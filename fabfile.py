@@ -5,7 +5,7 @@
 
     This script is used by fabric for easy deployment.
 
-    :copyright: Copyright 2008 by Florian Apolloner.
+    :copyright: Copyright 2009 by the Inyoka Team.
     :license: GNU GPL.
 """
 

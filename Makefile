@@ -4,11 +4,10 @@
 #
 # Shortcuts for various tasks.
 #
-# :copyright: 2007-2009 by the Inyoka Team, see AUTHORS for more details.
+# :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
 # :license: GNU GPL, see LICENSE for more details.
 #
-.PHONY: test doc pdfdoc reindent migrate test_data convert server profiled \
-	shell mysql clean-files
+.PHONY: test doc pdfdoc reindent migrate test_data server profiled shell clean-files
 
 test:
 	@(python run_tests.py)
@@ -26,12 +25,6 @@ reindent:
 
 migrate:
 	@(python dbmanage.py upgrade)
-
-test_data:
-	@(python make_testdata.py)
-
-convert:
-	@(python inyoka/scripts/converter/converter.py)
 
 server_cherrypy:
 	@(python manage-inyoka.py runcp)

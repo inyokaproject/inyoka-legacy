@@ -83,15 +83,36 @@ class Component(object):
         """returns a list of all component classes for this class"""
         return cls._implementations
 
-def _helper(imp, accepted_components):
+def component_is_activated(imp, accepted_components):
+    """This method is used to determine whether a component should get
+    activated or not.
+    """
+    return True # Allow every implementation for now
     return ("%s.%s" % (imp.__module__, imp.__name__) in accepted_components or
             "%s.*" % imp.__module__ in accepted_components)
 
-#def setup_components(accepted_components):
-#    # todo import the components
-#    for c, implementations in ComponentMeta._registry.items():
-#        c._implementations = [imp for imp in implementations if _helper(imp, accepted_components)]
-#        c._instances = [i() for i in c._implementations]
+def setup_components(accepted_components):
+    """Set up the :cls:`Component`'s implementation and instance lists.
+    Should get called early during application setup, cause otherwise the 
+    components won't return any implementations.
+    """
+    from werkzeug.utils import import_string
+    # Import the components to setup the metaclass magic.
+    for comp in accepted_components:
+        import_string(comp if comp[-1] != '*' else comp[:-2])
+
+    instance_map = {}
+    for c, implementations in ComponentMeta._registry.items():
+        # Only add those components to the implementation list,
+        # which are activated
+        c._implementations = [imp for imp in implementations if 
+                              component_is_activated(imp, accepted_components)]
+        for i in c._implementations:
+            if i not in instance_map: instance_map[i] = i()
+
+        c._instances = [instance_map[i] for i in c._implementations]
+
+    del instance_map
 
 def _bootstrap():
     """Get the inyoka version and store it."""

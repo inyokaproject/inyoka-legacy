@@ -61,12 +61,12 @@ class Component(object):
         ...     def get_id(self):
         ...         return 'forum_post'
         ...
-        >>> AttachmentProvider.get_components()
-        [<class '__main__.ForumPostAttachmentProvider'>, <class '__main__.NonBoundAttachmentProvider'>]
+        >>> AttachmentProvider.get_component_classes()
+        []
 
-    As you see :meth:`get_components` returns all implemented features
-    for that specific component (supposedly the feature is activated in the config).
-
+    :meth:`get_component_classes` would return `ForumPostAttachmentProvider` and 
+    `NonBoundAttachmentProvider` if they were activated (That's not the case,
+    in this example, so it returns []).
     """
     __metaclass__ = ComponentMeta
 

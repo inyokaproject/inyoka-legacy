@@ -11,6 +11,10 @@
 
 from werkzeug import Request as RequestBase, Response as ResponseBase,\
                      ClosingIterator
+from werkzeug.routing import Map
+
+from inyoka import setup_components
+from .api import Controller
 
 class Request(RequestBase):
     pass
@@ -19,6 +23,9 @@ class Response(ResponseBase):
     default_mimetype = 'text/html'
 
 class InyokaApplication(object):
+    def __init__(self):
+        setup_components(['inyoka.testing.api.*'])
+        self.url_map = Map(Controller.get_urlmap())
 
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""

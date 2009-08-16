@@ -11,38 +11,31 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
-
-
 class ComponentMeta(type):
     """Metaclass that keeps track of all derived component implementations."""
 
-    _name2mod = {}
+    _registry = {}
 
     def __new__(mcs, name, bases, dict_):
         obj = type.__new__(mcs, name, bases, dict_)
         if bases == (object,):
             # `Component` itself
             return obj
+
         if Component in bases:
             obj._iscomptype = True
-            uniquename = dict_['__module__'] + '.' + name
-            if name in ComponentMeta._name2mod:
-                raise TypeError('Component type with name %r already exists' %
-                                uniquename)
-            ComponentMeta._name2mod[uniquename] = {}
         else:
-            # A component
             obj._comptypes = comptypes = []
             for base in bases:
-                basename = base.__module__ + '.' + base.__name__
-                objname = obj.__module__ + '.' + obj.__name__
-                ComponentMeta._name2mod[basename].update({objname: obj})
                 if '_iscomptype' in base.__dict__:
                     comptypes.append(base)
                 elif '_comptypes' in base.__dict__:
                     comptypes.extend(base._comptypes)
-        return obj
 
+            for comp in comptypes:
+                ComponentMeta._registry.setdefault(comp, []).append(obj)
+
+        return obj
 
 class Component(object):
     """Base component class.
@@ -54,7 +47,7 @@ class Component(object):
 
     A simple example:
 
-    .. sourcecode: pycon
+    .. sourcecode: python
 
         >>> class AttachmentProvider(Component):
         ...     def get_id(self):
@@ -72,23 +65,33 @@ class Component(object):
         [<class '__main__.ForumPostAttachmentProvider'>, <class '__main__.NonBoundAttachmentProvider'>]
 
     As you see :meth:`get_components` returns all implemented features
-    for that specific component.
+    for that specific component (supposedly the feature is activated in the config).
 
     """
     __metaclass__ = ComponentMeta
 
+    _implementations = []
+    _instances = []
+
     @classmethod
     def get_components(cls):
-        """return a list of all components from the class"""
-        if hasattr(cls, '__metaclass__'):
-            mcls = cls.__metaclass__
-            dict_ = mcls._name2mod
-            name = cls.__module__ + '.' + cls.__name__
-            components = []
-            for ccls in dict_.get(name, {}).itervalues():
-                components.append(ccls)
-            return components
+        """return a list of all component instances for this class"""
+        return cls._instances
 
+    @classmethod
+    def get_component_classes(cls):
+        """returns a list of all component classes for this class"""
+        return cls._implementations
+
+def _helper(imp, accepted_components):
+    return ("%s.%s" % (imp.__module__, imp.__name__) in accepted_components or
+            "%s.*" % imp.__module__ in accepted_components)
+
+#def setup_components(accepted_components):
+#    # todo import the components
+#    for c, implementations in ComponentMeta._registry.items():
+#        c._implementations = [imp for imp in implementations if _helper(imp, accepted_components)]
+#        c._instances = [i() for i in c._implementations]
 
 def _bootstrap():
     """Get the inyoka version and store it."""

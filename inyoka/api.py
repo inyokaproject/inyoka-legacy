@@ -1,5 +1,7 @@
+#-*- coding: utf-8 -*-
 from werkzeug.routing import Submount, EndpointPrefix
 from inyoka import Component
+
 
 class Controller(Component):
     # The prefix, will get prefix.domain, or domain/prefix

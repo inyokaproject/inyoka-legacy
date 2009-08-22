@@ -9,18 +9,14 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
-from werkzeug import Request as RequestBase, Response as ResponseBase,\
-                     ClosingIterator
+from werkzeug import ClosingIterator
 from werkzeug.routing import Map
 
 from inyoka import setup_components
-from .api import Controller
+from inyoka.api import Controller
+from inyoka.utils.http import Request, Response
 
-class Request(RequestBase):
-    pass
 
-class Response(ResponseBase):
-    default_mimetype = 'text/html'
 
 class InyokaApplication(object):
     def __init__(self):

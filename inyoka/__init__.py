@@ -11,6 +11,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
+
 class ComponentMeta(type):
     """Metaclass that keeps track of all derived component implementations."""
 
@@ -36,6 +37,7 @@ class ComponentMeta(type):
                 ComponentMeta._registry.setdefault(comp, []).append(obj)
 
         return obj
+
 
 class Component(object):
     """Base component class.
@@ -64,7 +66,7 @@ class Component(object):
         >>> AttachmentProvider.get_component_classes()
         []
 
-    :meth:`get_component_classes` would return `ForumPostAttachmentProvider` and 
+    :meth:`get_component_classes` would return `ForumPostAttachmentProvider` and
     `NonBoundAttachmentProvider` if they were activated (That's not the case,
     in this example, so it returns []).
     """
@@ -83,6 +85,7 @@ class Component(object):
         """returns a list of all component classes for this class"""
         return cls._implementations
 
+
 def component_is_activated(imp, accepted_components):
     """This method is used to determine whether a component should get
     activated or not.
@@ -91,9 +94,10 @@ def component_is_activated(imp, accepted_components):
     return ("%s.%s" % (imp.__module__, imp.__name__) in accepted_components or
             "%s.*" % imp.__module__ in accepted_components)
 
+
 def setup_components(accepted_components):
     """Set up the :cls:`Component`'s implementation and instance lists.
-    Should get called early during application setup, cause otherwise the 
+    Should get called early during application setup, cause otherwise the
     components won't return any implementations.
     """
     from werkzeug.utils import import_string
@@ -105,7 +109,7 @@ def setup_components(accepted_components):
     for c, implementations in ComponentMeta._registry.items():
         # Only add those components to the implementation list,
         # which are activated
-        c._implementations = [imp for imp in implementations if 
+        c._implementations = [imp for imp in implementations if
                               component_is_activated(imp, accepted_components)]
         for i in c._implementations:
             if i not in instance_map: instance_map[i] = i()
@@ -113,6 +117,7 @@ def setup_components(accepted_components):
         c._instances = [instance_map[i] for i in c._implementations]
 
     del instance_map
+
 
 def _bootstrap():
     """Get the inyoka version and store it."""

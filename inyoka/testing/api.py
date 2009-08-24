@@ -1,14 +1,16 @@
 from werkzeug.routing import Rule, EndpointPrefix
 
-from inyoka.api import Controller
+from inyoka.core.api import IController
+from inyoka.core.controller import register
 
-class TestingController(Controller):
+class TestingController(IController):
     url_section = 'forum'
+
     url_rules = [
         Rule('/', endpoint='index'),
         Rule('/about', endpoint='about')
     ]
-    url_map = {
-        'index': lambda x: 'index',
-        'about': lambda x: 'about'
-    }
+
+    @register('index')
+    def bla(self, request):
+        return 'apo'        

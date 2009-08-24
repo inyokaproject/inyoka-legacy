@@ -13,4 +13,4 @@ class TestingController(IController):
 
     @register('index')
     def bla(self, request):
-        return 'apo'        
+        return 'apo'

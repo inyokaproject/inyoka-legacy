@@ -24,7 +24,7 @@ class User(object):
         self.id = id
         self.username = username
         self.display_name = display_name
-    
+
 class AuthSystemBase(object):
 
     def login(self, request, username, password):
@@ -81,4 +81,3 @@ class EasyAuth(AuthSystemBase):
 
     def logout(self, request):
         self.set_user(request, None)
-

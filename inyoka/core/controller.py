@@ -31,7 +31,7 @@ class IController(Component):
                                              comp.url_rules)]
                         ))
             cls._endpoint_map.setdefault(comp.url_section, {}).update(url_map)
-        
+
         return urls
 
     @classmethod

@@ -15,7 +15,7 @@ from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map
 
 from inyoka import setup_components
-from inyoka.core.api import Controller
+from inyoka.core.api import IController
 
 class Request(RequestBase):
     pass
@@ -26,7 +26,7 @@ class Response(ResponseBase):
 class InyokaApplication(object):
     def __init__(self):
         setup_components(['inyoka.testing.api.*'])
-        self.url_map = Map(Controller.get_urlmap())
+        self.url_map = Map(IController.get_urlmap())
 
     def handle_not_found(self, request, error):
         return error.get_response(request)
@@ -40,7 +40,7 @@ class InyokaApplication(object):
         try:
             try:
                 endpoint, args = urls.match()
-                response = Controller.get_view(endpoint)(request, **args)
+                response = IController.get_view(endpoint)(request, **args)
             except NotFound, e:
                 response = self.handle_not_found(request, e)
 

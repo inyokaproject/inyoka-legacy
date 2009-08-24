@@ -1,8 +1,9 @@
 from werkzeug.routing import Rule, EndpointPrefix
 
-from inyoka.core.api import Controller, register
+from inyoka.core.api import IController
+from inyoka.core.controller import register
 
-class TestingController(Controller):
+class TestingController(IController):
     url_section = 'forum'
 
     url_rules = [

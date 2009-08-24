@@ -10,23 +10,37 @@ class Controller(Component):
     # inyoka takes care of it.
     url_rules = []
 
-    # Maps the endpoints to views, use the property decorator,
-    # if you want to map methods on this object.
-    url_map = {}
-
     @classmethod
     def get_urlmap(cls):
         cls._endpoint_map = {}
+
         urls = []
+
         for comp in cls.get_components():
+            url_map = {}
+            for method in dir(comp):
+                try:
+                    method = getattr(comp, method)
+                    endpoint_name = getattr(method, 'endpoint')
+                    url_map[endpoint_name] = method
+                except AttributeError:
+                    continue
+
             urls.append(Submount('/%s' % comp.url_section,
                              [EndpointPrefix('%s/' % comp.url_section,
                                              comp.url_rules)]
-                            ))
-            cls._endpoint_map.setdefault(comp.url_section, {}).update(comp.url_map)
+                        ))
+            cls._endpoint_map.setdefault(comp.url_section, {}).update(url_map)
+        
         return urls
 
     @classmethod
     def get_view(cls, endpoint):
         parts = endpoint.split('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
+
+def register(endpoint_name):
+    def wrap(func):
+        func.endpoint = endpoint_name
+        return func
+    return wrap

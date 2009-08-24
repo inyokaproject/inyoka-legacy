@@ -14,7 +14,7 @@ from werkzeug import Request as RequestBase, Response as ResponseBase,\
 from werkzeug.routing import Map
 
 from inyoka import setup_components
-from .api import Controller
+from inyoka.core.api import Controller
 
 class Request(RequestBase):
     pass

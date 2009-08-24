@@ -11,6 +11,7 @@
 
 from werkzeug import Request as RequestBase, Response as ResponseBase,\
                      ClosingIterator
+from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.routing import Map
 
 from inyoka import setup_components
@@ -27,15 +28,24 @@ class InyokaApplication(object):
         setup_components(['inyoka.testing.api.*'])
         self.url_map = Map(Controller.get_urlmap())
 
+    def handle_not_found(self, request, error):
+        return error.get_response(request)
+
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""
 
         request = Request(environ, self)
+        urls = self.url_map.bind_to_environ(environ)
 
         try:
-            response = Response('Hallo')
-        except:
-            raise
+            try:
+                endpoint, args = urls.match()
+                response = Controller.get_view(endpoint)(request, **args)
+            except NotFound, e:
+                response = self.handle_not_found(request, e)
+
+        except HTTPException, e:
+            reponse = e.get_response(request)
 
         # TODO: add session cleanup
         return ClosingIterator(response(environ, start_response),

@@ -45,7 +45,7 @@ class InyokaApplication(object):
                 response = self.handle_not_found(request, e)
 
         except HTTPException, e:
-            reponse = e.get_response(request)
+            response = e.get_response(request)
 
         # TODO: add session cleanup
         return ClosingIterator(response(environ, start_response),

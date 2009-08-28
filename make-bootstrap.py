@@ -22,6 +22,7 @@ def after_install(options, home_dir):
     easy_install('sqlalchemy-migrate', home_dir)
     easy_install('simplejson', home_dir)
     easy_install('pytz', home_dir)
+    easy_install('nose', home_dir)
     easy_install('html5lib', home_dir)
     easy_install('Babel', home_dir)
 """

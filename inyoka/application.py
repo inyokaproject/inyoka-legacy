@@ -13,7 +13,7 @@ from werkzeug import ClosingIterator
 from werkzeug.routing import Map
 
 from inyoka import setup_components
-from inyoka.api import Controller
+from inyoka.core.api import IController
 from inyoka.utils.http import Request, Response
 
 
@@ -21,7 +21,7 @@ from inyoka.utils.http import Request, Response
 class InyokaApplication(object):
     def __init__(self):
         setup_components(['inyoka.testing.api.*'])
-        self.url_map = Map(Controller.get_urlmap())
+        self.url_map = Map(IController.get_urlmap())
 
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""

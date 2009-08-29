@@ -9,14 +9,16 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import BaseRequest, BaseResponse
-from werkzeug import CommonRequestDescriptorsMixin, CommonResponseDescriptorsMixin, \
+from werkzeug import Request as BaseRequest, Response as BaseResponse, \
+    CommonRequestDescriptorsMixin, CommonResponseDescriptorsMixin, \
     ResponseStreamMixin
 
 
-class Request(BaseRequest, CommonRequestDescriptorsMixin):
-    pass
+class Request(BaseRequest):
+    def __init__(self, environ, application):
+        self.application = application
+        BaseRequest.__init__(self, environ)
 
 
-class Response(BaseResponse, CommonResponseDescriptorsMixin, ResponseStreamMixin):
+class Response(BaseResponse):
     default_mimetype = 'text/html'

@@ -2,6 +2,8 @@ from werkzeug.routing import Rule, EndpointPrefix
 
 from inyoka.core.api import IController
 from inyoka.core.controller import register
+from inyoka.utils.http import Response
+
 
 class TestingController(IController):
     url_section = 'forum'
@@ -13,4 +15,4 @@ class TestingController(IController):
 
     @register('index')
     def bla(self, request):
-        return 'apo'
+        return Response('apo')

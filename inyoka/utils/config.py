@@ -15,8 +15,7 @@ import os
 from os import path
 from threading import Lock
 
-#XXX: This is just for development reasons.  If we get something usable
-#     that variable should move into some kind of setup process.
+#TODO: integrate with the upcoming form framework (see zine.forms for example)
 DEFAULTS = {
 }
 

@@ -23,8 +23,19 @@ def after_install(options, home_dir):
     easy_install('sqlalchemy-migrate', home_dir)
     easy_install('simplejson', home_dir)
     easy_install('pytz', home_dir)
+    easy_install('nose', home_dir)
+    easy_install('Sphinx', home_dir)
     easy_install('html5lib', home_dir)
     easy_install('Babel', home_dir)
+
+def easy_install(package, home_dir, optional_args=None):
+    optional_args = optional_args or []
+    cmd = [os.path.join(home_dir, 'bin', 'easy_install')]
+    cmd.extend(optional_args)
+    # update the environment
+    cmd.append('-U')
+    cmd.append(package)
+    call_subprocess(cmd)
 """
 
 def main():

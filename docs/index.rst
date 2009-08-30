@@ -11,10 +11,14 @@ Contents
 Inyoka Basics
 -------------
 
-This section covers the very basics of inyoka.
+This section covers the very basics of inyoka and its development.
 
 .. toctree::
     :maxdepth: 2
+
+    installation
+    documentation
+    unittests
 
 
 Utilities

@@ -26,6 +26,7 @@ application = LocalProxy(_local, 'application')
 
 from inyoka.core.controller import IController, register
 
+# some special api defintions
 
 def href(endpoint, **values):
     adapter = application.url_adapter

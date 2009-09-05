@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 """
-    inyoka.utils.http
-    ~~~~~~~~~~~~~~~~~
+    inyoka.core.http
+    ~~~~~~~~~~~~~~~~
 
     This module implements various http helpers
     such as our own request and response classes.

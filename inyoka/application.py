@@ -15,8 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from inyoka import setup_components
 from inyoka.core.api import IController, _local, _local_manager
 from inyoka.core.exceptions import HTTPException, NotFound, Forbidden
-from inyoka.utils.http import Request, Response
-
+from inyoka.core.http import Request, Response
 
 
 class InyokaApplication(object):

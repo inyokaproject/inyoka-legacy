@@ -24,6 +24,7 @@ application = LocalProxy(_local, 'application')
 
 
 
+# some special api defintions
 
 # Imports for easy API access
 from inyoka.core.routing import IController, Rule, register, href

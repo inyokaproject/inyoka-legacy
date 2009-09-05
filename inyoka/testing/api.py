@@ -2,7 +2,7 @@ from werkzeug.routing import Rule, EndpointPrefix
 
 from inyoka.core.api import IController
 from inyoka.core.controller import register
-from inyoka.utils.http import Response
+from inyoka.core.http import Response
 
 
 class TestingController(IController):

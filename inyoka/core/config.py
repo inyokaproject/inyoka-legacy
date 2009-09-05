@@ -14,9 +14,18 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
+from solace.utils.forms import TextField, BooleanField
+from solace.i18n import lazy_gettext
 
-#TODO: integrate with the upcoming form framework (see zine.forms for example)
+
 DEFAULTS = {
+    'database_uri':             TextField(default=u'', help_text=lazy_gettext(
+        u'The database URI.  For more information about database settings '
+        u'consult the Inyoka docs.')),
+    'database_debug':           BooleanField(default=False, help_text=lazy_gettext(
+        u'If enabled the database will collect the SQL statements and add them '
+        u'to the bottom of the page for easier debugging.  Beside that the '
+        u'sqlalchemy log is written to a `db.log` file.'))
 }
 
 

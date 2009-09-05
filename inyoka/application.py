@@ -24,10 +24,12 @@ class InyokaApplication(object):
         #TODO: utilize that!
         setup_components(['inyoka.testing.api.*'])
         self.url_map = Map(IController.get_urlmap())
+        self.url_adapter = None
 
     def dispatch_request(self, request):
         # normal request dispatching
         urls = self.url_map.bind_to_environ(request.environ)
+        self.url_adapter = urls
 
         try:
             try:
@@ -68,6 +70,10 @@ class InyokaApplication(object):
             raise
 
         return response(environ, start_response)
+
+    def bind(self):
+        """bind the application to a thread local"""
+        _local.application = self
 
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""

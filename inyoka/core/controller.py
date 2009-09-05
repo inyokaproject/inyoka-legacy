@@ -43,6 +43,10 @@ class IController(Component):
 
     @classmethod
     def get_view(cls, endpoint):
+        if not '/' in endpoint:
+            # we assume that we have url_sections that point
+            # to no name but to an empty string
+            endpoint = '/' + endpoint
         parts = endpoint.split('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
 

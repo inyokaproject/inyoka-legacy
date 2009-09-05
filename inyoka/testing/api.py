@@ -6,7 +6,7 @@ from inyoka.utils.http import Response
 
 
 class TestingController(IController):
-    url_section = 'forum'
+    url_section = ''
 
     url_rules = [
         Rule('/', endpoint='index'),

@@ -22,7 +22,12 @@ from inyoka.utils.http import Request, Response
 class InyokaApplication(object):
     def __init__(self):
         #TODO: utilize that!
-        setup_components(['inyoka.testing.api.*'])
+        setup_components([
+#            'inyoka.testing.api.*',
+            'inyoka.portal.controllers.*',
+            'inyoka.news.controllers.*',
+            'inyoka.forum.controllers.*',
+        ])
         self.url_map = Map(IController.get_urlmap())
         self.url_adapter = None
 

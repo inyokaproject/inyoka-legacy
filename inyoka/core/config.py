@@ -25,7 +25,21 @@ DEFAULTS = {
     'database_debug':           BooleanField(default=False, help_text=lazy_gettext(
         u'If enabled the database will collect the SQL statements and add them '
         u'to the bottom of the page for easier debugging.  Beside that the '
-        u'sqlalchemy log is written to a `db.log` file.'))
+        u'sqlalchemy log is written to a `db.log` file.')),
+    'routing.portal.subdomain':     TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the portal application')),
+    'routing.portal.submount':      TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the portal application')),
+    'routing.calendar.subdomain':   TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the calendar application')),
+    'routing.calendar.submount':    TextField(default=u'calendar',
+        help_text=lazy_gettext(u'Submount used for the calendar application')),
+    'routing.news.subdomain':       TextField(default=u'news',
+        help_text=lazy_gettext(u'Subdomain used for the news application')),
+    'routing.news.submount':        TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the news application')),
+    'base_domain_name':             TextField(default=u'inyoka.local:5000',
+        help_text=lazy_gettext(u'Base domain name')),
 }
 
 

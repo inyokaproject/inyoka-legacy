@@ -22,14 +22,8 @@ _local_manager = LocalManager(_local)
 request = LocalProxy(_local, 'request')
 application = LocalProxy(_local, 'application')
 
+
+
+
 # Imports for easy API access
-
-from inyoka.core.controller import IController, register
-
-
-def href(endpoint, **values):
-    adapter = application.url_adapter
-    if adapter is None:
-        #TODO: build a better pseudo adapter
-        adapter = application.url_map.bind('')
-    return adapter.build(endpoint, values)
+from inyoka.core.routing import IController, Rule, register, href

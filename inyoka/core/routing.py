@@ -19,7 +19,7 @@ from inyoka.utils.urls import make_full_domain
 #     working on config ;-)
 #from inyoka.core.config import config
 
-_date_formatter_split_re = '(%.)'
+_date_formatter_split_re = re.compile('(%.)')
 _date_formatter_mapping = {
     'd': r'\d\d',
     'j': r'\d{3}',

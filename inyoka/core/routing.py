@@ -104,7 +104,7 @@ def href(endpoint, **values):
     if adapter is None:
         #TODO: build a better pseudo adapter
         adapter = application.url_map.bind(config['base_domain_name'])
-    return adapter.build(endpoint, values)
+    return adapter.build(endpoint, values, force_external=True)
 
 
 class Rule(BaseRule):

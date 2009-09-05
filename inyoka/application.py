@@ -17,6 +17,9 @@ from inyoka.core.api import IController, _local, _local_manager
 from inyoka.core.exceptions import HTTPException, NotFound, Forbidden
 from inyoka.core.http import Request, Response
 
+#XXX
+from inyoka.core.routing import config
+
 
 class InyokaApplication(object):
     def __init__(self):
@@ -32,7 +35,8 @@ class InyokaApplication(object):
 
     def dispatch_request(self, request):
         # normal request dispatching
-        urls = self.url_map.bind_to_environ(request.environ)
+        urls = self.url_map.bind_to_environ(request.environ,
+            server_name=config['base_domain_name'])
         self.url_adapter = urls
 
         try:

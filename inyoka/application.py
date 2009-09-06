@@ -18,7 +18,7 @@ from inyoka.core.exceptions import HTTPException, NotFound, Forbidden
 from inyoka.core.http import Request, Response
 
 #XXX
-from inyoka.core.routing import config
+from inyoka.core.routing import config, DateConverter
 
 
 class InyokaApplication(object):
@@ -30,7 +30,10 @@ class InyokaApplication(object):
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
         ])
-        self.url_map = Map(IController.get_urlmap())
+        self.url_map = Map(IController.get_urlmap(),
+            converters={
+                'date': DateConverter,
+        })
         self.url_adapter = None
 
     def dispatch_request(self, request):

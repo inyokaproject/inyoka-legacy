@@ -33,7 +33,7 @@ class CalendarController(IController):
 
     url_rules = [
         Rule('/') > 'index',
-        Rule('/<int(fixed_digits=4,min=0):year>/<int(fixed_digits=2,min=0):month>/<int(fixed_digits=2,min=0):day>/<slug>/') > 'entry',
+        Rule('/<date:date>/<slug>/') > 'entry',
     ]
 
     @register('index')
@@ -41,6 +41,6 @@ class CalendarController(IController):
         return Response('this is calendar index page')
 
     @register('entry')
-    def entry(self, request, year, month, day, slug):
-        return Response('this is calendar entry %r from %d-%d-%d' % (slug, year, month, day))
+    def entry(self, request, date, slug):
+        return Response('this is calendar entry %r from %r' % (slug, date))
 

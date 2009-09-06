@@ -16,7 +16,7 @@ class NewsController(IController):
 
     url_rules = [
         Rule('/') > 'index',
-        Rule('/<int(fixed_digits=4,min=0):year>/<int(fixed_digits=2,min=0):month>/<int(fixed_digits=2,min=0):day>/<slug>/') > 'entry',
+        Rule('/<date:date>/<slug>/') > 'entry',
     ]
 
     @register('index')
@@ -24,5 +24,5 @@ class NewsController(IController):
         return Response('this is the news (aka ikhaya) index page')
 
     @register('entry')
-    def entry(self, request, year, month, day, slug):
-        return Response('this is news entry %r from %d-%d-%d' % (slug, year, month, day))
+    def entry(self, request, date, slug):
+        return Response('this is news entry %r from %s' % (slug, date.strftime('%F')))

@@ -19,12 +19,25 @@ _local_manager = LocalManager(_local)
 # the current request object.  This object is managed
 # by _local_manager and cleaned up by the current :cls:`InyokaApplication`
 # instance.
-request = LocalProxy(_local, 'request')
-application = LocalProxy(_local, 'application')
+_current_request = LocalProxy(_local, 'request')
+_current_application = LocalProxy(_local, 'application')
 
+# Imports for easy API access
 
+from inyoka.core.routing import IController, register, Rule
 
 # some special api defintions
 
-# Imports for easy API access
-from inyoka.core.routing import IController, Rule, register, href
+def href(endpoint, **values):
+    adapter = application.url_adapter
+    if adapter is None:
+        #TODO: build a better pseudo adapter
+        adapter = application.url_map.bind('')
+    return adapter.build(endpoint, values)
+
+
+def get_application():
+    return getattr(_local, 'application', None)
+
+def get_request():
+    return getattr(_local, 'request', None)

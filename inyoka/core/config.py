@@ -14,11 +14,16 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from solace.utils.forms import TextField, BooleanField
-from solace.i18n import lazy_gettext
+from inyoka.core.forms import TextField, BooleanField
+from inyoka.core.i18n import lazy_gettext
+from inyoka.core.environment import PACKAGE_LOCATION, MEDIA_DATA
 
 
 DEFAULTS = {
+    'debug':                    BooleanField(default=False, help_text=lazy_gettext(
+        u'Enable debug mode')),
+    'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
+        u'The path to the media folder')),
     'database_uri':             TextField(default=u'', help_text=lazy_gettext(
         u'The database URI.  For more information about database settings '
         u'consult the Inyoka docs.')),
@@ -38,7 +43,7 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Subdomain used for the news application')),
     'routing.news.submount':        TextField(default=u'/',
         help_text=lazy_gettext(u'Submount used for the news application')),
-    'base_domain_name':             TextField(default=u'inyoka.local:5000',
+    'base_domain_name':             TextField(default=u'inyoka.local',
         help_text=lazy_gettext(u'Base domain name')),
 }
 
@@ -108,7 +113,7 @@ class Configuration(object):
         self.namespace = {}
         self.namespace.update(namespace) if namespace is not None else namespace
 
-        self.config_vars = DEFAULT.copy()
+        self.config_vars = DEFAULTS.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()
@@ -328,3 +333,6 @@ class ConfigTransaction(object):
         finally:
             self.cfg._lock.release()
         self._committed = True
+
+
+config = Configuration(path.join(PACKAGE_LOCATION, 'inyoka.ini'))

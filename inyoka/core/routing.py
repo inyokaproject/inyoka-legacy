@@ -39,7 +39,7 @@ config = {
     'routing.news.submount': '/',
     'routing.calendar.subdomain': '',
     'routing.calendar.submount': '/calendar',
-    'base_domain_name': 'inyoka.local:5000',
+    'base_domain_name': 'inyoka.local',
 }
 
 

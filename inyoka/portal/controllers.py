@@ -9,7 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, register
-from inyoka.utils.http import Response
+from inyoka.core.http import Response
+
 
 class PortalController(IController):
     name = 'portal'

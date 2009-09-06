@@ -11,15 +11,19 @@
 """
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     CommonRequestDescriptorsMixin, CommonResponseDescriptorsMixin, \
-    ResponseStreamMixin, redirect as _redirect
+    ResponseStreamMixin, redirect as _redirect, get_current_url
 from werkzeug.exceptions import NotFound
 from inyoka.core.api import get_application, get_request
 
 
 class Request(BaseRequest):
+
     def __init__(self, environ, application):
         self.application = application
         BaseRequest.__init__(self, environ)
+
+    def build_absolute_uri(self):
+        return get_current_url(self.environ)
 
 
 class Response(BaseResponse):

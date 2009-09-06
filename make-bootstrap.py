@@ -27,8 +27,6 @@ def after_install(options, home_dir):
     easy_install('Sphinx', home_dir)
     easy_install('html5lib', home_dir)
     easy_install('Babel', home_dir)
-    # TODO: This is yet broken :(
-    #easy_install('http://bitbucket.org/plurk/solace/get/tip.gz', home_dir)
 
 
 def easy_install(package, home_dir, optional_args=None):

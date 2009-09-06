@@ -34,7 +34,7 @@ class InyokaApplication(object):
             converters={
                 'date': DateConverter,
         })
-        self.url_adapter = None
+        self.url_adapter = self.url_map.bind(config['base_domain_name'])
         self.bind()
 
     def dispatch_request(self, request):
@@ -95,3 +95,4 @@ class InyokaApplication(object):
 
 
 application = InyokaApplication()
+application.bind()

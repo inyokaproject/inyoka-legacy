@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import IController, Rule, register
+from inyoka.core.api import IController, Rule, register, href
 from inyoka.core.http import Response
 
 
@@ -22,7 +22,10 @@ class PortalController(IController):
 
     @register('index')
     def index(self, request):
-        return Response('this is the portal index page')
+        return Response('this is the portal index page.\n'
+                        + 'called URL is: %s\n' % request.build_absolute_uri()
+                        + 'link is: %s\n' % href('portal/index')
+                       )
 
     @register('user_profile')
     def user_profile(self, request, username):

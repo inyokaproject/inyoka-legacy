@@ -43,7 +43,7 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Subdomain used for the news application')),
     'routing.news.submount':        TextField(default=u'/',
         help_text=lazy_gettext(u'Submount used for the news application')),
-    'base_domain_name':             TextField(default=u'inyoka.local',
+    'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
 }
 

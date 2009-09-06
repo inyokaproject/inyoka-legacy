@@ -40,7 +40,7 @@ config = {
     'routing.news.submount': '/',
     'routing.calendar.subdomain': '',
     'routing.calendar.submount': '/calendar',
-    'base_domain_name': 'inyoka.local',
+    'base_domain_name': 'inyoka.local:5000',
 }
 
 
@@ -101,11 +101,7 @@ register = IController.register
 
 
 def href(endpoint, **values):
-    app = get_application()
-    adapter = app.url_adapter
-    if adapter is None:
-        #TODO: build a better pseudo adapter
-        adapter = app.url_map.bind(config['base_domain_name'])
+    adapter = get_application().url_adapter
     return adapter.build(endpoint, values, force_external=True)
 
 

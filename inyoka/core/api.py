@@ -15,6 +15,12 @@ from werkzeug import Local, LocalManager, LocalProxy
 #       clean them up.
 _local = Local()
 _local_manager = LocalManager(_local)
+#from types import ModuleType
+#_local = ModuleType('_local')
+#class LocalManager(object):
+#    def cleanup(*args, **kwargs):
+#        pass
+#_local_manager = LocalManager()
 
 # the current request object.  This object is managed
 # by _local_manager and cleaned up by the current :cls:`InyokaApplication`
@@ -26,10 +32,11 @@ _current_application = LocalProxy(_local, 'application')
 # some special api defintions
 
 def get_application():
-    return getattr(_local, 'application', None)
+    print `dir(_local)`
+    return getattr(_local, 'application')
 
 def get_request():
-    return getattr(_local, 'request', None)
+    return getattr(_local, 'request')
 
 
 # Imports for easy API access

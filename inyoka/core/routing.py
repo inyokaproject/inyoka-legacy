@@ -122,7 +122,7 @@ class DateConverter(BaseConverter):
                 if part[1] not in _date_formatter_mapping:
                     raise ValidationError('formatter not allowed for dates: %s'
                                           % part)
-                regex.append(_date_formatter_mapping[part[0]])
+                regex.append(_date_formatter_mapping[part[1]])
             else:
                 regex.append(re.escape(part))
         self.regex = ''.join(regex)

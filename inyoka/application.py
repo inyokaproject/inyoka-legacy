@@ -35,6 +35,7 @@ class InyokaApplication(object):
                 'date': DateConverter,
         })
         self.url_adapter = None
+        self.bind()
 
     def dispatch_request(self, request):
         # normal request dispatching

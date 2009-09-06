@@ -14,6 +14,7 @@ from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
 from werkzeug import url_quote
 from inyoka import Component
 from inyoka.utils.urls import make_full_domain
+from inyoka.core.api import get_application
 
 #XXX: temporary to check if the routing stuff works until ente has finished
 #     working on config ;-)
@@ -100,10 +101,11 @@ register = IController.register
 
 
 def href(endpoint, **values):
-    adapter = application.url_adapter
+    app = get_application()
+    adapter = app.url_adapter
     if adapter is None:
         #TODO: build a better pseudo adapter
-        adapter = application.url_map.bind(config['base_domain_name'])
+        adapter = app.url_map.bind(config['base_domain_name'])
     return adapter.build(endpoint, values, force_external=True)
 
 

@@ -67,6 +67,7 @@ class InyokaApplication(object):
         # the database in the initialization method.
         request = object.__new__(Request)
         _local.request = request
+        self.bind()
         request.__init__(environ, self)
 
         # wrap the real dispatching in a try/except so that we can
@@ -95,4 +96,3 @@ class InyokaApplication(object):
 
 
 application = InyokaApplication()
-application.bind()

@@ -80,7 +80,7 @@ from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
 from sqlalchemy import MetaData, String, create_engine
-from sqlalchemy import orm
+from sqlalchemy import orm, sql
 from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.pool import NullPool, Pool
 from sqlalchemy.interfaces import ConnectionProxy

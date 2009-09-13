@@ -233,7 +233,7 @@ def mapper(model, table, **options):
 
 
 #: initiate the database
-metadat = MetaData()
+metadata = MetaData()
 session = orm.scoped_session(lambda: orm.create_session(
     get_engine(), autoflush=True, autocommit=False
 ))

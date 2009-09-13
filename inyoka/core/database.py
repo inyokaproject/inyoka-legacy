@@ -3,22 +3,72 @@
     inyoka.core.database
     ~~~~~~~~~~~~~~~~~~~~
 
-    This module provides the database interface inyoka uses.
+    This module implements our interface to `SQLAlchemy <http://sqlalchemy.org>`_.
 
     It uses scoped sessions to represent the database connection and
     implements some useful classes and functions to ease the database
     development.
 
-    This module must never import application code so that migrations
+    .. _database-basics:
 
-    The default session shutdown happens in the application handler in
-    :mod:`inyoka.application`.
+    Basics
+    ======
 
-    To use this model you normally only need to import the `db` object.
-    It implements a wrapper for all commonly used sqlalchemy classes,
-    functions as well as our own utilities.
+    The very basic operation to use the database system is to import the
+    `db` module-type.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    .. data: db
+
+        This is a pseudo module that holds all common objects, functions
+        and classes to have a one-import-for-everything solution but without
+        the disadvantage of a cluttered namespace as a star-import has.
+
+    Engine
+    ------
+
+    The engine represents some kind of connection to the underlying database
+    and enables us to manage transactions and such stuff.  Connection pooling
+    is just another part the engine manages.
+
+    Let's say the engine is bouncer of our database connection so that we can
+    speak with a lot of databases with just one language.
+
+    Metadata
+    --------
+
+    The core of SQLAlchemy’s query and object mapping operations are supported
+    by database metadata, which is comprised of Python objects that describe
+    tables and other schema-level objecs.
+
+    Session
+    -------
+
+    The session implements some kind of instance map (not a cache!) that handles
+    all of our engines and query infrastructure.  It's *the* interface we use to
+    interact with the database.  The session abstracts the database transaction
+    in some transparent way.  We are able to add objects to a transaction
+    without touching the database and can flush these changes whenever we
+    have to.  Thanks to the autoflush setting (on per default) that will be
+    handled in background without any instructions.
+
+    See :ref:`Usage <database-usage>` for more details.
+
+    .. _database-usage:
+
+    Usage
+    =====
+
+    … some usage examples here…
+
+    .. _database-tricks:
+
+    Tipps & Tricks
+    ==============
+
+    … some tipps and tricks could be mentioned here…
+
+    :copyright: 2009 by the Inyoka Team,
+                     and Plurk Inc. see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
@@ -27,19 +77,22 @@ import sys
 import time
 from os import path
 from types import ModuleType
+from threading import Lock
 from contextlib import contextmanager
 from sqlalchemy import MetaData, String, create_engine
-from sqlalchemy.orm import scoped_session, create_session, Query as QueryBase, \
-        mapper as sqla_mapper
-from sqlalchemy.orm.scoping import _ScopedExt
+from sqlalchemy import orm
 from sqlalchemy.orm.interfaces import AttributeExtension
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import NullPool, Pool
 from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list, get_cls_kwargs
 from inyoka.core.api import get_application, href
 from inyoka.core.config import config
 
+#TODO: write more documentation, usage examples and such stuff!
+
+_engine = None
+_engine_lock = Lock()
 
 if sys.platform == 'win32':
     _timer = time.clock
@@ -47,40 +100,74 @@ else:
     _timer = time.time
 
 
-def _create_engine():
-    info = make_url(config['database_uri'])
-    options = {'convert_unicode': True,
-               'echo': config['database_debug'],
-               'pool_recycle': 300}
-    if info.drivername == 'mysql':
-        info.query.setdefault('charset', 'utf8')
-    elif info.drivername == 'sqlite':
-        # disable polling for sqlite
-        options.update({
-            #'poolclass': NullPool, <-- This locks our sqlite databases in test runs…
-            #                           but don't ask why…
-            'connect_args': {'timeout': 30}
-        })
-    url = SafeURL(info)
-    return create_engine(url, **options)
+def get_engine():
+    """Creates the engine if it does not exist and returns
+    the current engine.
+    """
+    global _engine
+    with _engine_lock:
+        if _engine is None:
+            info = make_url(config['database_uri'])
+            # convert_unicode: Let SQLAlchemy convert all values to unicode
+            #                  before we get them
+            # echo:            Set the database debug level
+            # pool_recycle:    Enable long-living connection pools
+            options = {'convert_unicode': True,
+                       'echo': config['database_debug'],
+                       'pool_recycle': -1}
+            if info.drivername == 'mysql':
+                info.query.setdefault('charset', 'utf8')
+            elif info.drivername == 'sqlite':
+                # enable longer timeouts for sqlite
+                options.update({
+                    'connect_args': {'timeout': 30}
+                })
+            uri = SafeURI(info)
+            _engine = creat_engine(uri, **options)
+        return _engine
 
 
-def session_mapper(scoped_session):
-    def mapper(cls, *arg, **kwargs):
-        extension_args = dict((arg, kwargs.pop(arg))
-                              for arg in get_cls_kwargs(_ScopedExt)
-                              if arg in kwargs)
-        kwargs['extension'] = extension = to_list(kwargs.get('extension', []))
-        if extension_args:
-            extension.append(scoped_session.extension.configure(**extension_args))
-        else:
-            extension.append(scoped_session.extension)
+def refresh_engine():
+    """Gets rid of the existing engine.  Useful for unittesting, use with care.
+    Do not call this function if there are multiple threads accessing the
+    engine.  Only do that in single-threaded test environments or console
+    sessions.
+    """
+    global _engine
+    with _engine_lock:
+        session.remove()
+        if _engine is not None:
+            _engine.dispose()
+        _engine = None
 
-        if not 'query' in cls.__dict__:
-            cls.query = scoped_session.query_property(Query)
 
-        return sqla_mapper(cls, *arg, **kwargs)
-    return mapper
+def atomic_add(obj, column, delta, expire=False):
+    """Performs an atomic add (or subtract) of the given column on the
+    object.  This updates the object in place for reflection but does
+    the real add on the server to avoid race conditions.  This assumes
+    that the database's '+' operation is atomic.
+
+    If `expire` is set to `True`, the value is expired and reloaded instead
+    of added of the local value.  This is a good idea if the value should
+    be used for reflection.
+    """
+    sess = orm.object_session(obj) or session
+    mapper = orm.object_mapper(obj)
+    pk = mapper.primary_key_from_instance(obj)
+    assert len(pk) == 1, 'atomic_add not supported for classes with ' \
+                         'more than one primary key'
+
+    val = orm.attributes.get_attribute(obj, column)
+    if expire:
+        orm.attributes.instance_state(obj).expire_attributes([column])
+    else:
+        orm.attributes.set_committed_value(obj, column, val + delta)
+
+    table = mapper.tables[0]
+    stmt = sql.update(table, mapper.primary_key[0] == pk[0], {
+        column:     table.c[column] + delta
+    })
+    sess.execute(stmt)
 
 
 def select_blocks(query, pk, block_size=1000, start_with=0, max_fails=10):
@@ -108,6 +195,7 @@ def select_blocks(query, pk, block_size=1000, start_with=0, max_fails=10):
         range = range[1] + 1, range[1] + block_size
 
 
+#TODO: documentation!
 @contextmanager
 def no_autoflush(scoped_session):
     session = scoped_session()
@@ -136,15 +224,22 @@ class SafeURL(URL):
     def __str__(self):
         return self.__unicode__().encode('utf-8')
 
+
+def mapper(model, table, **options):
+    """A mapper that hooks in standard extensions."""
+    extensions = to_list(options.pop('extension', None), [])
+    options['extension'] = extensions
+    return orm.mapper(model, table, **options)
+
+
 #: initiate the database
-_engine = _create_engine()
-_metadata = MetaData(bind=_engine)
+metadat = MetaData()
+session = orm.scoped_session(lambda: orm.create_session(
+    get_engine(), autoflush=True, autocommit=False
+))
 
-_session = scoped_session(lambda: create_session(_engine, autoflush=True,
-                                                 autocommit=False))
 
-
-class Query(QueryBase):
+class Query(orm.Query):
     """Default query class."""
 
     def dates(self, key, kind):
@@ -181,6 +276,7 @@ class Model(object):
     Internal baseclass for all models. It provides some syntactic
     sugar and mapps the default query property.
     """
+    query = session.query_property(Query)
 
     def __init__(self, *mixed, **kwargs):
         # some syntactic sugar. It allows us to initialize
@@ -224,14 +320,13 @@ def _make_module():
             if key in mod.__all__:
                 setattr(db, key, value)
 
-    db.File = File
-    db.engine = _engine
-    db.session = _session
+    db.engine = get_engine()
+    db.session = session
+    db.metadata = _metadata
+    db.mapper = session_mapper(session)
     db.Model = Model
     db.Query = Query
     db.AttributeExtension = AttributeExtension
-    db.metadata = _metadata
-    db.mapper = session_mapper(_session)
     return db
 
 sys.modules['inyoka.utils.database.db'] = db = _make_module()

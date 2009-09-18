@@ -1,7 +1,11 @@
-List of All Authors
--------------------
+Inyoka is maintained by various contributors.
 
-    * Armin Ronacher
-    * Christopher Grebs
-    * Florian Apolloner
-    * Marian Sigler
+Current Maintainers and Developers
+----------------------------------
+
+- Armin Ronacher <armin.ronacher@active-4.com>
+- Christopher Grebs <cg@webshox.org>
+- Florian Apolloner
+- Marian Sigler
+
+Some parts are taken from existing projects:

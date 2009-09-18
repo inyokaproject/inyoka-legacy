@@ -67,8 +67,7 @@
 
     … some tipps and tricks could be mentioned here…
 
-    :copyright: 2009 by the Inyoka Team,
-                     and Plurk Inc. see AUTHORS for more details.
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
@@ -79,10 +78,10 @@ from os import path
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
-from sqlalchemy import MetaData, String, create_engine
+from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
 from sqlalchemy.orm.interfaces import AttributeExtension
-from sqlalchemy.pool import NullPool, Pool
+from sqlalchemy.pool import Pool
 from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list, get_cls_kwargs

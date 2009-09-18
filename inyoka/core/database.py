@@ -316,8 +316,8 @@ def _make_module():
 
     db.engine = get_engine()
     db.session = session
-    db.metadata = _metadata
-    db.mapper = session_mapper(session)
+    db.metadata = metadata
+    db.mapper = mapper
     db.Model = Model
     db.Query = Query
     db.AttributeExtension = AttributeExtension

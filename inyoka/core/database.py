@@ -93,11 +93,6 @@ from inyoka.core.config import config
 _engine = None
 _engine_lock = Lock()
 
-if sys.platform == 'win32':
-    _timer = time.clock
-else:
-    _timer = time.time
-
 
 def get_engine():
     """Creates the engine if it does not exist and returns

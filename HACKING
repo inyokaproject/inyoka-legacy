@@ -1,0 +1,91 @@
+=================
+Hacking on Inyoka
+=================
+
+Inyoka is written in Python and based on popular libraries.  The dynamic parts
+in the user interface are created using HTML5 and jQuery.
+
+This file should give you a brief overview how the code works and what
+you should keep in mind working on it.
+
+Please note that this file is work in progress.  Adapt it whenever you think
+some urgent things needs to be written down so that other developers can use
+them.  But try to keep it simple so that it's easy and fast to read.
+
+
+Style Guide
+-----------
+
+Inyoka follows the PEP 8 for Python code.  The rule you should follow follow
+is “adapt the code style used in the file”.  And that also means, put
+whitespace where the original author put it and so on
+
+Indent with 4 *spaces* only.
+
+JavaScript code is intended with 2 spaces and *only two spaces*.  The same
+rule applies for HTML as well.
+
+**Every page has to be valide `HTML 5 <http://www.whatwg.org/html5>`**
+
+Instead of using plain CSS 2.1 we're using `CleverCSS <http://sandbox.pocoo.org/clevercss/>`
+to format our pages.  That gives us the ability to create a painless
+color-schema for better designs and easier designer work.
+
+All filenames have to be lowercase and ASCII only.
+
+URLs
+----
+
+Rules for URLs are simple.  Services, e.g Ajax calls are prefixed with a underscore.
+Use as less ids as possible and try to use "speeking" urls as much as possible.
+
+Examples:
+
+    /topic/new
+	/topic/what-the-hack/edit
+	/topic/what-the-hack/reply?pid=12345
+
+    Ajax calls:
+
+	/topic/_subscribe/what-the-hack
+	/topic/_unsubscribe/what-the-hack
+
+
+JavaScript Scripting
+--------------------
+
+All features that are implemented should work without JavaScript.
+There must only be things implemented in JavaScript that could ease
+some use-cases or shorten some workflow.  But everything else *must* work
+without JavaScript.
+
+
+Templates
+---------
+
+Templates must not contain any CSS information besides classes.
+Use classes as appropriate, and use as many of them as you like.
+Keep them easy to read.
+
+Use macros to ensure that you are using the same elements and
+classes for the same widget (tags, users, badges etc.)
+
+
+Unit Tests
+----------
+
+Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/0.11.1/>` for all
+tests.  If you don't use functions or doctests you must inherit either 
+:cls:`inyoka.core.test.TestCase` for common unittests or 
+:cls:`inyoka.core.test.ViewTestCase` to test view functions.  See the docs
+of :mod:`inyoka.core.test` for more details.
+
+Well, try to write the tests first, but we don't thrash you if you don't.
+TDD is cool but not easy to use everywhere.  So our development cycle depends
+on the hackers not on some kind of protocol nobody likes to use :)
+
+
+Documentation
+-------------
+
+This part is not written yet…

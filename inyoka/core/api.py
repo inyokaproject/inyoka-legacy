@@ -32,7 +32,6 @@ _current_application = LocalProxy(_local, 'application')
 # some special api defintions
 
 def get_application():
-    print `dir(_local)`
     return getattr(_local, 'application')
 
 def get_request():

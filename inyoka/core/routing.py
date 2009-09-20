@@ -6,17 +6,22 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import sre_constants
+import os
 import re
+import string
+import mimetypes
+import sre_constants
 from datetime import datetime
 from sqlalchemy.exc import InvalidRequestError
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule as BaseRule, BaseConverter, ValidationError
-from werkzeug import url_quote
+from werkzeug import append_slash_redirect, url_quote, wrap_file
+from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
+from inyoka.core.api import get_application
+from inyoka.core.http import Response
 from inyoka.utils.datastructures import missing
 from inyoka.utils.urls import make_full_domain
-from inyoka.core.api import get_application
 
 #XXX: temporary to check if the routing stuff works until ente has finished
 #     working on config ;-)
@@ -42,7 +47,13 @@ config = {
     'routing.news.submount': '/',
     'routing.calendar.subdomain': '',
     'routing.calendar.submount': '/calendar',
+    'routing.static.subdomain': 'static',
+    'routing.static.submount': '/',
+    'routing.media.subdomain': 'media',
+    'routing.media.submount': '/',
     'base_domain_name': 'inyoka.local:5000',
+    'static_path': 'static',
+    'media_path': 'media',
 }
 
 
@@ -68,11 +79,6 @@ class IController(Component):
                 if endpoint is not None and endpoint not in url_map:
                     url_map[endpoint] = method
 
-#            urls.append(Submount('/%s' % comp.url_section,
-#                             [EndpointPrefix('%s/' % comp.url_section,
-#                                             comp.url_rules)]
-#                        ))
-#            urls.append(Subdomain(make_full_domain(config['routing.%s.subdomain' % comp.name]), [
             urls.append(Subdomain(config['routing.%s.subdomain' % comp.name], [
                 Submount(config.get('routing.%s.submount' % comp.name, '/'), [
                     EndpointPrefix('%s/' % comp.name, comp.url_rules)
@@ -179,3 +185,82 @@ class ModelConverter(BaseConverter):
 
     def to_url(self, value):
         return getattr(self.model, column)
+
+
+class StaticDataProxy(object):
+    def __init__(self, basedir, index=True):
+        """
+        Provides access to files on the local filesystem. It can be used like
+        a usual view (e.g. supplied as endpoint for routing).
+
+        :param basedir: Location of the directory files shall be searched in.
+        :param index: Print a directory index when a directory is called.
+        """
+        if not os.path.isabs(basedir):
+            import inyoka
+            basedir = os.path.join(inyoka.__path__[0], basedir)
+        if not basedir.endswith('/'):
+            basedir += '/'
+        self.basedir = basedir
+        self.index = index
+
+    def __call__(self, request, path):
+        has_slash = path.endswith('/')
+
+        print `path`
+        path = [x for x in path.split('/') if x and x != '..']
+        full_path = os.path.join(self.basedir, *path)
+        print `full_path`
+
+        mimetype = mimetypes.guess_type(full_path)[0] or 'text/plain'
+
+        if has_slash and os.path.isfile(full_path):
+            raise NotFound()
+        if not has_slash and os.path.isdir(full_path):
+            return append_slash_redirect(request.environ)
+
+        try:
+            f = wrap_file(request.environ, open(full_path, 'rb'))
+        except IOError, e:
+            if e.errno == 2:
+                raise NotFound()
+            if e.errno == 13:
+                raise Forbidden()
+            if e.errno == 21:
+                if not self.index:
+                    raise Forbidden()
+                return Response('\n'.join(os.listdir(full_path)) + '\n',
+                                mimetype='text/plain')
+        headers = {
+            'Content-Length': os.path.getsize(full_path),
+        }
+        return Response(f, mimetype=mimetype, direct_passthrough=True)
+
+
+#TODO: this is just plain ugly, look at the definition below and think of
+#      href('static/file', path='style/main.css')
+#      - introduce a special handling in href? (but there might be other places
+#        where there are problems)
+#      - make StaticDataProxy behave like a rule/ruleset?
+#      - other ideas?
+
+class StaticController(IController):
+    name = 'static'
+
+    url_rules = [
+        Rule('/<path:path>') > 'file',
+        Rule('/', {'path': '/'}) > 'file',
+    ]
+
+    proxy = register('file')(StaticDataProxy(config['static_path']))
+
+
+class MediaController(IController):
+    name = 'media'
+
+    url_rules = [
+        Rule('/<path:path>') > 'file',
+        Rule('/', {'path': '/'}) > 'file',
+    ]
+
+    proxy = register('file')(StaticDataProxy(config['media_path']))

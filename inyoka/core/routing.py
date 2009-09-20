@@ -186,10 +186,8 @@ class StaticDataProxy(object):
     def __call__(self, request, path):
         has_slash = path.endswith('/')
 
-        print `path`
         path = [x for x in path.split('/') if x and x != '..']
         full_path = os.path.join(self.basedir, *path)
-        print `full_path`
 
         mimetype = mimetypes.guess_type(full_path)[0] or 'text/plain'
 

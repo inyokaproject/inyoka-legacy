@@ -13,13 +13,10 @@ from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
-from inyoka.core.api import IController, _local, _local_manager
-from inyoka.core.exceptions import HTTPException
-from inyoka.core.http import Request, Response
-from inyoka.core.database import db
-from inyoka.core.config import config
+from inyoka.core.api import IController, _local, _local_manager, Request, \
+    Response, db, config, logger
 from inyoka.core.routing import DateConverter
-from inyoka.utils.logger import logger
+from inyoka.core.exceptions import HTTPException
 
 
 class InyokaApplication(object):

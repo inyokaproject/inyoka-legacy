@@ -3,5 +3,6 @@
 ~$
 ^docs/_build
 \.orig$
-^\.inyoka\.ini$
+^inyoka\.ini$
+^db\.log$
 \.pida-metadata/

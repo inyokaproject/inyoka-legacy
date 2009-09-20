@@ -11,6 +11,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
+INYOKA_REVISION = 'unknown'
+
 
 class ComponentMeta(type):
     """Metaclass that keeps track of all derived component implementations."""
@@ -106,28 +108,27 @@ def setup_components(accepted_components):
         import_string(comp if comp[-1] != '*' else comp[:-2])
 
     instance_map = {}
-    for c, implementations in ComponentMeta._registry.items():
+    for comp, implementations in ComponentMeta._registry.items():
         # Only add those components to the implementation list,
         # which are activated
-        c._implementations = [imp for imp in implementations if
-                              component_is_activated(imp, accepted_components)]
-        for i in c._implementations:
-            if i not in instance_map: instance_map[i] = i()
+        comp._implementations = [imp for imp in implementations if
+                                 component_is_activated(imp, accepted_components)]
+        for i in comp._implementations:
+            if i not in instance_map:
+                instance_map[i] = i()
 
-        c._instances = [instance_map[i] for i in c._implementations]
-
-    del instance_map
+        comp._instances = [instance_map[i] for i in comp._implementations]
 
 
 def _bootstrap():
     """Get the inyoka version and store it."""
     global INYOKA_REVISION
-    import os, inyoka
+    import os
     from subprocess import Popen, PIPE
 
     # get inyoka revision
     hg = Popen(['hg', 'tip'], stdout=PIPE, stderr=PIPE, stdin=PIPE,
-               cwd=os.path.dirname(inyoka.__file__))
+               cwd=os.path.dirname(__file__))
     hg.stdin.close()
     hg.stderr.close()
     rv = hg.stdout.read()

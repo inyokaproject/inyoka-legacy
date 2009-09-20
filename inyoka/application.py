@@ -14,14 +14,17 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
 from inyoka.core.api import IController, _local, _local_manager
-from inyoka.core.exceptions import HTTPException, NotFound, Forbidden
+from inyoka.core.exceptions import HTTPException
 from inyoka.core.http import Request, Response
-
+from inyoka.core.database import db
 #XXX
 from inyoka.core.routing import config, DateConverter
+from inyoka.utils.logger import logger
 
 
 class InyokaApplication(object):
+    """The WSGI application that binds everything."""
+
     def __init__(self):
         #TODO: utilize that!
         setup_components([
@@ -39,6 +42,10 @@ class InyokaApplication(object):
         self.bind()
 
     def dispatch_request(self, request):
+        """Dispatch a request.
+        This includes url matching and a proper exception handling
+        for HTTP or database errors.
+        """
         # normal request dispatching
         urls = self.url_map.bind_to_environ(request.environ,
             server_name=config['base_domain_name'])
@@ -50,12 +57,17 @@ class InyokaApplication(object):
         except HTTPException, e:
             response = e.get_response(request)
         except SQLAlchemyError, e:
-            #TODO: session rollback and logging!
-            pass
+            db.session.rollback()
+            logger.error(e)
 
         return response
 
     def dispatch(self, environ, start_response):
+        """The overall dispatch process.
+        This binds the current request to the thread locals,
+        binds the current application instance too and dispatches
+        to a proper view.
+        """
         # Create a new request object, register it with the application
         # and all the other stuff on the current thread but initialize
         # it afterwards.  We do this so that the request object can query
@@ -80,14 +92,13 @@ class InyokaApplication(object):
         return response(environ, start_response)
 
     def bind(self):
-        """bind the application to a thread local"""
+        """Bind the application to a thread local"""
         _local.application = self
 
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""
-        #TODO: database session cleanup
         return ClosingIterator(self.dispatch(environ, start_response),
-                               [_local_manager.cleanup])
+                               [_local_manager.cleanup, db.session.close])
 
 
 application = InyokaApplication()

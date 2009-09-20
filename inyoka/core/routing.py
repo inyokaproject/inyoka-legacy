@@ -8,7 +8,6 @@
 """
 import os
 import re
-import string
 import mimetypes
 import sre_constants
 from datetime import datetime
@@ -21,7 +20,6 @@ from inyoka import Component
 from inyoka.core.api import get_application
 from inyoka.core.http import Response
 from inyoka.utils.datastructures import missing
-from inyoka.utils.urls import make_full_domain
 
 #XXX: temporary to check if the routing stuff works until ente has finished
 #     working on config ;-)

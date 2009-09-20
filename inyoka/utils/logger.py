@@ -8,18 +8,12 @@
     :copyright: 2007-2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import re
 import sys
 import logging
-import traceback
 from os import path
-from hashlib import md5
-from logging import Handler, Formatter, CRITICAL, ERROR, WARNING, \
-     INFO, DEBUG
-from threading import Thread
+from logging import Formatter
 from inyoka import INYOKA_REVISION
 from inyoka.core.config import config
-from inyoka.utils.urls import url_encode
 from inyoka.utils.colors import blue, green, red, yellow, white
 
 

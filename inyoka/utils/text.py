@@ -2,20 +2,9 @@
 """
 """
 import re
-import string
 import unicodedata
-from copy import deepcopy
 from datetime import datetime
-from itertools import chain, izip
-from threading import Lock
-from urlparse import urlparse
 from itertools import starmap
-try:
-    from hashlib import sha1
-except ImportError:
-    from sha import new as sha1
-
-from werkzeug import html, escape, MultiDict
 from inyoka.core.i18n import rebase_to_timezone
 
 

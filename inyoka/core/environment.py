@@ -14,10 +14,6 @@
 from os.path import realpath, dirname, join, pardir, isdir
 
 
-# the platform name
-from os import name as PLATFORM
-
-
 # the path to the contents of the inyoka package
 PACKAGE_CONTENTS = realpath(join(dirname(__file__), pardir))
 

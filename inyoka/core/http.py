@@ -10,9 +10,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
-    CommonRequestDescriptorsMixin, CommonResponseDescriptorsMixin, \
-    ResponseStreamMixin, redirect as _redirect, get_current_url
-from werkzeug.exceptions import NotFound
+    redirect as _redirect, get_current_url
 from inyoka.core.api import get_application, get_request
 
 

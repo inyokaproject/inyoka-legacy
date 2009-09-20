@@ -1,4 +1,4 @@
-from werkzeug.routing import Rule, EndpointPrefix
+from werkzeug.routing import Rule
 
 from inyoka.core.api import IController, register
 from inyoka.core.http import Response

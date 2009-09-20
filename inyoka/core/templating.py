@@ -14,7 +14,6 @@ from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
 from inyoka.core import api
 from inyoka.utils.urls import url_encode, url_quote
-from werkzeug import UserAgent
 
 
 def populate_context_defaults(context):

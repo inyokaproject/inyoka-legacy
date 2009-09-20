@@ -71,21 +71,15 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
-import os
 import sys
-import time
-from os import path
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
 from sqlalchemy.orm.interfaces import AttributeExtension
-from sqlalchemy.pool import Pool
-from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.engine.url import make_url, URL
-from sqlalchemy.util import to_list, get_cls_kwargs
-from inyoka.core.api import get_application, href
+from sqlalchemy.util import to_list
 from inyoka.core.config import config
 
 #TODO: write more documentation, usage examples and such stuff!
@@ -117,7 +111,7 @@ def get_engine():
                     'connect_args': {'timeout': 30}
                 })
             uri = SafeURI(info)
-            _engine = creat_engine(uri, **options)
+            _engine = create_engine(uri, **options)
         return _engine
 
 

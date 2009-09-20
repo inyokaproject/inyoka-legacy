@@ -3,6 +3,7 @@
 """
 import os
 import pytz
+from gettext import NullTranslations
 from babel import Locale, dates, UnknownLocaleError
 from babel.support import Translations
 
@@ -15,7 +16,9 @@ DATE_FORMATS = ['%m/%d/%Y', '%d/%m/%Y', '%Y%m%d', '%d. %m. %Y',
 TIME_FORMATS = ['%H:%M', '%H:%M:%S', '%I:%M %p', '%I:%M:%S %p']
 DEFAULT_TIMEZONE = pytz.timezone('UTC')
 
-_translations = {}
+_translations = {
+    None: NullTranslations()
+}
 _current_locale = None
 
 
@@ -42,7 +45,7 @@ def get_timezone(name=None):
 
 def get_locale():
     """Return the current locale."""
-    return _current_locale or Locale('en')
+    return _current_locale or None
 
 
 def gettext(string):
@@ -54,12 +57,11 @@ def ngettext(singular, plural, n):
     """Translate the possible pluralized string to the language of the
     application.
     """
-    try:
-        return _translations[get_locale()].ungettext(singular, plural, n)
-    except KeyError:
+    if get_locale() is None:
         if n == 1:
             return singular
         return plural
+    return _translations[get_locale()].ungettext(singular, plural, n)
 
 
 def _date_format(formatter, obj, format):

@@ -13,6 +13,7 @@ import string
 from datetime import date, datetime, timedelta
 from random import sample
 from inyoka.core.routing import href
+from inyoka.core.database import db
 
 
 CONFIRM_ACTIONS = {}

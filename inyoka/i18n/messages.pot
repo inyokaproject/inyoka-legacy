@@ -1,0 +1,229 @@
+# Translations template for PROJECT.
+# Copyright (C) 2009 The Inyoka Team
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2009-09-20 12:42+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.4\n"
+
+#: inyoka/core/config.py:23
+msgid "Enable debug mode"
+msgstr ""
+
+#: inyoka/core/config.py:25
+msgid "The path to the media folder"
+msgstr ""
+
+#: inyoka/core/config.py:27
+msgid ""
+"The database URI.  For more information about database settings consult the "
+"Inyoka docs."
+msgstr ""
+
+#: inyoka/core/config.py:30
+msgid ""
+"If enabled the database will collect the SQL statements and add them to the "
+"bottom of the page for easier debugging.  Beside that the sqlalchemy log is "
+"written to a `db.log` file."
+msgstr ""
+
+#: inyoka/core/config.py:35
+msgid "Subdomain used for the portal application"
+msgstr ""
+
+#: inyoka/core/config.py:37
+msgid "Submount used for the portal application"
+msgstr ""
+
+#: inyoka/core/config.py:39
+msgid "Subdomain used for the calendar application"
+msgstr ""
+
+#: inyoka/core/config.py:41
+msgid "Submount used for the calendar application"
+msgstr ""
+
+#: inyoka/core/config.py:43
+msgid "Subdomain used for the news application"
+msgstr ""
+
+#: inyoka/core/config.py:45
+msgid "Submount used for the news application"
+msgstr ""
+
+#: inyoka/core/config.py:47
+msgid "Base domain name"
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:675
+msgid "No choices."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:775
+msgid "Submit"
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:919
+msgid "This field is required."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1087
+msgid "Invalid security token submitted."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1140 inyoka/core/forms/__init__.py:1526
+#, python-format
+msgid "Please provide at least %d item."
+msgid_plural "Please provide at least %d items."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inyoka/core/forms/__init__.py:1147 inyoka/core/forms/__init__.py:1533
+#, python-format
+msgid "Please provide no more than %d item."
+msgid_plural "Please provide no more than %d items."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inyoka/core/forms/__init__.py:1262
+#, python-format
+msgid "Please enter at least %d character."
+msgid_plural "Please enter at least %d characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inyoka/core/forms/__init__.py:1269
+#, python-format
+msgid "Please enter no more than %d character."
+msgid_plural "Please enter no more than %d characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inyoka/core/forms/__init__.py:1293
+msgid "Please enter a valid date."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1329
+#, python-format
+msgid "“%(value)s” does not exist"
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1389
+msgid "Invalid value."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1390
+msgid "Key does not exist."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1460
+msgid "Please enter a valid choice."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1520
+#, python-format
+msgid "“%s” is not a valid choice"
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1565
+msgid "Please enter a whole number."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1591
+#, python-format
+msgid "Ensure this value is greater than or equal to %s."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1597
+#, python-format
+msgid "Ensure this value is less than or equal to %s."
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1619
+msgid "True"
+msgstr ""
+
+#: inyoka/core/forms/__init__.py:1620
+msgid "False"
+msgstr ""
+
+#: inyoka/core/forms/validators.py:78
+msgid "You have to enter a valid e-mail address."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:99
+msgid "You have to enter a valid URL."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:117
+msgid "The slug is too long"
+msgstr ""
+
+#: inyoka/core/forms/validators.py:119
+msgid "The slug must not start with a slash"
+msgstr ""
+
+#: inyoka/core/forms/validators.py:137 inyoka/core/forms/validators.py:140
+msgid "You have to enter a valid net address."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:142
+msgid "The port has to be numeric"
+msgstr ""
+
+#: inyoka/core/forms/validators.py:150
+msgid "Invalid character, < or > are not allowed."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:152
+msgid "URL prefix must not be a sole slash."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:155
+msgid "URL prefix must start with a slash."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:157
+msgid "URL prefix must not end with a slash."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:179
+msgid "Invalid character, <, > or \\ are not allowed."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:183
+msgid "URL format cannot start with a slash."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:185
+msgid "URL cannot contain //."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:187
+msgid "URL cannot contain a reference toparent path."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:191
+#, python-format
+msgid "Unknown format code %s."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:201
+msgid "The text must not be empty."
+msgstr ""
+
+#: inyoka/core/i18n/__init__.py:212
+msgid "now"
+msgstr ""
+

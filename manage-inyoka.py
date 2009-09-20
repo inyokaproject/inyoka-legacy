@@ -42,6 +42,30 @@ def action_dbshell():
     p = Popen(cmd, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
     return p.wait()
 
+def action_runtests(cleanup=True, debug=True):
+    """Run the unit and doctests"""
+    import sys
+    from os import path
+    from werkzeug import import_string
+    from inyoka.core.api import config, environ
+
+    tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
+    #TODO: support other databases for unittests
+    sqlite_path = path.join(tests_path, 'test_database.db')
+    dburi = 'sqlite:///%s' % sqlite_path
+
+    trans = config.edit()
+    trans['database_debug'] = debug
+    trans['debug'] = debug
+    config.touch()
+
+    # remove unused options from sys.argv
+    sys.argv = sys.argv[:1]
+
+    from inyoka.core.test import run_suite
+    run_suite(tests_path, cleanup)
+
+
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
 action_runserver = script.make_runserver(make_app, use_reloader=True)
 

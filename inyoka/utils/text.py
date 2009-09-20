@@ -19,12 +19,13 @@ def gen_slug(text, delim=u'-', ascii=False):
     configuration.
     """
     if ascii:
-        return get_ascii_slug(text, delim)
+        return gen_ascii_slug(text, delim)
     return gen_unicode_slug(text, delim)
 
 
 def gen_ascii_slug(text, delim=u'-'):
-    """Generates an ASCII-only slug."""
+    """Generates an ASCII-only slug.
+    """
     result = []
     for word in _punctuation_re.split(text.lower()):
         #TODO: transliterate `word` see :func:`transliterate` comment
@@ -35,19 +36,20 @@ def gen_ascii_slug(text, delim=u'-'):
 
 
 def gen_unicode_slug(text, delim=u'-'):
-    """Generate an unicode slug."""
+    """Generate an unicode slug.
+    """
     return unicode(delim.join(_punctuation_re.split(text.lower())))
 
 
-def gen_timestamped_slug(slug, content_type, pub_date=None, prefix=False,
+def gen_timestamped_slug(slug, content_type, pub_date=None, prefix='',
                          fixed=False, url_format=None):
     """Generate a timestamped slug, suitable for use as final URL path."""
     if pub_date is None:
         pub_date = datetime.utcnow()
     pub_date = rebase_to_timezone(pub_date)
 
-    prefix = prefix.strip(u'/')
     if prefix:
+        prefix = prefix.strip(u'/')
         prefix += u'/'
 
     if url_format is None:

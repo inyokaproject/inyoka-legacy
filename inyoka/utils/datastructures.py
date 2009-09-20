@@ -101,6 +101,22 @@ class OrderedDict(dict):
     >>> d
     OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', [])])
 
+    And more tests:
+
+    >>> del d['a']
+    >>> d.get('a') is None
+    True
+
+    >>> OrderedDict.fromkeys([1,2,3], 'test')
+    OrderedDict([(1, 'test'), (2, 'test'), (3, 'test')])
+
+    >>> d.keys()
+    ['c', 'foo', 'spam']
+
+    >>> d.sort(key=lambda x: x[0].lower(), reverse=True)
+    >>> d
+    OrderedDict([('spam', []), ('foo', 'bar'), ('c', 'd')])
+
     For performance reasons the ordering is not taken into account when
     comparing two ordered dicts.
 

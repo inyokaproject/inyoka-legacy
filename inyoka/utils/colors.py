@@ -78,14 +78,23 @@ codes["fuscia"]     = codes["fuchsia"]
 codes["white"]      = codes["bold"]
 
 def nocolor():
-    "turn off colorization"
+    """turn off colorization
+    """
     for code in codes:
         codes[code] = ""
 
 def reset_color():
+    """
+    >>> reset_color()
+    '\\x1b[39;49;00m'
+    """
     return codes["reset"]
 
 def colorize(color_key, text):
+    """
+    >>> colorize("fuscia", "test")
+    '\\x1b[35;01mtest\\x1b[39;49;00m'
+    """
     return codes[color_key] + text + codes["reset"]
 
 functions_colors = [
@@ -98,6 +107,9 @@ functions_colors = [
 def create_color_func(color_key):
     """
     Return a function that formats its argument in the given color.
+
+    >>> create_color_func("fuscia")("test")
+    '\\x1b[35;01mtest\\x1b[39;49;00m'
     """
     def derived_func(text):
         return colorize(color_key, text)

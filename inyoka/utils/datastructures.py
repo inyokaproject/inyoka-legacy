@@ -1,4 +1,6 @@
 #-*- coding: utf-8 -*-
+from copy import deepcopy
+from itertools import izip, imap
 
 
 class _Missing(object):

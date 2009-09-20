@@ -26,10 +26,10 @@ _current_application = LocalProxy(_local, 'application')
 # some special api defintions
 
 def get_application():
-    return getattr(_local, 'application')
+    return getattr(_local, 'application', None)
 
 def get_request():
-    return getattr(_local, 'request')
+    return getattr(_local, 'request', None)
 
 
 # Imports for easy API access

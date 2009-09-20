@@ -3,6 +3,8 @@
 """
 import os
 import pytz
+from time import strptime
+from datetime import datetime
 from gettext import NullTranslations
 from babel import Locale, dates, UnknownLocaleError
 from babel.support import Translations
@@ -14,7 +16,7 @@ __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 DATE_FORMATS = ['%m/%d/%Y', '%d/%m/%Y', '%Y%m%d', '%d. %m. %Y',
                 '%m/%d/%y', '%d/%m/%y', '%d%m%y', '%m%d%y', '%y%m%d']
 TIME_FORMATS = ['%H:%M', '%H:%M:%S', '%I:%M %p', '%I:%M:%S %p']
-DEFAULT_TIMEZONE = pytz.timezone('UTC')
+UTC = pytz.timezone('UTC')
 
 _translations = {
     None: NullTranslations()
@@ -39,7 +41,7 @@ def get_timezone(name=None):
     of the application based on the configuration.
     """
     if name is None:
-        return DEFAULT_TIMEZONE
+        return UTC
     return timezone(name)
 
 

@@ -13,19 +13,24 @@ from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
-from inyoka.core.api import IController, _local, _local_manager
-from inyoka.core.exceptions import HTTPException
-from inyoka.core.http import Request, Response
-from inyoka.core.database import db
-from inyoka.core.config import config
+from inyoka.core.api import IController, _local, _local_manager, Request, \
+    Response, db, config, logger
 from inyoka.core.routing import DateConverter
-from inyoka.utils.logger import logger
+from inyoka.core.exceptions import HTTPException
 
 
 class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
     def __init__(self):
+        #TODO: this should go into some kind of setup process
+        from inyoka.core.config import config
+        if not config.exists:
+            # write the inyoka.ini file
+            trans = config.edit()
+            trans.commit(force=True)
+            config.touch()
+
         #TODO: utilize that!
         setup_components([
 #            'inyoka.testing.api.*',

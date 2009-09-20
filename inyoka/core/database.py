@@ -221,7 +221,7 @@ def mapper(model, table, **options):
 
 
 #: initiate the database
-metadata = MetaData()
+metadata = MetaData(get_engine())
 session = orm.scoped_session(lambda: orm.create_session(
     get_engine(), autoflush=True, autocommit=False
 ))

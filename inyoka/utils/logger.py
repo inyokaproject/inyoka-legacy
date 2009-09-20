@@ -13,6 +13,7 @@ import logging
 from os import path
 from logging import Formatter
 from inyoka import INYOKA_REVISION
+from inyoka.core import environ
 from inyoka.core.config import config
 from inyoka.utils.colors import blue, green, red, yellow, white
 
@@ -55,19 +56,16 @@ class SimpleFormatter(Formatter):
         return log_format % dct
 
 
+
 logger = logging.getLogger('inyoka')
-
-
+logging_handler = logging.StreamHandler(sys.stdout)
+logging_handler.setFormatter(SimpleFormatter())
+logger.addHandler(logging_handler)
 if config['debug']:
-    # inyoka logger
-    logging_handler = logging.StreamHandler(sys.stdout)
-    logging_handler.setFormatter(SimpleFormatter())
-    logger.addHandler(logging_handler)
     logger.setLevel(logging.DEBUG)
-    # database logger
-    dblogger = logging.getLogger('sqlalchemy.engine')
-    dblogger.setLevel(logging.INFO)
-    _log_path = path.join(environ.PACKAGE_LOCATION, 'db.log')
-    dblogger.addHandler(logging.FileHandler(_log_path))
 
-#logger.debug('Logging Engine Initialized')
+# database logger
+dblogger = logging.getLogger('sqlalchemy.engine')
+dblogger.setLevel(logging.INFO)
+_log_path = path.join(environ.PACKAGE_LOCATION, 'db.log')
+dblogger.addHandler(logging.FileHandler(_log_path))

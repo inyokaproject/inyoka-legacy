@@ -5,7 +5,7 @@
 
     This module is a fork of the `zine.utils.debug` module for use in inyoka.
 
-    :copyright: (c) 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 import re

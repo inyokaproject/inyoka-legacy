@@ -16,7 +16,7 @@ from os import path
 from threading import Lock
 from inyoka.core.forms import TextField, BooleanField
 from inyoka.core.i18n import lazy_gettext
-from inyoka.core.environment import PACKAGE_LOCATION, MEDIA_DATA
+from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
 
 
 DEFAULTS = {
@@ -271,21 +271,22 @@ class ConfigTransaction(object):
         if key in self._converted_values:
             return self._converted_values[key]
         elif key in self._remove:
-            return self.cfg.config_vars[key][1]
+            return self.cfg.config_vars[key].value
         return self.cfg[key]
 
     def __setitem__(self, key, value):
         """Set the value for a key by a python value."""
         self._assert_uncommitted()
+
+        if value == self[key]:
+            return
         if key not in self.cfg.config_vars:
             raise KeyError(key)
         if isinstance(value, str):
             value = value.decode('utf-8')
-        if value == self.cfg.config_vars[key][1]:
-            self._remove.append(key)
-        else:
-            self._values[key] = unicode(value)
-            self._converted_values[key] = value
+        field = self.cfg.config_vars[key]
+        self._values[key] = field.to_primitive(value)
+        self._converted_values[key] = value
 
     def _assert_uncommitted(self):
         if self._committed:
@@ -312,13 +313,13 @@ class ConfigTransaction(object):
         for key, value in dict(*args, **kwargs).iteritems():
             self[key] = value
 
-    def commit(self):
+    def commit(self, force=False):
         """Commit the transactions. This first tries to save the changes to the
         configuration file and only updates the config in memory when that is
         successful.
         """
         self._assert_uncommitted()
-        if not self._values and not self._remove:
+        if not self._values and not self._remove and not force:
             self._committed = True
             return
         self.cfg._lock.acquire()

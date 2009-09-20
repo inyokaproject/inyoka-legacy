@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.core.environment
-    ~~~~~~~~~~~~~~~~~~~~~~~
+    inyoka.core.environ
+    ~~~~~~~~~~~~~~~~~~~
 
     This module can figure how Inyoka is installed and where it has to look
     for shared information.  Currently it knows about two modes: development
     environment and installation on a posix system.  OS X should be special
     cased later and Windows support is missing by now.
 
-    :copyright: (c) 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GPL, see LICENSE for more details.
 """
 from os.path import realpath, dirname, join, pardir, isdir

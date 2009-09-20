@@ -8,8 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import IController, Rule, register, href
-from inyoka.core.http import Response
+from inyoka.core.api import IController, Rule, register, href, Response
 
 
 class PortalController(IController):

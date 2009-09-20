@@ -331,8 +331,8 @@ class ConfigTransaction(object):
 
             sections = {}
             for key, value in all.iteritems():
-                if '/' in key:
-                    section, key = key.split('/', 1)
+                if '.' in key:
+                    section, key = key.split('.', 1)
                 else:
                     section = 'inyoka'
                 sections.setdefault(section, []).append((key, value))

@@ -26,6 +26,7 @@ class InyokaApplication(object):
         #TODO: utilize that!
         setup_components([
 #            'inyoka.testing.api.*',
+            'inyoka.core.routing.*',
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
@@ -44,14 +45,8 @@ class InyokaApplication(object):
         self.url_adapter = urls
 
         try:
-            try:
-                endpoint, args = urls.match(request.path)
-                response = IController.get_view(endpoint)(request, **args)
-            except NotFound, e:
-                response = e.get_response(request)
-            except Forbidden, e:
-                #TODO: handle forbidden...
-                pass
+            endpoint, args = urls.match(request.path)
+            response = IController.get_view(endpoint)(request, **args)
         except HTTPException, e:
             response = e.get_response(request)
         except SQLAlchemyError, e:

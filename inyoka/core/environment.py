@@ -8,22 +8,6 @@
     environment and installation on a posix system.  OS X should be special
     cased later and Windows support is missing by now.
 
-    File Locations
-    --------------
-
-    The files are located at different places depending on the environment.
-
-    development
-        in development mode all the files are relative to the zine
-        package::
-
-            zine/                           application code
-                plugins/                    builtin plugins
-                shared/                     core shared data
-                templates/                  core templates
-                i18n/                       translations
-
-
     :copyright: (c) 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GPL, see LICENSE for more details.
 """
@@ -37,7 +21,7 @@ from os import name as PLATFORM
 # the path to the contents of the inyoka package
 PACKAGE_CONTENTS = realpath(join(dirname(__file__), pardir))
 
-# the path to the folder where the "zine" package is stored in.
+# the path to the folder where the "inyoka" package is stored in.
 PACKAGE_LOCATION = realpath(join(PACKAGE_CONTENTS, pardir))
 
 # name of the domain for the builtin translations

@@ -6,7 +6,7 @@
 
     This script adds a new translation to Inyoka.
 
-    :copyright: (c) 2009 by the Zine Team, see AUTHORS for more details.
+    :copyright: (c) 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 from os import makedirs
@@ -18,7 +18,7 @@ from babel.messages import Catalog
 from babel.messages.pofile import read_po, write_po
 from babel.util import LOCALTZ
 
-zine = realpath(join(dirname(__file__), '..', 'inyoka'))
+inyoka = realpath(join(dirname(__file__), '..', 'inyoka'))
 
 def main():
     global parser
@@ -61,8 +61,8 @@ def write_catalog(catalog, folder):
 
 
 def create_application_lang(locale):
-    catalog = create_from_pot(locale, join(zine, 'i18n', 'messages.pot'))
-    write_catalog(catalog, join(zine, 'i18n'))
+    catalog = create_from_pot(locale, join(inyoka, 'i18n', 'messages.pot'))
+    write_catalog(catalog, join(inyoka, 'i18n'))
     print 'Created catalog for %s' % locale
 
 

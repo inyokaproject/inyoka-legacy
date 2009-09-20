@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-    zine.utils.forms
-    ~~~~~~~~~~~~~~~~
+    inyoka.core.forms
+    ~~~~~~~~~~~~~~~~~
 
     This module implements a sophisticated form validation and rendering
     system that is based on diva with concepts from django newforms and
     wtforms incorporated.
 
     It can validate nested structures and works in both ways.  It can also
-    handle intelligent backredirects (via :mod:`zine.utils.http`) and supports
+    handle intelligent backredirects (via :mod:`inyoka.core.http`) and supports
     basic CSRF protection.
 
     For usage informations see :class:`Form`
 
-    :copyright: (c) 2009 by the Zine Team, see AUTHORS for more details.
+    :copyright: (c) 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 from datetime import datetime

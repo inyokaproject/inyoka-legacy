@@ -49,6 +49,4 @@ executive power derives from a mandate
 from the masses, not from some farcical
 aquatic ceremony!\""""
 
-    print result
-    print wrap(msg,40)
     eq_(wrap(msg, 40), result)

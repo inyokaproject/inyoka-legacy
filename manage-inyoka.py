@@ -47,6 +47,10 @@ def action_runtests(cleanup=True, debug=True):
     import sys
     from os import path
     from werkzeug import import_string
+
+    # initialize the app
+    from inyoka.application import application
+
     from inyoka.core.api import config, environ
 
     tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')

@@ -83,15 +83,12 @@ def quote_value(value):
                          .replace('\t', '\\t') \
                          .replace('"', '\\"').encode('utf-8')
 
-
-def from_string(value, conv, default):
+def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
-    if conv is bool:
-        conv = lambda x: x == 'True'
     try:
-        return conv(value)
-    except (ValueError, TypeError), e:
-        return default
+        return field(value)
+    except ValidationError, e:
+        return field.get_default()
 
 
 def get_converter_name(conv):
@@ -153,11 +150,11 @@ class Configuration(object):
         try:
             return self._converted_values[key]
         except KeyError:
-            conv, default = self.config_vars[key]
+            field = self.config_vars[key]
         try:
-            value = from_string(self._values[key], conv, default)
+            value = from_string(self._values[key], field)
         except KeyError:
-            value = default
+            value = field.get_default()
         self._converted_values[key] = value
         return value
 
@@ -269,8 +266,8 @@ class ConfigTransaction(object):
     def set_from_string(self, key, value, override=False):
         """Set the value for a key from a string."""
         self._assert_uncommitted()
-        conv, default = self.cfg.config_vars[key]
-        new = from_string(value, conv, default)
+        field = self.cfg.config_vars[key]
+        new = from_string(value, field)
         old = self._converted_values.get(key, None) or self.cfg[key]
         if override or unicode(old) != unicode(new):
             self[key] = new

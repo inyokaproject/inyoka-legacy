@@ -38,6 +38,32 @@ _date_formatter_mapping = {
 
 
 class IController(Component):
+    """Interface for controllers.
+
+    A controller is some kind of wrapper around differend
+    methods handling various routing endpoints.
+
+    Example controller implementation::
+
+        class DummyController(IController):
+
+            url_rules = [
+                Rule('/', endpoint='index'),
+                Rule('/news/<int:id>', endpoint='news')
+            ]
+
+            @register('index')
+            def index_handler(self, request):
+                return Response('index view')
+
+            @register('news')
+            def news_handler(self, request, id=None):
+                return Response('News %s' % (id is None and 'index' or id))
+
+    All “handlers” are registered with :meth:`register` as endpoint handlers.
+
+    """
+
     # The name of the component. Used for `href`.
     name = ''
 
@@ -71,6 +97,7 @@ class IController(Component):
 
     @classmethod
     def get_view(cls, endpoint):
+        """Return the proper view for :attr:`endpoint`"""
         if not '/' in endpoint:
             # we assume that we have url_sections that point
             # to no name but to an empty string
@@ -80,6 +107,7 @@ class IController(Component):
 
     @staticmethod
     def register(endpoint_name):
+        """Register a method as an endpoint handler"""
         def wrap(func):
             func.endpoint = endpoint_name
             return func

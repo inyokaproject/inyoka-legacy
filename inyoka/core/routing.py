@@ -18,6 +18,7 @@ from werkzeug import append_slash_redirect, url_quote, wrap_file
 from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core.api import get_application
+from inyoka.core.environment import PACKAGE_CONTENTS
 from inyoka.core.http import Response
 
 #XXX: temporary to check if the routing stuff works until ente has finished
@@ -194,8 +195,7 @@ class StaticDataProxy(object):
         :param index: Print a directory index when a directory is called.
         """
         if not os.path.isabs(basedir):
-            import inyoka
-            basedir = os.path.join(inyoka.__path__[0], basedir)
+            basedir = os.path.join(PACKAGE_CONTENTS, basedir)
         if not basedir.endswith('/'):
             basedir += '/'
         self.basedir = basedir

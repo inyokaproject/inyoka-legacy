@@ -13,7 +13,7 @@
 
     For usage informations see :class:`Form`
 
-    :copyright: (c) 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 from datetime import datetime

@@ -26,6 +26,14 @@ class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
     def __init__(self):
+        #TODO: this should go into some kind of setup process
+        from inyoka.core.config import config
+        if not config.exists:
+            # write the inyoka.ini file
+            trans = config.edit()
+            trans.commit(force=True)
+            config.touch()
+
         #TODO: utilize that!
         setup_components([
 #            'inyoka.testing.api.*',

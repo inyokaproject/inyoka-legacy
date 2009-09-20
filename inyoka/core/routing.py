@@ -18,6 +18,8 @@ from werkzeug import append_slash_redirect, url_quote, wrap_file
 from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core.api import get_application
+from inyoka.core.config import config
+from inyoka.core.environment import PACKAGE_CONTENTS
 from inyoka.core.http import Response
 
 #XXX: temporary to check if the routing stuff works until ente has finished
@@ -35,22 +37,6 @@ _date_formatter_mapping = {
     'y': r'\d\d',
     'Y': r'\d{4}',
     '%': r'%',
-}
-
-config = {
-    'routing.portal.subdomain': '',
-    'routing.portal.submount': '/',
-    'routing.news.subdomain': 'news',
-    'routing.news.submount': '/',
-    'routing.calendar.subdomain': '',
-    'routing.calendar.submount': '/calendar',
-    'routing.static.subdomain': 'static',
-    'routing.static.submount': '/',
-    'routing.media.subdomain': 'media',
-    'routing.media.submount': '/',
-    'base_domain_name': 'inyoka.local:5000',
-    'static_path': 'static',
-    'media_path': 'media',
 }
 
 
@@ -77,7 +63,7 @@ class IController(Component):
                     url_map[endpoint] = method
 
             urls.append(Subdomain(config['routing.%s.subdomain' % comp.name], [
-                Submount(config.get('routing.%s.submount' % comp.name, '/'), [
+                Submount(config['routing.%s.submount' % comp.name], [
                     EndpointPrefix('%s/' % comp.name, comp.url_rules)
                 ])
             ]))
@@ -194,8 +180,7 @@ class StaticDataProxy(object):
         :param index: Print a directory index when a directory is called.
         """
         if not os.path.isabs(basedir):
-            import inyoka
-            basedir = os.path.join(inyoka.__path__[0], basedir)
+            basedir = os.path.join(PACKAGE_CONTENTS, basedir)
         if not basedir.endswith('/'):
             basedir += '/'
         self.basedir = basedir

@@ -13,7 +13,7 @@ from werkzeug import url_encode, url_decode, url_quote, url_quote_plus, \
 
 
 def make_full_domain(subdomain=''):
-    from inyoka.core.routing import config #XXX
+    from inyoka.core.config import config
     if not subdomain:
         return config['base_domain_name']
     return '%s.%s' % (subdomain, config['base_domain_name'])

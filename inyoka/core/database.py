@@ -95,7 +95,7 @@ def get_engine():
     global _engine
     with _engine_lock:
         if _engine is None:
-            info = make_url(config['database_uri'])
+            info = make_url(config['database_url'])
             # convert_unicode: Let SQLAlchemy convert all values to unicode
             #                  before we get them
             # echo:            Set the database debug level
@@ -110,8 +110,8 @@ def get_engine():
                 options.update({
                     'connect_args': {'timeout': 30}
                 })
-            uri = SafeURI(info)
-            _engine = create_engine(uri, **options)
+            url = SafeURL(info)
+            _engine = create_engine(url, **options)
         return _engine
 
 

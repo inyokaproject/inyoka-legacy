@@ -24,8 +24,9 @@ DEFAULTS = {
         u'Enable debug mode')),
     'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
         u'The path to the media folder')),
-    'database_uri':             TextField(default=u'', help_text=lazy_gettext(
-        u'The database URI.  For more information about database settings '
+    'database_url':             TextField(default=u'sqlite://',
+                                          help_text=lazy_gettext(
+        u'The database URL.  For more information about database settings '
         u'consult the Inyoka docs.')),
     'database_debug':           BooleanField(default=False, help_text=lazy_gettext(
         u'If enabled the database will collect the SQL statements and add them '

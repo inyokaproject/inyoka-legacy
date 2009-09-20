@@ -1,6 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+    inyoka.core.auth
+    ~~~~~~~~~~~~~~~~
+
+    Inyoka authentication framework.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GPL, see LICENSE for more details.
+"""
 from inyoka import Component
 
+
 class IPermissionChecker(Component):
+
     @classmethod
     def has_perm(cls, user, perm):
         has_permission = False
@@ -19,11 +31,13 @@ class IPermissionChecker(Component):
 
         return has_permission
 
+
 class User(object):
     def __init__(self, id, username, display_name):
         self.id = id
         self.username = username
         self.display_name = display_name
+
 
 class AuthSystemBase(object):
 

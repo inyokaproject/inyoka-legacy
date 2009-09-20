@@ -18,7 +18,7 @@ for model in models:
             mappers.append(class_mapper(cls))
         except:
             pass
-print mappers
+
 # pass them to the function and set some formatting options
 graph = create_uml_graph(mappers,
     show_operations=False, # not necessary in this case

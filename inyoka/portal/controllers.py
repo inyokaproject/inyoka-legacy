@@ -46,4 +46,3 @@ class CalendarController(IController):
     @register('entry')
     def entry(self, request, date, slug):
         return Response('this is calendar entry %r from %r' % (slug, date))
-

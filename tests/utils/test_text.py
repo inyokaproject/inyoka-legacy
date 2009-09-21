@@ -15,6 +15,7 @@ def test_slugs():
     # shouldn't non ascii get split out?
     eq_(gen_ascii_slug(text + ' at least I did'), u'i-do-have-unicode-charz:-at-least-i-did')
 
+
 def test_timestamped_slugs():
     text = u'my new slug'
     pub_date = datetime.datetime(2009, 10, 12, 8, 3)
@@ -23,6 +24,7 @@ def test_timestamped_slugs():
     eq_(gen_timestamped_slug(text, 'entry', pub_date, url_format='%fail%'), '%fail%')
 
     eq_(gen_timestamped_slug(text, 'post', pub_date), u'my new slug')
+
 
 def test_wrap():
     msg = """Arthur:  "The Lady of the Lake, her arm clad in the purest \

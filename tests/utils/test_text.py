@@ -12,7 +12,6 @@ def test_slugs():
     eq_(gen_slug(text, ascii=True), gen_ascii_slug(text))
 
     eq_(gen_unicode_slug(text), u'i-do-have-unicode-charz:-\xf6\xe4\xfc')
-    # shouldn't non ascii get split out?
     eq_(gen_ascii_slug(text + ' at least I did'), u'i-do-have-unicode-charz:-at-least-i-did')
 
 

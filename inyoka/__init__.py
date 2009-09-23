@@ -115,6 +115,9 @@ def setup_components(accepted_components):
                                  component_is_activated(imp, accepted_components)]
         for i in comp._implementations:
             if i not in instance_map:
+                #TODO: pass something like a context object so that
+                #      components don't have to query the thread-local
+                #      too much? --entequak
                 instance_map[i] = i()
 
         comp._instances = [instance_map[i] for i in comp._implementations]

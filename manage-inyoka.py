@@ -7,6 +7,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import sys
 from werkzeug import script
 
 def make_app():
@@ -73,5 +74,18 @@ def action_runtests(cleanup=True, debug=True):
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
 action_runserver = script.make_runserver(make_app, use_reloader=True)
 
+def print_version():
+    from inyoka import INYOKA_REVISION
+    print 'Inyoka revision %s on Python %s' % \
+          (INYOKA_REVISION, sys.version.replace('\n', 'compiled with '))
+
+
+def main():
+    args = sys.argv[1:]
+    if '--version' in args or '-v' in args:
+        return print_version()
+    script.run(args)
+
+
 if __name__ == '__main__':
-    script.run()
+    main()

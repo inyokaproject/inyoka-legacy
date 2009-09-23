@@ -84,7 +84,7 @@ def main():
     args = sys.argv[1:]
     if '--version' in args or '-v' in args:
         return print_version()
-    script.run(args)
+    script.run(globals(), args=args)
 
 
 if __name__ == '__main__':

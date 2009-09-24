@@ -101,6 +101,10 @@ def setup_components(accepted_components):
     """Set up the :cls:`Component`'s implementation and instance lists.
     Should get called early during application setup, cause otherwise the
     components won't return any implementations.
+
+    :param accepted_components: Modules to import to setupt the components.
+    :return: An instance map containing all registered and activated components
+    :return type: dict
     """
     from werkzeug.utils import import_string
     # Import the components to setup the metaclass magic.
@@ -121,6 +125,7 @@ def setup_components(accepted_components):
                 instance_map[i] = i()
 
         comp._instances = [instance_map[i] for i in comp._implementations]
+    return instance_map
 
 
 def _bootstrap():

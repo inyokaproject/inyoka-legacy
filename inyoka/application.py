@@ -15,8 +15,9 @@ from sqlalchemy.exc import SQLAlchemyError
 from inyoka import setup_components
 from inyoka.core.api import IController, _local, _local_manager, Request, \
     Response, db, config, logger
-from inyoka.core.routing import DateConverter
 from inyoka.core.exceptions import HTTPException
+from inyoka.core.middlewares import IMiddleware
+from inyoka.core.routing import DateConverter
 
 
 class InyokaApplication(object):
@@ -38,6 +39,7 @@ class InyokaApplication(object):
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
+            'inyoka.core.middlewares.services.*',
         ])
         self.url_map = Map(IController.get_urlmap(),
             converters={
@@ -47,23 +49,38 @@ class InyokaApplication(object):
         self.bind()
 
     def dispatch_request(self, request):
-        """Dispatch a request.
-        This includes url matching and a proper exception handling
-        for HTTP or database errors.
         """
-        # normal request dispatching
-        urls = self.url_map.bind_to_environ(request.environ,
-            server_name=config['base_domain_name'])
-        self.url_adapter = urls
+        Dispatch a request.
+        This includes url matching, middleware handling and a proper exception
+        handling for HTTP or database errors.
+        """
 
-        try:
-            endpoint, args = urls.match(request.path)
-            response = IController.get_view(endpoint)(request, **args)
-        except HTTPException, e:
-            response = e.get_response(request)
-        except SQLAlchemyError, e:
-            db.session.rollback()
-            logger.error(e)
+        response = None
+
+        # middlewares (request part)
+        for middleware in reversed(IMiddleware.middlewares()):
+            response = middleware.process_request(request)
+            if response is not None:
+                break
+
+        if response is None:
+            # normal request dispatching
+            urls = self.url_map.bind_to_environ(request.environ,
+                server_name=config['base_domain_name'])
+            self.url_adapter = urls
+
+            try:
+                endpoint, args = urls.match(request.path)
+                response = IController.get_view(endpoint)(request, **args)
+            except HTTPException, e:
+                response = e.get_response(request)
+            except SQLAlchemyError, e:
+                db.session.rollback()
+                logger.error(e)
+
+        # middleware handling (response part)
+        for middleware in IMiddleware.middlewares():
+            response = middleware.process_response(request, response)
 
         return response
 

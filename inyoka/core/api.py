@@ -34,8 +34,9 @@ def get_request():
 
 # Imports for easy API access
 from inyoka.core import environ
-from inyoka.core.http import Request, Response
 from inyoka.core.config import config
-from inyoka.core.routing import IController, register, Rule, href
 from inyoka.core.database import db
+from inyoka.core.http import Request, Response
+from inyoka.core.routing import IController, register, register_service, \
+    Rule, href
 from inyoka.utils.logger import logger

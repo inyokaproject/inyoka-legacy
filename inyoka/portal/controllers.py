@@ -8,7 +8,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import IController, Rule, register, href, Response
+from inyoka.core.api import IController, Rule, register, register_service, \
+    href, Response
 
 
 class PortalController(IController):
@@ -29,6 +30,10 @@ class PortalController(IController):
     @register('user_profile')
     def user_profile(self, request, username):
         return Response('this is user %s' % username)
+
+    @register_service('userlist')
+    def userlist(self, request):
+        return ['ich', 'du', u'Müllers Kuh']
 
 
 class CalendarController(IController):

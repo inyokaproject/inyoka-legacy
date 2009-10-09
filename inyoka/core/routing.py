@@ -96,6 +96,21 @@ class IController(Component):
         return urls
 
     @classmethod
+    def get_servicemap(cls):
+        if hasattr(cls, '_services'):
+            return cls._services
+
+        cls._services = {}
+        for comp in cls.get_components():
+            for method in dir(comp):
+                method = getattr(comp, method)
+                if getattr(method, 'service_name', None) is not None:
+                    cls._services['%s.%s' % (comp.name, method.service_name)] \
+                        = method
+        return cls._services
+
+
+    @classmethod
     def get_view(cls, endpoint):
         """Return the proper view for :attr:`endpoint`"""
         if not '/' in endpoint:
@@ -113,7 +128,16 @@ class IController(Component):
             return func
         return wrap
 
+    @staticmethod
+    def register_service(name):
+        """Register a method as a service handler"""
+        def wrap(func):
+            func.service_name = name
+            return func
+        return wrap
+
 register = IController.register
+register_service = IController.register_service
 
 
 def href(endpoint, **values):

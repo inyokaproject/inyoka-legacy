@@ -12,7 +12,7 @@ class IMiddleware(Component):
     def process_request(self, request):
         pass
 
-    def process_response(self, request, reponse):
+    def process_response(self, request, response):
         return response
 
     _middlewares = []
@@ -21,3 +21,4 @@ class IMiddleware(Component):
         if not cls._middlewares:
             _middlewares = sorted(cls.get_components(), key=attrgetter('priority'))
         return _middlewares
+

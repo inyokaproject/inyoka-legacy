@@ -126,4 +126,3 @@ def call_confirm(key):
     db.session.delete(c)
     db.session.commit()
     return ret
-

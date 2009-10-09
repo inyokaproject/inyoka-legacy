@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+    inyoka.utils.text
+    ~~~~~~~~~~~~~~~~~
+
+    Utilities for text processing
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
 """
 import re
 import unicodedata
@@ -29,7 +36,7 @@ def gen_ascii_slug(text, delim=u'-'):
     result = []
     for word in _punctuation_re.split(text.lower()):
         #TODO: transliterate `word` see :func:`transliterate` comment
-        word = _punctuation_re.sub(u'', word)
+        word = _punctuation_re.sub(u'', word).encode('ascii', 'ignore')
         if word:
             result.append(word)
     return unicode(delim.join(result))

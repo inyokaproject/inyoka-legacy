@@ -58,7 +58,7 @@ class InyokaApplication(object):
         response = None
 
         # middlewares (request part)
-        for middleware in reversed(IMiddleware.middlewares()):
+        for middleware in IMiddleware.middlewares():
             response = middleware.process_request(request)
             if response is not None:
                 break
@@ -79,7 +79,7 @@ class InyokaApplication(object):
                 logger.error(e)
 
         # middleware handling (response part)
-        for middleware in IMiddleware.middlewares():
+        for middleware in reversed(IMiddleware.middlewares()):
             response = middleware.process_response(request, response)
 
         return response

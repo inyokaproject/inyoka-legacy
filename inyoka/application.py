@@ -39,7 +39,6 @@ class InyokaApplication(object):
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
-            'inyoka.core.middlewares.services.*',
         ])
         self.url_map = Map(IController.get_urlmap(),
             converters={

@@ -19,6 +19,6 @@ class IMiddleware(Component):
     @classmethod
     def middlewares(cls):
         if not cls._middlewares:
-            _middlewares = sorted(cls.get_components(), key=attrgetter('priority'))
+            _middlewares = sorted(cls.get_components(), key=lambda x: -x.priority)
         return _middlewares
 

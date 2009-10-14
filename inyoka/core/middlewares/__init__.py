@@ -1,5 +1,3 @@
-from operator import attrgetter
-
 from inyoka import Component
 
 class IMiddleware(Component):

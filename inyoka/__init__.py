@@ -93,8 +93,8 @@ def component_is_activated(imp, accepted_components):
     activated or not.
     """
     return True # Allow every implementation for now
-    return ("%s.%s" % (imp.__module__, imp.__name__) in accepted_components or
-            "%s.*" % imp.__module__ in accepted_components)
+#    return ("%s.%s" % (imp.__module__, imp.__name__) in accepted_components or
+#            "%s.*" % imp.__module__ in accepted_components)
 
 
 def setup_components(accepted_components):

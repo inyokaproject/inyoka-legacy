@@ -117,6 +117,15 @@ class OrderedDict(dict):
     >>> d
     OrderedDict([('spam', []), ('foo', 'bar'), ('c', 'd')])
 
+    >>> d.pop('spam')
+    []
+    >>> d
+    OrderedDict([('spam', None), ('foo', 'bar'), ('c', 'd')])
+
+    >>> d.clear()
+    >>> d
+    OrderedDict([])
+
     For performance reasons the ordering is not taken into account when
     comparing two ordered dicts.
 

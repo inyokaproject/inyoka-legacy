@@ -15,21 +15,24 @@ from random import sample
 from inyoka.core.database import db
 from inyoka.core.routing import href
 
+#XXX: This module is yet unused and not tested!
+#     It's not recommend to create a model in some `util` module
+#     so there must be another way to do so…
 
 CONFIRM_ACTIONS = {}
 
-confirm_table = db.Table('core_confirm', db.metadata,
-    db.Column('id', db.Integer, primary_key=True),
-    db.Column('key', db.String(40), unique=True),
-    db.Column('action', db.String(40)),
-    db.Column('data', db.PickleType),
-    db.Column('expires', db.Date),
-)
-
 
 class Confirm(db.Model):
-    key_length = 40
-    key_chars = string.ascii_letters + string.digits
+    __tablename__ = 'core_confirm'
+
+    _key_length = 40
+    _key_chars = string.ascii_letters + string.digits
+
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(40), unique=True)
+    action = db.Column(db.String(40))
+    data = db.Column(db.PickleType)
+    expires = db.Column(db.Date)
 
     def __init__(self, action, data, expires):
         self.key = Confirm._make_key()

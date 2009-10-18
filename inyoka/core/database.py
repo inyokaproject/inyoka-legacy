@@ -77,12 +77,12 @@ from threading import Lock
 from contextlib import contextmanager
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
-from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
-from inyoka.core.api import config
+from sqlalchemy.orm.interfaces import AttributeExtension
+from sqlalchemy.ext.declarative import declarative_base
+from inyoka.core.config import config
 
-#TODO: write more documentation, usage examples and such stuff!
 
 _engine = None
 _engine_lock = Lock()
@@ -183,9 +183,21 @@ def select_blocks(query, pk, block_size=1000, start_with=0, max_fails=10):
         range = range[1] + 1, range[1] + block_size
 
 
-#TODO: documentation!
 @contextmanager
 def no_autoflush(scoped_session):
+    """Disable the autoflush feature temporary
+
+    Use it in conjunction with the `with` statement;
+    it returns a session with disabled autoflush and safely
+    enables it after the `with` block.
+
+    Example usage::
+
+        from inyoka.core.database import db
+        with no_autoflush(db.session) as sess:
+            sess.execute('update core_user set (1, 'username', 'password')')
+
+    """
     session = scoped_session()
     session.autoflush = False
     try:
@@ -259,12 +271,12 @@ class Query(orm.Query):
         return self.options(*args)
 
 
-class Model(object):
+class ModelBase(object):
+    """Internal baseclass for all models.  It provides some syntactic
+    sugar and maps the default query property.
+
+    We use the declarative model api from sqlalchemy.
     """
-    Internal baseclass for all models. It provides some syntactic
-    sugar and mapps the default query property.
-    """
-    query = session.query_property(Query)
 
     def __init__(self, *mixed, **kwargs):
         # some syntactic sugar. It allows us to initialize
@@ -297,6 +309,10 @@ class Model(object):
         return self.__class__.__name__ + '(' + ', '.join(x[0] + '=' +
                                             repr(x[1]) for x in attrs) + ')'
 
+# configure the declarative base
+Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper)
+ModelBase.query = session.query_property(Query)
+
 
 def _make_module():
     import sqlalchemy
@@ -317,4 +333,4 @@ def _make_module():
     db.AttributeExtension = AttributeExtension
     return db
 
-sys.modules['inyoka.utils.database.db'] = db = _make_module()
+sys.modules['inyoka.core.database.db'] = db = _make_module()

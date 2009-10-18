@@ -15,6 +15,7 @@ from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.core.context import get_application, current_request
 from inyoka.core.config import config
 
+
 class Request(BaseRequest):
 
     def __init__(self, environ, application):
@@ -27,6 +28,7 @@ class Request(BaseRequest):
     @cached_property
     def session(self):
         return SecureCookie.load_cookie(self, secret_key=config['cookie_secret'])
+
 
 class Response(BaseResponse):
     default_mimetype = 'text/html'

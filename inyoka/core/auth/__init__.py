@@ -17,8 +17,10 @@ from inyoka import Component
 from inyoka.core.api import config
 from inyoka.core.middlewares import IMiddleware
 
+
 _auth_system = None
 _auth_system_lock = Lock()
+
 
 def get_auth_system():
     """Return the auth system."""
@@ -28,11 +30,13 @@ def get_auth_system():
             _auth_system = import_string(config['auth_system'])()
         return _auth_system
 
+
 def refresh_auth_system():
     """Tears down the auth system after a config change."""
     global _auth_system
     with _auth_system_lock:
         _auth_system = None
+
 
 class AuthMiddleware(IMiddleware):
     priority = 75
@@ -48,6 +52,7 @@ class AuthMiddleware(IMiddleware):
     def process_response(self, request, response):
         # TODO: set cache headers to no cache
         return response
+
 
 class IPermissionChecker(Component):
 
@@ -71,7 +76,6 @@ class IPermissionChecker(Component):
         return has_permission
 
 
-
 class User(object):
     def __init__(self, id, username, display_name):
         self.id = id
@@ -79,10 +83,12 @@ class User(object):
         self.display_name = display_name
         self.anonymous = False
 
+
 class AnonymousUser(User):
     def __init__(self):
         super(AnonymousUser, self).__init__(0, u'anonymous', u'Anonymous')
         self.anonymous = True
+
 
 class AuthSystemBase(object):
 
@@ -131,6 +137,7 @@ class AuthSystemBase(object):
             request.session.pop('uuid')
         else:
             request.session['uuid'] = user.id
+
 
 class EasyAuth(AuthSystemBase):
     _store = {}

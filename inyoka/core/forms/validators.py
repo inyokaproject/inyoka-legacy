@@ -192,7 +192,13 @@ def is_valid_url_format():
 
 def is_not_whitespace_only():
     """Make sure the value does consist of at least one
-    non-whitespace character"""
+    non-whitespace character
+
+    >>> check(is_not_whitespace_only, '   ')
+    False
+    >>> check(is_not_whitespace_only, 'some value')
+    True
+    """
     def validator(form, value):
         if not value.strip():
             raise ValidationError(_(u'The text must not be empty.'))

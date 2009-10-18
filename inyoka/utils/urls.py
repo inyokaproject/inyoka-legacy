@@ -23,7 +23,7 @@ def make_full_domain(subdomain=''):
     u'www.ubuntuusers.de'
 
     """
-    from inyoka.core.api import config
+    from inyoka.core.config import config
     if not subdomain:
         return config['base_domain_name']
     return u'%s.%s' % (subdomain, config['base_domain_name'])

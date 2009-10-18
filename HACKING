@@ -31,7 +31,11 @@ Ordering of import statements is as defined in PEP 8, additionally:
  - Within that, the statements are sorted alphabetically (shorter paths first).
  - Within `inyoka.*` imports, `inyoka.core` comes first, then `inyoka.utils`,
    then all other components (alphabetically)
+
 No relative imports.
+
+No imports from `inyoka.api` in core and utils (to avoid recursive imports)
+(except middlewares)
 
 JavaScript
 ----------

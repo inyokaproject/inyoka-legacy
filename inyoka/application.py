@@ -13,8 +13,9 @@ from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
-from inyoka.core.api import IController, _local, _local_manager, Request, \
+from inyoka.core.api import IController, Request, \
     Response, db, config, logger
+from inyoka.core.context import _local, _local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.routing import DateConverter
@@ -39,8 +40,10 @@ class InyokaApplication(object):
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
+            'inyoka.paste.controllers.*',
             'inyoka.core.middlewares.services.*',
         ])
+
         self.url_map = Map(IController.get_urlmap(),
             converters={
                 'date': DateConverter,

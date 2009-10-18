@@ -11,7 +11,7 @@
 """
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect as _redirect, get_current_url
-from inyoka.core.api import get_application, get_request
+from inyoka.core.context import get_application, get_request
 
 
 class Request(BaseRequest):

@@ -23,7 +23,7 @@ from hashlib import sha1
 
 from werkzeug import html, escape, MultiDict
 
-from inyoka.core.api import get_request
+from inyoka.core.context import get_request
 from inyoka.core.i18n import _, ngettext, lazy_gettext, parse_datetime, \
     format_system_datetime
 from inyoka.core.http import get_redirect_target, _redirect, redirect_to

@@ -64,6 +64,10 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Subdomain used for the media application')),
     'routing.media.submount':      TextField(default=u'/',
         help_text=lazy_gettext(u'Submount used for the media application')),
+    'routing.testing.subdomain':    TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the testing application')),
+    'routing.testing.submount':    TextField(default=u'/testing',
+        help_text=lazy_gettext(u'Submount used for the testing application')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
     'static_path':                  TextField(default=u'static',
@@ -163,9 +167,6 @@ class Configuration(object):
                     continue
                 elif line[0] == '[' and line[-1] == ']':
                     section = line[1:-1].strip()
-                elif '=' not in line:
-                    key = line.strip()
-                    value = ''
                 else:
                     key, value = line.split('=', 1)
                     key = key.strip()

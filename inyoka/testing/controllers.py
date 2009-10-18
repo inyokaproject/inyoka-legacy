@@ -1,21 +1,20 @@
-from werkzeug.routing import Rule
-
-from inyoka.core.api import IController, register
+from inyoka.core.api import IController, register, Rule
 from inyoka.core.http import Response
+from inyoka.core.templating import render_template
 
 
 class TestingController(IController):
     name = 'testing'
 
     url_rules = [
-        Rule('/', endpoint='index'),
-        Rule('/about', endpoint='about'),
-        Rule('/user/<username>/', endpoint='profile'),
+        Rule('/') > 'index',
+        Rule('/about') > 'about',
+        Rule('/user/<username>/') > 'profile',
     ]
 
     @register('index')
     def bla(self, request):
-        return Response('apo')
+        return render_template('testing.html', {})
 
     @register('profile')
     def user_profile(self, request, username):

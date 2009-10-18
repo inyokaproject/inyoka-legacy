@@ -34,7 +34,7 @@ class InyokaApplication(object):
 
         #TODO: utilize that!
         setup_components([
-#            'inyoka.testing.api.*',
+            'inyoka.testing.controllers.*',
             'inyoka.core.routing.*',
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',

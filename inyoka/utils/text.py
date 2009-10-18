@@ -90,19 +90,6 @@ def increment_string(string):
     return string[:match.start()] + unicode(int(match.group(1)) + 1)
 
 
-#TODO: this could be rebased to translitcodec by jek... it does not work yet!
-def transliterate(string, table='long'):
-    """Transliterate to 8 bit using one of the tables given.  The table
-    must either be ``'long'``, ``'short'`` or ``'single'``.
-    """
-    table = {
-        'long':     LONG_TABLE,
-        'short':    SHORT_TABLE,
-        'single':   SINGLE_TABLE
-    }[table]
-    return unicodedata.normalize('NFKC', unicode(string)).translate(table)
-
-
 def wrap(text, width):
     r"""A word-wrap function that preserves existing line breaks
     and most spaces in the text. Expects that existing line breaks are

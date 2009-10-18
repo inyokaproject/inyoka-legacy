@@ -32,13 +32,6 @@ class IPermissionChecker(Component):
         return has_permission
 
 
-class User(object):
-    def __init__(self, id, username, display_name):
-        self.id = id
-        self.username = username
-        self.display_name = display_name
-
-
 class AuthSystemBase(object):
 
     def login(self, request, username, password):
@@ -88,10 +81,10 @@ class AuthSystemBase(object):
             request.session['user_id'] = user.id
 
 
-class EasyAuth(AuthSystemBase):
-    def login(self, request, username, password):
-        user = User(username, username, username)
-        self.set_user(request, user)
-
-    def logout(self, request):
-        self.set_user(request, None)
+#class EasyAuth(AuthSystemBase):
+#    def login(self, request, username, password):
+#        user = User(username, username, username)
+#        self.set_user(request, user)
+#
+#    def logout(self, request):
+#        self.set_user(request, None)

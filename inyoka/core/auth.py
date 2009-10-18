@@ -139,7 +139,7 @@ class EasyAuth(AuthSystemBase):
         self._store[user.id] = user
 
     def logout(self, request):
-        del self._store[self.get_user().id]
+        del self._store[self.get_user(request).id]
         self.set_user(request, None)
 
     def get_user(self, request):

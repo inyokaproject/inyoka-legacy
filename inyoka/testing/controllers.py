@@ -1,6 +1,8 @@
 from inyoka.core.api import IController, register, Rule
 from inyoka.core.http import Response
+from inyoka.core.auth import get_auth_system
 from inyoka.core.templating import render_template
+from werkzeug import redirect
 
 
 class TestingController(IController):
@@ -14,8 +16,12 @@ class TestingController(IController):
 
     @register('index')
     def bla(self, request):
-        print request.user
-        return Response(render_template('testing.html', {'r': request}))
+        if 'login' in request.args:
+            get_auth_system().login(request, 'apollo13', 'apo')
+        if 'logout' in request.args:
+            get_auth_system().logout(request)
+            return redirect('/testing/')
+        return Response(render_template('testing.html', {}))
 
     @register('profile')
     def user_profile(self, request, username):

@@ -22,10 +22,6 @@ from inyoka.core.config import config
 from inyoka.core.context import get_application
 from inyoka.core.http import Response
 
-#XXX: temporary to check if the routing stuff works until ente has finished
-#     working on config ;-)
-#from inyoka.core.config import config
-
 _date_formatter_split_re = re.compile('(%.)')
 _date_formatter_mapping = {
     'd': r'\d\d',

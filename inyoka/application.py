@@ -26,7 +26,6 @@ class InyokaApplication(object):
 
     def __init__(self):
         #TODO: this should go into some kind of setup process
-        from inyoka.core.config import config
         if not config.exists:
             # write the inyoka.ini file
             trans = config.edit()
@@ -35,8 +34,9 @@ class InyokaApplication(object):
 
         #TODO: utilize that!
         setup_components([
-#            'inyoka.testing.api.*',
+            'inyoka.testing.controllers.*',
             'inyoka.core.routing.*',
+            'inyoka.core.auth.*',
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
@@ -117,6 +117,7 @@ class InyokaApplication(object):
             #TODO: exception handling!
             raise
 
+        request.session.save_cookie(response)
         return response(environ, start_response)
 
     def bind(self):

@@ -19,4 +19,3 @@ class IMiddleware(Component):
         if not cls._middlewares:
             _middlewares = sorted(cls.get_components(), key=lambda x: -x.priority)
         return _middlewares
-

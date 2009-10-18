@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import ClosingIterator
+from werkzeug import ClosingIterator, redirect
 from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -65,8 +65,11 @@ class InyokaApplication(object):
 
         if response is None:
             # normal request dispatching
-            urls = self.url_map.bind_to_environ(request.environ,
-                server_name=config['base_domain_name'])
+            try:
+                urls = self.url_map.bind_to_environ(request.environ,
+                    server_name=config['base_domain_name'])
+            except ValueError:
+                return redirect('http://%s/' % config['base_domain_name'])
             self.url_adapter = urls
 
             try:

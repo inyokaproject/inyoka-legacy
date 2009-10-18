@@ -14,15 +14,16 @@ from inyoka import Component
 class IPermissionChecker(Component):
 
     @classmethod
-    def has_perm(cls, user, perm):
+    def has_perm(cls, user, perm, obj=None):
         has_permission = False
 
         for comp in cls.get_components():
             # The component doesn't care about the permission.
-            if comp.has_perm(user, perm) is None:
+            flag = comp.has_perm(user, perm, obj)
+            if flag is None:
                 continue
             # The component vetoed, which counts stronger than any True found.
-            elif not comp.has_perm(user, perm):
+            elif not flag:
                 return False
             # We got an auth here, but we can't break out of the loop cause
             # another component still might veto.
@@ -31,13 +32,11 @@ class IPermissionChecker(Component):
 
         return has_permission
 
-
 class User(object):
     def __init__(self, id, username, display_name):
         self.id = id
         self.username = username
         self.display_name = display_name
-
 
 class AuthSystemBase(object):
 

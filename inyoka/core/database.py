@@ -77,9 +77,10 @@ from threading import Lock
 from contextlib import contextmanager
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
-from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
+from sqlalchemy.orm.interfaces import AttributeExtension
+from sqlalchemy.ext.declarative import declarative_base
 from inyoka.core.config import config
 
 
@@ -270,12 +271,12 @@ class Query(orm.Query):
         return self.options(*args)
 
 
-class Model(object):
+class ModelBase(object):
+    """Internal baseclass for all models.  It provides some syntactic
+    sugar and maps the default query property.
+
+    We use the declarative model api from sqlalchemy.
     """
-    Internal baseclass for all models. It provides some syntactic
-    sugar and mapps the default query property.
-    """
-    query = session.query_property(Query)
 
     def __init__(self, *mixed, **kwargs):
         # some syntactic sugar. It allows us to initialize
@@ -307,6 +308,11 @@ class Model(object):
                 attrs.append((key, getattr(self, key)))
         return self.__class__.__name__ + '(' + ', '.join(x[0] + '=' +
                                             repr(x[1]) for x in attrs) + ')'
+
+# configure a declarative base.  This is unused in the code but makes it easier
+# for plugins to work with the database.
+Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper)
+ModelBase.query = session.query_property(Query)
 
 
 def _make_module():

@@ -309,8 +309,7 @@ class ModelBase(object):
         return self.__class__.__name__ + '(' + ', '.join(x[0] + '=' +
                                             repr(x[1]) for x in attrs) + ')'
 
-# configure a declarative base.  This is unused in the code but makes it easier
-# for plugins to work with the database.
+# configure the declarative base
 Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper)
 ModelBase.query = session.query_property(Query)
 

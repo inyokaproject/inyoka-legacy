@@ -54,8 +54,8 @@ class IPermissionChecker(Component):
         has_permission = False
 
         for comp in cls.get_components():
-            # The component doesn't care about the permission.
             flag = comp.has_perm(user, perm, obj)
+            # The component doesn't care about the permission.
             if flag is None:
                 continue
             # The component vetoed, which counts stronger than any True found.

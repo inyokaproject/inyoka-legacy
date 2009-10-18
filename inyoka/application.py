@@ -8,13 +8,14 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import ClosingIterator
+from werkzeug import ClosingIterator, redirect
 from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
-from inyoka.core.api import IController, _local, _local_manager, Request, \
+from inyoka.core.api import IController, Request, \
     Response, db, config, logger
+from inyoka.core.context import _local, _local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.routing import DateConverter
@@ -25,7 +26,6 @@ class InyokaApplication(object):
 
     def __init__(self):
         #TODO: this should go into some kind of setup process
-        from inyoka.core.config import config
         if not config.exists:
             # write the inyoka.ini file
             trans = config.edit()
@@ -34,13 +34,16 @@ class InyokaApplication(object):
 
         #TODO: utilize that!
         setup_components([
-#            'inyoka.testing.api.*',
+            'inyoka.testing.controllers.*',
             'inyoka.core.routing.*',
+            'inyoka.core.auth.*',
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',
+            'inyoka.paste.controllers.*',
             'inyoka.core.middlewares.services.*',
         ])
+
         self.url_map = Map(IController.get_urlmap(),
             converters={
                 'date': DateConverter,
@@ -65,8 +68,11 @@ class InyokaApplication(object):
 
         if response is None:
             # normal request dispatching
-            urls = self.url_map.bind_to_environ(request.environ,
-                server_name=config['base_domain_name'])
+            try:
+                urls = self.url_map.bind_to_environ(request.environ,
+                    server_name=config['base_domain_name'])
+            except ValueError:
+                return redirect('http://%s/' % config['base_domain_name'])
             self.url_adapter = urls
 
             try:
@@ -111,6 +117,7 @@ class InyokaApplication(object):
             #TODO: exception handling!
             raise
 
+        request.session.save_cookie(response)
         return response(environ, start_response)
 
     def bind(self):

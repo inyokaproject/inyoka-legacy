@@ -12,7 +12,8 @@
 import string
 from datetime import date, datetime, timedelta
 from random import sample
-from inyoka.core.api import href, db
+from inyoka.core.database import db
+from inyoka.core.routing import href
 
 #XXX: This module is yet unused and not tested!
 #     It's not recommend to create a model in some `util` module

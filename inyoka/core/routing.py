@@ -17,11 +17,10 @@ from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
 from werkzeug import append_slash_redirect, url_quote, wrap_file
 from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
-from inyoka.core.api import get_application, config, environ, Response
-
-#XXX: temporary to check if the routing stuff works until ente has finished
-#     working on config ;-)
-#from inyoka.core.config import config
+from inyoka.core import environ
+from inyoka.core.config import config
+from inyoka.core.context import get_application
+from inyoka.core.http import Response
 
 _date_formatter_split_re = re.compile('(%.)')
 _date_formatter_mapping = {

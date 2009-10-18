@@ -11,7 +11,7 @@
 import re
 import sys
 from werkzeug import escape
-from inyoka.core.api import href
+from inyoka.core.routing import href
 
 
 _body_end_re = re.compile(r'</\s*(body|html)(?i)')

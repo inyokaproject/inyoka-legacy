@@ -35,6 +35,7 @@ class InyokaApplication(object):
         setup_components([
             'inyoka.testing.controllers.*',
             'inyoka.core.routing.*',
+            'inyoka.core.auth.*',
             'inyoka.portal.controllers.*',
             'inyoka.news.controllers.*',
             'inyoka.forum.controllers.*',

@@ -13,7 +13,7 @@ from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect as _redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
 
-from inyoka.core.api import get_application, get_request, config
+from inyoka.core.api import get_application, config, current_request
 
 class Request(BaseRequest):
 
@@ -38,7 +38,7 @@ def get_redirect_target(invalid_targets=(), request=None):
     function is suitable to be passed to `_redirect`
     """
     if request is None:
-        request = get_request()
+        request = current_request
     check_target = request.values.get('_redirect_target') or \
                    request.values.get('next') or \
                    request.referrer
@@ -113,7 +113,7 @@ def redirect(url, code=302, allow_external_redirect=False,
     # keep the current URL schema if we have an active request if we
     # should.  If https enforcement is set we suppose that the blog_url
     # is already set to an https value.
-    request = get_request()
+    request = current_request
     if request and not force_scheme_change:
         url = request.environ['wsgi.url_scheme'] + ':' + url.split(':', 1)[1]
 

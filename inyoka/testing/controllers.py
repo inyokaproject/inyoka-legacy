@@ -14,7 +14,8 @@ class TestingController(IController):
 
     @register('index')
     def bla(self, request):
-        return render_template('testing.html', {})
+        print request.user
+        return Response(render_template('testing.html', {'r': request}))
 
     @register('profile')
     def user_profile(self, request, username):

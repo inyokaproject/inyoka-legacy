@@ -19,7 +19,7 @@ from inyoka.utils.urls import url_encode, url_quote
 def populate_context_defaults(context):
     """Fill in context defaults."""
     try:
-        request = api.get_request()._get_current_object()
+        request = api.current_request
     except RuntimeError:
         request = None
 
@@ -59,7 +59,7 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=api.get_request(),
+            REQUEST=api.current_request,
         )
         self.filters.update(
             jsonencode=simplejson.dumps

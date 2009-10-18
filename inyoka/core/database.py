@@ -82,7 +82,6 @@ from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
 from inyoka.core.config import config
 
-#TODO: write more documentation, usage examples and such stuff!
 
 _engine = None
 _engine_lock = Lock()
@@ -183,9 +182,21 @@ def select_blocks(query, pk, block_size=1000, start_with=0, max_fails=10):
         range = range[1] + 1, range[1] + block_size
 
 
-#TODO: documentation!
 @contextmanager
 def no_autoflush(scoped_session):
+    """Disable the autoflush feature temporary
+
+    Use it in conjunction with the `with` statement;
+    it returns a session with disabled autoflush and safely
+    enables it after the `with` block.
+
+    Example usage::
+
+        from inyoka.core.database import db
+        with no_autoflush(db.session) as sess:
+            sess.execute('update core_user set (1, 'username', 'password')')
+
+    """
     session = scoped_session()
     session.autoflush = False
     try:
@@ -317,4 +328,4 @@ def _make_module():
     db.AttributeExtension = AttributeExtension
     return db
 
-sys.modules['inyoka.utils.database.db'] = db = _make_module()
+sys.modules['inyoka.core.database.db'] = db = _make_module()

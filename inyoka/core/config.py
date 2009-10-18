@@ -14,16 +14,47 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from inyoka.core.forms import TextField, BooleanField
 from inyoka.core.i18n import lazy_gettext
 from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
 
+#### TODO: Cleanup validation
+
+class ConfigField(object):
+    def __init__(self, default, help_text):
+        self.default = default
+        self.help_text = help_text
+
+    get_default = lambda self: self.default
+    converter = lambda self: self.default
+
+    def __call__(self, value):
+        return self.converter(value)
+
+class IntegerField(ConfigField):
+    converter = int
+
+class TextField(ConfigField):
+    def converter(self, value):
+        if isinstance(value, unicode):
+            return value.strip()
+        else:
+            return value.decode('utf-8').strip()
+
+class BooleanField(ConfigField):
+    def converter(self, value):
+        if value.lower() in ('yes', 'y', 'true', '1'):
+            return True
+
+        return False
 
 DEFAULTS = {
     'debug':                    BooleanField(default=False, help_text=lazy_gettext(
         u'Enable debug mode')),
     'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
         u'The path to the media folder')),
+    'cookie_secret':            TextField(default='CHANGEME',
+                                          help_text=lazy_gettext(
+        u'The secret used for hashing the cookies')),
     'database_url':             TextField(default=u'sqlite://',
                                           help_text=lazy_gettext(
         u'The database URL.  For more information about database settings '
@@ -32,6 +63,8 @@ DEFAULTS = {
         u'If enabled the database will collect the SQL statements and add them '
         u'to the bottom of the page for easier debugging.  Beside that the '
         u'sqlalchemy log is written to a `db.log` file.')),
+    'auth_system':                  TextField(default=u'inyoka.core.auth.EasyAuth',
+        help_text=lazy_gettext(u'The Authsystem which should get used')),
     'routing.portal.subdomain':     TextField(default=u'',
         help_text=lazy_gettext(u'Subdomain used for the portal application')),
     'routing.portal.submount':      TextField(default=u'/',
@@ -68,6 +101,10 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Subdomain used for the paste application')),
     'routing.paste.submount':      TextField(default=u'/',
         help_text=lazy_gettext(u'Submount used for the paste application')),
+    'routing.testing.subdomain':    TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the testing application')),
+    'routing.testing.submount':    TextField(default=u'/testing',
+        help_text=lazy_gettext(u'Submount used for the testing application')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
     'static_path':                  TextField(default=u'static',

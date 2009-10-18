@@ -12,7 +12,7 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import get_request
+from inyoka.core.context import current_request
 from inyoka.core.http import Response
 from inyoka.utils.urls import url_encode, url_quote
 
@@ -20,7 +20,7 @@ from inyoka.utils.urls import url_encode, url_quote
 def populate_context_defaults(context):
     """Fill in context defaults."""
     try:
-        request = get_request()
+        request = current_request
     except RuntimeError:
         request = None
 
@@ -71,7 +71,6 @@ class InyokaEnvironment(Environment):
     """
 
     def __init__(self):
-        print os.path.join(os.path.dirname(__file__), os.pardir, 'templates')
         loader = FileSystemLoader(os.path.join(os.path.dirname(__file__),
                                                os.pardir, 'templates'))
         #TODO: link `auto_reload` to a config setting
@@ -81,7 +80,7 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=get_request(),
+            REQUEST=current_request,
         )
         self.filters.update(
             jsonencode=simplejson.dumps

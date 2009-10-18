@@ -80,7 +80,7 @@ from sqlalchemy import orm, sql
 from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
-from inyoka.core.config import config
+from inyoka.core.api import config
 
 #TODO: write more documentation, usage examples and such stuff!
 

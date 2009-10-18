@@ -10,9 +10,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
-    redirect as _redirect, get_current_url
-from inyoka.core.api import get_application, get_request
+    redirect as _redirect, get_current_url, cached_property
+from werkzeug.contrib.securecookie import SecureCookie
 
+from inyoka.core.api import get_application, get_request, config
 
 class Request(BaseRequest):
 
@@ -23,6 +24,9 @@ class Request(BaseRequest):
     def build_absolute_uri(self):
         return get_current_url(self.environ)
 
+    @cached_property
+    def session(self):
+        return SecureCookie.load_cookie(self, secret_key=config['cookie_secret'])
 
 class Response(BaseResponse):
     default_mimetype = 'text/html'
@@ -122,3 +126,4 @@ def redirect_to(*args, **kwargs):
     # from this module because it will strip leading slashes this function
     # returns and thus generate wrong redirects.
     return _redirect(url_for(*args, **kwargs))
+

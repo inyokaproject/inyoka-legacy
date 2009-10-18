@@ -19,10 +19,6 @@ from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core.api import get_application, config, environ, Response
 
-#XXX: temporary to check if the routing stuff works until ente has finished
-#     working on config ;-)
-#from inyoka.core.config import config
-
 _date_formatter_split_re = re.compile('(%.)')
 _date_formatter_mapping = {
     'd': r'\d\d',

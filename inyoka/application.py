@@ -25,7 +25,6 @@ class InyokaApplication(object):
 
     def __init__(self):
         #TODO: this should go into some kind of setup process
-        from inyoka.core.config import config
         if not config.exists:
             # write the inyoka.ini file
             trans = config.edit()
@@ -110,6 +109,7 @@ class InyokaApplication(object):
             #TODO: exception handling!
             raise
 
+        request.session.save_cookie(response)
         return response(environ, start_response)
 
     def bind(self):

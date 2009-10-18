@@ -14,16 +14,47 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from inyoka.core.forms import TextField, BooleanField
 from inyoka.core.i18n import lazy_gettext
 from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
 
+#### TODO: Cleanup validation
+
+class ConfigField(object):
+    def __init__(self, default, help_text):
+        self.default = default
+        self.help_text = help_text
+
+    get_default = lambda self: self.default
+    converter = lambda self: self.default
+
+    def __call__(self, value):
+        return self.converter(value)
+
+class IntegerField(ConfigField):
+    converter = int
+
+class TextField(ConfigField):
+    def converter(self, value):
+        if isinstance(value, unicode):
+            return value.strip()
+        else:
+            return value.decode('utf-8').strip()
+
+class BooleanField(ConfigField):
+    def converter(self, value):
+        if value.lower() in ('yes', 'y', 'true', '1'):
+            return True
+
+        return False
 
 DEFAULTS = {
     'debug':                    BooleanField(default=False, help_text=lazy_gettext(
         u'Enable debug mode')),
     'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
         u'The path to the media folder')),
+    'cookie_secret':            TextField(default='CHANGEME',
+                                          help_text=lazy_gettext(
+        u'The secret used for hashing the cookies')),
     'database_url':             TextField(default=u'sqlite://',
                                           help_text=lazy_gettext(
         u'The database URL.  For more information about database settings '

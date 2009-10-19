@@ -9,11 +9,11 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from threading import Lock
-from werkzeug import import_string
 
 from inyoka import Component
 from inyoka.core.api import config
 from inyoka.core.middlewares import IMiddleware
+from inyoka.utils import import_string
 
 
 _auth_system = None

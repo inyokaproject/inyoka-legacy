@@ -180,44 +180,6 @@ class DateConverter(BaseConverter):
                                   'be invalid.')
 
 
-class ModelConverter(BaseConverter):
-    """
-    A converter for werkzeug routing that directly uses the input data to
-    query the database. Returns a model, requires a model as input for
-    building.
-
-    :param model: Absolute import path to the model.
-    :param column: Name of the column. Defaults to `id`.
-    :param regex: Regex the url part has to match in order for the converter
-                  to match. Required if `column` is set.
-    """
-    def __init__(self, model, column=None, regex=None):
-        try:
-            self.model = import_string(model)
-        except ImportError:
-            raise ValidationError
-
-        #TODO: find out the regex from the column.
-        #TODO: don't use `id` per default but use .get with the primary key.
-        if column is None:
-            self.column = 'id'
-            self.regex = '\d+'
-        elif regex is None:
-            raise TypeError('If a column is specified, a regex is required.')
-        else:
-            self.column = column
-            self.regex = regex
-
-    def to_python(self, value):
-        try:
-            return session.query(self.model).filter_by(**{self.column: value}).one()
-        except InvalidRequestError:
-            raise ValidationError
-
-    def to_url(self, value):
-        return getattr(self.model, column)
-
-
 class StaticDataProxy(object):
     def __init__(self, basedir, index=True):
         """

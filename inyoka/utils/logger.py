@@ -56,7 +56,6 @@ class SimpleFormatter(Formatter):
         return log_format % dct
 
 
-
 logger = logging.getLogger('inyoka')
 logging_handler = logging.StreamHandler(sys.stdout)
 logging_handler.setFormatter(SimpleFormatter())

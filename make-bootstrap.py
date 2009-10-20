@@ -39,8 +39,10 @@ def easy_install(package, home_dir, optional_args=None):
     call_subprocess(cmd)
 """
 
+
 def main():
     print virtualenv.create_bootstrap_script(EXTRA_TEXT)
+
 
 if __name__ == '__main__':
     main()

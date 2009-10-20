@@ -11,7 +11,9 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os, subprocess
+import os
+import sys
+import subprocess
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -206,7 +208,7 @@ latex_use_modindex = True
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'http://docs.python.org/': None,
-    'http://packages.python.org/sqlalchemy-migrate/': None
+    'http://packages.python.org/sqlalchemy-migrate/': None,
 }
 
 def setup(app):

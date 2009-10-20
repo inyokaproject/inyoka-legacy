@@ -73,7 +73,9 @@ def action_runtests(cleanup=True, debug=True):
 
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
 # TODO make configureable
-action_runserver = script.make_runserver(make_app, use_reloader=True, use_debugger=True, use_evalex=True)
+action_runserver = script.make_runserver(make_app,
+    use_reloader=True, use_debugger=True, use_evalex=True)
+
 
 def print_version():
     from inyoka import INYOKA_REVISION

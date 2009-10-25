@@ -72,7 +72,6 @@ class InyokaApplication(object):
                 urls = self.url_map.bind_to_environ(request.environ,
                     server_name=config['base_domain_name'])
             except ValueError:
-                print "fooooooooooo"
                 return redirect('http://%s/' % config['base_domain_name'])
             self.url_adapter = urls
 

@@ -11,8 +11,9 @@
 """
 from os import path
 import simplejson
-from werkzeug.exceptions import NotFound
 from werkzeug import SharedDataMiddleware
+from werkzeug.routing import Rule
+from werkzeug.exceptions import NotFound
 
 from inyoka.core import environ
 from inyoka.core.middlewares import IMiddleware
@@ -32,6 +33,13 @@ class StaticMiddleware(IMiddleware, SharedDataMiddleware):
     priority = 99
 
     is_low_level = True
+
+    url_rules = [
+        Rule('/__static__', defaults={'file': '/'}, endpoint='static/file'),
+        Rule('/__static__/<path:file>', endpoint='static/file'),
+        Rule('/__media__', defaults={'file': '/'}, endpoint='media/file'),
+        Rule('/__media__/<path:file>', endpoint='media/file'),
+    ]
 
     def __init__(self, *args, **kwargs):
         app = lambda e, s: None

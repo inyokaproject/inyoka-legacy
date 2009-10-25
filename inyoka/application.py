@@ -45,7 +45,8 @@ class InyokaApplication(object):
             'inyoka.core.middlewares.static.*',
         ])
 
-        self.url_map = Map(IController.get_urlmap(),
+        url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
+        self.url_map = Map(url_map,
             converters={
                 'date': DateConverter,
         })

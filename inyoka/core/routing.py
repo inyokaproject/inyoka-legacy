@@ -22,6 +22,7 @@ from inyoka.core.config import config
 from inyoka.core.context import current_application
 from inyoka.core.http import Response
 
+
 _date_formatter_split_re = re.compile('(%.)')
 _date_formatter_mapping = {
     'd': r'\d\d',
@@ -36,7 +37,81 @@ _date_formatter_mapping = {
 }
 
 
-class IController(Component):
+
+class UrlMixin(object):
+    """Mixin to make components able to implement own url rules
+
+    Usage::
+
+        class MyComponent(Component, UrlMixin):
+
+            constant = None
+
+            def some_method(self):
+                # ...
+
+
+        class MyComponentImplementation(MyComponent):
+
+            name = 'mycomponent'
+
+            url_rules = [
+                Rule('/', endpoint='foo'),
+                Rule('/bar/', endpoint='bar')
+            ]
+
+    """
+
+    # The name of the component. Used for `href`.
+    name = None
+
+    # The url objects, without Subdomain or EndpointPrefix,
+    # inyoka takes care of it.
+    url_rules = []
+
+    # all rules are for build only, they never match
+    build_only = False
+
+    @classmethod
+    def get_urlmap(cls):
+        cls._endpoint_map = {}
+        urls = []
+
+        for comp in cls.get_components():
+            url_map = {}
+
+            # check if url rules are for build only
+            if cls.build_only:
+                new_map = []
+                for rule in comp.url_rules:
+                    rule.build_only = True
+                    new_map.append(rule)
+                comp.url_rules = new_map
+
+            for name in dir(comp):
+                method = getattr(comp, name)
+                endpoint = getattr(method, 'endpoint', None)
+                if endpoint is not None and endpoint not in url_map:
+                    url_map[endpoint] = method
+
+            #TODO: handle `None` component names properly
+            name = comp.name
+            if name:
+                val = Subdomain(config['routing.%s.subdomain' % name], [
+                Submount(config['routing.%s.submount' % name], [
+                    EndpointPrefix('%s/' % name, comp.url_rules)
+                ])])
+                urls.append(val)
+            else:
+                val = comp.url_rules
+                urls.extend(val)
+
+            cls._endpoint_map.setdefault(name, {}).update(url_map)
+
+        return urls
+
+
+class IController(Component, UrlMixin):
     """Interface for controllers.
 
     A controller is some kind of wrapper around differend
@@ -63,37 +138,6 @@ class IController(Component):
 
     """
 
-    # The name of the component. Used for `href`.
-    name = ''
-
-    # The url objects, without Subdomain or Endpointprefix,
-    # inyoka takes care of it.
-    url_rules = []
-
-    @classmethod
-    def get_urlmap(cls):
-        cls._endpoint_map = {}
-
-        urls = []
-
-        for comp in cls.get_components():
-            url_map = {}
-            for method in dir(comp):
-                method = getattr(comp, method)
-                endpoint = getattr(method, 'endpoint', None)
-                if endpoint is not None and endpoint not in url_map:
-                    url_map[endpoint] = method
-
-            urls.append(Subdomain(config['routing.%s.subdomain' % comp.name], [
-                Submount(config['routing.%s.submount' % comp.name], [
-                    EndpointPrefix('%s/' % comp.name, comp.url_rules)
-                ])
-            ]))
-
-            cls._endpoint_map.setdefault(comp.name, {}).update(url_map)
-
-        return urls
-
     @classmethod
     def get_servicemap(cls):
         if hasattr(cls, '_services'):
@@ -107,7 +151,6 @@ class IController(Component):
                     cls._services['%s.%s' % (comp.name, method.service_name)] \
                         = method
         return cls._services
-
 
     @classmethod
     def get_view(cls, endpoint):
@@ -134,6 +177,7 @@ class IController(Component):
             func.service_name = name
             return func
         return wrap
+
 
 register = IController.register
 register_service = IController.register_service

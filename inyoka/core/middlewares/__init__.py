@@ -9,12 +9,12 @@
     :license: GPL, see LICENSE for more details.
 """
 from inyoka import Component
+from inyoka.core.routing import UrlMixin
 
 
-class IMiddleware(Component):
+class IMiddleware(Component, UrlMixin):
     # cache for imported middlewares
     _middlewares = []
-
 
     # The higher the number the earlier the middleware will get called during
     # request, for the response, the result is reversed
@@ -25,6 +25,10 @@ class IMiddleware(Component):
     # if a middleware is applied as “low level” we apply environ and start_response
     # to :meth:`process_request` instead of the “high level” request object
     is_low_level = False
+
+    # set `build_only` from `UrlMixin` to `True` 'cause middlewares should
+    # never ever build matching url rules
+    build_only = True
 
     def process_request(self, request):
         pass

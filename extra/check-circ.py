@@ -120,8 +120,8 @@ if __name__ == '__main__':
     if graph:
         print '\nError: Ouch, a circular dependency was detected!\n'
         print 'Detected cycle:\n - %s\n' % '\n - '.join(finder.find_cycle(graph))
-        print 'Remainding dependencies:'
+        print 'Remaining dependencies:'
         finder.print_graph(graph)
         sys.exit(1)
     else:
-        print  '\nWohoo, everything is fine! No circular dependencies found.'
+        print  '\nHooray, everything is fine! No circular dependencies found.'

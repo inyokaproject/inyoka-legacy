@@ -52,10 +52,11 @@ for path, dirs, files in os.walk(root_path):
                 pkg = []
                 for p in pkg_to:
                     pkg.append(p)
-                    if graph.has_key('.'.join(pkg)):
-                        graph[pkg_from].add('.'.join(pkg))
-                    if graph.has_key('.'.join(pkg + ['__init__'])):
-                        graph[pkg_from].add('.'.join(pkg + ['__init__']))
+                    p1, p2 = '.'.join(pkg), '.'.join(pkg + ['__init__'])
+                    if graph.has_key(p1) and p1 != pkg_from:
+                        graph[pkg_from].add(p1)
+                    if graph.has_key(p2) and p2 != pkg_from:
+                        graph[pkg_from].add(p2)
 
 while graph:
     delete = []

@@ -86,8 +86,6 @@ class InyokaApplication(object):
 
             if response is None:
                 # dispatch the request if not already done by some middleware
-
-
                 self.url_adapter = urls
 
                 try:

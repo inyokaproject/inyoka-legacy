@@ -16,7 +16,7 @@ class PasteController(IController):
     name = 'paste'
 
     url_rules = [
-        Rule('/') > 'index',
+        Rule('/', endpoint='index'),
     ]
 
 

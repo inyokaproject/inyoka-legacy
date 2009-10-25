@@ -24,15 +24,14 @@ from werkzeug import Local, LocalManager
 # object at all.  If there are easy ways of *not* using
 # thread locals, you should not use them.
 #
-_local = Local()
-_local_manager = LocalManager(_local)
-_current_request = _local('request')
-_current_application = _local('application')
+# Please also note that you should *ever* set the `local` proxy
+# values to `None` before initializing the proxy.  This adds some
+# proper “not defined” manner by returning `None` instead of raising
+# an RuntimeException
+#
+local = Local()
+local_manager = LocalManager(local)
 
-
-def get_application():
-    return getattr(_local, 'application', None)
-
-
-def get_request():
-    return getattr(_local, 'request', None)
+local.request = local.application = None
+current_request = local('request')
+current_application = local('application')

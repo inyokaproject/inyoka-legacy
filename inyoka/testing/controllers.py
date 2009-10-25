@@ -1,8 +1,15 @@
-from inyoka.core.routing import IController, register, Rule
-from inyoka.core.http import Response
+# -*- coding: utf-8 -*-
+"""
+    inyoka.testing.controllers
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
+from inyoka.core.api import Response, IController, Rule, register, \
+    render_template
 from inyoka.core.auth import get_auth_system
-from inyoka.core.templating import render_template
 from werkzeug import redirect
 
 
@@ -10,9 +17,9 @@ class TestingController(IController):
     name = 'testing'
 
     url_rules = [
-        Rule('/') > 'index',
-        Rule('/about') > 'about',
-        Rule('/user/<username>/') > 'profile',
+        Rule('/', endpoint='index'),
+        Rule('/about', endpoint='about'),
+        Rule('/user/<username>/', endpoint='profile'),
     ]
 
     @register('index')

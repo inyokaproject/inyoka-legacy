@@ -15,8 +15,8 @@ class NewsController(IController):
     name = 'news'
 
     url_rules = [
-        Rule('/') > 'index',
-        Rule('/<date:date>/<slug>/') > 'entry',
+        Rule('/', endpoint='index'),
+        Rule('/<date:date>/<slug>/', endpoint='entry'),
     ]
 
     @register('index')

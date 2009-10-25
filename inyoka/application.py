@@ -15,7 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from inyoka import setup_components
 from inyoka.core.api import IController, Request, \
     Response, db, config, logger
-from inyoka.core.context import _local, _local_manager
+from inyoka.core.context import local, local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.routing import DateConverter
@@ -72,6 +72,7 @@ class InyokaApplication(object):
                 urls = self.url_map.bind_to_environ(request.environ,
                     server_name=config['base_domain_name'])
             except ValueError:
+                print "fooooooooooo"
                 return redirect('http://%s/' % config['base_domain_name'])
             self.url_adapter = urls
 
@@ -101,7 +102,7 @@ class InyokaApplication(object):
         # it afterwards.  We do this so that the request object can query
         # the database in the initialization method.
         request = object.__new__(Request)
-        _local.request = request
+        local.request = request
         self.bind()
         request.__init__(environ, self)
 
@@ -122,12 +123,12 @@ class InyokaApplication(object):
 
     def bind(self):
         """Bind the application to a thread local"""
-        _local.application = self
+        local.application = self
 
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""
         return ClosingIterator(self.dispatch(environ, start_response),
-                               [_local_manager.cleanup, db.session.close])
+                               [local_manager.cleanup, db.session.close])
 
 
 application = InyokaApplication()

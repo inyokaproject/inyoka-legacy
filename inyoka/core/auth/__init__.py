@@ -13,7 +13,7 @@ from __future__ import with_statement
 from threading import Lock
 
 from inyoka import Component
-from inyoka.core.api import config
+from inyoka.core.config import config
 from inyoka.core.middlewares import IMiddleware
 from inyoka.utils import import_string
 

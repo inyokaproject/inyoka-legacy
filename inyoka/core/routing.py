@@ -13,13 +13,13 @@ import sre_constants
 from datetime import datetime
 from sqlalchemy.exc import InvalidRequestError
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
-    Rule as BaseRule, BaseConverter, ValidationError
+    Rule, BaseConverter, ValidationError
 from werkzeug import append_slash_redirect, url_quote, wrap_file
 from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core import environ
 from inyoka.core.config import config
-from inyoka.core.context import get_application
+from inyoka.core.context import current_application
 from inyoka.core.http import Response
 
 _date_formatter_split_re = re.compile('(%.)')
@@ -140,14 +140,8 @@ register_service = IController.register_service
 
 
 def href(endpoint, **values):
-    adapter = get_application().url_adapter
+    adapter = current_application.url_adapter
     return adapter.build(endpoint, values, force_external=True)
-
-
-class Rule(BaseRule):
-    def __gt__(self, endpoint):
-        self.endpoint = endpoint
-        return self
 
 
 class DateConverter(BaseConverter):
@@ -238,8 +232,8 @@ class StaticController(IController):
     name = 'static'
 
     url_rules = [
-        Rule('/<path:path>') > 'file',
-        Rule('/', {'path': '/'}) > 'file',
+        Rule('/<path:path>', endpoint='file'),
+        Rule('/', {'path': '/'}, endpoint='file'),
     ]
 
     proxy = register('file')(StaticDataProxy(config['static_path']))
@@ -249,8 +243,8 @@ class MediaController(IController):
     name = 'media'
 
     url_rules = [
-        Rule('/<path:path>') > 'file',
-        Rule('/', {'path': '/'}) > 'file',
+        Rule('/<path:path>', endpoint='file'),
+        Rule('/', {'path': '/'}, endpoint='file'),
     ]
 
     proxy = register('file')(StaticDataProxy(config['media_path']))

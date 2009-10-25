@@ -16,8 +16,8 @@ class PortalController(IController):
     name = 'portal'
 
     url_rules = [
-        Rule('/') > 'index',
-        Rule('/user/<username>/') > 'user_profile',
+        Rule('/', endpoint='index'),
+        Rule('/user/<username>/', endpoint='user_profile'),
     ]
 
     @register('index')
@@ -40,8 +40,8 @@ class CalendarController(IController):
     name = 'calendar'
 
     url_rules = [
-        Rule('/') > 'index',
-        Rule('/<date:date>/<slug>/') > 'entry',
+        Rule('/', endpoint='index'),
+        Rule('/<date:date>/<slug>/', endpoint='entry'),
     ]
 
     @register('index')

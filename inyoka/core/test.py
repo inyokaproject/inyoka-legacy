@@ -22,7 +22,7 @@ from functools import update_wrapper
 from werkzeug import Client, BaseResponse
 from nose.plugins.base import Plugin
 from inyoka.core.config import config
-from inyoka.core.context import get_application
+from inyoka.core.context import current_application
 from inyoka.core.database import db
 from inyoka.core.routing import href
 from inyoka.utils.logger import logger
@@ -84,7 +84,7 @@ class ViewTestCase(unittest.TestCase):
 
     component = 'portal'
     response = None
-    client = Client(get_application(), response_wrapper=ResponseWrapper)
+    client = Client(current_application, response_wrapper=ResponseWrapper)
 
     def open_location(self, path, method='GET', **kwargs):
         """Open a location (path)"""

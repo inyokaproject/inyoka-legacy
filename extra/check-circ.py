@@ -13,7 +13,7 @@ from os.path import abspath, normpath, relpath, isfile, join as joinpath
 import re
 import sys
 
-_import_re = re.compile(r'^(?:from\s+([\w.]+)\s+)import\s+([\w.]+)')
+_import_re = re.compile(r'^(?:from\s+([\w.]+)\s+)import\s+([\w., ]+)')
 
 
 class CircularImportFinder(object):
@@ -49,17 +49,17 @@ class CircularImportFinder(object):
                     match = _import_re.match(line)
                     if not match:
                         continue
-                    pkg_to = (match.group(1) or '').split('.') + match.group(2).split('.')
-
-                    pkg = []
-                    for p in pkg_to:
-                        pkg.append(p)
-                        p1, p2 = '.'.join(pkg), '.'.join(pkg + ['__init__'])
-                        if graph.has_key(p1) and p1 != pkg_from:
-                            graph[pkg_from].add(p1)
-                        if graph.has_key(p2) and p2 != pkg_from:
-                            graph[pkg_from].add(p2)
-        
+                    for g2 in match.group(2).split(','):
+                        pkg_to = (match.group(1) or '').split('.') + g2.strip().split('.')
+                        pkg = []
+                        for p in pkg_to:
+                            pkg.append(p)
+                            p1, p2 = '.'.join(pkg), '.'.join(pkg + ['__init__'])
+                            if graph.has_key(p1) and p1 != pkg_from:
+                                graph[pkg_from].add(p1)
+                            if graph.has_key(p2) and p2 != pkg_from:
+                                graph[pkg_from].add(p2)
+                
         return graph
 
     def print_graph(self, graph):
@@ -81,7 +81,7 @@ class CircularImportFinder(object):
                             d.remove(package)
                             graph[p] = d
             if delete:
-                for package in delete:
+                for package in sorted(delete):
                     rval.append(package)
                     del graph[package]
             else:

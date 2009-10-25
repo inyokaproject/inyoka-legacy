@@ -16,6 +16,7 @@ from inyoka import setup_components
 from inyoka.core.api import IController, Request, \
     Response, db, config, logger
 from inyoka.core.context import local, local_manager
+from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.routing import DateConverter
@@ -68,11 +69,14 @@ class InyokaApplication(object):
         self.bind()
         request.__init__(environ, self)
 
+        response = None
+
         # wrap the real dispatching in a try/except so that we can
         # intercept exceptions that happen in the application.
-        # TODO: implement real exception handling
+        # TODO: implement real exception handling and logging
         try:
-            response = None
+            urls = self.url_map.bind_to_environ(
+                request.environ, server_name=config['base_domain_name'])
 
             for middleware in IMiddleware.iter_middlewares():
                 if middleware.is_low_level:
@@ -80,17 +84,9 @@ class InyokaApplication(object):
                 else:
                     response = middleware.process_request(request)
 
-                if response is not None:
-                    break
-
             if response is None:
                 # dispatch the request if not already done by some middleware
-                try:
-                    urls = self.url_map.bind_to_environ(
-                        request.environ,
-                        server_name=config['base_domain_name'])
-                except ValueError:
-                    return redirect('http://%s/' % config['base_domain_name'])
+
 
                 self.url_adapter = urls
 
@@ -107,23 +103,29 @@ class InyokaApplication(object):
             for middleware in reversed(IMiddleware.iter_middlewares()):
                 response = middleware.process_response(request, response)
 
-            if callable(response):
-                # force the response type to be a werkzeug response
-                response = Response.force_type(response, environ)
+            # force the response type to be a werkzeug response
+            response = Response.force_type(response, environ)
 
+        except DirectResponse, exc:
+            # a response type that works around the call with
+            # (environ, start_response).  Use it with care and only
+            # if there's no other way!
+            # Some usage example is a middleware that needs to respond
+            # directly to the client and needs to be sure that no other
+            # middlewares can modify the response object what, generally
+            # all middlewares can do in the common request-pipeline
+            return exc.response
+        except ValueError:
+            # url_adapter.bind_to_environ do raise this if we are not on the
+            # proper base domain, so redirect
+            response = redirect('http://%s/' % config['base_domain_name'])
         except:
-            #TODO: exception handling!
+            #TODO: proper exception handling!
             raise
 
         request.session.save_cookie(response)
 
-        # check if we could have a response object or something else
-        # (e.g FileWrapper)
-        if callable(response):
-            ret = response(environ, start_response)
-        else:
-            ret = response
-        return ret
+        return response(environ, start_response)
 
     def bind(self):
         """Bind the application to a thread local"""

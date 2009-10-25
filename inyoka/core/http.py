@@ -34,6 +34,14 @@ class Response(BaseResponse):
     default_mimetype = 'text/html'
 
 
+class DirectResponse(Exception):
+
+    def __init__(self, response):
+        Exception.__init__(self, response)
+        self.message = 'direct response %r' % response
+        self.response = response
+
+
 def get_redirect_target(invalid_targets=(), request=None):
     """Check the request and get the redirect target if possible.
     If not this function returns just `None`.  The return value of this

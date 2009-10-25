@@ -12,10 +12,10 @@ from __future__ import with_statement
 
 from threading import Lock
 
+from werkzeug import import_string
 from inyoka import Component
 from inyoka.core.config import config
 from inyoka.core.middlewares import IMiddleware
-from inyoka.utils import import_string
 
 
 _auth_system = None

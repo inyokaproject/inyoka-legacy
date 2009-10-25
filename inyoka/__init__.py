@@ -106,7 +106,7 @@ def setup_components(accepted_components):
     :return: An instance map containing all registered and activated components
     :return type: dict
     """
-    from inyoka.utils import import_string
+    from werkzeug import import_string
     # Import the components to setup the metaclass magic.
     for comp in accepted_components:
         import_string(comp if comp[-1] != '*' else comp[:-2])

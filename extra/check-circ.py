@@ -5,78 +5,123 @@
 
     Tool for checking for circular imports in a python project.
 
-    :author: Christoph Hack
-    :license: GPL, see LICENSE for details
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for details.
 """
 import os
+from os.path import abspath, normpath, relpath, isfile, join as joinpath
 import re
 import sys
 
-if len(sys.argv) != 2:
-    sys.stdout.write('Usage: %s <project_root>\n' % sys.argv[0])
-    sys.exit(2)
-
-re_import = re.compile(r'^(?:from\s+([\w.]+)\s+)import\s+([\w.]+)')
-root_path = sys.argv[1]
+_import_re = re.compile(r'^(?:from\s+([\w.]+)\s+)import\s+([\w.]+)')
 
 
-def dfs(graph, pkg, visited=set(), active=[]):
-    visited.add(pkg)
-    active.append(pkg)
-    for p in graph[pkg]:
-        if p in active:
-            return active[active.index(p):]
-        if p not in visited:
-            rval = dfs(graph, p, visited, active)
-            if rval:
+class CircularImportFinder(object):
+
+    def __init__(self, project_root):
+        if not isfile(joinpath(project_root, '__init__.py')):
+            raise ValueError('Invalid project root: "%s"' % project_root)
+        self.project_root = abspath(project_root)
+
+    def get_package_name(self, path, filename):
+        """Return a pretty package name for the given file."""
+        if not filename.endswith('.py'):
+            return None
+        strip_path = normpath(joinpath(self.project_root, os.pardir))
+        return '.'.join(relpath(path, strip_path).split(os.sep) + \
+            [filename[:-3]])
+
+    def generate_graph(self):
+        """Generate a directed dependency graph for the project."""
+        graph = dict()
+        
+        for path, dirs, files in os.walk(self.project_root):
+            for filename in files:
+                if filename.endswith('.py'):
+                    graph[self.get_package_name(path, filename)] = set()
+
+        for path, dirs, files in os.walk(self.project_root):
+            for filename in files:
+                if not filename.endswith('.py'):
+                    continue
+                pkg_from = self.get_package_name(path, filename)
+                for line in file(os.path.join(path, filename)):
+                    match = _import_re.match(line)
+                    if not match:
+                        continue
+                    pkg_to = (match.group(1) or '').split('.') + match.group(2).split('.')
+
+                    pkg = []
+                    for p in pkg_to:
+                        pkg.append(p)
+                        p1, p2 = '.'.join(pkg), '.'.join(pkg + ['__init__'])
+                        if graph.has_key(p1) and p1 != pkg_from:
+                            graph[pkg_from].add(p1)
+                        if graph.has_key(p2) and p2 != pkg_from:
+                            graph[pkg_from].add(p2)
+        
+        return graph
+
+    def print_graph(self, graph):
+        """Print the graph to stdout, which might be useful for debugging."""
+        for package, dependencies in graph.iteritems():
+            print ' - %s (%s)' % (package, ', '.join(dependencies))
+
+    def sort_topological(self, graph):
+        """Sort the directed dependency graph topological to find out the
+        import order and to detect cyclic dependencies."""
+        rval = []
+        while graph:
+            delete = []
+            for package, dependencies in graph.iteritems():
+                if not dependencies:
+                    delete.append(package)
+                    for p, d in graph.iteritems():
+                        if package in d:
+                            d.remove(package)
+                            graph[p] = d
+            if delete:
+                for package in delete:
+                    rval.append(package)
+                    del graph[package]
+            else:
                 return rval
-    active.pop()
+        return rval
+    
+    def find_cycle(self, graph, package=None, visited=set(), active=[]):
+        """Perform a depth-first-search on the graph to detect the exact
+        location of the cycle."""
+        if not graph:
+            return []
+        elif package is None:
+            package = graph.keys()[0]
+        visited.add(package)
+        active.append(package)
+        for dependency in graph[package]:
+            if dependency in active:
+                return active[active.index(dependency):]
+            elif dependency not in visited:
+                rval = self.find_cycle(graph, dependency, visited, active)
+                if rval:
+                    return rval
+        active.pop()
 
-graph = dict()
-for path, dirs, files in os.walk(root_path):
-    for f in files:
-        if f.endswith('.py'):
-           graph['.'.join(path.split(os.sep) + [f[:-3]])] = set()
 
-for path, dirs, files in os.walk(root_path):
-    for f in files:
-        if not f.endswith('.py'):
-            continue
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        sys.stdout.write('Usage: %s <project_root>\n' % sys.argv[0])
+        sys.exit(2)
 
-        pkg_from = '.'.join(path.split(os.sep) + [f[:-3]])
-        for line in file(os.path.join(path, f)):
-            match = re_import.match(line)
-            if match:
-                pkg_to = (match.group(1) or '').split('.') + match.group(2).split('.')
-
-                pkg = []
-                for p in pkg_to:
-                    pkg.append(p)
-                    p1, p2 = '.'.join(pkg), '.'.join(pkg + ['__init__'])
-                    if graph.has_key(p1) and p1 != pkg_from:
-                        graph[pkg_from].add(p1)
-                    if graph.has_key(p2) and p2 != pkg_from:
-                        graph[pkg_from].add(p2)
-
-while graph:
-    delete = []
-    for pkg, backrefs in graph.iteritems():
-        if not backrefs:
-            delete.append(pkg)
-            for p, b in graph.iteritems():
-                if pkg in b:
-                    b.remove(pkg)
-                    graph[p] = b
-    if delete:
-        for pkg in delete:
-            print pkg
-            del graph[pkg]
-    else:
-        sys.stderr.write('\nERROR: Detected circular import!\n\n')
-        sys.stderr.write('Detected Cycle:\n - %s\n\n' % '\n - '.join(dfs(graph, pkg)))
-        
-        sys.stderr.write('Remaining dependecies:\n - %s\n' % '\n - '.join('%s (%s)' % \
-            (k, ', '.join(v)) for k, v in graph.iteritems()))
-        
+    finder = CircularImportFinder(sys.argv[1])
+    graph = finder.generate_graph()
+    packages = finder.sort_topological(graph)
+    print '\n'.join(packages)
+    
+    if graph:
+        print '\nError: Ouch, a circular dependency was detected!\n'
+        print 'Detected cycle:\n - %s\n' % '\n - '.join(finder.find_cycle(graph))
+        print 'Remainding dependencies:'
+        finder.print_graph(graph)
         sys.exit(1)
-        break
+    else:
+        print  '\nWohoo, everything is fine! No circular dependencies found.'

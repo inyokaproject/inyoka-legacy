@@ -151,6 +151,5 @@ def _bootstrap():
                 break
     INYOKA_REVISION = hg_node
 
-
 _bootstrap()
 del _bootstrap

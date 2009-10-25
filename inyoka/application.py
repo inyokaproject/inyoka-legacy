@@ -42,6 +42,7 @@ class InyokaApplication(object):
             'inyoka.forum.controllers.*',
             'inyoka.paste.controllers.*',
             'inyoka.core.middlewares.services.*',
+            'inyoka.core.middlewares.static.*',
         ])
 
         self.url_map = Map(IController.get_urlmap(),
@@ -50,45 +51,6 @@ class InyokaApplication(object):
         })
         self.url_adapter = self.url_map.bind(config['base_domain_name'])
         self.bind()
-
-    def dispatch_request(self, request):
-        """
-        Dispatch a request.
-        This includes url matching, middleware handling and a proper exception
-        handling for HTTP or database errors.
-        """
-
-        response = None
-
-        # middlewares (request part)
-        for middleware in IMiddleware.middlewares():
-            response = middleware.process_request(request)
-            if response is not None:
-                break
-
-        if response is None:
-            # normal request dispatching
-            try:
-                urls = self.url_map.bind_to_environ(request.environ,
-                    server_name=config['base_domain_name'])
-            except ValueError:
-                return redirect('http://%s/' % config['base_domain_name'])
-            self.url_adapter = urls
-
-            try:
-                endpoint, args = urls.match(request.path)
-                response = IController.get_view(endpoint)(request, **args)
-            except HTTPException, e:
-                response = e.get_response(request)
-            except SQLAlchemyError, e:
-                db.session.rollback()
-                logger.error(e)
-
-        # middleware handling (response part)
-        for middleware in reversed(IMiddleware.middlewares()):
-            response = middleware.process_response(request, response)
-
-        return response
 
     def dispatch(self, environ, start_response):
         """The overall dispatch process.
@@ -109,16 +71,58 @@ class InyokaApplication(object):
         # intercept exceptions that happen in the application.
         # TODO: implement real exception handling
         try:
-            response = self.dispatch_request(request)
+            response = None
 
-            # make sure the response object is one of ours
-            response = Response.force_type(response, environ)
+            for middleware in IMiddleware.iter_middlewares():
+                if middleware.is_low_level:
+                    response = middleware.process_request(environ, start_response)
+                else:
+                    response = middleware.process_request(request)
+
+                if response is not None:
+                    break
+
+            if response is None:
+                # dispatch the request if not already done by some middleware
+                try:
+                    urls = self.url_map.bind_to_environ(
+                        request.environ,
+                        server_name=config['base_domain_name'])
+                except ValueError:
+                    return redirect('http://%s/' % config['base_domain_name'])
+
+                self.url_adapter = urls
+
+                try:
+                    rule, args = urls.match(request.path, return_rule=True)
+                    response = IController.get_view(rule.endpoint)(request, **args)
+                except HTTPException, e:
+                    response = e.get_response(request)
+                except SQLAlchemyError, e:
+                    db.session.rollback()
+                    logger.error(e)
+
+            # let middlewares process the response
+            for middleware in reversed(IMiddleware.iter_middlewares()):
+                response = middleware.process_response(request, response)
+
+            if callable(response):
+                # force the response type to be a werkzeug response
+                response = Response.force_type(response, environ)
+
         except:
             #TODO: exception handling!
             raise
 
         request.session.save_cookie(response)
-        return response(environ, start_response)
+
+        # check if we could have a response object or something else
+        # (e.g FileWrapper)
+        if callable(response):
+            ret = response(environ, start_response)
+        else:
+            ret = response
+        return ret
 
     def bind(self):
         """Bind the application to a thread local"""

@@ -23,7 +23,7 @@ from hashlib import sha1
 
 from werkzeug import html, escape, MultiDict
 
-from inyoka.core.context import current_request
+from inyoka.core.context import get_request
 from inyoka.core.i18n import _, ngettext, lazy_gettext, parse_datetime, \
     format_system_datetime
 from inyoka.core.http import get_redirect_target, _redirect, redirect_to
@@ -1820,7 +1820,7 @@ class Form(object):
     redirect_tracking = True
 
     def __init__(self, initial=None):
-        self.request = current_request
+        self.request = get_request()
         if initial is None:
             initial = {}
         self.initial = initial

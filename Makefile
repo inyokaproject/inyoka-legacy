@@ -32,3 +32,14 @@ dbshell:
 
 runtests:
 	@python manage-inyoka.py runtests
+
+reindent:
+	@extra/reindent.py -r -B .
+
+clean-files:
+	find . -name '*.pyc' -exec rm -f {} +
+	find . -name '*.pyo' -exec rm -f {} +
+	find . -name '*~' -exec rm -f {} +
+	find . -name '*.orig' -exec rm -f {} +
+	find . -name '*.orig.*' -exec rm -f {} +
+	find . -name '*.py.fej' -exec rm -f {} +

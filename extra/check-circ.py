@@ -34,7 +34,7 @@ class CircularImportFinder(object):
     def generate_graph(self):
         """Generate a directed dependency graph for the project."""
         graph = dict()
-        
+
         for path, dirs, files in os.walk(self.project_root):
             for filename in files:
                 if filename.endswith('.py'):
@@ -59,7 +59,7 @@ class CircularImportFinder(object):
                                 graph[pkg_from].add(p1)
                             if graph.has_key(p2) and p2 != pkg_from:
                                 graph[pkg_from].add(p2)
-                
+
         return graph
 
     def print_graph(self, graph):
@@ -87,7 +87,7 @@ class CircularImportFinder(object):
             else:
                 return rval
         return rval
-    
+
     def find_cycle(self, graph, package=None, visited=set(), active=[]):
         """Perform a depth-first-search on the graph to detect the exact
         location of the cycle."""
@@ -116,7 +116,7 @@ if __name__ == '__main__':
     graph = finder.generate_graph()
     packages = finder.sort_topological(graph)
     print '\n'.join(packages)
-    
+
     if graph:
         print '\nError: Ouch, a circular dependency was detected!\n'
         print 'Detected cycle:\n - %s\n' % '\n - '.join(finder.find_cycle(graph))

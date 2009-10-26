@@ -55,6 +55,8 @@ DEFAULTS = {
         u'Enable debug mode')),
     'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
         u'The path to the media folder')),
+    'template_path':            TextField(default='', help_text=lazy_gettext(
+        u'Custom template path which is searched before the default path.')),
     'cookie_secret':            TextField(default='CHANGEME',
                                           help_text=lazy_gettext(
         u'The secret used for hashing the cookies')),

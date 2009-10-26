@@ -14,6 +14,7 @@ from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
 from inyoka.core.context import get_request
 from inyoka.core.http import Response
+from inyoka.core.config import config
 from inyoka.utils.urls import url_encode, url_quote
 
 
@@ -66,6 +67,11 @@ class InyokaEnvironment(Environment):
     """
 
     def __init__(self):
+        template_paths = [os.path.join(os.path.dirname(__file__), os.pardir,
+                                       'templates')]
+        if config['template_path']:
+            template_paths.insert(0,  config['template_path'])
+
         loader = FileSystemLoader(os.path.join(os.path.dirname(__file__),
                                                os.pardir, 'templates'))
         #TODO: link `auto_reload` to a config setting

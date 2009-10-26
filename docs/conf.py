@@ -33,7 +33,7 @@ templates_path = ['_templates']
 #autosummary_generate = ['inyoka.forum', 'inyoka.portal', 'inyoka.planet']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = '.py'
 
 # The encoding of source files.
 #source_encoding = 'utf-8'

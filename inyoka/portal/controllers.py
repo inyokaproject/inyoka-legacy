@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, register, register_service, \
-    href, Response
+    href, Response, templated
 
 
 class PortalController(IController):
@@ -21,11 +21,10 @@ class PortalController(IController):
     ]
 
     @register('index')
+    @templated('portal/index.html')
     def index(self, request):
-        return Response('this is the portal index page.\n'
-                        + 'called URL is: %s\n' % request.build_absolute_uri()
-                        + 'link is: %s\n' % href('portal/index')
-                       )
+        return { 'called_url': request.build_absolute_uri(),
+                 'link': href('portal/index') }
 
     @register('user_profile')
     def user_profile(self, request, username):

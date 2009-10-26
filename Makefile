@@ -3,7 +3,7 @@
 # :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
 # :license: GNU GPL, see LICENSE for more details.
 
-.PHONY: help docs docs/ server shell dbshell test runtests reindent clean-files
+.PHONY: help docs docs/ server shell dbshell test-venv test runtests reindent clean-files
 
 
 help:
@@ -30,6 +30,10 @@ shell:
 dbshell:
 	@python manage-inyoka.py dbshell
 
+test-venv:
+	python make-bootstrap.py > ../bootstrap.py
+	cd .. && python bootstrap.py inyoka-testsuite
+	
 test:
 	extra/buildbottest.sh `pwd`
 

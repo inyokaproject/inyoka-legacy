@@ -89,6 +89,5 @@ def main():
         return print_version()
     script.run(globals(), args=args)
 
-
 if __name__ == '__main__':
     main()

@@ -3,7 +3,7 @@
 # :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
 # :license: GNU GPL, see LICENSE for more details.
 
-.PHONY: help docs server shell dbshell
+.PHONY: help docs docs/ server shell dbshell test runtests reindent clean-files
 
 
 help:
@@ -29,6 +29,9 @@ shell:
 
 dbshell:
 	@python manage-inyoka.py dbshell
+
+test:
+	extra/buildbottest.sh `pwd`
 
 runtests:
 	@python manage-inyoka.py runtests

@@ -12,6 +12,7 @@ help:
 	@echo "  server      start a development server"
 	@echo "  shell       start an interactive python shell"
 	@echo "  dbshell     start an interactive database shell"
+	@echo "  runtests    run the unit and doc tests"
 
 docs/: docs
 # bash_completion completes to docs/
@@ -28,3 +29,6 @@ shell:
 
 dbshell:
 	@python manage-inyoka.py dbshell
+
+runtests:
+	@python manage-inyoka.py runtests

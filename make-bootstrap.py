@@ -27,6 +27,7 @@ def after_install(options, home_dir):
     easy_install('Sphinx', home_dir)
     easy_install('html5lib', home_dir)
     easy_install('Babel', home_dir)
+    easy_install('coverage', home_dir)
 
 
 def easy_install(package, home_dir, optional_args=None):

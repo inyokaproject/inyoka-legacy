@@ -42,8 +42,11 @@ class TextField(ConfigField):
 
 class BooleanField(ConfigField):
     def converter(self, value):
-        if value.lower() in ('yes', 'y', 'true', '1'):
-            return True
+        if isinstance(value, (str, unicode)):
+            if value.lower() in ('yes', 'y', 'true', '1'):
+                return True
+        else:
+            return bool(value)
 
         return False
 
@@ -318,7 +321,7 @@ class ConfigTransaction(object):
         if isinstance(value, str):
             value = value.decode('utf-8')
         field = self.cfg.config_vars[key]
-        self._values[key] = field.to_primitive(value)
+        self._values[key] = field(value)
         self._converted_values[key] = value
 
     def _assert_uncommitted(self):

@@ -13,7 +13,7 @@
 import virtualenv
 
 EXTRA_TEXT = """
-import tempfile, shutil, os
+import os
 
 def after_install(options, home_dir):
     easy_install('Jinja2', home_dir)

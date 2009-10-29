@@ -25,15 +25,11 @@ class ComponentMeta(type):
             # `Component` itself
             return obj
 
-        if Component in bases:
-            obj._iscomptype = True
-        else:
+        if Component not in bases:
             obj._comptypes = comptypes = []
             for base in bases:
-                if '_iscomptype' in base.__dict__:
+                if issubclass(base, Component):
                     comptypes.append(base)
-                elif '_comptypes' in base.__dict__:
-                    comptypes.extend(base._comptypes)
 
             for comp in comptypes:
                 ComponentMeta._registry.setdefault(comp, []).append(obj)

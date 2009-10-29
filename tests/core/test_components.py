@@ -27,12 +27,11 @@ class Implementation(ComponentType):
 class Implementation2(ComponentType, ComponentType2):
     pass
 
-#def test_components():
+def test_components():
 #    assert_true(ComponentType._iscomptype)
 #    assert_true(Implementation._iscomptype)
-#
-#    eq_(Implementation._comptypes, [ComponentType])
-#    eq_(Implementation2._comptypes, [ComponentType, ComponentType2])
+    eq_(Implementation._comptypes, [ComponentType])
+    eq_(Implementation2._comptypes, [ComponentType, ComponentType2])
 
 def test_setup_components():
     map = setup_components(['tests.core.test_components.*'])

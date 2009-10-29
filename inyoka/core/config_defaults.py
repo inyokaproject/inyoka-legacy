@@ -8,6 +8,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka.core.i18n import lazy_gettext
+from inyoka.core.environ import MEDIA_DATA
 from inyoka.core.config import BooleanField, TextField, IntegerField
 
 

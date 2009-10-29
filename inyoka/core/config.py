@@ -114,6 +114,7 @@ class Configuration(object):
         self.namespace.update(namespace) if namespace is not None else namespace
 
         from inyoka.core.config_defaults import DEFAULTS
+        self.config_vars = DEFAULTS.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()

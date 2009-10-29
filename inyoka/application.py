@@ -13,8 +13,8 @@ from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
-from inyoka.core.api import IController, Request, \
-    Response, db, config, logger
+from inyoka.core.api import db. config, logger, IController, Request, \
+    Response
 from inyoka.core.context import local, local_manager
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException

@@ -165,43 +165,44 @@ class Configuration(object):
     def __setitem__(self, key, value):
         """Set the config item's value.
         May raise `IOError`, you may want to use `change_single`."""
-        self.change_single(key, value, catch=False)
+        self.change_single(key, value, True)
 
     def __delitem__(self, key):
         """Revert the config item's value to its default.
         May raise `IOError`, you may want to use `revert_single`"""
-        self.revert_single(key, catch=False)
+        self.revert_single(key, True)
 
-    def change_single(self, key, value, catch=True):
-        """Create and commit a transaction for a single key-value-pair. Return
-        True on success, otherwise False.
+    def change_single(self, key, value, silent=False):
+        """Create and commit a transaction fro a single key-value pair.
+
+        Return `True` on success, otherwise `False`.  If :attr:`silent` is
+        applied `True` we fail silently on exceptions.
         """
-        t = self.edit()
-        t[key] = value
+        trans = self.edit()
         try:
-            t.commit()
-            if catch:
-                return True
+            trans[key] = value
+            trans.commit()
         except IOError:
-            if catch:
+            if silent:
                 return False
             raise
+        return True
 
-    def revert_single(self, key, catch=True):
-        """Create and commit a transaction for a single key-value-pair,
-        resetting the value to its default value. Return True on success,
-        otherwise False.
+    def revert_single(self, key, silent=False):
+        """Revert a single key to it's default.
+
+        Fail silently if :attr:`silent` is applied `True`,
+        see :meth:`change_single` for more details.
         """
-        t = self.edit()
-        t.revert_to_default(key)
+        trans = self.edit()
         try:
-            t.commit()
-            if catch:
-                return True
+            trans.revert_to_default(key)
+            trans.commit()
         except IOError:
-            if catch:
+            if silent:
                 return False
             raise
+        return True
 
     def edit(self):
         """Return a new transaction object."""

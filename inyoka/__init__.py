@@ -33,6 +33,8 @@ class ComponentMeta(type):
 
             for comp in comptypes:
                 ComponentMeta._registry.setdefault(comp, []).append(obj)
+        else:
+            obj._iscomptype = True
 
         return obj
 

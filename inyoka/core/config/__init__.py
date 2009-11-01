@@ -17,33 +17,52 @@ from threading import Lock
 from inyoka.core.i18n import lazy_gettext
 from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
 
-#### TODO: Cleanup validation
 
 class ConfigField(object):
+    """A field representing a configuration entry.
+
+    To create your own field types subclass and override
+    :meth:`converter` to match your needs.
+    """
+
     def __init__(self, default, help_text):
         self.default = default
         self.help_text = help_text
 
-    get_default = lambda self: self.default
-    converter = lambda self: self.default
+    def get_default(self):
+        return self.default
+
+    def converter(self):
+        return self.default
 
     def __call__(self, value):
         return self.converter(value)
 
+
 class IntegerField(ConfigField):
+    """A field representing integer values"""
     converter = int
 
+
 class TextField(ConfigField):
+    """A field representing unicode values"""
+
     def converter(self, value):
-        if isinstance(value, unicode):
-            return value.strip()
-        else:
-            return value.decode('utf-8').strip()
+        if not isinstance(value, unicode):
+            value = value.decode('utf-8')
+        value = value.strip()
+        return value
+
 
 class BooleanField(ConfigField):
+    """A field representing boolean values"""
+
+    TRUE_STATES = ['1', 'yes', 'true', 'on']
+    FALSE_STATES = ['0', 'no', 'false', 'off']
+
     def converter(self, value):
-        if isinstance(value, (str, unicode)):
-            if value.lower() in ('yes', 'y', 'true', '1'):
+        if isinstance(value, basestring):
+            if value.lower in BooleanField.TRUE_STATES:
                 return True
         else:
             return bool(value)
@@ -86,21 +105,13 @@ def quote_value(value):
                          .replace('\t', '\\t') \
                          .replace('"', '\\"').encode('utf-8')
 
+
 def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
     try:
         return field(value)
     except ValidationError, e:
         return field.get_default()
-
-
-def get_converter_name(conv):
-    """Get the name of a converter"""
-    return {
-        bool:   'boolean',
-        int:    'integer',
-        float:  'float',
-    }.get(conv, 'string')
 
 
 class Configuration(object):

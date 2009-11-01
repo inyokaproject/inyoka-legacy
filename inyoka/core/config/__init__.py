@@ -165,12 +165,12 @@ class Configuration(object):
     def __setitem__(self, key, value):
         """Set the config item's value.
         May raise `IOError`, you may want to use `change_single`."""
-        self.change_single(key, value, True)
+        self.change_single(key, value, False)
 
     def __delitem__(self, key):
         """Revert the config item's value to its default.
         May raise `IOError`, you may want to use `revert_single`"""
-        self.revert_single(key, True)
+        self.revert_single(key, False)
 
     def change_single(self, key, value, silent=False):
         """Create and commit a transaction fro a single key-value pair.

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.core.config_defaults
+    inyoka.core.config.defaults
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     This module implements and documents the default values for our configuration.

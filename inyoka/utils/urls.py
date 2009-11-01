@@ -16,11 +16,12 @@ def make_full_domain(subdomain=''):
     """Return the full domain based on :attr:`subdomain`
 
     >>> from inyoka.core.api import config
-    >>> _ = config.change_single('base_domain_name', 'ubuntuusers.de')
+    >>> config['base_domain_name'] = 'example.com'
     >>> make_full_domain()
-    u'ubuntuusers.de'
+    u'example.com'
     >>> make_full_domain('www')
-    u'www.ubuntuusers.de'
+    u'www.example.com'
+    >>> del config['base_domain_name']
 
     """
     from inyoka.core.config import config

@@ -106,10 +106,7 @@ def setup_folders():
     instance_folder = os.path.join(tmpdir, 'inyoka_test')
     if not path.exists(instance_folder):
         os.mkdir(instance_folder)
-        trans = config.edit()
-        trans['media_root'] = os.path.join(instance_folder, 'media')
-        trans.commit()
-        config.touch()
+        config['media_root'] = os.path.join(instance_folder, 'media')
         os.mkdir(config['media_root'])
 
     return instance_folder
@@ -162,6 +159,9 @@ def run_suite(tests_path=None, clean_db=False, base=None):
         # cleanup the test context
         context.teardown_instance()
         shutil.rmtree(instance_dir)
+        if os.path.isdir(config['media_root']):
+            shutil.rmtree(config['media_root'])
+        del config['media_root']
 
         # optionally delete our test database
         if clean_db and db.engine.url.drivername == 'sqlite':

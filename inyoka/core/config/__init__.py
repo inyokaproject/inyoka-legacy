@@ -162,7 +162,17 @@ class Configuration(object):
         self._converted_values[key] = value
         return value
 
-    def change_single(self, key, value):
+    def __setitem__(self, key, value):
+        """Set the config item's value.
+        May raise `IOError`, you may want to use `change_single`."""
+        self.change_single(key, value, catch=False)
+
+    def __delitem__(self, key):
+        """Revert the config item's value to its default.
+        May raise `IOError`, you may want to use `revert_single`"""
+        self.revert_single(key, catch=False)
+
+    def change_single(self, key, value, catch=True):
         """Create and commit a transaction for a single key-value-pair. Return
         True on success, otherwise False.
         """
@@ -170,9 +180,28 @@ class Configuration(object):
         t[key] = value
         try:
             t.commit()
-            return True
+            if catch:
+                return True
         except IOError:
-            return False
+            if catch:
+                return False
+            raise
+
+    def revert_single(self, key, catch=True):
+        """Create and commit a transaction for a single key-value-pair,
+        resetting the value to its default value. Return True on success,
+        otherwise False.
+        """
+        t = self.edit()
+        t.revert_to_default(key)
+        try:
+            t.commit()
+            if catch:
+                return True
+        except IOError:
+            if catch:
+                return False
+            raise
 
     def edit(self):
         """Return a new transaction object."""

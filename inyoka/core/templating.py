@@ -32,16 +32,30 @@ def render_template(template_name, context):
     populate_context_defaults(context)
     return tmpl.render(context)
 
-def render_to_response(template_name, context, mimetype='text/html'):
-    content = render_template(template_name, context)
-    return Response(content, mimetype=mimetype)
-
-
 def urlencode_filter(value):
     """URL encode a string or dict."""
     if isinstance(value, dict):
         return url_encode(value)
     return url_quote(value)
+
+class TemplateResponse(Response):
+    """
+    Special Response object for using templates.
+
+    :param template_name: The name of the template file.
+    :param context: The context for rendering the template.
+
+    All other parameters (except `response` are the same as in the normal
+    `Response`.
+    """
+    def __init__(self, template_name, context, **kwargs):
+        if 'response' in kwargs:
+            raise TypeError('TemplateResponse does not accept `response` '
+                            'parameter')
+        data = render_template(template_name, context)
+        if config['debug']:
+            self.template_context = context
+        Response.__init__(self, data, **kwargs)
 
 
 def templated(template_name):
@@ -53,8 +67,10 @@ def templated(template_name):
     def decorator(f):
         def proxy(*args, **kwargs):
             ret = f(*args, **kwargs)
+            if ret is None:
+                ret = {}
             if isinstance(ret, dict):
-                return render_to_response(template_name, context=ret)
+                return TemplateResponse(template_name, context=ret)
             return Response.force_type(ret)
         return proxy
     return decorator

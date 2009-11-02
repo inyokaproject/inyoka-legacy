@@ -50,3 +50,8 @@ clean-files:
 	find . -name '*.orig' -exec rm -f {} +
 	find . -name '*.orig.*' -exec rm -f {} +
 	find . -name '*.py.fej' -exec rm -f {} +
+
+i18n:
+	@extra/extract-messages
+	@extra/update-translations
+	@extra/compile-translations

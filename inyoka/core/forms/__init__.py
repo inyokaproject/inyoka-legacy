@@ -13,7 +13,7 @@ from bureaucracy.forms import *
 from bureaucracy import csrf, exceptions, recaptcha, redirects, utils, \
     widgets
 
-from inyoka.core.i18n import get_locale, get_translations
+from inyoka.i18n import get_locale, get_translations
 from inyoka.core.http import redirect
 from inyoka.core.context import get_request
 

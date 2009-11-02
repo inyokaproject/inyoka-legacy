@@ -32,8 +32,22 @@ from werkzeug import Local, LocalManager
 local = Local()
 local_manager = LocalManager(local)
 
+
 def get_request():
+    """Return the current request or None"""
     return getattr(local, 'request', None)
 
+
 def get_application():
+    """Return the current application instance or None if none was set up"""
     return getattr(local, 'application', None)
+
+
+def get_locale():
+    """Return the current i18n locale object"""
+    return getattr(local, 'locale', None)
+
+
+def get_translations():
+    """Return the current loaded i18n translations"""
+    return getattr(local, 'translations', None)

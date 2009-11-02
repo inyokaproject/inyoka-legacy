@@ -14,7 +14,6 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from inyoka.core.i18n import lazy_gettext
 from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
 
 

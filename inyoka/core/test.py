@@ -19,13 +19,15 @@ import tempfile
 import nose
 from os import path
 from functools import update_wrapper
-from werkzeug import Client, BaseResponse
 from nose.plugins.base import Plugin
+from werkzeug import Client, BaseResponse, EnvironBuilder
 from inyoka.core.config import config
 from inyoka.core.context import get_application
 from inyoka.core.database import db
-from inyoka.core.routing import href
+from inyoka.core.http import Request
+from inyoka.core.routing import href, Map, IController
 from inyoka.utils.logger import logger
+from inyoka.utils.urls import make_full_domain
 
 # disable the logger
 logger.disabled = True
@@ -140,9 +142,12 @@ def run_suite(tests_path=None, clean_db=False, base=None):
         raise RuntimeError('You must specify a path for the unittests')
     # setup our folder structure
     instance_dir = setup_folders()
+    #XXX: this raises, need to find out why
+    #config['debug'] = True
 
     # initialize the database
     #XXX: _initialize_database(config['database_url'])
+    db.metadata.create_all()
 
     # setup the test context
     _res = path.join(tests_path, 'res')
@@ -174,3 +179,26 @@ def run_suite(tests_path=None, clean_db=False, base=None):
             except (OSError, AttributeError):
                 # fail silently
                 pass
+
+class ViewTester(object):
+    def __init__(self, Controller):
+        self.app_name = Controller.name
+        self.url_map = Map(Controller.url_rules)
+        self.subdomain = config['routing.%s.subdomain' % self.app_name]
+        self.submount = config['routing.%s.submount' % self.app_name].strip('/')
+
+    def __call__(self, path, **kwargs):
+        e = EnvironBuilder(self.submount + path,
+                           'http://%s/' % make_full_domain(self.subdomain),
+                           **kwargs)
+        environ = e.get_environ()
+        request = Request(environ, get_application())
+
+        adapter = self.url_map.bind_to_environ(environ,
+                                               make_full_domain(self.subdomain))
+        view_name, ctx = adapter.match(self.submount + path)
+        view = IController._endpoint_map[self.app_name][view_name]
+
+        response = view(request, **ctx)
+
+        return response, getattr(response, 'template_context', None)

@@ -1878,6 +1878,7 @@ class Form(object):
         if self.request is None:
             raise AttributeError('no csrf token because form not bound '
                                  'to request')
+        return 'TEST'
         path = self.request.path
         user_id = -1
         if self.request.user.is_somebody:

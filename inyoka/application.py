@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import ClosingIterator, redirect
-from werkzeug.routing import Map
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
@@ -19,7 +18,7 @@ from inyoka.core.context import local, local_manager
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.middlewares import IMiddleware
-from inyoka.core.routing import DateConverter
+from inyoka.core.routing import DateConverter, Map
 
 
 class InyokaApplication(object):
@@ -47,10 +46,7 @@ class InyokaApplication(object):
         ])
 
         url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
-        self.url_map = Map(url_map,
-            converters={
-                'date': DateConverter,
-        })
+        self.url_map = Map(url_map)
         self.url_adapter = self.url_map.bind(config['base_domain_name'])
         self.bind()
 

@@ -310,7 +310,8 @@ class ModelBase(object):
                                             repr(x[1]) for x in attrs) + ')'
 
 # configure the declarative base
-Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper)
+Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper,
+                         metadata=metadata)
 ModelBase.query = session.query_property(Query)
 
 

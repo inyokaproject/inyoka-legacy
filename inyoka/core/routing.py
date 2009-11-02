@@ -15,11 +15,13 @@ from sqlalchemy.exc import InvalidRequestError
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
 from werkzeug import append_slash_redirect, url_quote, wrap_file
+from werkzeug.routing import Map as BaseMap
 from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core import environ
 from inyoka.core.config import config
 from inyoka.core.context import get_application
+from inyoka.core.database import db
 from inyoka.core.http import Response
 
 
@@ -184,6 +186,8 @@ register_service = IController.register_service
 
 
 def href(endpoint, **values):
+    if isinstance(endpoint, db.Model):
+        return endpoint.get_absolute_url()
     adapter = get_application().url_adapter
     return adapter.build(endpoint, values, force_external=True)
 
@@ -216,3 +220,15 @@ class DateConverter(BaseConverter):
         except sre_constants.error:
             raise ValidationError('strftime failed. Format string seems to '
                                   'be invalid.')
+
+
+class Map(BaseMap):
+    #XXX: remove that as soon as werkzeug takes that from the class
+    if not hasattr(BaseMap, 'default_converters'):
+        import werkzeug.routing
+        werkzeug.routing.DEFAULT_CONVERTERS['date'] = DateConverter
+    else:
+        default_converters = BaseMap.default_converters.copy()
+        default_converters.update(
+            date=DateConverter,
+        )

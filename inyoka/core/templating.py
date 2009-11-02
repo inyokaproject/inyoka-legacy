@@ -15,6 +15,7 @@ from inyoka import INYOKA_REVISION
 from inyoka.core.context import local, current_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
+from inyoka.core.routing import href
 from inyoka.utils.urls import url_encode, url_quote
 
 
@@ -100,6 +101,7 @@ class InyokaEnvironment(Environment):
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             REQUEST=current_request,
+            href=href,
         )
         self.filters.update(
             jsonencode=simplejson.dumps

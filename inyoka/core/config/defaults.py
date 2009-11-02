@@ -31,7 +31,7 @@ DEFAULTS = {
         u'If enabled the database will collect the SQL statements and add them '
         u'to the bottom of the page for easier debugging.  Beside that the '
         u'sqlalchemy log is written to a `db.log` file.')),
-    'auth_system':                  TextField(default=u'inyoka.core.auth.EasyAuth',
+    'auth_system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',
         help_text=lazy_gettext(u'The Authsystem which should get used')),
     'routing.portal.subdomain':     TextField(default=u'',
         help_text=lazy_gettext(u'Subdomain used for the portal application')),

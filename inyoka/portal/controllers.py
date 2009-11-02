@@ -8,16 +8,19 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import IController, Rule, register, register_service, \
-    href, Response, templated
+from werkzeug import redirect
 
+from inyoka.core.api import IController, Rule, register, register_service, \
+    href, Response, templated, href
+from inyoka.core.auth import get_auth_system
 
 class PortalController(IController):
     name = 'portal'
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/user/<username>/', endpoint='user_profile'),
+        Rule('/login', endpoint='login'),
+        Rule('/logout', endpoint='logout'),
     ]
 
     @register('index')
@@ -26,13 +29,21 @@ class PortalController(IController):
         return { 'called_url': request.build_absolute_url(),
                  'link': href('portal/index') }
 
-    @register('user_profile')
-    def user_profile(self, request, username):
-        return Response('this is user %s' % username)
+    @register('login')
+    @templated('portal/login.html')
+    def login(self, request):
+        #form = get_auth_system().get_login_form()
+        #if request.method == 'POST' and form.validate(request.form):
+        #    get_auth_system().login(request, form.data['username'],
+        #                            form['password'])
+        #    return redirect(href('portal/index'))
+        #return { 'login_form': form.as_widget() }
+        return get_auth_system().login(request)
 
-    @register_service('userlist')
-    def userlist(self, request):
-        return ['ich', 'du', u'Müllers Kuh']
+    @register('logout')
+    def logout(self, request):
+        get_auth_system().logout(request)
+        return redirect(href('portal/index'))
 
 
 class CalendarController(IController):

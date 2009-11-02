@@ -49,6 +49,6 @@ class Form(FormBase):
         return redirect_to(*args, **kwargs)
 
     def _get_session(self):
-        #TODO: implement this once we have a session system.
-        raise NotImplementedError('some features require access to the session. '
-                                  'If you want those, implement `_get_session`.')
+        return current_request.session if current_request != None else {}
+
+

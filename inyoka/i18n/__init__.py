@@ -22,10 +22,13 @@ __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 UTC = pytz.timezone('UTC')
 
-_translations = local.translations = {
+local.translations = local.locale = None
+_translations = local('translations')
+_current_locale = local('locale')
+
+_translations = {
     None: NullTranslations()
 }
-_current_locale = local.locale = None
 
 
 def get_translations(locale):
@@ -35,8 +38,8 @@ def get_translations(locale):
     if translations is not None:
         return translations
     rv = Translations.load(os.path.dirname(__file__), [locale])
-    _translations[str(locale)] = local.translations = rv
-    _current_locale = local.locale = locale
+    _translations[str(locale)] = rv
+    _current_locale = locale
     return rv
 
 

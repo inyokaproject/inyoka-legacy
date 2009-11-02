@@ -11,7 +11,7 @@
 from werkzeug import url_encode, url_decode, url_quote, url_quote_plus, \
     url_fix
 from inyoka.core.config import config
-from inyoka.core.context import get_application
+from inyoka.core.context import current_application
 
 
 def make_full_domain(subdomain=''):
@@ -45,8 +45,8 @@ def url_for(endpoint, **args):
     """
     anchor = args.pop('_anchor', None)
     external = args.pop('_external', False)
-    rv = get_application().url_adapter.build(endpoint, args,
-                                             force_external=external)
+    rv = current_application.url_adapter.build(endpoint, args,
+        force_external=external)
     if anchor is not None:
         rv += '#' + url_quote(anchor)
     return rv

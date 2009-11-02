@@ -14,7 +14,7 @@ from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect as _redirect, get_current_url, cached_property
 from werkzeug.exceptions import BadRequest
 from werkzeug.contrib.securecookie import SecureCookie
-from inyoka.core.context import get_application, get_request
+from inyoka.core.context import current_application, current_request
 from inyoka.core.config import config
 
 
@@ -86,9 +86,9 @@ def redirect(url, code=302, allow_external_redirect=False,
     # keep the current URL schema if we have an active request if we
     # should.  If https enforcement is set we suppose that the blog_url
     # is already set to an https value.
-    request = get_request()
-    if request and not force_scheme_change:
-        url = request.environ['wsgi.url_scheme'] + ':' + url.split(':', 1)[1]
+    req = current_request
+    if req and not force_scheme_change:
+        url = req.environ['wsgi.url_scheme'] + ':' + url.split(':', 1)[1]
 
     return _redirect(url, code)
 

@@ -12,7 +12,7 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import local, get_request
+from inyoka.core.context import local, current_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.utils.urls import url_encode, url_quote
@@ -20,9 +20,9 @@ from inyoka.utils.urls import url_encode, url_quote
 
 def populate_context_defaults(context):
     """Fill in context defaults."""
-    if get_request():
+    if current_request:
         context.update(
-            CURRENT_URL=get_request().build_absolute_url(),
+            CURRENT_URL=current_request.build_absolute_url(),
         )
 
 
@@ -99,7 +99,7 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=local('request'),
+            REQUEST=current_request,
         )
         self.filters.update(
             jsonencode=simplejson.dumps

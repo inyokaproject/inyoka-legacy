@@ -3,8 +3,7 @@
     inyoka.core.forms.validators
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    This module implements various functions for validation of miscellaneous
-    things, e.g. urls.
+    our custom validators for the bureaucracy form system
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
@@ -23,39 +22,10 @@ _mail_re = re.compile(r'''(?xi)
           \\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@.
 ''')
 
-
-class ValidationError(ValueError):
-    """Exception raised when invalid data is encountered."""
-
-    def __init__(self, message):
-        if not isinstance(message, (list, tuple)):
-            messages = [message]
-        # make all items in the list unicode (this also evaluates
-        # lazy translations in there)
-        messages = map(unicode, messages)
-        Exception.__init__(self, messages[0])
-
-        from inyoka.core.forms import ErrorList
-        self.messages = ErrorList(messages)
-
-    def unpack(self, key=None):
-        return {key: self.messages}
-
-
-def check(validator, value, *args, **kwargs):
-    """Call a validator and return True if it's valid, False otherwise.
-    The first argument is the validator, the second a value.  All other
-    arguments are forwarded to the validator function.
-
-    >>> check(is_valid_email, 'foo@bar.com')
-    True
-    """
-    try:
-        validator(*args, **kwargs)(None, value)
-    except ValidationError:
-        return False
-    return True
-
+#TODO: this module is yet unused, because bureaucracy does not have
+#      any validator api for now.
+#
+'''
 
 def is_valid_email(message=None):
     """Check if the string passed is a valid mail address.
@@ -115,91 +85,4 @@ def is_valid_slug(allow_slash=True):
         elif value.startswith('/'):
             raise ValidationError(_(u'The slug must not start with a slash'))
     return validator
-
-
-def is_netaddr():
-    """Checks if the string given is a net address.  Either an IP or a
-    hostname.  This currently does not support ipv6 (XXX!!)
-
-    >>> check(is_netaddr, 'localhost')
-    True
-    >>> check(is_netaddr, 'localhost:443')
-    True
-    >>> check(is_netaddr, 'just something else')
-    False
-    """
-    def validator(form, value):
-        items = value.split()
-        if len(items) > 1:
-            raise ValidationError(_(u'You have to enter a valid net address.'))
-        items = items[0].split(':')
-        if len(items) not in (1, 2):
-            raise ValidationError(_(u'You have to enter a valid net address.'))
-        elif len(items) == 2 and not items[1].isdigit():
-            raise ValidationError(_(u'The port has to be numeric'))
-    return validator
-
-
-def is_valid_url_prefix():
-    """Validates URL parts."""
-    def validator(form, value):
-        if '<' in value or '>' in value:
-            raise ValidationError(_(u'Invalid character, < or > are not allowed.'))
-        if value == '/':
-            raise ValidationError(_(u'URL prefix must not be a sole slash.'))
-        if value:
-            if value[:1] != '/':
-                raise ValidationError(_(u'URL prefix must start with a slash.'))
-            if value[-1:] == '/':
-                raise ValidationError(_(u'URL prefix must not end with a slash.'))
-    return validator
-
-
-def is_valid_url_format():
-    """Validates URL format.
-
-    >>> check(is_valid_url_format, '/%year%')
-    False
-    >>> check(is_valid_url_format, '%year%')
-    True
-    >>> check(is_valid_url_format, '%year%/%month%/')
-    True
-    >>> check(is_valid_url_format, '%year%/%month%/%day%/')
-    True
-    >>> check(is_valid_url_format, '%year%/%month%/%day%/%hour%%minute%-')
-    True
-    >>> check(is_valid_url_format, '%other%')
-    False
-    """
-    def validator(form, value):
-        if '<' in value or '>' in value or '\\' in value:
-            raise ValidationError(_(u'Invalid character, <, > or \\ are not '
-            'allowed.'))
-        if value:
-            if value.startswith('/'):
-                raise ValidationError(_(u'URL format cannot start with a slash.'))
-            if value.find('//') >= 0:
-                raise ValidationError(_(u'URL cannot contain //.'))
-            if value.find('/../') >= 0 or value.startswith('../'):
-                raise ValidationError(_(u'URL cannot contain a reference to'
-                'parent path.'))
-            for match in _placeholder_re.finditer(value):
-                if match.group(1) not in _slug_parts:
-                    raise ValidationError(_(u'Unknown format code %s.') %
-                                          match.group())
-    return validator
-
-
-def is_not_whitespace_only():
-    """Make sure the value does consist of at least one
-    non-whitespace character
-
-    >>> check(is_not_whitespace_only, '   ')
-    False
-    >>> check(is_not_whitespace_only, 'some value')
-    True
-    """
-    def validator(form, value):
-        if not value.strip():
-            raise ValidationError(_(u'The text must not be empty.'))
-    return validator
+'''

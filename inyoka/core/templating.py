@@ -32,11 +32,13 @@ def render_template(template_name, context):
     populate_context_defaults(context)
     return tmpl.render(context)
 
+
 def urlencode_filter(value):
     """URL encode a string or dict."""
     if isinstance(value, dict):
         return url_encode(value)
     return url_quote(value)
+
 
 class TemplateResponse(Response):
     """
@@ -59,11 +61,11 @@ class TemplateResponse(Response):
 
 
 def templated(template_name):
-    '''
+    """
     Decorator for views. The decorated view must return a dictionary which is
     default_mimetype = 'text/html'
     then used as context for the given template. Returns a Response object.
-    '''
+    """
     def decorator(f):
         def proxy(*args, **kwargs):
             ret = f(*args, **kwargs)

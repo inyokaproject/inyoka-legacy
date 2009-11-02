@@ -9,8 +9,10 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from urlparse import urlparse, urljoin
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect as _redirect, get_current_url, cached_property
+from werkzeug.exceptions import BadRequest
 from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.core.context import get_application, get_request
 from inyoka.core.config import config
@@ -42,54 +44,15 @@ class DirectResponse(Exception):
         self.response = response
 
 
-def get_redirect_target(invalid_targets=(), request=None):
-    """Check the request and get the redirect target if possible.
-    If not this function returns just `None`.  The return value of this
-    function is suitable to be passed to `_redirect`
+def check_external_url(url):
+    """Check if a URL is on the application server and return the canonical
+    URL (eg: it externalizes a passed in path)
     """
-    if request is None:
-        request = get_request()
-    check_target = request.values.get('_redirect_target') or \
-                   request.values.get('next') or \
-                   request.referrer
-
-    # if there is no information in either the form data
-    # or the wsgi environment about a jump target we have
-    # to use the target url
-    if not check_target:
-        return
-
-    # otherwise drop the leading slash
-    check_target = check_target.lstrip('/')
-
-    root_url = request.url_root
-    root_parts = urlparse(root_url)
-    check_parts = urlparse(urljoin(root_url, check_target))
-
-    # if the jump target is on a different server we probably have
-    # a security problem and better try to use the target url.
-    if blog_parts[:2] != check_parts[:2]:
-        return
-
-    # if the jump url is the same url as the current url we've had
-    # a bad redirect before and use the target url to not create a
-    # infinite redirect.
-    current_parts = urlparse(urljoin(blog_url, request.path))
-    if check_parts[:5] == current_parts[:5]:
-        return
-
-    # if the `check_target` is one of the invalid targets we also
-    # fall back.
-    for invalid in invalid_targets:
-        if check_parts[:5] == urlparse(urljoin(blog_url, invalid))[:5]:
-            return
-
-    return check_target
-
-
-def make_external_url(path):
-    """Return an external url for the given path."""
-    return urljoin(config['base_domain_name'], path.lstrip('/'))
+    base_url = config['base_domain_name']
+    check_url = urljoin(base_url, url)
+    if urlparse(base_url)[:2] != urlparse(check_url)[:2]:
+        raise ValueError('The URL %s is not on the same server' % check_url)
+    return check_url
 
 
 def redirect(url, code=302, allow_external_redirect=False,
@@ -116,7 +79,7 @@ def redirect(url, code=302, allow_external_redirect=False,
         #: check if the url is on the same server
         #: and make it an external one
         try:
-            url = check_external_url(get_application(), url)
+            url = check_external_url(url)
         except ValueError:
             raise BadRequest()
 

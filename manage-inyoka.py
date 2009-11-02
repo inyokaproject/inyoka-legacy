@@ -10,13 +10,16 @@
 import sys
 from werkzeug import script
 
+
 def make_app():
     from inyoka.application import application
     return application
 
+
 def make_shell():
     application = make_app()
     return locals()
+
 
 def action_dbshell():
     import sys
@@ -42,6 +45,7 @@ def action_dbshell():
 
     p = Popen(cmd, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
     return p.wait()
+
 
 def action_runtests(cleanup=True, debug=True):
     """Run the unit and doctests"""

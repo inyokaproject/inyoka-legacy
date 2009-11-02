@@ -11,7 +11,6 @@ help:
 	@echo "  docs        create the docs (standalone HTML files)"
 	@echo "  server      start a development server"
 	@echo "  shell       start an interactive python shell"
-	@echo "  dbshell     start an interactive database shell"
 	@echo "  runtests    run the unit and doc tests"
 
 docs/: docs
@@ -26,9 +25,6 @@ server:
 
 shell:
 	@python manage-inyoka.py shell
-
-dbshell:
-	@python manage-inyoka.py dbshell
 
 test-venv:
 	python make-bootstrap.py > ../bootstrap.py

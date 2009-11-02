@@ -18,7 +18,7 @@ from inyoka.core.config import config
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core import forms
 from inyoka.core.templating import templated
-from inyoka.core.i18n import lazy_gettext
+from inyoka.i18n import lazy_gettext
 
 
 _auth_system = None

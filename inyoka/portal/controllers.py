@@ -23,7 +23,7 @@ class PortalController(IController):
     @register('index')
     @templated('portal/index.html')
     def index(self, request):
-        return { 'called_url': request.build_absolute_uri(),
+        return { 'called_url': request.build_absolute_url(),
                  'link': href('portal/index') }
 
     @register('user_profile')

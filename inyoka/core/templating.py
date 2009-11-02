@@ -22,7 +22,7 @@ def populate_context_defaults(context):
     """Fill in context defaults."""
     if get_request():
         context.update(
-            CURRENT_URL=get_request().build_absolute_uri(),
+            CURRENT_URL=get_request().build_absolute_url(),
         )
 
 

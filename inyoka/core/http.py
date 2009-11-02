@@ -24,7 +24,7 @@ class Request(BaseRequest):
         self.application = application
         BaseRequest.__init__(self, environ)
 
-    def build_absolute_uri(self):
+    def build_absolute_url(self):
         return get_current_url(self.environ)
 
     @cached_property

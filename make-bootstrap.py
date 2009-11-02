@@ -28,6 +28,7 @@ def after_install(options, home_dir):
     easy_install('html5lib', home_dir)
     easy_install('Babel', home_dir)
     easy_install('coverage', home_dir)
+    easy_install('http://dev.pocoo.org/hg/bureaucracy-main/archive/tip.tar.gz', home_dir)
 
 
 def easy_install(package, home_dir, optional_args=None):

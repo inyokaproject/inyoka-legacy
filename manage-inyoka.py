@@ -48,6 +48,7 @@ def action_runtests(cleanup=True, debug=True):
     from inyoka.core.test import run_suite
     run_suite(tests_path, cleanup)
 
+
 def make_runserver():
     # initialize the app
     from inyoka.application import application
@@ -56,6 +57,7 @@ def make_runserver():
     port = int(parts[1]) if len(parts) == 2 else 80
     return script.make_runserver(make_app, port=port, use_reloader=True,
                                  use_debugger=True, use_evalex=True)
+
 
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
 # TODO make configureable

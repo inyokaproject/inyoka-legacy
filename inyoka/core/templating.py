@@ -53,7 +53,8 @@ class TemplateResponse(Response):
             raise TypeError('TemplateResponse does not accept `response` '
                             'parameter')
         data = render_template(template_name, context)
-        if config['debug']:
+        #TODO: see inyoka.core.test.run_suite
+        if config['debug'] or True:
             self.template_context = context
         Response.__init__(self, data, **kwargs)
 

@@ -9,6 +9,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from urlparse import urlparse, urljoin
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect as _redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
@@ -68,20 +69,20 @@ def get_redirect_target(invalid_targets=(), request=None):
 
     # if the jump target is on a different server we probably have
     # a security problem and better try to use the target url.
-    if blog_parts[:2] != check_parts[:2]:
+    if root_parts[:2] != check_parts[:2]:
         return
 
     # if the jump url is the same url as the current url we've had
     # a bad redirect before and use the target url to not create a
     # infinite redirect.
-    current_parts = urlparse(urljoin(blog_url, request.path))
+    current_parts = urlparse(urljoin(root_url, request.path))
     if check_parts[:5] == current_parts[:5]:
         return
 
     # if the `check_target` is one of the invalid targets we also
     # fall back.
     for invalid in invalid_targets:
-        if check_parts[:5] == urlparse(urljoin(blog_url, invalid))[:5]:
+        if check_parts[:5] == urlparse(urljoin(root_url, invalid))[:5]:
             return
 
     return check_target
@@ -121,7 +122,7 @@ def redirect(url, code=302, allow_external_redirect=False,
             raise BadRequest()
 
     # keep the current URL schema if we have an active request if we
-    # should.  If https enforcement is set we suppose that the blog_url
+    # should.  If https enforcement is set we suppose that the root_url
     # is already set to an https value.
     request = get_request()
     if request and not force_scheme_change:

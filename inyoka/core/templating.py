@@ -12,7 +12,7 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import get_request
+from inyoka.core.context import local, get_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.utils.urls import url_encode, url_quote
@@ -99,7 +99,7 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=get_request(),
+            REQUEST=local('request'),
         )
         self.filters.update(
             jsonencode=simplejson.dumps

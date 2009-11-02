@@ -51,8 +51,11 @@ class InyokaApplication(object):
             converters={
                 'date': DateConverter,
         })
-        self.url_adapter = self.url_map.bind(config['base_domain_name'])
         self.bind()
+
+    @property
+    def url_adapter(self):
+        return self.url_map.bind(config['base_domain_name'])
 
     def dispatch(self, environ, start_response):
         """The overall dispatch process.

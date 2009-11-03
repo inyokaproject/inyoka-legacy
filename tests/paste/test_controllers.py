@@ -6,7 +6,6 @@ from inyoka.core.test import ViewTestCase
 from inyoka.paste.controllers import PasteController
 
 
-
 class PasteTester(ViewTestCase):
 
     controller = PasteController

@@ -185,6 +185,7 @@ register = IController.register
 register_service = IController.register_service
 
 
+# FIXME: remove href in favor of url_for? where should it be core.routing or utils.urls?
 def href(endpoint, **values):
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()

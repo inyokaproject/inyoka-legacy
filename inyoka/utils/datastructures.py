@@ -190,8 +190,6 @@ class OrderedDict(dict):
     def pop(self, key, default=missing):
         if default is missing:
             return dict.pop(self, key)
-        elif key not in self:
-            return default
         self._keys.remove(key)
         return dict.pop(self, key, default)
 

@@ -6,4 +6,7 @@ if [ -f inyoka-testsuite/bin/activate ]; then
 fi
 cd $1
 find inyoka -name "*.pyc" -delete
+if [ -f .coverage ]; then
+	rm .coverage
+fi
 make runtests

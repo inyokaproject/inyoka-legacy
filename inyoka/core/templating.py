@@ -12,17 +12,18 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import get_request
+from inyoka.core.context import local, current_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
+from inyoka.core.routing import href
 from inyoka.utils.urls import url_encode, url_quote
 
 
 def populate_context_defaults(context):
     """Fill in context defaults."""
-    if get_request():
+    if current_request:
         context.update(
-            CURRENT_URL=get_request().build_absolute_uri(),
+            CURRENT_URL=current_request.build_absolute_url(),
         )
 
 
@@ -32,11 +33,13 @@ def render_template(template_name, context):
     populate_context_defaults(context)
     return tmpl.render(context)
 
+
 def urlencode_filter(value):
     """URL encode a string or dict."""
     if isinstance(value, dict):
         return url_encode(value)
     return url_quote(value)
+
 
 class TemplateResponse(Response):
     """
@@ -60,11 +63,11 @@ class TemplateResponse(Response):
 
 
 def templated(template_name):
-    '''
+    """
     Decorator for views. The decorated view must return a dictionary which is
     default_mimetype = 'text/html'
     then used as context for the given template. Returns a Response object.
-    '''
+    """
     def decorator(f):
         def proxy(*args, **kwargs):
             ret = f(*args, **kwargs)
@@ -98,7 +101,8 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=get_request(),
+            REQUEST=current_request,
+            href=href,
         )
         self.filters.update(
             jsonencode=simplejson.dumps

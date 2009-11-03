@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.i18n import lazy_gettext
+from inyoka.i18n import lazy_gettext
 from inyoka.core.environ import MEDIA_DATA
 from inyoka.core.config import BooleanField, TextField, IntegerField
 
@@ -31,7 +31,7 @@ DEFAULTS = {
         u'If enabled the database will collect the SQL statements and add them '
         u'to the bottom of the page for easier debugging.  Beside that the '
         u'sqlalchemy log is written to a `db.log` file.')),
-    'auth_system':                  TextField(default=u'inyoka.core.auth.EasyAuth',
+    'auth_system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',
         help_text=lazy_gettext(u'The Authsystem which should get used')),
     'routing.portal.subdomain':     TextField(default=u'',
         help_text=lazy_gettext(u'Subdomain used for the portal application')),

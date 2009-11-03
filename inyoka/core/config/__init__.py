@@ -14,36 +14,54 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from inyoka.core.i18n import lazy_gettext
 from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
 
-#### TODO: Cleanup validation
 
 class ConfigField(object):
+    """A field representing a configuration entry.
+
+    To create your own field types subclass and override
+    :meth:`converter` to match your needs.
+    """
+
     def __init__(self, default, help_text):
         self.default = default
         self.help_text = help_text
 
-    get_default = lambda self: self.default
-    converter = lambda self: self.default
+    def get_default(self):
+        return self.default
+
+    def converter(self):
+        return self.default
 
     def __call__(self, value):
         return self.converter(value)
 
+
 class IntegerField(ConfigField):
+    """A field representing integer values"""
     converter = int
 
+
 class TextField(ConfigField):
+    """A field representing unicode values"""
+
     def converter(self, value):
-        if isinstance(value, unicode):
-            return value.strip()
-        else:
-            return value.decode('utf-8').strip()
+        if not isinstance(value, unicode):
+            value = value.decode('utf-8')
+        value = value.strip()
+        return value
+
 
 class BooleanField(ConfigField):
+    """A field representing boolean values"""
+
+    TRUE_STATES = ['1', 'yes', 'true', 'on']
+    FALSE_STATES = ['0', 'no', 'false', 'off']
+
     def converter(self, value):
-        if isinstance(value, (str, unicode)):
-            if value.lower() in ('yes', 'y', 'true', '1'):
+        if isinstance(value, basestring):
+            if value.lower in BooleanField.TRUE_STATES:
                 return True
         else:
             return bool(value)
@@ -86,21 +104,13 @@ def quote_value(value):
                          .replace('\t', '\\t') \
                          .replace('"', '\\"').encode('utf-8')
 
+
 def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
     try:
         return field(value)
     except ValidationError, e:
         return field.get_default()
-
-
-def get_converter_name(conv):
-    """Get the name of a converter"""
-    return {
-        bool:   'boolean',
-        int:    'integer',
-        float:  'float',
-    }.get(conv, 'string')
 
 
 class Configuration(object):
@@ -165,43 +175,44 @@ class Configuration(object):
     def __setitem__(self, key, value):
         """Set the config item's value.
         May raise `IOError`, you may want to use `change_single`."""
-        self.change_single(key, value, catch=False)
+        self.change_single(key, value, False)
 
     def __delitem__(self, key):
         """Revert the config item's value to its default.
         May raise `IOError`, you may want to use `revert_single`"""
-        self.revert_single(key, catch=False)
+        self.revert_single(key, False)
 
-    def change_single(self, key, value, catch=True):
-        """Create and commit a transaction for a single key-value-pair. Return
-        True on success, otherwise False.
+    def change_single(self, key, value, silent=False):
+        """Create and commit a transaction fro a single key-value pair.
+
+        Return `True` on success, otherwise `False`.  If :attr:`silent` is
+        applied `True` we fail silently on exceptions.
         """
-        t = self.edit()
-        t[key] = value
+        trans = self.edit()
         try:
-            t.commit()
-            if catch:
-                return True
+            trans[key] = value
+            trans.commit()
         except IOError:
-            if catch:
+            if silent:
                 return False
             raise
+        return True
 
-    def revert_single(self, key, catch=True):
-        """Create and commit a transaction for a single key-value-pair,
-        resetting the value to its default value. Return True on success,
-        otherwise False.
+    def revert_single(self, key, silent=False):
+        """Revert a single key to it's default.
+
+        Fail silently if :attr:`silent` is applied `True`,
+        see :meth:`change_single` for more details.
         """
-        t = self.edit()
-        t.revert_to_default(key)
+        trans = self.edit()
         try:
-            t.commit()
-            if catch:
-                return True
+            trans.revert_to_default(key)
+            trans.commit()
         except IOError:
-            if catch:
+            if silent:
                 return False
             raise
+        return True
 
     def edit(self):
         """Return a new transaction object."""

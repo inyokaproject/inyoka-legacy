@@ -47,8 +47,18 @@ class InyokaApplication(object):
 
         url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
         self.url_map = Map(url_map)
-        self.url_adapter = self.url_map.bind(config['base_domain_name'])
         self.bind()
+
+    @property
+    def url_adapter(self):
+        domain = config['base_domain_name']
+        if not local.request is None:
+            adapter = self.url_map.bind_to_environ(
+                local.request.environ,
+                server_name=domain)
+        else:
+            adapter = self.url_map.bind(domain)
+        return adapter
 
     def dispatch(self, environ, start_response):
         """The overall dispatch process.
@@ -71,8 +81,7 @@ class InyokaApplication(object):
         # intercept exceptions that happen in the application.
         # TODO: implement real exception handling and logging
         try:
-            urls = self.url_map.bind_to_environ(
-                request.environ, server_name=config['base_domain_name'])
+            urls = self.url_adapter
 
             for middleware in IMiddleware.iter_middlewares():
                 if middleware.is_low_level:
@@ -82,8 +91,6 @@ class InyokaApplication(object):
 
             if response is None:
                 # dispatch the request if not already done by some middleware
-                self.url_adapter = urls
-
                 try:
                     rule, args = urls.match(request.path, return_rule=True)
                     response = IController.get_view(rule.endpoint)(request, **args)

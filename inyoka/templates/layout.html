@@ -3,8 +3,14 @@
     <title>Inyoka</title>
   </head>
   <body>
-    <h1>Inyoka</h2>
-    
+    <h1>Inyoka</h2> 
+    <div>
+    {% if REQUEST.user.anonymous %}
+      <a href="{{ href('portal/login') }}">Login</a>
+    {% else %}
+      Hallo {{ REQUEST.user }} <a href="{{ href('portal/logout') }}">Logout</a>
+    {% endif %}
+    </div>
     <div id="content">
     {% block content %}
 

@@ -22,7 +22,7 @@ from functools import update_wrapper
 from nose.plugins.base import Plugin
 from werkzeug import Client, BaseResponse, EnvironBuilder
 from inyoka.core.config import config
-from inyoka.core.context import get_application
+from inyoka.core.context import current_application
 from inyoka.core.database import db
 from inyoka.core.http import Request
 from inyoka.core.routing import href, Map, IController
@@ -31,16 +31,6 @@ from inyoka.utils.urls import make_full_domain
 
 # disable the logger
 logger.disabled = True
-
-
-MESSAGE_TEMPLATE = '''
-From: %s
-To: %s
-Subject: %s
-Message: %s'''
-
-
-csrf_token_re = re.compile(r'<input\s+.*?name=[\'"]_form_token[\'"]\s+.*?value=[\'"](.*?)[\'"][^>]*?>(?is)')
 
 
 class Context(object):
@@ -72,7 +62,10 @@ class Context(object):
             # fail silently
             pass
 
+
+# initialize the test context
 context = Context()
+
 
 class ResponseWrapper(object):
 
@@ -86,7 +79,7 @@ class ViewTestCase(unittest.TestCase):
 
     component = 'portal'
     response = None
-    client = Client(get_application(), response_wrapper=ResponseWrapper)
+    client = Client(current_application, response_wrapper=ResponseWrapper)
 
     def open_location(self, path, method='GET', **kwargs):
         """Open a location (path)"""
@@ -96,11 +89,73 @@ class ViewTestCase(unittest.TestCase):
             base_url=href(self.component), **kwargs)
         return self.response
 
+    def get_context(self, path, method='GET', **kwargs):
+        """This method returns the internal context of the templates
+        so that we can check it in our view-tests."""
+        response = self.open_location(path, method, **kwargs)
+
+        # we assume to test a @templated view function.  We don't have that
+        # much view functions where we don't use the @ templated decorator
+        # or even a `TemplateResponse` as return type.
+        assert isinstance(response.app, TemplateResponse)
+        return response.app.template_context
+
     def login(self, credentials):
         return
 
     def logout(self):
         return
+
+
+def viewtest(location=None, method='GET', component='portal', **bkw):
+    """
+    This decorator is used to create an easy test-environment. Example usage::
+
+        @viewtest('/', component='forum')
+        def test_forum_index(client, tctx, ctx):
+            assert tctx['is_index'] == True
+
+    As you see this decorator adds the following arguments to the function
+    call::
+
+        `resp`
+            The returned response. With that we are able to check for
+            custom response headers and other things.
+        `tctx`
+            This is the template context returned by view functions decorated
+            with the @templated decorator. So it's required to test a @templated
+            function if you use the @view_test decorator.
+        `ctx`
+            The overall test context. It's a `Context` instance with some methods
+            and attributes to ensure a easy test experience.
+
+    :param location: The script path of the view. E.g ``/forum/foobar/``.
+                     If not given the `tctx` supplied as an argument
+                     of the test-function will be `None`.
+    :param method:  The method of the request. It must be one of GET, POST,
+                    HEAD, DELETE or PUT.
+    :param component: The component of the inyoka portal.
+                      E.g portal, forum, paste…
+    :param bkw: You can also use the kwargs for all arguments
+                :meth:`werkzeug.test.Client.open` uses to supply
+                `data` and other things.
+    """
+    def _wrapper(func):
+        def decorator(*args, **kwargs):
+            client = Client(application, response_wrapper=ResponseWrapper)
+            if not 'follow_redirects' in bkw:
+                bkw['follow_redirects'] = True
+            if location is not None:
+                resp = client.open(location, method=method,
+                                   base_url=href(component), **bkw)
+                assert isinstance(resp.app, TemplateResponse)
+                tctx = resp.app.temmplate_context
+            else:
+                tctx = None
+            args = (resp, tctx, context) + args
+            return func(*args, **kwargs)
+        return update_wrapper(decorator, func)
+    return _wrapper
 
 
 def setup_folders():

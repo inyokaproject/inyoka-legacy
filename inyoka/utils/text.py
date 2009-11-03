@@ -12,7 +12,7 @@ import re
 import unicodedata
 from datetime import datetime
 from itertools import starmap
-from inyoka.core.i18n import rebase_to_timezone
+from inyoka.i18n import rebase_to_timezone
 
 
 _punctuation_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')

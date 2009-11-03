@@ -22,10 +22,6 @@ class IMiddleware(Component, UrlMixin):
     # TODO: document sensible priority values
     priority = 0
 
-    # if a middleware is applied as “low level” we apply environ and start_response
-    # to :meth:`process_request` instead of the “high level” request object
-    is_low_level = False
-
     # set `build_only` from `UrlMixin` to `True` 'cause middlewares should
     # never ever build matching url rules
     build_only = True

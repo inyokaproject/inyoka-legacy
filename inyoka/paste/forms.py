@@ -11,7 +11,7 @@
 
 from pygments.lexers import get_all_lexers
 from inyoka.core import forms
-from inyoka.core.i18n import _
+from inyoka.i18n import _
 
 
 
@@ -25,6 +25,6 @@ def _get_pygments_lexers(add_empty=True):
 
 
 class AddPasteForm(forms.Form):
-    code = forms.TextField(u'Code', required=True, widget=forms.Textarea)
+    code = forms.TextField(u'Code', required=True, widget=forms.widgets.Textarea)
     language = forms.ChoiceField(u'Highlighting',
                                  choices=list(_get_pygments_lexers()))

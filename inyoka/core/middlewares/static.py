@@ -16,8 +16,9 @@ from werkzeug.routing import Rule
 from werkzeug.exceptions import NotFound
 
 from inyoka.core import environ
-from inyoka.core.middlewares import IMiddleware
+from inyoka.core.http import Response
 from inyoka.core.config import config
+from inyoka.core.middlewares import IMiddleware
 
 
 STATIC_PATH = path.join(environ.PACKAGE_CONTENTS, config['static_path'])
@@ -31,8 +32,6 @@ class StaticMiddleware(IMiddleware, SharedDataMiddleware):
     """
 
     priority = 99
-
-    is_low_level = True
 
     url_rules = [
         Rule('/__static__', defaults={'file': '/'}, endpoint='static/file'),
@@ -49,5 +48,7 @@ class StaticMiddleware(IMiddleware, SharedDataMiddleware):
         }
         SharedDataMiddleware.__init__(self, app, exports)
 
-    def process_request(self, environ, start_response):
-        return self(environ, start_response)
+    def process_request(self, request):
+        return
+        #FIXME: find another way to integrate `SharedDataMiddleware` as a real
+        #       WSGI middleware...

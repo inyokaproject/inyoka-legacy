@@ -34,7 +34,6 @@ class PasteController(IController):
                       author_id=1)
             db.session.add(e)
             db.session.commit()
-            print 'saved as #%d' % e.id
             return redirect(href(e))
 
         recent_pastes = Entry.query.order_by(Entry.pub_date.desc())[:10]

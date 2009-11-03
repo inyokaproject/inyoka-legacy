@@ -25,6 +25,7 @@ from inyoka.core.config import config
 from inyoka.core.context import current_application
 from inyoka.core.database import db
 from inyoka.core.http import Request
+from inyoka.core.templating import TemplateResponse
 from inyoka.core.routing import href, Map, IController
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
@@ -77,16 +78,29 @@ class ResponseWrapper(object):
 
 class ViewTestCase(unittest.TestCase):
 
-    component = 'portal'
+    controller = None
     response = None
     client = Client(current_application, response_wrapper=ResponseWrapper)
+
+    def __init__(self, *args, **kwargs):
+        unittest.TestCase.__init__(self, *args, **kwargs)
+        self.url_map = Map(self.controller.url_rules)
+        self.subdomain = config['routing.%s.subdomain' % self.controller.name]
+        self.submount = config['routing.%s.submount' %
+                               self.controller.name].strip('/')
 
     def open_location(self, path, method='GET', **kwargs):
         """Open a location (path)"""
         if not 'follow_redirects' in kwargs:
             kwargs['follow_redirects'] = True
+        if not path.endswith('/'):
+            path += '/'
+
+        path = self.submount + path
+        base_url = make_full_domain(self.subdomain)
         self.response = self.client.open(path, method=method,
-            base_url=href(self.component), **kwargs)
+            base_url=base_url, **kwargs)
+
         return self.response
 
     def get_context(self, path, method='GET', **kwargs):
@@ -97,6 +111,7 @@ class ViewTestCase(unittest.TestCase):
         # we assume to test a @templated view function.  We don't have that
         # much view functions where we don't use the @ templated decorator
         # or even a `TemplateResponse` as return type.
+        # print response.app, response.headers, response.status
         assert isinstance(response.app, TemplateResponse)
         return response.app.template_context
 
@@ -106,56 +121,6 @@ class ViewTestCase(unittest.TestCase):
     def logout(self):
         return
 
-
-def viewtest(location=None, method='GET', component='portal', **bkw):
-    """
-    This decorator is used to create an easy test-environment. Example usage::
-
-        @viewtest('/', component='forum')
-        def test_forum_index(client, tctx, ctx):
-            assert tctx['is_index'] == True
-
-    As you see this decorator adds the following arguments to the function
-    call::
-
-        `resp`
-            The returned response. With that we are able to check for
-            custom response headers and other things.
-        `tctx`
-            This is the template context returned by view functions decorated
-            with the @templated decorator. So it's required to test a @templated
-            function if you use the @view_test decorator.
-        `ctx`
-            The overall test context. It's a `Context` instance with some methods
-            and attributes to ensure a easy test experience.
-
-    :param location: The script path of the view. E.g ``/forum/foobar/``.
-                     If not given the `tctx` supplied as an argument
-                     of the test-function will be `None`.
-    :param method:  The method of the request. It must be one of GET, POST,
-                    HEAD, DELETE or PUT.
-    :param component: The component of the inyoka portal.
-                      E.g portal, forum, paste…
-    :param bkw: You can also use the kwargs for all arguments
-                :meth:`werkzeug.test.Client.open` uses to supply
-                `data` and other things.
-    """
-    def _wrapper(func):
-        def decorator(*args, **kwargs):
-            client = Client(application, response_wrapper=ResponseWrapper)
-            if not 'follow_redirects' in bkw:
-                bkw['follow_redirects'] = True
-            if location is not None:
-                resp = client.open(location, method=method,
-                                   base_url=href(component), **bkw)
-                assert isinstance(resp.app, TemplateResponse)
-                tctx = resp.app.temmplate_context
-            else:
-                tctx = None
-            args = (resp, tctx, context) + args
-            return func(*args, **kwargs)
-        return update_wrapper(decorator, func)
-    return _wrapper
 
 
 def setup_folders():
@@ -234,26 +199,3 @@ def run_suite(tests_path=None, clean_db=False, base=None):
             except (OSError, AttributeError):
                 # fail silently
                 pass
-
-class ViewTester(object):
-    def __init__(self, Controller):
-        self.app_name = Controller.name
-        self.url_map = Map(Controller.url_rules)
-        self.subdomain = config['routing.%s.subdomain' % self.app_name]
-        self.submount = config['routing.%s.submount' % self.app_name].strip('/')
-
-    def __call__(self, path, **kwargs):
-        e = EnvironBuilder(self.submount + path,
-                           'http://%s/' % make_full_domain(self.subdomain),
-                           **kwargs)
-        environ = e.get_environ()
-        request = Request(environ, get_application())
-
-        adapter = self.url_map.bind_to_environ(environ,
-                                               make_full_domain(self.subdomain))
-        view_name, ctx = adapter.match(self.submount + path)
-        view = IController._endpoint_map[self.app_name][view_name]
-
-        response = view(request, **ctx)
-
-        return response, getattr(response, 'template_context', None)

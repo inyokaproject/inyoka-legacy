@@ -20,15 +20,20 @@ def make_full_domain(subdomain=''):
     >>> from inyoka.core.api import config
     >>> config['base_domain_name'] = 'example.com'
     >>> make_full_domain()
-    u'example.com'
+    u'http://example.com/'
     >>> make_full_domain('www')
-    u'www.example.com'
+    u'http://www.example.com/'
     >>> del config['base_domain_name']
 
     """
-    if not subdomain:
-        return config['base_domain_name']
-    return u'%s.%s' % (subdomain, config['base_domain_name'])
+    adapter = current_application.url_adapter
+
+    return unicode('%s://%s%s%s/' % (
+        adapter.url_scheme,
+        subdomain and subdomain + '.' or '',
+        adapter.server_name,
+        adapter.script_name[:-1]
+    ))
 
 
 def url_for(endpoint, **args):

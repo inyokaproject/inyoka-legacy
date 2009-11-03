@@ -25,6 +25,7 @@ class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
     def __init__(self):
+        self.bind()
         #TODO: this should go into some kind of setup process
         if not config.exists:
             # write the inyoka.ini file
@@ -47,7 +48,6 @@ class InyokaApplication(object):
 
         url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
         self.url_map = Map(url_map)
-        self.bind()
 
     @property
     def url_adapter(self):

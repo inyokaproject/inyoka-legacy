@@ -84,7 +84,7 @@ def redirect(url, code=302, allow_external_redirect=False,
             raise BadRequest()
 
     # keep the current URL schema if we have an active request if we
-    # should.  If https enforcement is set we suppose that the feed_url
+    # should.  If https enforcement is set we suppose that the url
     # is already set to an https value.
     req = current_request
     if req and not force_scheme_change:

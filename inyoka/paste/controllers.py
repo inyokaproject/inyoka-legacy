@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import redirect
+from werkzeug.exceptions import NotFound
 from inyoka.core.api import IController, Rule, register, register_service, \
     href, Response, templated, href, db
 from inyoka.paste.forms import AddPasteForm
@@ -46,4 +47,6 @@ class PasteController(IController):
     @register('view_paste')
     def view_paste(self, request, id):
         e = Entry.query.get(id)
+        if e is None:
+            raise NotFound
         return Response(e.code, mimetype='text/plain')

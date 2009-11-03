@@ -12,3 +12,4 @@ def test_url_for():
     eq_(url_for('portal/index', _external=True), 'http://inyoka.local:8080/')
     eq_(url_for('portal/index', _anchor='News'), '/#News')
     eq_(url_for('portal/index', _external=True, _anchor='News'), 'http://inyoka.local:8080/#News')
+    del config['base_domain_name']

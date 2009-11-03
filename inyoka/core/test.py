@@ -21,8 +21,9 @@ from os import path
 from functools import update_wrapper
 from nose.plugins.base import Plugin
 from werkzeug import Client, BaseResponse, EnvironBuilder
+from werkzeug.datastructures import Headers
 from inyoka.core.config import config
-from inyoka.core.context import current_application
+from inyoka.core.context import current_application, local
 from inyoka.core.database import db
 from inyoka.core.http import Request
 from inyoka.core.templating import TemplateResponse
@@ -73,7 +74,7 @@ class ResponseWrapper(object):
     def __init__(self, app, status, headers):
         self.app = app
         self.status = status
-        self.headers = headers
+        self.headers = Headers(headers)
 
 
 class ViewTestCase(unittest.TestCase):
@@ -101,7 +102,14 @@ class ViewTestCase(unittest.TestCase):
         self.response = self.client.open(path, method=method,
             base_url=base_url, **kwargs)
 
+        # Kill the request, so we are on the top domain again…
+        local.request = None
+
         return self.response
+
+    def open_location_no_follow(self, path, method='GET', **kwargs):
+        kwargs['follow_redirects'] = False
+        return self.open_location(path, method, **kwargs)
 
     def get_context(self, path, method='GET', **kwargs):
         """This method returns the internal context of the templates

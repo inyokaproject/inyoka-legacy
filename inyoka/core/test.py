@@ -102,7 +102,10 @@ class ViewTestCase(unittest.TestCase):
         self.response = self.client.open(path, method=method,
             base_url=base_url, **kwargs)
 
-        # Kill the request, so we are on the top domain again…
+        # Cleanup and put the application back into locals for other tests…
+        app = local.application
+        self.response.app.close()
+        local.application = app
         local.request = None
 
         return self.response

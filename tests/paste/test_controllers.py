@@ -21,8 +21,8 @@ class PasteTester(ViewTestCase):
             # 'csrf-token missing'
         }
 
-        #response = self.open_location_no_follow('/', 'POST', data=data)
-        #eq_(response.headers['Location'], href('paste/view_paste', id=1))
+        response = self.open_location_no_follow('/', 'POST', data=data)
+        eq_(response.headers['Location'], href('paste/view_paste', id=1))
 
         #context = self.get_context('/')
         #eq_(len(context['recent_pastes']), 1)

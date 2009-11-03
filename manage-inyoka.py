@@ -26,7 +26,7 @@ def action_initdb():
     db.metadata.create_all()
 
 
-def action_runtests(cleanup=False, debug=True):
+def action_runtests():
     """Run the unit and doctests"""
     import sys
     from os import path
@@ -39,15 +39,15 @@ def action_runtests(cleanup=False, debug=True):
     tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
 
     trans = config.edit()
-    trans['database_debug'] = debug
-    trans['debug'] = debug
+    trans['database_debug'] = True
+    trans['debug'] = True
     config.touch()
 
     # remove unused options from sys.argv
     sys.argv = sys.argv[:1]
 
     from inyoka.core.test import run_suite
-    run_suite(tests_path, cleanup)
+    run_suite()
 
 
 def make_runserver():

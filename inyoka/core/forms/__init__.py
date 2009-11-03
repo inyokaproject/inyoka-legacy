@@ -29,7 +29,7 @@ class Form(FormBase):
 
     def _lookup_request_info(self):
         """Return our current request object"""
-        #return current_request
+        return current_request
 
     def _get_wsgi_environ(self):
         """Return the WSGI environment from the request info if possible."""

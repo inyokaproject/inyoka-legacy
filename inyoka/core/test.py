@@ -9,205 +9,113 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import re
 import os
-import sys
-import urlparse
-import shutil
-import unittest
 import tempfile
-import nose
+import unittest
+import warnings
 from os import path
-from functools import update_wrapper
-from nose.plugins.base import Plugin
-from werkzeug import Client, BaseResponse, EnvironBuilder
-from werkzeug.datastructures import Headers
+
+import nose
+from lxml import etree
+from html5lib import HTMLParser
+from html5lib.treebuilders import getTreeBuilder
+
+#import re
+#import sys
+#import urlparse
+#import shutil
+
+from werkzeug import Client, cached_property
+from inyoka.core import database
+from inyoka.core.context import local
 from inyoka.core.config import config
-from inyoka.core.context import current_application, local
-from inyoka.core.database import db
-from inyoka.core.http import Request
-from inyoka.core.templating import TemplateResponse
-from inyoka.core.routing import href, Map, IController
+from inyoka.core.http import Request, Response
 from inyoka.utils.logger import logger
-from inyoka.utils.urls import make_full_domain
 
 # disable the logger
 logger.disabled = True
 
+warnings.filterwarnings('ignore', message='lxml does not preserve')
+warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
-class Context(object):
-    """
-    This is the context for our tests. It provides
-    some required things like the `admin` and `user`
-    attributes to create a overall test experience.
-    """
-    admin = None
-    res_dir = None
-    anonymous = None
-    instance_dir = None
+html_parser = HTMLParser(tree=getTreeBuilder('lxml'))
 
-    def setup_instance(self, instance_dir):
-        """
-        Setup the test context. That means: Create an admin
-        and normal test user and patch required libraries.
-        """
-        self.instance_dir = instance_dir
-        #TODO: setup admin, anonymous once models are up again
+class TestResponse(Response):
+    """Responses for the test client."""
 
-    def teardown_instance(self):
-        db.session.rollback()
-        db.session.expunge_all()
-        db.metadata.drop_all()
-        try:
-            os.rmdir(self.instance_dir)
-        except:
-            # fail silently
-            pass
-
-
-# initialize the test context
-context = Context()
-
-
-class ResponseWrapper(object):
-
-    def __init__(self, app, status, headers):
-        self.app = app
-        self.status = status
-        self.headers = Headers(headers)
+    @cached_property
+    def html(self):
+        return html_parser.parse(self.data)
 
 
 class ViewTestCase(unittest.TestCase):
 
     controller = None
-    response = None
-    client = Client(current_application, response_wrapper=ResponseWrapper)
 
-    def __init__(self, *args, **kwargs):
-        unittest.TestCase.__init__(self, *args, **kwargs)
-        self.url_map = Map(self.controller.url_rules)
-        self.subdomain = config['routing.%s.subdomain' % self.controller.name]
-        self.submount = config['routing.%s.submount' %
-                               self.controller.name].strip('/')
-
-    def open_location(self, path, method='GET', **kwargs):
-        """Open a location (path)"""
-        if not 'follow_redirects' in kwargs:
-            kwargs['follow_redirects'] = True
-        if not path.endswith('/'):
-            path += '/'
-
-        path = self.submount + path
-        base_url = make_full_domain(self.subdomain)
-        self.response = self.client.open(path, method=method,
-            base_url=base_url, **kwargs)
-
-        # Cleanup and put the application back into locals for other tests…
-        app = local.application
-        self.response.app.close()
-        local.application = app
-        local.request = None
-
-        return self.response
-
-    def open_location_no_follow(self, path, method='GET', **kwargs):
-        kwargs['follow_redirects'] = False
-        return self.open_location(path, method, **kwargs)
+    def setUp(self):
+        from inyoka.application import application
+        self._client = Client(application, response_wrapper=TestResponse)
+        self.base_domain = config['base_domain_name']
+        subdomain = config['routing.%s.subdomain' % self.controller.name]
+        submount = config['routing.%s.submount' %
+                           self.controller.name].strip('/')
+        self.base_url = 'http://%s.%s' % (subdomain, self.base_domain)
 
     def get_context(self, path, method='GET', **kwargs):
-        """This method returns the internal context of the templates
-        so that we can check it in our view-tests."""
-        response = self.open_location(path, method, **kwargs)
+        self.open(path, method=method, **kwargs)
+        return local.template_context
 
-        # we assume to test a @templated view function.  We don't have that
-        # much view functions where we don't use the @ templated decorator
-        # or even a `TemplateResponse` as return type.
-        #print response.app, response.headers, response.status
-        assert isinstance(response.app, TemplateResponse)
-        return response.app.template_context
+    def open(self, path, *args, **kw):
+        if not 'follow_redirects' in kw:
+            kw['follow_redirects'] = True
+        if not path.endswith('/'):
+            path += '/'
+        kw['base_url'] = self.base_url
+        response = self._client.open(path, *args, **kw)
 
-    def login(self, credentials):
-        return
+        local.request = None
 
-    def logout(self):
-        return
+        return response
 
+    def get(self, *args, **kw):
+        """Like open but method is enforced to GET."""
+        kw['method'] = 'GET'
+        return self.open(*args, **kw)
 
+    def post(self, *args, **kw):
+        """Like open but method is enforced to POST."""
+        kw['method'] = 'POST'
+        return self.open(*args, **kw)
 
-def setup_folders():
-    tmpdir = tempfile.gettempdir()
-    instance_folder = os.path.join(tmpdir, 'inyoka_test')
-    if not path.exists(instance_folder):
-        os.mkdir(instance_folder)
-        config['media_root'] = os.path.join(instance_folder, 'media')
-        os.mkdir(config['media_root'])
+    def normalize_local_path(self, path):
+        if path in ('', '.'):
+            path = path
+        elif path.startswith(self.base_url):
+            path = path[len(self.base_url) - 1:]
+        return path
 
-    return instance_folder
-
-
-#XXX: yet unused
-def _initialize_database(uri):
-    from sqlalchemy import create_engine
-    from migrate.versioning import api
-    from migrate.versioning.repository import Repository
-    from migrate.versioning.exceptions import DatabaseAlreadyControlledError, \
-                                              DatabaseNotControlledError
-
-    repository = Repository('inyoka/migrations')
-
-    try:
-        schema = api.ControlledSchema(db.engine, repository)
-    except DatabaseNotControlledError:
-        pass
-
-    try:
-        schema = api.ControlledSchema.create(db.engine, repository, None)
-    except DatabaseAlreadyControlledError:
-        pass
-
-    api.upgrade(db.engine, repository, None)
+    def submit_form(self, path, data, follow_redirects=False):
+        response = self.get(path)
+        try:
+            form = response.html.xpath('//form')[0]
+        except IndexError:
+            raise RuntimeError('no form on page')
+        print response.data
+        csrf_token = form.xpath('//input[@name="_csrf_token"]')[0]
+        data['_csrf_token'] = csrf_token.attrib['value']
+        action = self.normalize_local_path(form.attrib['action'])
+        return self.post(action, method=form.attrib['method'].upper(),
+                                data=data, follow_redirects=follow_redirects)
 
 
-def run_suite(tests_path=None, clean_db=False, base=None):
-    if tests_path is None:
-        raise RuntimeError('You must specify a path for the unittests')
-    # setup our folder structure
-    instance_dir = setup_folders()
-
-    #XXX: this raises, need to find out why
-    #config['debug'] = True
-
-    # initialize the database
-    #XXX: _initialize_database(config['database_url'])
-    db.metadata.create_all()
-
-    # setup the test context
-    _res = path.join(tests_path, 'res')
-    if not path.exists(_res):
-        os.mkdir(_res)
-    context.res_dir = _res
-    context.setup_instance(instance_dir)
-
+def run_suite():
     import nose.plugins.builtin
     plugins = [x() for x in nose.plugins.builtin.plugins]
+
+    config['debug'] = True
+    engine = database.get_engine()
+    database.metadata.create_all(bind=engine)
     try:
         nose.main(plugins=plugins)
     finally:
-        # cleanup the test context
-        context.teardown_instance()
-        shutil.rmtree(instance_dir)
-        if os.path.isdir(config['media_root']):
-            shutil.rmtree(config['media_root'])
-        del config['media_root']
-
-        # optionally delete our test database
-        if clean_db and db.engine.url.drivername == 'sqlite':
-            try:
-                database = db.engine.url.database
-                if path.isabs(db.engine.url.database):
-                    os.remove(database)
-                else:
-                    os.remove(path.join(tests_path, path.pardir, database))
-            except (OSError, AttributeError):
-                # fail silently
-                pass
+        database.metadata.drop_all(bind=engine)

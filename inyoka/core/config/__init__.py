@@ -93,6 +93,11 @@ def unquote_value(value):
 
 def quote_value(value):
     """Quote a configuration value."""
+    if isinstance(value, bool):
+        value = u'1' if value else u'0'
+    if isinstance(value, int):
+        value = unicode(value)
+
     if not value:
         return ''
     if value.strip() == value and value[0] not in '"\'' and \

@@ -11,9 +11,8 @@ class PasteTester(ViewTestCase):
     controller = PasteController
 
     def test_index(self):
-        #context = self.get_context('/')
-
-        #eq_(context['recend_pastes'], [])
+        context = self.get_context('/')
+        eq_(context['recent_pastes'], [])
 
         data = {
             'code': "#!/usr/bin/env python\nprint 'hello world'",
@@ -21,9 +20,9 @@ class PasteTester(ViewTestCase):
             # 'csrf-token missing'
         }
 
-        response = self.open_location_no_follow('/', 'POST', data=data)
+        response = self.submit_form('/', data=data)
         eq_(response.headers['Location'], href('paste/view_paste', id=1))
 
-        #context = self.get_context('/')
-        #eq_(len(context['recent_pastes']), 1)
-        #eq_(context['recent_pastes'][0].code, data['code'])
+        context = self.get_context('/')
+        eq_(len(context['recent_pastes']), 1)
+        eq_(context['recent_pastes'][0].code, data['code'])

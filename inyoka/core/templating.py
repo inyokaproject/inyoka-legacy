@@ -41,27 +41,6 @@ def urlencode_filter(value):
     return url_quote(value)
 
 
-class TemplateResponse(Response):
-    """
-    Special Response object for using templates.
-
-    :param template_name: The name of the template file.
-    :param context: The context for rendering the template.
-
-    All other parameters (except `response` are the same as in the normal
-    `Response`.
-    """
-    def __init__(self, template_name, context, **kwargs):
-        if 'response' in kwargs:
-            raise TypeError('TemplateResponse does not accept `response` '
-                            'parameter')
-        data = render_template(template_name, context)
-        #TODO: see inyoka.core.test.run_suite
-        if config['debug'] or True:
-            self.template_context = context
-        Response.__init__(self, data, **kwargs)
-
-
 def templated(template_name):
     """
     Decorator for views. The decorated view must return a dictionary which is
@@ -74,7 +53,10 @@ def templated(template_name):
             if ret is None:
                 ret = {}
             if isinstance(ret, dict):
-                return TemplateResponse(template_name, context=ret)
+                data = render_template(template_name, ret)
+                if config['debug'] == True:
+                    local.template_context = ret
+                return Response(data, **kwargs)
             return Response.force_type(ret)
         return proxy
     return decorator

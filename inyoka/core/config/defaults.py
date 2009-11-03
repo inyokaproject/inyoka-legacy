@@ -23,7 +23,7 @@ DEFAULTS = {
     'cookie_secret':            TextField(default='CHANGEME',
                                           help_text=lazy_gettext(
         u'The secret used for hashing the cookies')),
-    'database_url':             TextField(default=u'sqlite://',
+    'database_url':             TextField(default=u'sqlite:///dev.db',
                                           help_text=lazy_gettext(
         u'The database URL.  For more information about database settings '
         u'consult the Inyoka docs.')),

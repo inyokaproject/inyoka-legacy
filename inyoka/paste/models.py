@@ -22,6 +22,3 @@ class Entry(db.Model):
 
     def get_absolute_url(self):
         return href('paste/view_paste', id=self.id)
-
-#XXX: just to make the test pass. actually that should happen automatically???
-db.metadata.tables[Entry.__tablename__] = Entry.__table__

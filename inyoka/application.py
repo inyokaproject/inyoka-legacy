@@ -65,7 +65,10 @@ class InyokaApplication(object):
         local.application = self
 
     def dispatch_request(self, request):
-        urls = self.url_adapter
+        try:
+            urls = self.url_adapter
+        except ValueError:
+            return redirect('http://%s/' % config['base_domain_name'])
 
         for middleware in IMiddleware.iter_middlewares():
             response = middleware.process_request(request)
@@ -73,18 +76,16 @@ class InyokaApplication(object):
             if response is not None:
                 return response
 
-        if response is None:
-            # dispatch the request if not already done by some middleware
-            try:
-                rule, args = urls.match(request.path, return_rule=True)
-                response = IController.get_view(rule.endpoint)(request, **args)
-            except HTTPException, e:
-                response = e.get_response(request)
-            except SQLAlchemyError, e:
-                db.session.rollback()
-                logger.error(e)
-            except ValueError:
-                response = redirect('http://%s/' % config['base_domain_name'])
+        # dispatch the request if not already done by some middleware
+        try:
+            rule, args = urls.match(request.path, return_rule=True)
+            response = IController.get_view(rule.endpoint)(request, **args)
+        except HTTPException, e:
+            response = e.get_response(request)
+        except SQLAlchemyError, e:
+            db.session.rollback()
+            logger.error(e)
+            raise e
 
         return response
 

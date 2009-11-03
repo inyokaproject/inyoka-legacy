@@ -20,12 +20,16 @@ def make_shell():
     application = make_app()
     return locals()
 
+def action_initdb():
+    application = make_app()
+    from inyoka.core.database import db
+    db.metadata.create_all()
 
-def action_runtests(cleanup=True, debug=True):
+
+def action_runtests(cleanup=False, debug=True):
     """Run the unit and doctests"""
     import sys
     from os import path
-    from werkzeug import import_string
 
     # initialize the app
     from inyoka.application import application
@@ -33,9 +37,6 @@ def action_runtests(cleanup=True, debug=True):
     from inyoka.core.api import config, environ
 
     tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
-    #TODO: support other databases for unittests
-    sqlite_path = path.join(tests_path, 'test_database.db')
-    dburi = 'sqlite:///%s' % sqlite_path
 
     trans = config.edit()
     trans['database_debug'] = debug
@@ -60,7 +61,6 @@ def make_runserver():
 
 
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
-# TODO make configureable
 action_runserver = make_runserver()
 
 

@@ -111,7 +111,7 @@ class ViewTestCase(unittest.TestCase):
         # we assume to test a @templated view function.  We don't have that
         # much view functions where we don't use the @ templated decorator
         # or even a `TemplateResponse` as return type.
-        # print response.app, response.headers, response.status
+        #print response.app, response.headers, response.status
         assert isinstance(response.app, TemplateResponse)
         return response.app.template_context
 
@@ -162,6 +162,7 @@ def run_suite(tests_path=None, clean_db=False, base=None):
         raise RuntimeError('You must specify a path for the unittests')
     # setup our folder structure
     instance_dir = setup_folders()
+
     #XXX: this raises, need to find out why
     #config['debug'] = True
 

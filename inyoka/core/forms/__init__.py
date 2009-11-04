@@ -50,5 +50,3 @@ class Form(FormBase):
 
     def _get_session(self):
         return current_request.session if current_request != None else {}
-
-

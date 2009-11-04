@@ -194,6 +194,13 @@ def href(endpoint, **values):
 
 
 class DateConverter(BaseConverter):
+    """
+    Converter for the werkzeug routing that converts date strings in URLs to
+    `datetime.date` objects.
+
+    :param format: A string as expected by the strftime methods. Note that only
+                   date related format characters such as m and d are supported.
+    """
     def __init__(self, map, format='%Y/%m/%d'):
         # convert format string to a regex so that we don't have to be greedy.
         regex = []

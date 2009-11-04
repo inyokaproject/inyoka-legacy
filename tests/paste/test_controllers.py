@@ -22,6 +22,7 @@ class PasteTester(ViewTestCase):
 
         response = self.submit_form('/', data=data)
         eq_(response.headers['Location'], href('paste/view_paste', id=1))
+        #TODO: add _external=True
 
         context = self.get_context('/')
         eq_(len(context['recent_pastes']), 1)

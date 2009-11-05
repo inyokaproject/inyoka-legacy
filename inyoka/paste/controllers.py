@@ -33,7 +33,7 @@ class PasteController(IController):
         if request.method == 'POST' and form.validate(request.form):
             e = Entry(code=form.data['code'],
                       language=form.data['language'],
-                      author_id=1)
+                      author=1)
             db.session.add(e)
             db.session.commit()
             return redirect(href(e))

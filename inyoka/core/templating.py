@@ -12,18 +12,20 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import local, current_request
+from inyoka.core.context import get_request, local
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.core.routing import href
 from inyoka.utils.urls import url_encode, url_quote, url_for
 
+# Used for debugging
+TEMPLATE_CONTEXT = {}
 
 def populate_context_defaults(context):
     """Fill in context defaults."""
-    if current_request:
+    if get_request():
         context.update(
-            CURRENT_URL=current_request.build_absolute_url(),
+            CURRENT_URL=get_request().build_absolute_url(),
         )
 
 
@@ -55,7 +57,8 @@ def templated(template_name):
             if isinstance(ret, dict):
                 data = render_template(template_name, ret)
                 if config['debug'] == True:
-                    local.template_context = ret
+                    TEMPLATE_CONTEXT.clear()
+                    TEMPLATE_CONTEXT.update(ret)
                 return Response(data)
             return Response.force_type(ret)
         return templated__
@@ -83,7 +86,7 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=current_request,
+            REQUEST=local('request'),
             href=href,
             url_for=url_for,
         )

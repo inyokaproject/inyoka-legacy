@@ -8,10 +8,9 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import redirect
 from werkzeug.exceptions import NotFound
 from inyoka.core.api import IController, Rule, register, register_service, \
-    href, Response, templated, href, db
+    href, Response, templated, href, db, redirect
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
 

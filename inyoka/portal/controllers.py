@@ -8,10 +8,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import redirect
-
 from inyoka.core.api import IController, Rule, register, register_service, \
-    href, Response, templated, href
+    href, Response, templated, href, redirect
 from inyoka.core.auth import get_auth_system
 
 class PortalController(IController):

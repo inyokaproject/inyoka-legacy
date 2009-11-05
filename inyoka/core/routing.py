@@ -20,7 +20,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core import environ
 from inyoka.core.config import config
-from inyoka.core.context import current_application
+from inyoka.core.context import get_application
 from inyoka.core.database import db
 from inyoka.core.http import Response
 
@@ -189,8 +189,8 @@ register_service = IController.register_service
 def href(endpoint, **values):
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
-    adapter = current_application.url_adapter
-    return adapter.build(endpoint, values, force_external=True)
+    adapter = get_application().url_adapter
+    return adapter.build(endpoint, values)
 
 
 class DateConverter(BaseConverter):

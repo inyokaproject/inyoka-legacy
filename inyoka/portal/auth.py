@@ -1,6 +1,6 @@
-from werkzeug import redirect
 from inyoka.core.routing import href
 from inyoka.core.auth import AuthSystemBase, User
+from inyoka.core.http import redirect
 
 class EasyAuth(AuthSystemBase):
     _store = {}

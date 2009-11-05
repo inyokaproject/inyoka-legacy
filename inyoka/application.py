@@ -14,7 +14,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from inyoka import setup_components
 from inyoka.core.api import db, config, logger, IController, Request, \
     Response
-from inyoka.core.context import local, local_manager
+from inyoka.core.context import local, local_manager, get_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.middlewares import IMiddleware
@@ -52,9 +52,9 @@ class InyokaApplication(object):
     @property
     def url_adapter(self):
         domain = config['base_domain_name']
-        if not local.request is None:
+        if get_request():
             adapter = self.url_map.bind_to_environ(
-                local.request.environ,
+                get_request().environ,
                 server_name=domain)
         else:
             adapter = self.url_map.bind(domain)

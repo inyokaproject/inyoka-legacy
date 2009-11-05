@@ -20,17 +20,13 @@ from lxml import etree
 from html5lib import HTMLParser
 from html5lib.treebuilders import getTreeBuilder
 
-#import re
-#import sys
-#import urlparse
-#import shutil
-
 from werkzeug import Client, cached_property
 from inyoka.core import database
-from inyoka.core.context import local
+from inyoka.core.context import local, get_application
 from inyoka.core.config import config
 from inyoka.core.http import Request, Response
 from inyoka.utils.logger import logger
+from inyoka.core.templating import TEMPLATE_CONTEXT
 
 # disable the logger
 logger.disabled = True
@@ -63,17 +59,19 @@ class ViewTestCase(unittest.TestCase):
 
     def get_context(self, path, method='GET', **kwargs):
         self.open(path, method=method, **kwargs)
-        return local.template_context
+        c = TEMPLATE_CONTEXT
+        return c
 
     def open(self, path, *args, **kw):
+        app = get_application()
         if not 'follow_redirects' in kw:
             kw['follow_redirects'] = True
         if not path.endswith('/'):
             path += '/'
         kw['base_url'] = self.base_url
+        kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
-
-        local.request = None
+        local.application = app
 
         return response
 
@@ -100,7 +98,6 @@ class ViewTestCase(unittest.TestCase):
             form = response.html.xpath('//form')[0]
         except IndexError:
             raise RuntimeError('no form on page')
-        print response.data
         csrf_token = form.xpath('//input[@name="_csrf_token"]')[0]
         data['_csrf_token'] = csrf_token.attrib['value']
         action = self.normalize_local_path(form.attrib['action'])

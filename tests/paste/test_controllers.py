@@ -17,7 +17,6 @@ class PasteTester(ViewTestCase):
         data = {
             'code': "#!/usr/bin/env python\nprint 'hello world'",
             'language': 'python',
-            # 'csrf-token missing'
         }
 
         response = self.submit_form('/', data=data)

@@ -21,7 +21,8 @@ class PasteController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/paste/<int:id>/', endpoint='view_paste')
+        Rule('/paste/<int:id>/', endpoint='view_paste'),
+        Rule('/raw/<int:id>/', endpoint='raw_paste'),
     ]
 
 
@@ -45,8 +46,19 @@ class PasteController(IController):
         }
 
     @register('view_paste')
+    @templated('paste/view.html')
     def view_paste(self, request, id):
         e = Entry.query.get(id)
         if e is None:
             raise NotFound
+        return {
+            'paste': e,
+        }
+
+    @register('raw_paste')
+    def raw_paste(self, request, id):
+        e = Entry.query.get(id)
+        if e is None:
+            raise NotFound
         return Response(e.code, mimetype='text/plain')
+

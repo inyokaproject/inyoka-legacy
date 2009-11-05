@@ -16,7 +16,7 @@ from inyoka.core.context import local, current_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.core.routing import href
-from inyoka.utils.urls import url_encode, url_quote
+from inyoka.utils.urls import url_encode, url_quote, url_for
 
 
 def populate_context_defaults(context):
@@ -47,8 +47,8 @@ def templated(template_name):
     default_mimetype = 'text/html'
     then used as context for the given template. Returns a Response object.
     """
-    def decorator(f):
-        def proxy(*args, **kwargs):
+    def templated_(f):
+        def templated__(*args, **kwargs):
             ret = f(*args, **kwargs)
             if ret is None:
                 ret = {}
@@ -56,10 +56,10 @@ def templated(template_name):
                 data = render_template(template_name, ret)
                 if config['debug'] == True:
                     local.template_context = ret
-                return Response(data, **kwargs)
+                return Response(data)
             return Response.force_type(ret)
-        return proxy
-    return decorator
+        return templated__
+    return templated_
 
 
 class InyokaEnvironment(Environment):
@@ -85,9 +85,11 @@ class InyokaEnvironment(Environment):
             INYOKA_REVISION=INYOKA_REVISION,
             REQUEST=current_request,
             href=href,
+            url_for=url_for,
         )
         self.filters.update(
-            jsonencode=simplejson.dumps
+            jsonencode=simplejson.dumps,
+            url=href,
         )
 
         self.install_null_translations()

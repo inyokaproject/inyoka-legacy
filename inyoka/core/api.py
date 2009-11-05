@@ -9,6 +9,6 @@ from inyoka.core.database import db
 from inyoka.core.http import Request, Response
 from inyoka.core.routing import IController, register, register_service, \
     Rule, href
-from inyoka.i18n import *
-from inyoka.utils.logger import logger
 from inyoka.core.templating import templated, render_template
+from inyoka.utils.logger import logger
+from inyoka.i18n import *

@@ -13,5 +13,3 @@ class EasyAuth(AuthSystemBase):
 
     def get_user(self, request):
         return self._store.get(request.session.get('user_id'))
-
-

@@ -27,5 +27,3 @@ def test_date_converter():
     assert_raises(ValidationError, d.to_python, '2009 2009')
     d = DateConverter(map, '%Y %m')
     assert_raises(ValidationError, d.to_python, '2009 13')
-
-

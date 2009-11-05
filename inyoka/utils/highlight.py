@@ -20,7 +20,6 @@ _pygments_formatter = HtmlFormatter(style='colorful', cssclass='syntax',
 
 def highlight_code(code, lang=None, filename=None, mimetype=None):
     """Highlight a block using pygments to HTML."""
-    print 'highlighting %r with %s' % (code[:60], lang)
     try:
         lexer = None
         guessers = [(lang, get_lexer_by_name),

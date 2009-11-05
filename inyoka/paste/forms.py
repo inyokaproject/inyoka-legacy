@@ -9,18 +9,20 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
+from operator import itemgetter
 from pygments.lexers import get_all_lexers
 from inyoka.core import forms
 from inyoka.i18n import _
 
 
-
+# Hell, we need a shorter list ;)
 def _get_pygments_lexers(add_empty=True):
     r = []
     if add_empty:
         r.append(('', ''),)
     for lexer in get_all_lexers():
         r.append((lexer[1][0], _(lexer[0])),)
+    r.sort(key=itemgetter(1))
     return r
 
 

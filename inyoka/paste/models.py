@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from operator import attrgetter
-from sqlalchemy.orm import MapperExtension, synonym
 from inyoka.core.api import db, href
 from inyoka.utils.highlight import highlight_code
 

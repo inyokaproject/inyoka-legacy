@@ -12,11 +12,11 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import get_request, local
+from inyoka.core.context import get_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.core.routing import href
-from inyoka.utils.urls import url_encode, url_quote, url_for
+from inyoka.utils.urls import url_encode, url_quote
 
 # Used for debugging
 TEMPLATE_CONTEXT = {}
@@ -26,6 +26,7 @@ def populate_context_defaults(context):
     if get_request():
         context.update(
             CURRENT_URL=get_request().build_absolute_url(),
+            REQUEST=get_request()
         )
 
 
@@ -34,13 +35,6 @@ def render_template(template_name, context):
     tmpl = jinja_env.get_template(template_name)
     populate_context_defaults(context)
     return tmpl.render(context)
-
-
-def urlencode_filter(value):
-    """URL encode a string or dict."""
-    if isinstance(value, dict):
-        return url_encode(value)
-    return url_quote(value)
 
 
 def templated(template_name):
@@ -64,6 +58,15 @@ def templated(template_name):
         return templated__
     return templated_
 
+def url_filter(model_instance, action=None):
+    """
+    Call `get_absolute_url` on a model instance.
+    """
+    # filters don't take **kwargs?
+    kwargs = {}
+    if action is not None: kwargs['action'] = action
+    return model_instance.get_absolute_url(**kwargs)
+
 
 class InyokaEnvironment(Environment):
     """
@@ -86,13 +89,11 @@ class InyokaEnvironment(Environment):
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
-            REQUEST=local('request'),
             href=href,
-            url_for=url_for,
         )
         self.filters.update(
             jsonencode=simplejson.dumps,
-            url=href,
+            url=url_filter,
         )
 
         self.install_null_translations()

@@ -10,22 +10,27 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
+import sys
 import tempfile
 import unittest
 import warnings
 from os import path
 
 import nose
+import nose.plugins
 from lxml import etree
 from html5lib import HTMLParser
 from html5lib.treebuilders import getTreeBuilder
 
 from werkzeug import Client, cached_property
+import inyoka
 from inyoka.core import database
+from inyoka.core.database import db
 from inyoka.core.context import local, get_application
 from inyoka.core.config import config
 from inyoka.core.http import Request, Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
+from inyoka.utils import patch_wrapper
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
@@ -46,7 +51,7 @@ class TestResponse(Response):
         return html_parser.parse(self.data)
 
 
-class ViewTestCase(unittest.TestCase):
+class ViewTestCase(unittest.TestSuite):
 
     controller = None
 
@@ -107,9 +112,113 @@ class ViewTestCase(unittest.TestCase):
                                 data=data, follow_redirects=follow_redirects)
 
 
-def run_suite():
+class InyokaPlugin(nose.plugins.Plugin):
+    """Nose plugin extension
+
+    This prevents modules from being loaded without a configured Inyoka
+    environment.
+
+    """
+    enabled = False
+    enableOpt = 'inyoka_config'
+    name = 'inyoka'
+    _started = False
+
+    def add_options(self, parser, env=os.environ):
+        """Add command-line options for this plugin"""
+        env_opt = 'NOSE_WITH_%s' % self.name.upper()
+        env_opt.replace('-', '_')
+
+        parser.add_option("--with-%s" % self.name,
+                          dest=self.enableOpt, type="string",
+                          default="",
+                          help="Setup Inyoka environment with the config file"
+                          " specified by ATTR [NOSE_ATTR]")
+
+    def configure(self, options, conf):
+        """Configure the plugin"""
+        self.config_file = None
+        self.conf = conf
+        if hasattr(options, self.enableOpt):
+            self.enabled = bool(getattr(options, self.enableOpt))
+            self.config_file = getattr(options, self.enableOpt)
+
+    def startTest(self, test):
+        """Called before each test seperately to support our
+        own fixture system.
+        """
+        t = test.test
+        if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
+            self._started = True
+            # reset the database data.  That way we can assure
+            # that we get a clear database
+            database.metadata.drop_all()
+            database.metadata.create_all()
+            for fixture in t.test._required_fixtures:
+                try:
+                    functions = test.context.fixtures[fixture]
+                    instances = [func() for func in functions]
+                    db.session.add_all(instances)
+                    db.session.commit()
+                except:
+                    db.session.rollback()
+
+    def stopTest(self, test):
+        if self._started:
+            # we clear our database, just to be sure we leave
+            # a clean context
+            database.metadata.drop_all()
+            database.metadata.create_all()
+            self._started = False
+
+    def wantClass(self, cls):
+        # we want view test cases to be loaded with no matter
+        # if they are
+        if issubclass(cls, ViewTestCase):
+            return True
+        else:
+            return None
+
+
+#TODO: add json support
+#TODO: write unittests
+def fixture(model, **kwargs):
+    """Insert some test fixtures into the database"""
+    def onload():
+        table = model.__table__
+        names = [col for col in kwargs.keys()]
+        m = model(**kwargs)
+        return m
+    return onload
+
+
+def with_fixtures(*names):
+    def proxy(func):
+        func._required_fixtures = names
+        return func
+    return proxy
+
+
+#TODO: write unittests
+def future(fn):
+    """Mark a test as expected to unconditionally fail."""
+    fn_name = fn.func_name
+    def decorated(*args, **kw):
+        try:
+            fn(*args, **kw)
+        except Exception, ex:
+            print ("Future test '%s' failed as expected: %s " % (
+                fn_name, str(ex)))
+            return True
+        else:
+            raise AssertionError(
+                "Unexpected success for future test '%s'" % fn.func_name)
+    return patch_wrapper(decorated, fn)
+
+
+def run_suite(module='inyoka'):
     import nose.plugins.builtin
-    plugins = [x() for x in nose.plugins.builtin.plugins]
+    plugins = [InyokaPlugin()]
 
     config['debug'] = True
     engine = database.get_engine()
@@ -118,7 +227,7 @@ def run_suite():
     # then we create everything
     database.metadata.create_all(bind=engine)
     try:
-        nose.main(plugins=plugins)
+        nose.run(addplugins=plugins, module=module)
     finally:
         # and at the end we clean up our stuff
         database.metadata.drop_all(bind=engine)

@@ -9,4 +9,7 @@ find inyoka -name "*.pyc" -delete
 if [ -f .coverage ]; then
 	rm .coverage
 fi
+if [ -f .noseids ]; then
+	rm .noseids
+fi
 make runtests

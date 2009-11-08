@@ -60,4 +60,3 @@ class PasteController(IController):
         if e is None:
             raise NotFound
         return Response(e.code, mimetype='text/plain')
-

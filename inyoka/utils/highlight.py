@@ -39,4 +39,3 @@ def highlight_code(code, lang=None, filename=None, mimetype=None):
     except LookupError:
         lexer = TextLexer(stripnl=False)
     return highlight(code, lexer, _pygments_formatter)
-

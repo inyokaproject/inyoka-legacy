@@ -25,8 +25,9 @@ from inyoka.core import database
 from inyoka.core.context import local, get_application
 from inyoka.core.config import config
 from inyoka.core.http import Request, Response
-from inyoka.utils.logger import logger
 from inyoka.core.templating import TEMPLATE_CONTEXT
+from inyoka.utils.logger import logger
+from inyoka.utils.urls import make_full_domain
 
 # disable the logger
 logger.disabled = True
@@ -35,6 +36,7 @@ warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
 html_parser = HTMLParser(tree=getTreeBuilder('lxml'))
+
 
 class TestResponse(Response):
     """Responses for the test client."""
@@ -55,7 +57,7 @@ class ViewTestCase(unittest.TestCase):
         subdomain = config['routing.%s.subdomain' % self.controller.name]
         submount = config['routing.%s.submount' %
                            self.controller.name].strip('/')
-        self.base_url = 'http://%s.%s' % (subdomain, self.base_domain)
+        self.base_url = make_full_domain(subdomain)
 
     def get_context(self, path, method='GET', **kwargs):
         self.open(path, method=method, **kwargs)

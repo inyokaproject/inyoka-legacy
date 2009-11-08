@@ -111,8 +111,12 @@ def run_suite():
 
     config['debug'] = True
     engine = database.get_engine()
+    # first we cleanup the existing database
+    database.metadata.drop_all(bind=engine)
+    # then we create everything
     database.metadata.create_all(bind=engine)
     try:
         nose.main(plugins=plugins)
     finally:
+        # and at the end we clean up our stuff
         database.metadata.drop_all(bind=engine)

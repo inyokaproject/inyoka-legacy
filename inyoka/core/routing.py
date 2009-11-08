@@ -185,7 +185,6 @@ register = IController.register
 register_service = IController.register_service
 
 
-# FIXME: remove href in favor of url_for? where should it be core.routing or utils.urls?
 def href(endpoint, **values):
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
@@ -231,12 +230,6 @@ class DateConverter(BaseConverter):
 
 
 class Map(BaseMap):
-    #XXX: remove that as soon as werkzeug takes that from the class
-    if not hasattr(BaseMap, 'default_converters'):
-        import werkzeug.routing
-        werkzeug.routing.DEFAULT_CONVERTERS['date'] = DateConverter
-    else:
-        default_converters = BaseMap.default_converters.copy()
-        default_converters.update(
-            date=DateConverter,
-        )
+    """Our own map implementation for hooking in some custom converters"""
+    import werkzeug.routing
+    werkzeug.routing.DEFAULT_CONVERTERS['date'] = DateConverter

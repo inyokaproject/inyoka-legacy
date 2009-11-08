@@ -4,5 +4,5 @@
 {{ paste.rendered_code }}
 <p><small>
   Created on {{ paste.pub_date.strftime('%F %T') }}.
-  <a href={{ paste.get_absolute_url('raw') }}>Show raw text</a>
+  <a href={{ paste|url('raw') }}>Show raw text</a>
 </small></p>

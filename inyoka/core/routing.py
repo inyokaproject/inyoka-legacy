@@ -185,11 +185,25 @@ register = IController.register
 register_service = IController.register_service
 
 
-def href(endpoint, **values):
+def href(endpoint, _anchor=None, _external=False, **args):
+    """Get the URL to an endpoint.  The keyword arguments provided are used
+    as URL values.  Unknown URL values are used as keyword argument.
+    Additionally there are some special keyword arguments:
+
+    `_anchor`
+        This string is used as URL anchor.
+
+    `_external`
+        If set to `True` the URL will be generated with the full server name
+        and `http://` prefix.
+    """
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
-    adapter = get_application().url_adapter
-    return adapter.build(endpoint, values)
+    rv = get_application().url_adapter.build(endpoint, args,
+        force_external=_external)
+    if _anchor is not None:
+        rv += '#' + url_quote(_anchor)
+    return rv
 
 
 class DateConverter(BaseConverter):

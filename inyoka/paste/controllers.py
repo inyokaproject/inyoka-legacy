@@ -10,7 +10,7 @@
 """
 from werkzeug.exceptions import NotFound
 from inyoka.core.api import IController, Rule, register, register_service, \
-    href, Response, templated, href, db, redirect
+    Response, templated, href, db, redirect
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
 

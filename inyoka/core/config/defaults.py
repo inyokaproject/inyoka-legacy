@@ -67,6 +67,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Submount used for the testing application')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
+    'cookie_domain_name':           TextField(default=u'.inyoka.local',
+        help_text=lazy_gettext(u'Cookie domain name')),
     'static_path':                  TextField(default=u'static',
         help_text=lazy_gettext(u'Path to the directory for static files. Relative to the directory where '
                                u'the inyoka package lies in.')),

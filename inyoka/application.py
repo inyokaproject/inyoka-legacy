@@ -124,7 +124,7 @@ class InyokaApplication(object):
 
         # apply common response processors like cookies and etags
         if request.session.should_save:
-            request.session.save_cookie(response)
+            request.session.save_cookie(response, domain=config['cookie_domain_name'])
 
         if response.status == 200:
             response.add_etag()

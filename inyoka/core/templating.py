@@ -12,7 +12,7 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import get_request
+from inyoka.core.context import current_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.core.routing import href
@@ -23,11 +23,16 @@ TEMPLATE_CONTEXT = {}
 
 def populate_context_defaults(context):
     """Fill in context defaults."""
-    if get_request():
+    try:
         context.update(
-            CURRENT_URL=get_request().build_absolute_url(),
-            REQUEST=get_request()
+            CURRENT_URL=current_request.build_absolute_url(),
+            REQUEST=current_request
         )
+    except RuntimeError:
+        # Don't raise an error if we don't have a request as it's
+        # used get render_template which can get called by the message
+        # broker to deliver notifications etc…
+        pass
 
 
 def render_template(template_name, context):

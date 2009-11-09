@@ -14,7 +14,6 @@ from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
 from werkzeug.exceptions import BadRequest
 from werkzeug.contrib.securecookie import SecureCookie
-from inyoka.core.context import get_request
 from inyoka.core.config import config
 
 

@@ -10,7 +10,7 @@
 """
 from werkzeug import url_encode, url_quote, url_quote_plus
 from inyoka.core.config import config
-from inyoka.core.context import get_application
+from inyoka.core.context import current_application
 
 
 def make_full_domain(subdomain=''):
@@ -25,7 +25,7 @@ def make_full_domain(subdomain=''):
     >>> del config['base_domain_name']
 
     """
-    adapter = get_application().url_adapter
+    adapter = current_application.url_adapter
 
     return unicode('%s://%s%s%s/' % (
         adapter.url_scheme,

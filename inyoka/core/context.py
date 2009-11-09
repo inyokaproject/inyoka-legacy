@@ -32,5 +32,5 @@ from werkzeug import Local, LocalManager
 local = Local()
 local_manager = LocalManager(local)
 
-get_request = lambda: getattr(local, 'request', None)
-get_application = lambda: getattr(local, 'application', None)
+current_request = local('request')
+current_application = local('application')

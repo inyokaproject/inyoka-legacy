@@ -10,6 +10,7 @@
 """
 from operator import attrgetter
 from inyoka.core.api import db, href
+from inyoka.core.models import User
 from inyoka.utils.highlight import highlight_code
 
 
@@ -20,21 +21,17 @@ class Entry(db.Model):
     _code = db.Column('code', db.Text, nullable=False)
     rendered_code = db.Column(db.Text, nullable=False)
     language = db.Column(db.String(30))
-    author_id = db.Column(db.Integer, nullable=False) #TODO: ForeignKey!
+    author_id = db.Column(db.ForeignKey('core_user.id'), nullable=False)
     pub_date = db.Column(db.DateTime, default=db.func.now(), nullable=False)
+
+    author = db.relation(User)
 
 
     def __init__(self, code, language=None, author=None):
         self.language = language
         self.code = code
 
-        self.author_id = author
-#        if author is None:
-#            self.author_id = local.get_request().user.id
-#        elif isinstance(author, User):
-#            self.author_id = author.id
-#        else:
-#            self.author = author
+        self.author = author
 
     def get_absolute_url(self, action='view', external=False):
         return href({

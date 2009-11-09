@@ -15,7 +15,7 @@ from bureaucracy import csrf, exceptions, recaptcha, redirects, utils, \
 
 from inyoka.i18n import get_locale, get_translations
 from inyoka.core.http import redirect
-from inyoka.core.context import get_request
+from inyoka.core.context import local
 
 
 class Form(FormBase):
@@ -29,18 +29,18 @@ class Form(FormBase):
 
     def _lookup_request_info(self):
         """Return our current request object"""
-        return get_request()
+        if hasattr(local, 'request'):
+            return local.request
 
     def _get_wsgi_environ(self):
         """Return the WSGI environment from the request info if possible."""
-        if get_request():
-            return get_request().environ
+        request = self._lookup_request_info()
+        return request.environ if request != None else None
 
     def _get_request_url(self):
         """The absolute url of the current request"""
-        if get_request():
-            return get_request().build_absolute_url()
-        return ''
+        request = self._lookup_request_info()
+        return request.build_absolute_url() if request is not None else ''
 
     def _redirect_to_url(self, url):
         return redirect(url)
@@ -49,4 +49,5 @@ class Form(FormBase):
         return redirect_to(*args, **kwargs)
 
     def _get_session(self):
-        return get_request().session if get_request() != None else {}
+        request = self._lookup_request_info()
+        return request.session if request != None else {}

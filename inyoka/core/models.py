@@ -53,7 +53,7 @@ class User(db.Model):
         """Set a new sha1 generated password hash"""
         salt = get_hexdigest(str(random.random()), str(random.random()))[:5]
         hsh = get_hexdigest(salt, raw_password)
-        self.pw_hash = '%s$%s' % (salt, hsh)
+        self.pw_hash = u'%s$%s' % (salt, hsh)
 
     def check_password(self, raw_password):
         """
@@ -72,3 +72,6 @@ class User(db.Model):
     def anonymous(self):
         # TODO: make configureable
         return True if self.username == 'anonymous' else False
+
+    def __unicode__(self):
+        return self.display_name

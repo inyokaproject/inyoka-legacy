@@ -26,7 +26,7 @@ from werkzeug import Client, cached_property
 import inyoka
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.context import local, get_application
+from inyoka.core.context import local, current_application
 from inyoka.core.config import config
 from inyoka.core.http import Request, Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
@@ -56,8 +56,7 @@ class ViewTestCase(unittest.TestSuite):
     controller = None
 
     def setUp(self):
-        from inyoka.application import application
-        self._client = Client(application, response_wrapper=TestResponse)
+        self._client = Client(current_application, response_wrapper=TestResponse)
         self.base_domain = config['base_domain_name']
         subdomain = config['routing.%s.subdomain' % self.controller.name]
         submount = config['routing.%s.submount' %
@@ -70,7 +69,6 @@ class ViewTestCase(unittest.TestSuite):
         return c
 
     def open(self, path, *args, **kw):
-        app = get_application()
         if not 'follow_redirects' in kw:
             kw['follow_redirects'] = True
         if not path.endswith('/'):
@@ -78,7 +76,11 @@ class ViewTestCase(unittest.TestSuite):
         kw['base_url'] = self.base_url
         kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
-        local.application = app
+
+        # do we need to put the application on a local at all?
+        # inyoka.application.application should always exist…
+        from inyoka.application import application
+        local.application = application
 
         return response
 
@@ -153,7 +155,7 @@ class InyokaPlugin(nose.plugins.Plugin):
             # reset the database data.  That way we can assure
             # that we get a clear database
             database.metadata.drop_all()
-            database.metadata.create_all()
+            database.init_db()
             for fixture in t.test._required_fixtures:
                 try:
                     functions = test.context.fixtures[fixture]
@@ -168,7 +170,7 @@ class InyokaPlugin(nose.plugins.Plugin):
             # we clear our database, just to be sure we leave
             # a clean context
             database.metadata.drop_all()
-            database.metadata.create_all()
+            database.init_db()
             self._started = False
 
     def wantClass(self, cls):
@@ -225,7 +227,7 @@ def run_suite(module='inyoka'):
     # first we cleanup the existing database
     database.metadata.drop_all(bind=engine)
     # then we create everything
-    database.metadata.create_all(bind=engine)
+    database.init_db(bind=engine)
     try:
         nose.run(addplugins=plugins, module=module)
     finally:

@@ -20,7 +20,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
 from inyoka.core import environ
 from inyoka.core.config import config
-from inyoka.core.context import get_application
+from inyoka.core.context import current_application
 from inyoka.core.database import db
 from inyoka.core.http import Response
 
@@ -199,7 +199,7 @@ def href(endpoint, _anchor=None, _external=False, **args):
     """
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
-    rv = get_application().url_adapter.build(endpoint, args,
+    rv = current_application.url_adapter.build(endpoint, args,
         force_external=_external)
     if _anchor is not None:
         rv += '#' + url_quote(_anchor)

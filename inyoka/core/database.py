@@ -313,12 +313,14 @@ class ModelBase(object):
 Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper, metadata=metadata)
 ModelBase.query = session.query_property(Query)
 
-def init_db():
+def init_db(**kwargs):
+    # UGLY; BUT BEST TO GET TESTS ETC RUNNING NOW
     # TODO: how to discover models?! SchemaController?
     from inyoka.core import models as core_models
     from inyoka.paste import models
-    metadata.create_all()
-    anon = core_models.User('anonymous', '', '')
+    metadata.create_all(**kwargs)
+    # TODO: YES ugly, but for now…
+    anon = core_models.User(u'anonymous', u'', u'')
     session.add(anon)
     session.commit()
 

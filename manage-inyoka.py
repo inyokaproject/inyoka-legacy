@@ -22,8 +22,8 @@ def make_shell():
 
 def action_initdb():
     application = make_app()
-    from inyoka.core.database import db
-    db.metadata.create_all()
+    from inyoka.core.database import init_db
+    init_db()
 
 
 def action_runtests():

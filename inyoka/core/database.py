@@ -310,9 +310,17 @@ class ModelBase(object):
                                             repr(x[1]) for x in attrs) + ')'
 
 # configure the declarative base
-Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper,
-                         metadata=metadata)
+Model = declarative_base(name='Model', cls=ModelBase, mapper=mapper, metadata=metadata)
 ModelBase.query = session.query_property(Query)
+
+def init_db():
+    # TODO: how to discover models?! SchemaController?
+    from inyoka.core import models as core_models
+    from inyoka.paste import models
+    metadata.create_all()
+    anon = core_models.User('anonymous', '', '')
+    session.add(anon)
+    session.commit()
 
 
 def _make_module():
@@ -332,6 +340,7 @@ def _make_module():
     db.Model = Model
     db.Query = Query
     db.AttributeExtension = AttributeExtension
+    db.NoResultFound = orm.exc.NoResultFound
     return db
 
 sys.modules['inyoka.core.database.db'] = db = _make_module()

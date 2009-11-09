@@ -16,13 +16,41 @@ from werkzeug import import_string
 from inyoka import Component
 from inyoka.core.config import config
 from inyoka.core.middlewares import IMiddleware
-from inyoka.core import forms
 from inyoka.core.templating import templated
+from inyoka.core.models import User
+from inyoka.core.database import db
+from inyoka.core.routing import href
+from inyoka.core.http import redirect
+from inyoka.core import forms
 from inyoka.i18n import lazy_gettext
 
 
 _auth_system = None
 _auth_system_lock = Lock()
+
+class StandardLoginForm(forms.Form):
+    """Used to log in users."""
+    username = forms.TextField(lazy_gettext(u'Username'), required=True)
+    password = forms.TextField(lazy_gettext(u'Password'), required=True,
+                               widget=forms.widgets.PasswordInput)
+
+    def __init__(self, initial=None, action=None, request=None):
+        forms.Form.__init__(self, initial, action, request)
+        self.auth_system = get_auth_system()
+        if self.auth_system.passwordless:
+            del self.fields['password']
+
+class RegistrationForm(forms.Form):
+    username = forms.TextField(lazy_gettext(u'Username'), required=True)
+    email = forms.TextField(lazy_gettext(u'Email'), required=True)
+    password = forms.TextField(lazy_gettext(u'Password'), required=True,
+                               widget=forms.widgets.PasswordInput)
+    password_again = forms.TextField(lazy_gettext(u'Password again'), required=True,
+                               widget=forms.widgets.PasswordInput)
+
+    def context_validate(self, data):
+        if data['password'] != data['password_again']:
+            raise forms.ValidationError(lazy_gettext(u'The two passwords must be the same'))
 
 
 def get_auth_system():
@@ -45,27 +73,12 @@ class LoginUnsucessful(Exception):
     """Raised if the login failed."""
 
 
-class StandardLoginForm(forms.Form):
-    """Used to log in users."""
-    username = forms.TextField(lazy_gettext(u'Username'), required=True)
-    password = forms.TextField(lazy_gettext(u'Password'), required=True,
-                               widget=forms.widgets.PasswordInput)
-
-    def __init__(self, initial=None, action=None, request=None):
-        forms.Form.__init__(self, initial, action, request)
-        self.auth_system = get_auth_system()
-        if self.auth_system.passwordless:
-            del self.fields['password']
-
-
 class AuthMiddleware(IMiddleware):
     priority = 75
 
     def process_request(self, request):
         auth = get_auth_system()
         user = auth.get_user(request)
-        if user is None:
-            user = AnonymousUser()
 
         request.user = user
 
@@ -94,23 +107,6 @@ class IPermissionChecker(Component):
                 has_permission = True
 
         return has_permission
-
-
-class User(object):
-    def __init__(self, id, username, display_name):
-        self.id = id
-        self.username = username
-        self.display_name = display_name
-        self.anonymous = False
-
-    def __unicode__(self):
-        return self.display_name
-
-
-class AnonymousUser(User):
-    def __init__(self):
-        super(AnonymousUser, self).__init__(0, u'anonymous', u'Anonymous')
-        self.anonymous = True
 
 
 class AuthSystemBase(object):
@@ -173,7 +169,8 @@ class AuthSystemBase(object):
         handling.
         """
 
-    def register(self, request, username, password, email):
+    @templated('portal/register.html')
+    def register(self, request):
         """Called like a view function with only the request.  Has to do the
         register heavy-lifting.  Auth systems that only use the internal
         database do not have to override this method.  Implementers that
@@ -181,19 +178,19 @@ class AuthSystemBase(object):
         the registration of the new user.  If `before_register` is unnused
         it does not have to be called, otherwise as documented.
         """
-        rv = auth.before_register(request)
+        rv = self.before_register(request)
         if rv is not None:
             return rv
 
-        #form = RegistrationForm()
-        #if request.method == 'POST' and form.validate():
-        #    user = User(form['username'], form['email'], form['password'])
-        #    self.after_register(request, user)
-        #    session.commit()
-        #    if rv is not None:
-        #        return rv
-        #    return form.redirect('kb.overview')
-        #return render_template('core/register.html', form=form.as_widget())
+        form = RegistrationForm()
+        if request.method == 'POST' and form.validate(request.form):
+            user = User(username=form['username'], email=form['email'],
+                        password=form['password'])
+            db.session.add(user)
+            self.after_register(request, user)
+            db.session.commit()
+            return redirect(href('portal/index'))
+        return {'form':form.as_widget()}
 
     def after_register(self, request, user):
         """Handles activation."""

@@ -8,7 +8,7 @@
     {% if REQUEST.user.anonymous %}
       <a href="{{ href('portal/login') }}">Login</a>
     {% else %}
-      Hallo {{ REQUEST.user }} <a href="{{ href('portal/logout') }}">Logout</a>
+      Hallo {{ REQUEST.user.display_name }} <a href="{{ href('portal/logout') }}">Logout</a>
     {% endif %}
     </div>
     <div id="content">

@@ -10,7 +10,7 @@
 """
 import os
 import simplejson
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from inyoka import INYOKA_REVISION
 from inyoka.core.context import get_request
 from inyoka.core.http import Response
@@ -85,7 +85,7 @@ class InyokaEnvironment(Environment):
         #TODO: link `auto_reload` to a config setting
         Environment.__init__(self, loader=loader,
                              extensions=['jinja2.ext.i18n', 'jinja2.ext.do'],
-                             auto_reload=True,
+                             auto_reload=True, undefined=StrictUndefined,
                              cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,

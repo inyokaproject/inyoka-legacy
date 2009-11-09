@@ -19,6 +19,7 @@ class PortalController(IController):
         Rule('/', endpoint='index'),
         Rule('/login', endpoint='login'),
         Rule('/logout', endpoint='logout'),
+        Rule('/register', endpoint='register'),
     ]
 
     @register('index')
@@ -37,6 +38,10 @@ class PortalController(IController):
     def logout(self, request):
         get_auth_system().logout(request)
         return redirect(href('portal/index'))
+
+    @register('register')
+    def register(self, request):
+        return get_auth_system().register(request)
 
 
 class CalendarController(IController):

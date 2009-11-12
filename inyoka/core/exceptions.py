@@ -6,4 +6,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug.exceptions import HTTPException, Forbidden, NotFound
+# to support quite all exceptions werkzeug can raise
+from werkzeug.exceptions import abort
+# commonly used exceptions, more valuable using names then integers
+from werkzeug.exceptions import HTTPException, Forbidden, NotFound, \
+    BadRequest, Unauthorized, Forbidden, InternalServerError

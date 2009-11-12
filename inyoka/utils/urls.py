@@ -33,4 +33,3 @@ def make_full_domain(subdomain=''):
         adapter.server_name,
         adapter.script_name[:-1]
     ))
-

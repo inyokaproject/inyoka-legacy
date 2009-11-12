@@ -13,12 +13,12 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
 from inyoka.core.api import db, config, logger, IController, Request, \
-    Response
+    Response, IMiddleware
 from inyoka.core.context import local, local_manager, current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
-from inyoka.core.middlewares import IMiddleware
 from inyoka.core.routing import DateConverter, Map
+from inyoka.utils.urls import make_full_domain
 
 
 class InyokaApplication(object):
@@ -68,7 +68,7 @@ class InyokaApplication(object):
         try:
             urls = self.url_adapter
         except ValueError:
-            return redirect('http://%s/' % config['base_domain_name'])
+            return redirect(make_full_domain())
 
         for middleware in IMiddleware.iter_middlewares():
             response = middleware.process_request(request)

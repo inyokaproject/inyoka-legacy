@@ -10,5 +10,7 @@ from inyoka.core.http import Request, Response, redirect
 from inyoka.core.routing import IController, register, register_service, \
     Rule, href
 from inyoka.core.templating import templated, render_template
+from inyoka.core.middlewares import IMiddleware
+from inyoka.core.exceptions import NotFound, Forbidden
 from inyoka.utils.logger import logger
 from inyoka.i18n import *

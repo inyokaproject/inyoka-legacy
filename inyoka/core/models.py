@@ -12,7 +12,8 @@ import random
 
 from inyoka.core.database import db
 from inyoka.core.routing import href
-from inyoka.utils.algos import get_hexdigest
+from inyoka.utils.crypt import get_hexdigest
+
 
 class UserQuery(db.Query):
     def get(self, pk):
@@ -22,8 +23,11 @@ class UserQuery(db.Query):
         return super(UserQuery,self).filter_by(id=pk).one()
 
 
+#TODO: find a way to make models extensible e.g to add more properties
 class User(db.Model):
     __tablename__ = 'core_user'
+
+    query = db.session.query_property(UserQuery)
 
     # the internal ID of the user.  Even if an external Auth system is
     # used, we're storing the users a second time internal so that we
@@ -38,11 +42,10 @@ class User(db.Model):
     # the password hash.  This might not be used by every auth system.
     # the OpenID auth for example does not use it at all.  But also
     # external auth systems might not store the password here.
-    pw_hash = db.Column(db.String(60))
-    # the realname of the user
-    real_name = db.Column(db.String(200))
+    pw_hash = db.Column(db.String(60), nullable=True)
+    # the realname of the user.  This is also optional.
+    real_name = db.Column(db.String(200), nullable=True)
 
-    query = db.session.query_property(UserQuery)
 
     def __init__(self, username, email='', password=''):
         self.username = username
@@ -67,7 +70,7 @@ class User(db.Model):
     @property
     def display_name(self):
         return self.username
-    
+
     @property
     def anonymous(self):
         # TODO: make configureable

@@ -8,4 +8,3 @@ def get_hexdigest(salt, raw_password):
     if isinstance(raw_password, unicode):
         raw_password = raw_password.encode('utf-8')
     return sha1(str(salt) + raw_password).hexdigest()
-

@@ -31,8 +31,7 @@ def gen_slug(text, delim=u'-', ascii=False):
 
 
 def gen_ascii_slug(text, delim=u'-'):
-    """Generates an ASCII-only slug.
-    """
+    """Generates an ASCII-only slug."""
     result = []
     for word in _punctuation_re.split(text.lower()):
         #TODO: transliterate `word` see :func:`transliterate` comment
@@ -43,8 +42,7 @@ def gen_ascii_slug(text, delim=u'-'):
 
 
 def gen_unicode_slug(text, delim=u'-'):
-    """Generate an unicode slug.
-    """
+    """Generate an unicode slug."""
     return unicode(delim.join(_punctuation_re.split(text.lower())))
 
 

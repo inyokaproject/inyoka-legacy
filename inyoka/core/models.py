@@ -11,7 +11,6 @@
 import random
 
 from inyoka.core.database import db
-from inyoka.core.routing import href
 from inyoka.utils.crypt import get_hexdigest
 
 

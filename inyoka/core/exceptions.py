@@ -10,4 +10,4 @@
 from werkzeug.exceptions import abort
 # commonly used exceptions, more valuable using names then integers
 from werkzeug.exceptions import HTTPException, Forbidden, NotFound, \
-    BadRequest, Unauthorized, Forbidden, InternalServerError
+    BadRequest, Unauthorized, InternalServerError

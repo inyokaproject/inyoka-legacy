@@ -3,17 +3,10 @@
 """
 import os
 import pytz
-from time import strptime
-from datetime import datetime
 from gettext import NullTranslations
 from babel import Locale, dates, UnknownLocaleError
-from babel.support import Translations
-
-
 from babel.support import Translations, LazyProxy
-from babel.dates import format_date as babel_format_date, \
-    format_datetime as babel_format_datetime, format_time as babel_format_time
-
+from babel.dates import format_date, format_datetime, format_time
 from inyoka.core.context import local
 
 
@@ -49,7 +42,7 @@ def get_timezone(name=None):
     """
     if name is None:
         return UTC
-    return timezone(name)
+    return pytz.timezone(name)
 
 
 def get_locale():
@@ -81,15 +74,6 @@ def ngettext(singular, plural, n):
             return singular
         return plural
     return unicode(_translations[get_locale()].ungettext(singular, plural, n))
-
-
-def _date_format(formatter, obj, format):
-    return formatter(obj, format, locale=get_locale())
-
-
-def format_datetime(datetime=None, format='medium'):
-    """Return a date formatted according to the given pattern."""
-    return _date_format(dates.format_datetime, datetime, format)
 
 
 def list_languages():

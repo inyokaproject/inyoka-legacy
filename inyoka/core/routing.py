@@ -6,23 +6,17 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os
 import re
-import mimetypes
 import sre_constants
 from datetime import datetime
-from sqlalchemy.exc import InvalidRequestError
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
-from werkzeug import append_slash_redirect, url_quote, wrap_file
+from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
-from werkzeug.exceptions import NotFound, Forbidden
 from inyoka import Component
-from inyoka.core import environ
 from inyoka.core.config import config
 from inyoka.core.context import current_application
 from inyoka.core.database import db
-from inyoka.core.http import Response
 
 
 _date_formatter_split_re = re.compile('(%.)')

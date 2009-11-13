@@ -10,25 +10,20 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
-import sys
-import tempfile
 import unittest
 import warnings
-from os import path
 
 import nose
 import nose.plugins
-from lxml import etree
 from html5lib import HTMLParser
 from html5lib.treebuilders import getTreeBuilder
 
 from werkzeug import Client, cached_property
-import inyoka
 from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.context import local, current_application
 from inyoka.core.config import config
-from inyoka.core.http import Request, Response
+from inyoka.core.http import Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
 from inyoka.utils import patch_wrapper
 from inyoka.utils.logger import logger
@@ -64,9 +59,8 @@ class ViewTestCase(unittest.TestSuite):
         self.base_url = make_full_domain(subdomain)
 
     def get_context(self, path, method='GET', **kwargs):
-        self.open(path, method=method, **kwargs)
-        c = TEMPLATE_CONTEXT
-        return c
+        ret = self.open(path, method=method, **kwargs)
+        return TEMPLATE_CONTEXT
 
     def open(self, path, *args, **kw):
         if not 'follow_redirects' in kw:

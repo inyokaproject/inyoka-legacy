@@ -9,8 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug.exceptions import NotFound
-from inyoka.core.api import IController, Rule, register, register_service, \
-    Response, templated, href, db, redirect
+from inyoka.core.api import IController, Rule, register, Response, \
+    templated, href, db, redirect
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
 

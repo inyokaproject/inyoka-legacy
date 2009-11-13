@@ -16,10 +16,10 @@ from inyoka.core.context import current_request
 from inyoka.core.http import Response
 from inyoka.core.config import config
 from inyoka.core.routing import href
-from inyoka.utils.urls import url_encode, url_quote
 
-# Used for debugging
+
 TEMPLATE_CONTEXT = {}
+
 
 def populate_context_defaults(context):
     """Fill in context defaults."""
@@ -48,20 +48,22 @@ def templated(template_name):
     default_mimetype = 'text/html'
     then used as context for the given template. Returns a Response object.
     """
-    def templated_(f):
-        def templated__(*args, **kwargs):
+    def _proxy(f):
+        def _func(*args, **kwargs):
             ret = f(*args, **kwargs)
             if ret is None:
                 ret = {}
             if isinstance(ret, dict):
                 data = render_template(template_name, ret)
-                if config['debug'] == True:
+                response = Response(data)
+                if config['debug']:
                     TEMPLATE_CONTEXT.clear()
                     TEMPLATE_CONTEXT.update(ret)
-                return Response(data)
+                return response
             return Response.force_type(ret)
-        return templated__
-    return templated_
+        return _func
+    return _proxy
+
 
 def url_filter(model_instance, action=None):
     """

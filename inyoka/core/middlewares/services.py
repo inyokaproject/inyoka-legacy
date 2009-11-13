@@ -16,7 +16,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import simplejson
-from werkzeug.exceptions import NotFound
 
 from inyoka.core.api import Response
 from inyoka.core.middlewares import IMiddleware

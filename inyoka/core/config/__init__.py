@@ -14,7 +14,7 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from inyoka.core.environ import PACKAGE_LOCATION, MEDIA_DATA
+from inyoka.core.environ import PACKAGE_LOCATION
 
 
 class ConfigField(object):
@@ -112,9 +112,10 @@ def quote_value(value):
 
 def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
+    from inyoka.core.forms import exceptions as exc
     try:
         return field(value)
-    except ValidationError, e:
+    except exc.ValidationError, e:
         return field.get_default()
 
 

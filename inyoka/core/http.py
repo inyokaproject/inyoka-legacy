@@ -9,12 +9,11 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from urlparse import urlparse, urljoin
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
-from werkzeug.exceptions import BadRequest
 from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.core.config import config
+from inyoka.core.routing import href
 
 
 class Request(BaseRequest):
@@ -45,4 +44,4 @@ class DirectResponse(Exception):
 
 def redirect_to(*args, **kwargs):
     """Temporarily redirect to an URL rule."""
-    return redirect(url_for(*args, **kwargs))
+    return redirect(href(*args, **kwargs))

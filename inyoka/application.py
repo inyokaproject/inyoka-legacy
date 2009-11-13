@@ -17,7 +17,7 @@ from inyoka.core.api import db, config, logger, IController, Request, \
 from inyoka.core.context import local, local_manager, current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
-from inyoka.core.routing import DateConverter, Map
+from inyoka.core.routing import Map
 from inyoka.utils.urls import make_full_domain
 
 

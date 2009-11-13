@@ -8,8 +8,6 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import url_encode, url_quote, url_quote_plus
-from inyoka.core.config import config
 from inyoka.core.context import current_application
 
 

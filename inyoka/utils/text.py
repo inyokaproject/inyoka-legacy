@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-import unicodedata
 from datetime import datetime
 from itertools import starmap
 from inyoka.i18n import rebase_to_timezone

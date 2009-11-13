@@ -7,12 +7,23 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import os
 import sys
 from werkzeug import script
+from flickzeug import debug as fdebug, leakfinder, profiling
 
 
-def make_app():
+def make_app(debug=False, profile=False, leaky=False):
     from inyoka.application import application
+    if debug:
+        application = fdebug.DebuggedApplication(application, evalex=True,
+            show_hidden_frames=True)
+    if profile:
+        if not os.path.exists('profiles'):
+            os.mkdir('profiles')
+        application = profiling.Profiler(application, 'profiles')
+    if leaky:
+        application = leakfinder.LeackFinder
     return application
 
 
@@ -50,18 +61,24 @@ def action_runtests():
     run_suite()
 
 
-def make_runserver():
-    # initialize the app
-    from inyoka.application import application
+def make_action(app_factory, hostname='localhost', port=5000,
+                threaded=False, processes=1):
     from inyoka.core.api import config
     parts = config['base_domain_name'].split(':')
     port = int(parts[1]) if len(parts) == 2 else 80
-    return script.make_runserver(make_app, port=port, use_reloader=True,
-                                 use_debugger=True, use_evalex=True)
+    def action(hostname=('h', hostname), port=('p', port),
+               threaded=threaded, processes=processes):
+        """Start a new development server."""
+        from werkzeug.serving import run_simple
+        app = app_factory()
+        run_simple(hostname, port, app, False, None, threaded, processes)
+    return action
 
 
+action_runserver = make_action(lambda: make_app(True))
+action_profiled = make_action(lambda: make_app(True, True))
+action_leakfinder = make_action(lambda: make_action(True, False, True))
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
-action_runserver = make_runserver()
 
 
 def print_version():

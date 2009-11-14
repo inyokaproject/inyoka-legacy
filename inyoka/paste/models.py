@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from operator import attrgetter
+from sqlalchemy.orm import synonym
 from inyoka.core.api import db, href
 from inyoka.core.models import User
 from inyoka.utils.highlight import highlight_code
@@ -29,10 +30,11 @@ class Entry(db.Model):
 
 
     def __init__(self, code, author, language=None, title=None):
-        self.code = code
         self.author = author
-        self.language = language
         self.title = title
+        # set language before code to avoid rendering twice
+        self.language = language
+        self.code = code
 
     def get_absolute_url(self, action='view', external=False):
         return href({
@@ -48,24 +50,23 @@ class Entry(db.Model):
         code or language does this automatically.
         """
         if self._code is not None:
-            self.rendered_code = highlight_code(self._code, self.language)
+            self.rendered_code = highlight_code(self._code, self._language)
 
     def _set_code(self, code):
         if code is not self._code:
             self._code = code
             self._rerender()
-    code = property(attrgetter('_code'), _set_code)
+    code = synonym('_code', descriptor=property(fset=_set_code))
 
     def _set_language(self, language):
         if language is not self._language:
             self._language = language
             self._rerender()
-    language = property(attrgetter('_language'), _set_language)
+    language = synonym('_language', descriptor=property(fset=_set_language))
 
 
     @property
     def display_title(self):
-        print `self.title`
         if self.title:
             return self.title
         return '#%d' % self.id

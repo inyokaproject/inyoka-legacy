@@ -23,7 +23,7 @@ def make_app(debug=False, profile=False, leaky=False):
             os.mkdir('profiles')
         application = profiling.Profiler(application, 'profiles')
     if leaky:
-        application = leakfinder.LeakFinder
+        application = leakfinder.LeakFinder(application, async_ajax=True)
     return application
 
 

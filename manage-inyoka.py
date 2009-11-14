@@ -48,7 +48,8 @@ def make_action(app_factory, hostname='localhost', port=5000,
         """Start a new development server."""
         from werkzeug.serving import run_simple
         app = app_factory()
-        run_simple(hostname, port, app, False, None, threaded, processes)
+        run_simple(hostname, port, app, threaded=threaded, processes=processes,
+                   use_reloader=True, use_debugger=False)
     return action
 
 

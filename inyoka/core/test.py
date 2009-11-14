@@ -192,7 +192,6 @@ class InyokaPlugin(nose.plugins.Plugin):
             return None
 
 
-#TODO: add json support
 #TODO: write unittests
 def fixture(model, **kwargs):
     """Insert some test fixtures into the database"""

@@ -322,6 +322,8 @@ def init_db(**kwargs):
     # TODO: YES ugly, but for now…
     anon = core_models.User(u'anonymous', u'', u'')
     session.add(anon)
+    admin = core_models.User(u'admin', u'', u'default')
+    session.add(admin)
     session.commit()
 
 

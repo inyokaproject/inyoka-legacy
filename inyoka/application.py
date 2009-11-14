@@ -94,7 +94,7 @@ class InyokaApplication(object):
         except SQLAlchemyError, e:
             db.session.rollback()
             logger.error(e)
-            raise e
+            raise
 
         return response
 

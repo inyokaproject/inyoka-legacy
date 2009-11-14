@@ -18,6 +18,7 @@ from nose.plugins import cover
 
 import coverage
 coverage.erase()
+coverage.coverage(auto_data=True, branch=True)
 coverage.start()
 
 from werkzeug import Client, cached_property

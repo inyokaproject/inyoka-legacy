@@ -5,7 +5,7 @@
   <body>
     <h1>Inyoka</h2> 
     <div>
-    {% if REQUEST.user.anonymous %}
+    {% if REQUEST.user.is_anonymous %}
       <a href="{{ href('portal/login') }}">Login</a>
     {% else %}
       Hallo {{ REQUEST.user.display_name }} <a href="{{ href('portal/logout') }}">Logout</a>

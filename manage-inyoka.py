@@ -23,7 +23,7 @@ def make_app(debug=False, profile=False, leaky=False):
             os.mkdir('profiles')
         application = profiling.Profiler(application, 'profiles')
     if leaky:
-        application = leakfinder.LeackFinder
+        application = leakfinder.LeakFinder
     return application
 
 
@@ -75,9 +75,9 @@ def make_action(app_factory, hostname='localhost', port=5000,
     return action
 
 
-action_runserver = make_action(lambda: make_app(True))
-action_profiled = make_action(lambda: make_app(True, True))
-action_leakfinder = make_action(lambda: make_action(True, False, True))
+action_runserver = make_action(lambda: make_app(debug=True))
+action_profiled = make_action(lambda: make_app(debug=True, profile=True))
+action_leakfinder = make_action(lambda: make_app(debug=True, leaky=True))
 action_shell = script.make_shell(make_shell, 'Interactive Inyoka Shell')
 
 

@@ -3,7 +3,7 @@
     inyoka.core.models
     ~~~~~~~~~~~~~~~~~~
 
-    Models for the portal app.
+    Core models not specific to a single app.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -71,9 +71,12 @@ class User(db.Model):
         return self.username
 
     @property
-    def anonymous(self):
+    def is_anonymous(self):
         # TODO: make configureable
         return True if self.username == 'anonymous' else False
+
+    def __repr__(self):
+        return '<User %r>' % self.username
 
     def __unicode__(self):
         return self.display_name

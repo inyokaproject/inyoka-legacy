@@ -14,3 +14,10 @@ from inyoka.core.middlewares import IMiddleware
 from inyoka.core.exceptions import *
 from inyoka.utils.logger import logger
 from inyoka.i18n import *
+
+
+ctx = (type('Context', (object,), {
+    'request': current_request,
+    'application': current_application,
+    'config': config
+}))()

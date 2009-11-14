@@ -75,6 +75,9 @@ class Component(object):
     _implementations = []
     _instances = []
 
+    def __init__(self, ctx):
+        self.ctx = ctx
+
     @classmethod
     def get_components(cls):
         """return a list of all component instances for this class"""
@@ -105,6 +108,7 @@ def setup_components(accepted_components):
     :return type: dict
     """
     from werkzeug import import_string
+    from inyoka.core.api import ctx
     # Import the components to setup the metaclass magic.
     for comp in accepted_components:
         import_string(comp if comp[-1] != '*' else comp[:-2])
@@ -120,7 +124,7 @@ def setup_components(accepted_components):
                 #TODO: pass something like a context object so that
                 #      components don't have to query the thread-local
                 #      too much? --entequak
-                instance_map[i] = i()
+                instance_map[i] = i(ctx)
 
         comp._instances = [instance_map[i] for i in comp._implementations]
     return instance_map

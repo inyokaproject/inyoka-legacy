@@ -50,7 +50,7 @@ class InyokaApplication(object):
             'inyoka.forum.controllers.*',
             'inyoka.paste.controllers.*',
             'inyoka.core.middlewares.services.*',
-            #'inyoka.core.middlewares.static.*',
+            'inyoka.core.middlewares.static.*',
         ])
 
         url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
@@ -79,7 +79,7 @@ class InyokaApplication(object):
             # is required, too
             return redirect('http://%s/' % config['base_domain_name'])
 
-        for middleware in IMiddleware.iter_middlewares():
+        for middleware in IMiddleware.iter_middlewares(False):
             response = middleware.process_request(request)
 
             if response is not None:
@@ -128,7 +128,7 @@ class InyokaApplication(object):
         # process the response object, if it's returned from some view.
         # If an request modifing middleware is in-place we never reach
         # this code block.
-        for middleware in reversed(IMiddleware.iter_middlewares()):
+        for middleware in reversed(IMiddleware.iter_middlewares(False)):
             response = middleware.process_response(request, response)
 
         # apply common response processors like cookies and etags

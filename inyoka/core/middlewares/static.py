@@ -23,7 +23,10 @@ from inyoka.core.middlewares import IMiddleware
 
 STATIC_PATH = path.join(environ.PACKAGE_CONTENTS, config['static_path'])
 MEDIA_PATH = path.join(environ.PACKAGE_CONTENTS, config['media_path'])
-
+EXPORTS = {
+    '/__static__': STATIC_PATH,
+    '/__media__': MEDIA_PATH
+}
 
 
 class StaticMiddleware(IMiddleware, SharedDataMiddleware):
@@ -31,24 +34,21 @@ class StaticMiddleware(IMiddleware, SharedDataMiddleware):
     to :cls:`werkzeug.SharedDataMiddleware`.
     """
 
+    low_level = True
+
     priority = 99
 
+    #TODO: make the urls configurable
     url_rules = [
-        Rule('/__static__', defaults={'file': '/'}, endpoint='static/file'),
-        Rule('/__static__/<path:file>', endpoint='static/file'),
-        Rule('/__media__', defaults={'file': '/'}, endpoint='media/file'),
-        Rule('/__media__/<path:file>', endpoint='media/file'),
+        Rule('/__static__', defaults={'file': '/'}, endpoint='static'),
+        Rule('/__static__/<path:file>', endpoint='static'),
+        Rule('/__media__', defaults={'file': '/'}, endpoint='media'),
+        Rule('/__media__/<path:file>', endpoint='media'),
     ]
 
-    def __init__(self, *args, **kwargs):
-        app = lambda e, s: None
-        exports = {
-            '/__static__': STATIC_PATH,
-            '/__media__': MEDIA_PATH
-        }
-        SharedDataMiddleware.__init__(self, app, exports)
+    def __init__(self, ctx):
+        IMiddleware.__init__(self, ctx)
+        SharedDataMiddleware.__init__(self, self.application, EXPORTS)
 
-    def process_request(self, request):
-        return
-        #FIXME: find another way to integrate `SharedDataMiddleware` as a real
-        #       WSGI middleware...
+    def __call__(self, *args, **kwargs):
+        return SharedDataMiddleware.__call__(self, *args, **kwargs)

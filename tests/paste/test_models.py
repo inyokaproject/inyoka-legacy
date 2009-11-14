@@ -12,16 +12,21 @@ def test_automatic_rendering():
     rendered_code2 = highlight_code(code2, 'python')
     rendered_code2_plain = highlight_code(code2)
     e = Entry(code1, User.query.get('anonymous'), 'python')
+    eq_(e.code, code1)
     eq_(e.rendered_code, rendered_code1)
     e.code = code2
+    eq_(e.code, code2)
     eq_(e.rendered_code, rendered_code2)
 
     db.session.add(e)
     db.session.commit()
 
     e2 = Entry.query.get(e.id)
+    eq_(e.language, 'python')
     eq_(e2.rendered_code, rendered_code2)
     e2.language = None
+    eq_(e.language, None)
+
     eq_(e2.rendered_code, rendered_code2_plain)
 
 def test_display_title():

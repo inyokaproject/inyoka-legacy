@@ -56,13 +56,14 @@ class Entry(db.Model):
         if code is not self._code:
             self._code = code
             self._rerender()
-    code = synonym('_code', descriptor=property(fset=_set_code))
+    code = synonym('_code', descriptor=property(attrgetter('_code'), _set_code))
 
     def _set_language(self, language):
         if language is not self._language:
             self._language = language
             self._rerender()
-    language = synonym('_language', descriptor=property(fset=_set_language))
+    language = synonym('_language', descriptor=property(
+        attrgetter('_language'), fset=_set_language))
 
 
     @property

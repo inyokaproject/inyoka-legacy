@@ -10,6 +10,7 @@
 """
 from nose.tools import *
 from inyoka import Component, ComponentMeta, setup_components
+from inyoka.core.api import ctx
 
 
 # cleanup metadata registry before testing 'cause it's possible that
@@ -41,7 +42,7 @@ def test_components():
 
     # we return the component object unchanged so it does not
     # have any special attributes
-    obj = Component()
+    obj = Component(ctx)
     assert_false(hasattr(obj, '_iscomptype'))
     assert_false(hasattr(obj, '_comptypes'))
 

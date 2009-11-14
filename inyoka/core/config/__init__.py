@@ -15,7 +15,7 @@ import os
 from os import path
 from threading import Lock
 from inyoka.core.environ import PACKAGE_LOCATION
-from inyoka.core.context import config
+from inyoka.core.context import local, config
 
 
 class ConfigField(object):
@@ -384,4 +384,4 @@ class ConfigTransaction(object):
         self._committed = True
 
 
-config = Configuration(path.join(PACKAGE_LOCATION, 'inyoka.ini'))
+local.config = Configuration(path.join(PACKAGE_LOCATION, 'inyoka.ini'))

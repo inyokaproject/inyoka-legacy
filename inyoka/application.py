@@ -68,7 +68,9 @@ class InyokaApplication(object):
         try:
             urls = self.url_adapter
         except ValueError:
-            return redirect(make_full_domain())
+            # we cannot use make_full_domain() here because there an adapter
+            # is required, too
+            return redirect('http://%s/' % config['base_domain_name'])
 
         for middleware in IMiddleware.iter_middlewares():
             response = middleware.process_request(request)

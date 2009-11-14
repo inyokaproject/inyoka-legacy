@@ -37,30 +37,6 @@ def action_initdb():
     init_db()
 
 
-def action_runtests():
-    """Run the unit and doctests"""
-    import sys
-    from os import path
-
-    # initialize the app
-    from inyoka.application import application
-
-    from inyoka.core.api import config, environ
-
-    tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
-
-    trans = config.edit()
-    trans['database_debug'] = True
-    trans['debug'] = True
-    config.touch()
-
-    # remove unused options from sys.argv
-    sys.argv = sys.argv[:1]
-
-    from inyoka.core.test import run_suite
-    run_suite()
-
-
 def make_action(app_factory, hostname='localhost', port=5000,
                 threaded=False, processes=1):
     from inyoka.core.api import config

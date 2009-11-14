@@ -9,12 +9,16 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os
+import os, sys
 import unittest
 import warnings
 
 import nose
-import nose.plugins
+from nose.plugins import cover
+
+import coverage
+coverage.erase()
+coverage.start()
 
 from werkzeug import Client, cached_property
 from werkzeug.contrib.testtools import ContentAccessors
@@ -121,7 +125,7 @@ class ViewTestCase(unittest.TestCase):
                                 data=data, follow_redirects=follow_redirects)
 
 
-class InyokaPlugin(nose.plugins.Plugin):
+class InyokaPlugin(cover.Coverage):
     """Nose plugin extension
 
     This prevents modules from being loaded without a configured Inyoka
@@ -132,6 +136,14 @@ class InyokaPlugin(nose.plugins.Plugin):
     enableOpt = 'inyoka_config'
     name = 'inyoka'
     _started = False
+
+    # Disable some Coverage stuff
+    def options(self, parser, env):
+        super(InyokaPlugin, self).options(parser, env)
+
+    # We already started coverage
+    def begin(self):
+        self.skipModules = sys.modules.keys()[:]
 
     def add_options(self, parser, env=os.environ):
         """Add command-line options for this plugin"""
@@ -148,6 +160,9 @@ class InyokaPlugin(nose.plugins.Plugin):
         """Configure the plugin"""
         self.config_file = None
         self.conf = conf
+        self.coverInclusive = True
+        self.coverHtmlDir = False
+        self.coverPackages = ['inyoka']
         if hasattr(options, self.enableOpt):
             self.enabled = bool(getattr(options, self.enableOpt))
             self.config_file = getattr(options, self.enableOpt)
@@ -228,6 +243,20 @@ def future(fn):
 
 
 def run_suite(module='inyoka'):
+    from os import path
+
+    # initialize the app
+    from inyoka.application import application
+
+    from inyoka.core.api import config, environ
+
+    tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
+
+    trans = config.edit()
+    trans['database_debug'] = True
+    trans['debug'] = True
+    config.touch()
+
     import nose.plugins.builtin
     plugins = [InyokaPlugin()]
 

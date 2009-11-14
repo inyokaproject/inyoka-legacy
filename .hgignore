@@ -1,7 +1,8 @@
 ^\.coverage$
-~$
+^\.noseids$
 ^docs/_build
 ^profiles/
+~$
 \.orig$
 \.swp$
 \.py[co]$

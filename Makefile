@@ -11,7 +11,7 @@ help:
 	@echo "  docs        create the docs (standalone HTML files)"
 	@echo "  server      start a development server"
 	@echo "  shell       start an interactive python shell"
-	@echo "  runtests    run the unit and doc tests"
+	@echo "  test        run the unit and doc tests"
 
 docs/: docs
 # bash_completion completes to docs/
@@ -27,14 +27,14 @@ shell:
 	@python manage-inyoka.py shell
 
 test-venv:
-	python make-bootstrap.py > ../bootstrap.py
+	python extra/make-bootstrap.py > ../bootstrap.py
 	cd .. && python bootstrap.py inyoka-testsuite
 	
 test:
 	extra/buildbottest.sh `pwd`
 
 runtests:
-	@python manage-inyoka.py runtests
+	@PYTHONPATH=`pwd`:$PYTHONPATH python extra/runtests.py
 
 reindent:
 	@extra/reindent.py -r -B .

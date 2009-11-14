@@ -16,7 +16,6 @@ from werkzeug.routing import Map as BaseMap
 from inyoka import Component
 from inyoka.core.config import config
 from inyoka.core.context import current_application
-from inyoka.core.database import db
 
 
 _date_formatter_split_re = re.compile('(%.)')
@@ -191,6 +190,7 @@ def href(endpoint, _anchor=None, _external=False, **args):
         If set to `True` the URL will be generated with the full server name
         and `http://` prefix.
     """
+    from inyoka.core.database import db
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
     rv = current_application.url_adapter.build(endpoint, args,

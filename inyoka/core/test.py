@@ -159,7 +159,7 @@ class InyokaPlugin(cover.Coverage):
         self.config_file = None
         self.conf = conf
         self.coverInclusive = True
-        self.coverHtmlDir = False
+        self.coverHtmlDir = os.environ.get('NOSE_COVER_HTML_DIR', None)
         self.coverPackages = ['inyoka']
         if hasattr(options, self.enableOpt):
             self.enabled = bool(getattr(options, self.enableOpt))

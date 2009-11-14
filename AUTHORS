@@ -9,10 +9,11 @@ Current Maintainers and Developers
 - Marian Sigler
 - Christoph Hack <christoph@tux21b.org>
 
-Some parts are taken from existing projects:
+Some parts and ideas are taken from existing projects:
 
 - Zine <http://zine.pocoo.org>
 - Solace <http://opensource.plurk.com/solace/>
+- Django <http://djangoproject.com/>
 
 
 Thanks!

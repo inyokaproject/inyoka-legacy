@@ -278,18 +278,6 @@ class ModelBase(object):
     We use the declarative model api from sqlalchemy.
     """
 
-    def __init__(self, *mixed, **kwargs):
-        # some syntactic sugar. It allows us to initialize
-        # a model just via the constructor without create
-        # one in the “real” model.
-        dict_ = type(self)._sa_class_manager.keys()
-        for key, value in kwargs.items():
-            if not key.startswith('_') and key in dict_:
-                setattr(self, key, value)
-            else:
-                raise AttributeError('Cannot set attribute which is' +
-                                     'not column in mapped table: %s' % (key,))
-
     def __eq__(self, other):
         equal = True
         if type(other) != type(self):

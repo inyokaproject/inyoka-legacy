@@ -1,3 +1,12 @@
 <p>Das ist der <strong>Paste-Service</strong></p>
 
 {{ form() }}
+
+{% if recent_pastes %}
+  <h2>Recent Pastes</h2>
+  <ul>
+    {% for p in recent_pastes %}
+    <li><a href="{{ p|url }}">{{ p.display_title }}</a> <small>by {{ p.author|e }} ({{ p.pub_date.strftime('%F %T') }})</small></li>
+    {% endfor %}
+  </ul>
+{% endif %}

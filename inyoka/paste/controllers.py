@@ -32,6 +32,7 @@ class PasteController(IController):
         if request.method == 'POST' and form.validate(request.form):
             e = Entry(code=form.data['code'],
                       language=form.data['language'],
+                      title=form.data['title'],
                       author=request.user)
             db.session.add(e)
             db.session.commit()

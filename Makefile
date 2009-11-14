@@ -32,21 +32,21 @@ test-venv:
 	cd .. && python bootstrap.py inyoka-testsuite
 	
 test:
-	extra/buildbottest.sh `pwd`
+	@extra/buildbottest.sh `pwd`
 
 runtests:
-	@PYTHONPATH=`pwd`:$PYTHONPATH python extra/runtests.py
+	@PYTHONPATH=`pwd`:${PYTHONPATH} python extra/runtests.py
 
 reindent:
 	@extra/reindent.py -r -B .
 
 clean-files:
-	find . -name '*.pyc' -exec rm -f {} +
-	find . -name '*.pyo' -exec rm -f {} +
-	find . -name '*~' -exec rm -f {} +
-	find . -name '*.orig' -exec rm -f {} +
-	find . -name '*.orig.*' -exec rm -f {} +
-	find . -name '*.py.fej' -exec rm -f {} +
+	@find . -name '*.pyc' -exec rm -f {} +
+	@find . -name '*.pyo' -exec rm -f {} +
+	@find . -name '*~' -exec rm -f {} +
+	@find . -name '*.orig' -exec rm -f {} +
+	@find . -name '*.orig.*' -exec rm -f {} +
+	@find . -name '*.py.fej' -exec rm -f {} +
 
 i18n:
 	@extra/extract-messages

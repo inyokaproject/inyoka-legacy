@@ -9,7 +9,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import nose
+import nose, sys
 
 import coverage
 coverage.erase()
@@ -44,13 +44,18 @@ def run_suite(module='inyoka'):
     database.metadata.drop_all(bind=engine)
     # then we create everything
     database.init_db(bind=engine)
+
     try:
-        nose.run(addplugins=plugins, module=module)
+        ret = 0 if nose.run(addplugins=plugins, module=module) else 2
+    except:
+        ret = 2
     finally:
         # and at the end we clean up our stuff
         database.metadata.drop_all(bind=engine)
 
+    return ret
+
 
 
 if __name__ == '__main__':
-    run_suite()
+    sys.exit(run_suite())

@@ -12,6 +12,7 @@ help:
 	@echo "  server      start a development server"
 	@echo "  shell       start an interactive python shell"
 	@echo "  test        run the unit and doc tests"
+	@echo "  reindent    clean up indents"
 
 docs/: docs
 # bash_completion completes to docs/

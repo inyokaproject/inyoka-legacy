@@ -75,7 +75,7 @@ class Component(object):
     _implementations = []
     _instances = []
 
-    def __init__(self, ctx):
+    def __init__(self, ctx=None):
         self.ctx = ctx
 
     @classmethod

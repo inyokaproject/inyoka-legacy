@@ -29,6 +29,7 @@ from inyoka.utils import patch_wrapper
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
+
 # disable the logger
 logger.disabled = True
 
@@ -40,17 +41,35 @@ class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
 
 
-class ViewTestCase(unittest.TestSuite):
+class ViewTestCase(unittest.TestCase):
 
     controller = None
 
-    def setUp(self):
+    def __call__(self, *args, **kwargs):
+        """Wrap unittest.TestCase __call__ to hook in our own
+        internal setup methods
+        """
+        self._pre_setup()
+        unittest.TestCase.run(self, *args, **kwargs)
+        self._post_teardown()
+
+    def _pre_setup(self):
+        """Performs any pre-test setup. This includes:
+
+            * install the test client
+            * set up the base url and base domain values
+        """
+        #TODO: are fixtures required here or in the InyokaPlugin?
         self._client = Client(current_application, response_wrapper=TestResponse)
         self.base_domain = config['base_domain_name']
         subdomain = config['routing.%s.subdomain' % self.controller.name]
         submount = config['routing.%s.submount' %
                            self.controller.name].strip('/')
         self.base_url = make_full_domain(subdomain)
+
+    def _post_teardown(self):
+        """Performs any post-test things."""
+        return
 
     def get_context(self, path, method='GET', **kwargs):
         ret = self.open(path, method=method, **kwargs)
@@ -136,6 +155,9 @@ class InyokaPlugin(nose.plugins.Plugin):
     def startTest(self, test):
         """Called before each test seperately to support our
         own fixture system.
+
+        Note that this is called for *each* test *method* not
+        every TestCase.
         """
         t = test.test
         if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):

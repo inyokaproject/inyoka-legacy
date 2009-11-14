@@ -1,8 +1,10 @@
-\.py[co]$
 ^\.coverage$
 ~$
 ^docs/_build
+^profiles/
 \.orig$
+\.swp$
+\.py[co]$
 ^inyoka\.ini$
 ^db\.log$
 ^dev\.db$

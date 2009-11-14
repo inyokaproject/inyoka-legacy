@@ -21,36 +21,10 @@ from inyoka.core.models import User
 from inyoka.core.database import db
 from inyoka.core.routing import href
 from inyoka.core.http import redirect
-from inyoka.core import forms
-from inyoka.i18n import lazy_gettext
-
+from inyoka.core.auth import forms
 
 _auth_system = None
 _auth_system_lock = Lock()
-
-class StandardLoginForm(forms.Form):
-    """Used to log in users."""
-    username = forms.TextField(lazy_gettext(u'Username'), required=True)
-    password = forms.TextField(lazy_gettext(u'Password'), required=True,
-                               widget=forms.widgets.PasswordInput)
-
-    def __init__(self, initial=None, action=None, request=None):
-        forms.Form.__init__(self, initial, action, request)
-        self.auth_system = get_auth_system()
-        if self.auth_system.passwordless:
-            del self.fields['password']
-
-class RegistrationForm(forms.Form):
-    username = forms.TextField(lazy_gettext(u'Username'), required=True)
-    email = forms.TextField(lazy_gettext(u'Email'), required=True)
-    password = forms.TextField(lazy_gettext(u'Password'), required=True,
-                               widget=forms.widgets.PasswordInput)
-    password_again = forms.TextField(lazy_gettext(u'Password again'), required=True,
-                               widget=forms.widgets.PasswordInput)
-
-    def context_validate(self, data):
-        if data['password'] != data['password_again']:
-            raise forms.ValidationError(lazy_gettext(u'The two passwords must be the same'))
 
 
 def get_auth_system():
@@ -150,7 +124,7 @@ class AuthSystemBase(object):
 
     def get_login_form(self):
         """Returns the login form."""
-        return StandardLoginForm()
+        return forms.StandardLoginForm(self)
 
     @property
     def can_reset_password(self):
@@ -182,7 +156,7 @@ class AuthSystemBase(object):
         if rv is not None:
             return rv
 
-        form = RegistrationForm()
+        form = forms.RegistrationForm()
         if request.method == 'POST' and form.validate(request.form):
             user = User(username=form['username'], email=form['email'],
                         password=form['password'])

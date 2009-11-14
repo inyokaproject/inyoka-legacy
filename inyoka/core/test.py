@@ -15,10 +15,10 @@ import warnings
 
 import nose
 import nose.plugins
-from html5lib import HTMLParser
-from html5lib.treebuilders import getTreeBuilder
 
 from werkzeug import Client, cached_property
+from werkzeug.contrib.testtools import ContentAccessors
+
 from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.context import local, current_application
@@ -35,15 +35,12 @@ logger.disabled = True
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
-html_parser = HTMLParser(tree=getTreeBuilder('lxml'))
 
-
-class TestResponse(Response):
+class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
-
-    @cached_property
+    @property
     def html(self):
-        return html_parser.parse(self.data)
+        return self.lxml
 
 
 class ViewTestCase(unittest.TestSuite):

@@ -12,9 +12,8 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import current_request
+from inyoka.core.context import current_request, config
 from inyoka.core.http import Response
-from inyoka.core.config import config
 from inyoka.core.routing import href
 
 

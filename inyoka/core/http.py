@@ -12,7 +12,7 @@
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
-from inyoka.core.config import config
+from inyoka.core.context import config
 from inyoka.core.routing import href
 
 

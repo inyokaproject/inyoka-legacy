@@ -14,8 +14,7 @@ from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
 from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
 from inyoka import Component
-from inyoka.core.config import config
-from inyoka.core.context import current_application
+from inyoka.core.context import current_application, config
 
 
 _date_formatter_split_re = re.compile('(%.)')

@@ -14,7 +14,7 @@ from threading import Lock
 
 from werkzeug import import_string
 from inyoka import Component
-from inyoka.core.config import config
+from inyoka.core.context import config
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.templating import templated
 from inyoka.core.models import User

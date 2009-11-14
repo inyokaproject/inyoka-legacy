@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from nose.tools import *
 from inyoka.core.api import href
-from inyoka.core.config import config
+from inyoka.core.context import config
 
 
 

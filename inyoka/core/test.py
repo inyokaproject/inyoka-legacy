@@ -20,8 +20,7 @@ from werkzeug.contrib.testtools import ContentAccessors
 
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.context import current_application, local
-from inyoka.core.config import config
+from inyoka.core.context import current_application, local, config
 from inyoka.core.http import Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
 from inyoka.utils import patch_wrapper
@@ -84,7 +83,7 @@ class ViewTestCase(unittest.TestCase):
         kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
 
-        local.application = app
+        app.bind()
         return response
 
     def get(self, *args, **kw):

@@ -17,7 +17,7 @@ from werkzeug.exceptions import NotFound
 
 from inyoka.core import environ
 from inyoka.core.http import Response
-from inyoka.core.config import config
+from inyoka.core.context import config
 from inyoka.core.middlewares import IMiddleware
 
 

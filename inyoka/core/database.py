@@ -81,7 +81,7 @@ from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
 from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.ext.declarative import declarative_base
-from inyoka.core.config import config
+from inyoka.core.context import config
 
 
 _engine = None

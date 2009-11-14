@@ -28,9 +28,8 @@ class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
     def __init__(self, cfile='inyoka.ini'):
-        local.config = Configuration(path.join(
-            environ.PACKAGE_LOCATION,
-            cfile
+        local.config = self.config = Configuration(
+            path.join(environ.PACKAGE_LOCATION, cfile
         ))
         self.bind()
         #TODO: this should go into some kind of setup process
@@ -70,6 +69,7 @@ class InyokaApplication(object):
     def bind(self):
         """Bind the application to a thread local"""
         local.application = self
+        local.config = self.config
 
     def dispatch_request(self, request):
         try:

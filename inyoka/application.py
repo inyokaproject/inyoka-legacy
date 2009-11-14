@@ -8,23 +8,30 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from os import path
+
 from werkzeug import ClosingIterator, redirect
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
 from inyoka.core.api import db, config, logger, IController, Request, \
-    Response, IMiddleware
+    Response, IMiddleware, environ
 from inyoka.core.context import local, local_manager, current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
+from inyoka.core.config import Configuration
 from inyoka.utils.urls import make_full_domain
 
 
 class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
-    def __init__(self):
+    def __init__(self, cfile='inyoka.ini'):
+        local.config = Configuration(path.join(
+            environ.PACKAGE_LOCATION,
+            cfile
+        ))
         self.bind()
         #TODO: this should go into some kind of setup process
         if not config.exists:
@@ -96,9 +103,9 @@ class InyokaApplication(object):
         # and all the other stuff on the current thread but initialize
         # it afterwards.  We do this so that the request object can query
         # the database in the initialization method.
+        self.bind()
         request = object.__new__(Request)
         local.request = request
-        self.bind()
         request.__init__(environ, self)
 
         try:
@@ -138,6 +145,3 @@ class InyokaApplication(object):
         """Make the application object a WSGI application."""
         return ClosingIterator(self.dispatch_wsgi(environ, start_response),
                                [local_manager.cleanup, db.session.close])
-
-
-application = InyokaApplication()

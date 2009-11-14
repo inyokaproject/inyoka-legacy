@@ -34,3 +34,4 @@ local_manager = LocalManager(local)
 
 current_request = local('request')
 current_application = local('application')
+config = local('config')

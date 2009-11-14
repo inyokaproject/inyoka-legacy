@@ -25,7 +25,7 @@ from werkzeug.contrib.testtools import ContentAccessors
 
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.context import local, current_application
+from inyoka.core.context import current_application, local
 from inyoka.core.config import config
 from inyoka.core.http import Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
@@ -80,6 +80,7 @@ class ViewTestCase(unittest.TestCase):
         return TEMPLATE_CONTEXT
 
     def open(self, path, *args, **kw):
+        app = local.application
         if not 'follow_redirects' in kw:
             kw['follow_redirects'] = True
         if not path.endswith('/'):
@@ -88,11 +89,7 @@ class ViewTestCase(unittest.TestCase):
         kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
 
-        # do we need to put the application on a local at all?
-        # inyoka.application.application should always exist…
-        from inyoka.application import application
-        local.application = application
-
+        local.application = app
         return response
 
     def get(self, *args, **kw):
@@ -246,7 +243,8 @@ def run_suite(module='inyoka'):
     from os import path
 
     # initialize the app
-    from inyoka.application import application
+    from inyoka.application import InyokaApplication
+    application = InyokaApplication('inyoka_tests.ini')
 
     from inyoka.core.api import config, environ
 

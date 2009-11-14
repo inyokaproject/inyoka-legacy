@@ -15,6 +15,7 @@ import os
 from os import path
 from threading import Lock
 from inyoka.core.environ import PACKAGE_LOCATION
+from inyoka.core.context import config
 
 
 class ConfigField(object):

@@ -53,14 +53,16 @@ class Entry(db.Model):
             self.rendered_code = highlight_code(self._code, self._language)
 
     def _set_code(self, code):
-        if code is not self._code:
-            self._code = code
+        changed = code != self._code
+        self._code = code
+        if changed:
             self._rerender()
     code = synonym('_code', descriptor=property(attrgetter('_code'), _set_code))
 
     def _set_language(self, language):
-        if language is not self._language:
-            self._language = language
+        changed = language != self._language
+        self._language = language
+        if changed:
             self._rerender()
     language = synonym('_language', descriptor=property(
         attrgetter('_language'), fset=_set_language))

@@ -29,6 +29,14 @@ def test_automatic_rendering():
 
     eq_(e2.rendered_code, rendered_code2_plain)
 
+    def _my_rerender(self):
+        raise AssertionError
+    orig_rerender = Entry._rerender
+    Entry._rerender = _my_rerender
+    e.language = e.language
+    e.code = e.code
+    Entry._rerender = orig_rerender
+
 def test_display_title():
     e1 = Entry('void', User.query.get('anonymous'), title=u'some paste')
     e2 = Entry('void', User.query.get('anonymous'))

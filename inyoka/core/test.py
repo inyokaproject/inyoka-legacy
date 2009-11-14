@@ -13,13 +13,7 @@ import os, sys
 import unittest
 import warnings
 
-import nose
 from nose.plugins import cover
-
-import coverage
-coverage.erase()
-coverage.coverage(auto_data=True, branch=True)
-coverage.start()
 
 from werkzeug import Client, cached_property
 from werkzeug.contrib.testtools import ContentAccessors
@@ -141,7 +135,7 @@ class InyokaPlugin(cover.Coverage):
 
     # We already started coverage
     def begin(self):
-        self.skipModules = sys.modules.keys()[:]
+        self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
     def add_options(self, parser, env=os.environ):
         """Add command-line options for this plugin"""

@@ -38,9 +38,6 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 
 class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
-    @property
-    def html(self):
-        return self.lxml
 
 
 class ViewTestCase(unittest.TestSuite):
@@ -95,7 +92,7 @@ class ViewTestCase(unittest.TestSuite):
     def submit_form(self, path, data, follow_redirects=False):
         response = self.get(path)
         try:
-            form = response.html.xpath('//form')[0]
+            form = response.lxml.xpath('//form')[0]
         except IndexError:
             raise RuntimeError('no form on page')
         csrf_token = form.xpath('//input[@name="_csrf_token"]')[0]

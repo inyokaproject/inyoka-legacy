@@ -15,7 +15,7 @@ import warnings
 
 from nose.plugins import cover
 
-from werkzeug import Client, cached_property
+from werkzeug import Client
 from werkzeug.contrib.testtools import ContentAccessors
 
 from inyoka.core import database

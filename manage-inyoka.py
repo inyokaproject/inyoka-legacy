@@ -13,8 +13,10 @@ from werkzeug import script
 from flickzeug import debug as fdebug, leakfinder, profiling
 
 
-def make_app(debug=False, profile=False, leaky=False):
-    from inyoka.application import application
+def make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
+    from inyoka.application import InyokaApplication
+    application = InyokaApplication(cfg)
+    application.bind()
     if debug:
         application = fdebug.DebuggedApplication(application, evalex=True,
             show_hidden_frames=True)
@@ -42,8 +44,8 @@ def action_runtests():
     import sys
     from os import path
 
-    # initialize the app
-    from inyoka.application import application
+    # initialize the application
+    app = make_app('test.ini')
 
     from inyoka.core.api import config, environ
 

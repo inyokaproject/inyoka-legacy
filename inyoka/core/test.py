@@ -21,7 +21,7 @@ from werkzeug.contrib.testtools import ContentAccessors
 
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.context import local, current_application
+from inyoka.core.context import current_application
 from inyoka.core.config import config
 from inyoka.core.http import Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
@@ -83,11 +83,6 @@ class ViewTestCase(unittest.TestCase):
         kw['base_url'] = self.base_url
         kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
-
-        # do we need to put the application on a local at all?
-        # inyoka.application.application should always exist…
-        from inyoka.application import application
-        local.application = application
 
         return response
 

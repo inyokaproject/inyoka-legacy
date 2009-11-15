@@ -231,35 +231,3 @@ def future(fn):
             raise AssertionError(
                 "Unexpected success for future test '%s'" % fn.func_name)
     return patch_wrapper(decorated, fn)
-
-
-def run_suite(module='inyoka'):
-    from os import path
-
-    # initialize the app
-    from inyoka.application import InyokaApplication
-    application = InyokaApplication('inyoka_tests.ini')
-
-    from inyoka.core.api import config, environ
-
-    tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
-
-    trans = config.edit()
-    trans['database_debug'] = True
-    trans['debug'] = True
-    config.touch()
-
-    import nose.plugins.builtin
-    plugins = [InyokaPlugin()]
-
-    config['debug'] = True
-    engine = database.get_engine()
-    # first we cleanup the existing database
-    database.metadata.drop_all(bind=engine)
-    # then we create everything
-    database.init_db(bind=engine)
-    try:
-        nose.run(addplugins=plugins, module=module)
-    finally:
-        # and at the end we clean up our stuff
-        database.metadata.drop_all(bind=engine)

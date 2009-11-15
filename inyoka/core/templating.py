@@ -12,6 +12,7 @@ import os
 import simplejson
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from inyoka import INYOKA_REVISION
+from inyoka import i18n
 from inyoka.core.context import current_request, config
 from inyoka.core.http import Response
 from inyoka.core.routing import href
@@ -101,8 +102,13 @@ class InyokaEnvironment(Environment):
         self.filters.update(
             jsonencode=simplejson.dumps,
             url=url_filter,
+            datetimeformat=i18n.format_datetime,
+            dateformat=i18n.format_date,
         )
 
-        self.install_null_translations()
+        self.install_gettext_translations(
+            i18n.get_translations(i18n.get_locale()
+        ))
+
 
 jinja_env = InyokaEnvironment()

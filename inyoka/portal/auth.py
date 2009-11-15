@@ -1,8 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+    inyoka.portal.auth
+    ~~~~~~~~~~~~~~~~~~
+
+    Some description here
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
 from inyoka.core.routing import href
 from inyoka.core.auth import AuthSystemBase, LoginUnsucessful
 from inyoka.core.http import redirect
 from inyoka.core.models import User
 from inyoka.core.api import db
+
 
 class EasyAuth(AuthSystemBase):
     def perform_login(self, request, username, password):

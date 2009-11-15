@@ -166,6 +166,7 @@ class InyokaPlugin(cover.Coverage):
         """
         t = test.test
         if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
+            print t.test._requred_fixtures
             self._started = True
             # reset the database data.  That way we can assure
             # that we get a clear database

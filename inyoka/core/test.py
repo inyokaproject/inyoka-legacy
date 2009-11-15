@@ -18,6 +18,7 @@ from nose.plugins import cover, base
 
 from werkzeug import Client
 from werkzeug.contrib.testtools import ContentAccessors
+from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
 from inyoka.core import database
 from inyoka.core.database import db
@@ -34,6 +35,10 @@ logger.disabled = True
 
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
+
+
+# an overall trace tracker from minimock
+tracker = TraceTracker()
 
 
 class TestResponse(Response, ContentAccessors):
@@ -192,6 +197,8 @@ class InyokaPlugin(cover.Coverage):
             if isinstance(test.test, nose.case.MethodTestCase):
                 test.test.inst._post_teardown()
 
+        # revert all mock objects to get clear passage on the next test
+        revert_mocks()
         # rollback the transaction
         db.session.commit()
         db.session.close()

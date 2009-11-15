@@ -24,6 +24,19 @@ def test_timestamped_slugs():
 
     eq_(gen_timestamped_slug(text, 'post', pub_date), u'my new slug')
 
+    # gen_timestamped_slug is using the current utc time if no pub_date
+    # is applied
+    now = datetime.datetime.utcnow()
+    eq_(gen_timestamped_slug(text, 'entry'), u'%s/%s/%s/my new slug'
+        % (now.year, now.month, now.day))
+
+    eq_(gen_timestamped_slug(text, 'entry', pub_date, '/prefix/'),
+        u'prefix/2009/10/12/my new slug')
+
+    eq_(gen_timestamped_slug(text, 'entry', pub_date, '///prefix/'),
+        u'prefix/2009/10/12/my new slug')
+
+
 
 def test_wrap():
     msg = """Arthur:  "The Lady of the Lake, her arm clad in the purest \

@@ -48,7 +48,7 @@ def run_suite(module='inyoka'):
     try:
         ret = 0 if nose.run(addplugins=plugins, module=module) else 2
     except:
-        ret = 2
+        ret = 1
     finally:
         # and at the end we clean up our stuff
         database.metadata.drop_all(bind=engine)

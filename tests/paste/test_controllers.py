@@ -8,13 +8,13 @@ from inyoka.paste.controllers import PasteController
 from inyoka.paste.models import Entry
 
 
-#TODO: this fixture thingy here is mostly for test reasons.
-#      Move it into it's own test suite!
-DATA = {
-    'code': u"#!/usr/bin/env python\nprint 'hello world'",
-    'language': 'python',
-    'author': User.query.first()
-}
+def get_data():
+    author = User.query.first()
+    return {
+        'code': u"print 'hello world'",
+        'language': 'python',
+        'author': author
+    }
 
 
 class PasteTester(ViewTestCase):
@@ -23,7 +23,7 @@ class PasteTester(ViewTestCase):
 
     fixtures = {
         'pastes': [
-            fixture(Entry, **DATA)
+            fixture(Entry, get_data)
     ]}
 
     @with_fixtures('pastes')
@@ -32,10 +32,10 @@ class PasteTester(ViewTestCase):
         #      feature, so add real tests!
         context = self.get_context('/')
         eq_(len(context['recent_pastes']), 1)
-        eq_(context['recent_pastes'][0].code, DATA['code'])
+        eq_(context['recent_pastes'][0].code, u"print 'hello world'")
 
     def test_new_paste(self):
-        response = self.submit_form('/', data=DATA)
+        response = self.submit_form('/', data=get_data())
         eq_(response.headers['Location'], href('paste/view', id=1))
         context = self.get_context('/')
         eq_(len(context['recent_pastes']), 1)

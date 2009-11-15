@@ -207,9 +207,12 @@ class InyokaPlugin(cover.Coverage):
 
 
 #TODO: write unittests
-def fixture(model, **kwargs):
+def fixture(model, _callback=None, **kwargs):
     """Insert some test fixtures into the database"""
     def onload():
+        if _callback is not None:
+            data = _callback()
+        kwargs.update(data)
         table = model.__table__
         names = [col for col in kwargs.keys()]
         m = model(**kwargs)

@@ -232,6 +232,7 @@ def mapper(model, table, **options):
     options['extension'] = extensions
     return orm.mapper(model, table, **options)
 
+
 class InyokaSession(Session):
     # Session that binds the engine as late as possible
     def __init__(self):

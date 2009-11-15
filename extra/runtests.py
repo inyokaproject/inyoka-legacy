@@ -22,6 +22,8 @@ application = InyokaApplication('inyoka_tests.ini')
 from inyoka.core.api import config, environ
 from inyoka.core.test import InyokaPlugin
 from inyoka.core import database
+from inyoka.core.database import refresh_engine
+
 
 def run_suite(module='inyoka'):
     from os import path
@@ -35,6 +37,9 @@ def run_suite(module='inyoka'):
     trans['debug'] = True
     trans.commit()
     config.touch()
+
+    # force the engine to be bound to the new database
+    refresh_engine()
 
     plugins = [InyokaPlugin()]
 

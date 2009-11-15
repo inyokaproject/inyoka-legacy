@@ -135,7 +135,7 @@ class InyokaPlugin(cover.Coverage):
 
     # We already started coverage
     def begin(self):
-        engine = database.get_engine()
+        self._engine = engine = database.get_engine()
         # first we cleanup the existing database
         database.metadata.drop_all(bind=engine)
         # then we create everything
@@ -170,12 +170,16 @@ class InyokaPlugin(cover.Coverage):
             # enable our test suite to setup internal things
             t.inst._pre_setup()
 
+        # setup the new transaction context so that we can revert
+        # it to get a clean and nice database
+        self._connection = conn = self._engine.connect()
+        self._transaction = trans = conn.begin()
+        db.session.bind = conn
+
         if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
             self._started = True
             # reset the database data.  That way we can assure
             # that we get a clear database
-            database.metadata.drop_all(bind=db.get_engine())
-            database.init_db(bind=db.get_engine())
             for fixture in t.test._required_fixtures:
                 functions = test.context.fixtures[fixture]
                 instances = [func() for func in functions]
@@ -184,13 +188,14 @@ class InyokaPlugin(cover.Coverage):
 
     def stopTest(self, test):
         if self._started:
-            # we clear our database, just to be sure we leave
-            # a clean context
-            database.metadata.drop_all(bind=db.get_engine())
-            database.init_db(bind=db.get_engine())
             self._started = False
             if isinstance(test.test, nose.case.MethodTestCase):
                 test.test.inst._post_teardown()
+
+        # rollback the transaction
+        db.session.commit()
+        db.session.close()
+        self._transaction.rollback()
 
     def wantClass(self, cls):
         # we want view test cases to be loaded with no matter

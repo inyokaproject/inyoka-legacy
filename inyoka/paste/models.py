@@ -65,7 +65,7 @@ class Entry(db.Model):
         if changed:
             self._rerender()
     language = synonym('_language', descriptor=property(
-        attrgetter('_language'), fset=_set_language))
+        attrgetter('_language'), _set_language))
 
     @property
     def display_title(self):

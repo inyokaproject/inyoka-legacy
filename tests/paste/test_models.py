@@ -14,7 +14,6 @@ from inyoka.paste.models import Entry
 
 
 def test_automatic_rendering():
-    # highlight code tests
     code1 = '@property\ndef(self, foo=None):\n    raise Exception\n'
     rendered_code1 = highlight_code(code1, 'python')
     code2 = 'import sys\nclass Example(object):\n    pass\n'
@@ -40,12 +39,12 @@ def test_automatic_rendering():
     eq_(e2.rendered_code, rendered_code2_plain)
 
     # assert that we don't call the rerender method when not required
+    e2.language = 'python'
+    eq_(e2.rendered_code, rendered_code2)
     mock('Entry._rerender', tracker=tracker)
     tracker.clear()
-    e2.language = 'python'
-    assert_true(tracker.check('Called Entry._rerender()'))
-    tracker.clear()
-    e2.language = 'python'
+    e2.code = e2.code
+    e2.language = e2.language
     assert_false(tracker.check('Called Entry._rerender()'))
 
 

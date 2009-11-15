@@ -20,18 +20,19 @@ class PasteController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/paste/<int:id>/', endpoint='view_paste'),
-        Rule('/raw/<int:id>/', endpoint='raw_paste'),
+        Rule('/paste/<int:id>/', endpoint='view'),
+        Rule('/raw/<int:id>/', endpoint='raw'),
+        Rule('/browse/', endpoint='browse'),
     ]
 
 
-    @register('index')
+    @register()
     @templated('paste/index.html')
     def index(self, request):
         form = AddPasteForm()
         if request.method == 'POST' and form.validate(request.form):
             e = Entry(code=form.data['code'],
-                      language=form.data['language'],
+                      language=form.data['language'] or None,
                       title=form.data['title'],
                       author=request.user)
             db.session.add(e)
@@ -45,7 +46,7 @@ class PasteController(IController):
             'form': form.as_widget(),
         }
 
-    @register('view_paste')
+    @register('view')
     @templated('paste/view.html')
     def view_paste(self, request, id):
         e = Entry.query.get(id)
@@ -55,9 +56,17 @@ class PasteController(IController):
             'paste': e,
         }
 
-    @register('raw_paste')
+    @register('raw')
     def raw_paste(self, request, id):
         e = Entry.query.get(id)
         if e is None:
             raise NotFound
         return Response(e.code, mimetype='text/plain')
+
+    @register('browse')
+    @templated('paste/browse.html')
+    def browse_pastes(self, request):
+        pastes = Entry.query.all()
+        return {
+            'pastes': pastes,
+        }

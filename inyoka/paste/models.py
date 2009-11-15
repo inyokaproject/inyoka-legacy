@@ -38,8 +38,8 @@ class Entry(db.Model):
 
     def get_absolute_url(self, action='view', external=False):
         return href({
-            'view': 'paste/view_paste',
-            'raw': 'paste/raw_paste',
+            'view': 'paste/view',
+            'raw': 'paste/raw',
             }[action], id=self.id)
 
     def _rerender(self):
@@ -67,9 +67,11 @@ class Entry(db.Model):
     language = synonym('_language', descriptor=property(
         attrgetter('_language'), fset=_set_language))
 
-
     @property
     def display_title(self):
         if self.title:
             return self.title
         return '#%d' % self.id
+
+    def __unicode__(self):
+        return self.display_title

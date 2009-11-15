@@ -157,10 +157,13 @@ class IController(Component, UrlMixin):
         return cls._endpoint_map[parts[0]][parts[1]]
 
     @staticmethod
-    def register(endpoint_name):
+    def register(endpoint_name=None):
         """Register a method as an endpoint handler"""
         def wrap(func):
-            func.endpoint = endpoint_name
+            if endpoint_name is None:
+                func.endpoint = func.__name__
+            else:
+                func.endpoint = endpoint_name
             return func
         return wrap
 

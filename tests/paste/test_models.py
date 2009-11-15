@@ -44,3 +44,5 @@ def test_display_title():
     db.session.commit()
     eq_(e1.display_title, 'some paste')
     eq_(e2.display_title, '#%d' % e2.id)
+    eq_(unicode(e1), 'some paste')
+    eq_(unicode(e2), '#%d' % e2.id)

@@ -33,6 +33,6 @@ class PasteTester(ViewTestCase):
 
     def test_new_paste(self):
         response = self.submit_form('/', data=DATA)
-        eq_(response.headers['Location'], href('paste/view_paste', id=1))
+        eq_(response.headers['Location'], href('paste/view', id=1))
         context = self.get_context('/')
         eq_(len(context['recent_pastes']), 1)

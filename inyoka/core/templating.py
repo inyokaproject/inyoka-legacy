@@ -15,6 +15,7 @@ from inyoka import INYOKA_REVISION
 from inyoka.core.context import current_request, config
 from inyoka.core.http import Response
 from inyoka.core.routing import href
+from inyoka.utils import patch_wrapper
 
 
 TEMPLATE_CONTEXT = {}
@@ -60,7 +61,7 @@ def templated(template_name):
                     TEMPLATE_CONTEXT.update(ret)
                 return response
             return Response.force_type(ret)
-        return _func
+        return patch_wrapper(_func, f)
     return _proxy
 
 

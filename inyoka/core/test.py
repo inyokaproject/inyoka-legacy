@@ -13,6 +13,7 @@ import os, sys
 import unittest
 import warnings
 
+import nose
 from nose.plugins import cover, base
 
 from werkzeug import Client
@@ -39,23 +40,17 @@ class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
 
 
-class ViewTestCase(unittest.TestCase):
+class ViewTestCase(unittest.TestSuite):
 
     controller = None
-
-    def __call__(self, *args, **kwargs):
-        """Wrap unittest.TestCase __call__ to hook in our own
-        internal setup methods
-        """
-        self._pre_setup()
-        unittest.TestCase.run(self, *args, **kwargs)
-        self._post_teardown()
 
     def _pre_setup(self):
         """Performs any pre-test setup. This includes:
 
             * install the test client
             * set up the base url and base domain values
+        Note that this method is called right *before*
+        fixtures and such stuff are set up.
         """
         #TODO: are fixtures required here or in the InyokaPlugin?
         self._client = Client(current_application, response_wrapper=TestResponse)
@@ -66,7 +61,12 @@ class ViewTestCase(unittest.TestCase):
         self.base_url = make_full_domain(subdomain)
 
     def _post_teardown(self):
-        """Performs any post-test things."""
+        """Performs any post-test things.
+
+        Note that this methdod is called right *before*
+        the internal test suite cleans up it's trash.  So you
+        can still access the fixtures and other things here.
+        """
         return
 
     def get_context(self, path, method='GET', **kwargs):
@@ -140,7 +140,7 @@ class InyokaPlugin(cover.Coverage):
         database.metadata.drop_all(bind=engine)
         # then we create everything
         database.init_db(bind=engine)
- 
+
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
     def finalize(self, result):
@@ -165,22 +165,22 @@ class InyokaPlugin(cover.Coverage):
         every TestCase.
         """
         t = test.test
+
+        if isinstance(t, nose.case.MethodTestCase):
+            # enable our test suite to setup internal things
+            t.inst._pre_setup()
+
         if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
-            print t.test._requred_fixtures
             self._started = True
             # reset the database data.  That way we can assure
             # that we get a clear database
             database.metadata.drop_all(bind=db.get_engine())
             database.init_db(bind=db.get_engine())
             for fixture in t.test._required_fixtures:
-                try:
-                    functions = test.context.fixtures[fixture]
-                    instances = [func() for func in functions]
-                    print instances
-                    db.session.add_all(instances)
-                    db.session.commit()
-                except:
-                    db.session.rollback()
+                functions = test.context.fixtures[fixture]
+                instances = [func() for func in functions]
+                db.session.add_all(instances)
+                db.session.commit()
 
     def stopTest(self, test):
         if self._started:
@@ -189,6 +189,8 @@ class InyokaPlugin(cover.Coverage):
             database.metadata.drop_all(bind=db.get_engine())
             database.init_db(bind=db.get_engine())
             self._started = False
+            if isinstance(test.test, nose.case.MethodTestCase):
+                test.test.inst._post_teardown()
 
     def wantClass(self, cls):
         # we want view test cases to be loaded with no matter

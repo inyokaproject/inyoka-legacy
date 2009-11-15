@@ -3,13 +3,17 @@ from nose.tools import *
 from werkzeug import EnvironBuilder
 from inyoka.core.api import Request, href
 from inyoka.core.test import ViewTestCase, fixture, with_fixtures
+from inyoka.core.models import User
 from inyoka.paste.controllers import PasteController
 from inyoka.paste.models import Entry
 
 
+#TODO: this fixture thingy here is mostly for test reasons.
+#      Move it into it's own test suite!
 DATA = {
     'code': u"#!/usr/bin/env python\nprint 'hello world'",
-    'language': 'python'
+    'language': 'python',
+    'author': User.query.first()
 }
 
 

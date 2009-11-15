@@ -72,6 +72,12 @@ class InyokaApplication(object):
         local.config = self.config
 
     def dispatch_request(self, request):
+        """Dispatch the request.
+
+        This method tries to find the proper controller and view
+        for the request path and does the request middleware wrapping
+        as well.
+        """
         try:
             urls = self.url_adapter
         except ValueError:
@@ -89,16 +95,23 @@ class InyokaApplication(object):
         try:
             rule, args = urls.match(request.path, return_rule=True)
             response = IController.get_view(rule.endpoint)(request, **args)
-        except HTTPException, e:
-            response = e.get_response(request)
-        except SQLAlchemyError, e:
+        except HTTPException, err:
+            response = err.get_response(request)
+        except SQLAlchemyError, err:
             db.session.rollback()
-            logger.error(e)
+            logger.error(err)
             raise
 
         return response
 
     def dispatch_wsgi(self, environ, start_response):
+        """Dispatch the request the WSGI way.
+
+        This method binds the request, application and config to the
+        current thread local and dispatches the request.
+        It also wraps the response middleware processing and handles
+        cookies.
+        """
         # Create a new request object, register it with the application
         # and all the other stuff on the current thread but initialize
         # it afterwards.  We do this so that the request object can query

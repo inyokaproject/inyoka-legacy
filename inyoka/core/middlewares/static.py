@@ -10,13 +10,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from os import path
-import simplejson
 from werkzeug import SharedDataMiddleware
 from werkzeug.routing import Rule
-from werkzeug.exceptions import NotFound
 
 from inyoka.core import environ
-from inyoka.core.http import Response
 from inyoka.core.context import config
 from inyoka.core.middlewares import IMiddleware
 

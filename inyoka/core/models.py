@@ -19,7 +19,7 @@ class UserQuery(db.Query):
         if isinstance(pk, basestring):
             return self.filter_by(username=pk).one()
         # We always want to raise if no user is found, get returns none…
-        return super(UserQuery,self).filter_by(id=pk).one()
+        return super(UserQuery, self).filter_by(id=pk).one()
 
 
 #TODO: find a way to make models extensible e.g to add more properties

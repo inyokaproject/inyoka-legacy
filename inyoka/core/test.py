@@ -13,7 +13,7 @@ import os, sys
 import unittest
 import warnings
 
-from nose.plugins import cover
+from nose.plugins import cover, base
 
 from werkzeug import Client
 from werkzeug.contrib.testtools import ContentAccessors
@@ -128,24 +128,23 @@ class InyokaPlugin(cover.Coverage):
     name = 'inyoka'
     _started = False
 
-    # Disable some Coverage stuff
     def options(self, parser, env):
-        super(InyokaPlugin, self).options(parser, env)
+        # Don't setup coverage options,
+        # base.Plugin takes care of with-inyoka
+        base.Plugin.options(self, parser, env)
 
     # We already started coverage
     def begin(self):
+        engine = database.get_engine()
+        # first we cleanup the existing database
+        database.metadata.drop_all(bind=engine)
+        # then we create everything
+        database.init_db(bind=engine)
+ 
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
-    def add_options(self, parser, env=os.environ):
-        """Add command-line options for this plugin"""
-        env_opt = 'NOSE_WITH_%s' % self.name.upper()
-        env_opt.replace('-', '_')
-
-        parser.add_option("--with-%s" % self.name,
-                          dest=self.enableOpt, type="string",
-                          default="",
-                          help="Setup Inyoka environment with the config file"
-                          " specified by ATTR [NOSE_ATTR]")
+    def finalize(self, result):
+        database.metadata.drop_all(bind=database.get_engine())
 
     def configure(self, options, conf):
         """Configure the plugin"""
@@ -170,12 +169,13 @@ class InyokaPlugin(cover.Coverage):
             self._started = True
             # reset the database data.  That way we can assure
             # that we get a clear database
-            database.metadata.drop_all()
-            database.init_db()
+            database.metadata.drop_all(bind=db.get_engine())
+            database.init_db(bind=db.get_engine())
             for fixture in t.test._required_fixtures:
                 try:
                     functions = test.context.fixtures[fixture]
                     instances = [func() for func in functions]
+                    print instances
                     db.session.add_all(instances)
                     db.session.commit()
                 except:
@@ -185,8 +185,8 @@ class InyokaPlugin(cover.Coverage):
         if self._started:
             # we clear our database, just to be sure we leave
             # a clean context
-            database.metadata.drop_all()
-            database.init_db()
+            database.metadata.drop_all(bind=db.get_engine())
+            database.init_db(bind=db.get_engine())
             self._started = False
 
     def wantClass(self, cls):

@@ -40,6 +40,7 @@ class PasteController(IController):
             return redirect(href(e))
 
         recent_pastes = Entry.query.order_by(Entry.pub_date.desc())[:10]
+        print recent_pastes
 
         return {
             'recent_pastes': recent_pastes,

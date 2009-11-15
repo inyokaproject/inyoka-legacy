@@ -2,7 +2,7 @@
 from nose.tools import *
 from werkzeug import EnvironBuilder
 from inyoka.core.api import Request, href
-from inyoka.core.test import ViewTestCase, fixture, with_fixtures, future
+from inyoka.core.test import ViewTestCase, fixture, with_fixtures
 from inyoka.paste.controllers import PasteController
 from inyoka.paste.models import Entry
 
@@ -22,7 +22,6 @@ class PasteTester(ViewTestCase):
             fixture(Entry, **DATA)
     ]}
 
-    @future
     @with_fixtures('pastes')
     def test_index(self):
         #TODO: for now this mostly just tests the fixture

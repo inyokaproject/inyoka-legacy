@@ -77,6 +77,7 @@ from threading import Lock
 from contextlib import contextmanager
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
+from sqlalchemy.orm.session import Session
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
 from sqlalchemy.orm.interfaces import AttributeExtension
@@ -111,7 +112,7 @@ def get_engine():
                     'connect_args': {'timeout': 30}
                 })
             url = SafeURL(info)
-            _engine = create_engine(url, **options)
+            _engine = create_engine(url, echo=False)#**options)
         return _engine
 
 
@@ -231,12 +232,15 @@ def mapper(model, table, **options):
     options['extension'] = extensions
     return orm.mapper(model, table, **options)
 
+class InyokaSession(Session):
+    # Session that binds the engine as late as possible
+    def __init__(self):
+        Session.__init__(self, get_engine(), autoflush=True,
+                         autocommit=False)
 
-#: initiate the database
-metadata = MetaData(get_engine())
-session = orm.scoped_session(lambda: orm.create_session(
-    get_engine(), autoflush=True, autocommit=False
-))
+
+metadata = MetaData()
+session = orm.scoped_session(InyokaSession)
 
 
 class Query(orm.Query):
@@ -310,9 +314,8 @@ def init_db(**kwargs):
     metadata.create_all(**kwargs)
     # TODO: YES ugly, but for now…
     anon = core_models.User(u'anonymous', u'', u'')
-    session.add(anon)
     admin = core_models.User(u'admin', u'', u'default')
-    session.add(admin)
+    session.add_all((anon, admin))
     session.commit()
 
 
@@ -326,7 +329,7 @@ def _make_module():
             if key in mod.__all__:
                 setattr(db, key, value)
 
-    db.engine = get_engine()
+    db.get_engine = get_engine
     db.session = session
     db.metadata = metadata
     db.mapper = mapper

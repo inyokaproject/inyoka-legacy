@@ -34,8 +34,8 @@ def make_shell():
 
 def action_initdb():
     application = make_app()
-    from inyoka.core.database import init_db
-    init_db()
+    from inyoka.core.database import init_db, get_engine
+    init_db(bind=get_engine())
 
 
 def make_action(app_factory, hostname='localhost', port=5000,

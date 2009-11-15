@@ -33,28 +33,12 @@ def run_suite(module='inyoka'):
     trans = config.edit()
     trans['database_debug'] = True
     trans['debug'] = True
+    trans.commit()
     config.touch()
 
-    import nose.plugins.builtin
     plugins = [InyokaPlugin()]
 
-    config['debug'] = True
-    engine = database.get_engine()
-    # first we cleanup the existing database
-    database.metadata.drop_all(bind=engine)
-    # then we create everything
-    database.init_db(bind=engine)
-
-    try:
-        ret = 0 if nose.run(addplugins=plugins, module=module) else 2
-    except:
-        ret = 1
-    finally:
-        # and at the end we clean up our stuff
-        database.metadata.drop_all(bind=engine)
-
-    return ret
-
+    nose.main(addplugins=plugins, module=module)
 
 
 if __name__ == '__main__':

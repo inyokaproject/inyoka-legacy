@@ -6,7 +6,7 @@
 \.orig$
 \.swp$
 \.py[co]$
-^inyoka\.ini$
+^inyoka(_tests)?\.ini$
 ^db\.log$
 ^dev\.db$
 \.pida-metadata/

@@ -1,0 +1,11 @@
+<h1>Inyoka Paste Service</h1>
+
+<ul>
+  {% for p in pastes %}
+  <li>
+    <a href="{{ p|url }}">{{ p }}</a>
+    <small>written by {{ p.author }} on {{ p.pub_date.strftime('%F %T') }}
+      (language: {{ p.language|default('plain text') }})</small>
+  </li>
+  {% endfor %}
+</ul>

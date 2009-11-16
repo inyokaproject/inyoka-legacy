@@ -14,8 +14,9 @@ from pygments.lexers import get_lexer_by_name, get_lexer_for_filename, \
     get_lexer_for_mimetype, TextLexer
 from pygments.util import ClassNotFound
 
-_pygments_formatter = HtmlFormatter(style='colorful', cssclass='syntax',
-                                    linenos='table')
+CLASSNAME = 'highlighted'
+
+_pygments_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table')
 
 
 def highlight_code(code, lang=None, filename=None, mimetype=None):

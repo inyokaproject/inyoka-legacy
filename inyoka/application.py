@@ -157,4 +157,4 @@ class InyokaApplication(object):
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""
         return ClosingIterator(self.dispatch_wsgi(environ, start_response),
-                               [local_manager.cleanup, db.session.close])
+                               [db.session.close, local_manager.cleanup])

@@ -10,7 +10,7 @@
 """
 from inyoka.core.routing import href
 from inyoka.core.auth import AuthSystemBase, LoginUnsucessful
-from inyoka.core.http import redirect
+from inyoka.core.http import redirect_to
 from inyoka.core.models import User
 from inyoka.core.api import db
 
@@ -23,7 +23,7 @@ class EasyAuth(AuthSystemBase):
             raise LoginUnsucessful('This username doesn\'t exist.')
         if user.check_password(password):
             self.set_user(request, user)
-            return redirect(href('portal/index'))
+            return redirect_to('portal/index')
         else:
             raise LoginUnsucessful('The password is not correct.')
 

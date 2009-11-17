@@ -20,7 +20,7 @@ from inyoka.core.templating import templated
 from inyoka.core.models import User
 from inyoka.core.database import db
 from inyoka.core.routing import href
-from inyoka.core.http import redirect
+from inyoka.core.http import redirect_to
 from inyoka.core.auth import forms
 
 _auth_system = None
@@ -163,7 +163,7 @@ class AuthSystemBase(object):
             db.session.add(user)
             self.after_register(request, user)
             db.session.commit()
-            return redirect(href('portal/index'))
+            return redirect_to('portal/index')
         return {'form':form.as_widget()}
 
     def after_register(self, request, user):

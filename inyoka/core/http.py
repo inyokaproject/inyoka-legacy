@@ -10,7 +10,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
-    redirect, get_current_url, cached_property
+    redirect as _redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.core.context import config
 from inyoka.core.routing import href
@@ -44,4 +44,4 @@ class DirectResponse(Exception):
 
 def redirect_to(*args, **kwargs):
     """Temporarily redirect to an URL rule."""
-    return redirect(href(*args, **kwargs))
+    return _redirect(href(*args, **kwargs))

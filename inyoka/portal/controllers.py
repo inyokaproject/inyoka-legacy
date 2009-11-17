@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, register, register_service, \
-    Response, templated, href, redirect
+    Response, templated, href, redirect_to
 from inyoka.core.auth import get_auth_system
 
 class PortalController(IController):
@@ -37,7 +37,7 @@ class PortalController(IController):
     @register('logout')
     def logout(self, request):
         get_auth_system().logout(request)
-        return redirect(href('portal/index'))
+        return redirect_to('portal/index')
 
     @register('register')
     def register(self, request):

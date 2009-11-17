@@ -10,7 +10,7 @@
 """
 from werkzeug.exceptions import NotFound
 from inyoka.core.api import IController, Rule, register, Response, \
-    templated, href, db, redirect
+    templated, href, db, redirect_to
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
 
@@ -37,7 +37,7 @@ class PasteController(IController):
                       author=request.user)
             db.session.add(e)
             db.session.commit()
-            return redirect(href(e))
+            return redirect_to(e)
 
         recent_pastes = Entry.query.order_by(Entry.pub_date.desc())[:10]
 

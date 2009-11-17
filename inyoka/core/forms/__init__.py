@@ -9,12 +9,13 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from werkzeug import redirect
 from bureaucracy.forms import *
 from bureaucracy import csrf, exceptions, recaptcha, redirects, utils, \
     widgets
 
 from inyoka.i18n import get_locale, get_translations
-from inyoka.core.http import redirect
+from inyoka.core.http import redirect_to
 from inyoka.core.context import local
 
 

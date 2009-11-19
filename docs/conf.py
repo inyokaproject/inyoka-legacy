@@ -48,8 +48,8 @@ copyright = u'2009, Inyoka Team'
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-rev = subprocess.Popen(['hg', 'tip', '--template', '{rev}'],
-                       cwd='..', stdout=subprocess.PIPE).stdout.read()
+rev = subprocess.Popen(['hg', 'id', '-n'], cwd='..',
+                       stdout=subprocess.PIPE).communicate()[0].strip()
 #
 # The short X.Y version.
 #version = '0.1sa'

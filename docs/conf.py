@@ -11,8 +11,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import os
-import sys
 import subprocess
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -33,7 +31,7 @@ templates_path = ['_templates']
 #autosummary_generate = ['inyoka.forum', 'inyoka.portal', 'inyoka.planet']
 
 # The suffix of source filenames.
-source_suffix = '.py'
+source_suffix = '.rst'
 
 # The encoding of source files.
 #source_encoding = 'utf-8'

@@ -315,7 +315,7 @@ def init_db(**kwargs):
     metadata.create_all(**kwargs)
     # TODO: YES ugly, but for now…
     anon = core_models.User(u'anonymous', u'', u'')
-    admin = core_models.User(u'admin', u'', u'default')
+    admin = core_models.User(u'admin', u'root@localhost', u'default')
     session.add_all((anon, admin))
     session.commit()
 

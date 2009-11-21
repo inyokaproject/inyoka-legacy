@@ -14,6 +14,14 @@ from inyoka.core.database import db
 from inyoka.utils.crypt import get_hexdigest
 
 
+USER_STATUS_MAP = {
+    0: 'inactive', #not yet activated
+    1: 'normal',
+    2: 'banned',
+    3: 'deleted', #deleted itself
+}
+USER_STATUS_REVERSE_MAP = dict((v,k) for k,v in USER_STATUS_MAP.items())
+
 class UserQuery(db.Query):
     def get(self, pk):
         if isinstance(pk, basestring):
@@ -37,23 +45,25 @@ class User(db.Model):
     username = db.Column(db.String(40), unique=True)
     # the email of the user.  If an external auth system is used, the
     # login code should update that information automatically on login
-    email = db.Column(db.String(200), index=True)
+    email = db.Column(db.String(200), index=True, unique=True)
     # the password hash.  This might not be used by every auth system.
     # the OpenID auth for example does not use it at all.  But also
     # external auth systems might not store the password here.
     pw_hash = db.Column(db.String(60), nullable=True)
+    # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
+    _status = db.Column('status', db.Integer, nullable=False, default=0)
     # the realname of the user.  This is also optional.
     real_name = db.Column(db.String(200), nullable=True)
 
 
-    def __init__(self, username, email='', password=''):
+    def __init__(self, username, email, password=''):
         self.username = username
         self.email = email
         self.set_password(password)
 
     def set_password(self, raw_password):
         """Set a new sha1 generated password hash"""
-        salt = get_hexdigest(str(random.random()), str(random.random()))[:5]
+        salt = '%05x' % random.getrandbits(20)
         hsh = get_hexdigest(salt, raw_password)
         self.pw_hash = u'%s$%s' % (salt, hsh)
 
@@ -65,6 +75,16 @@ class User(db.Model):
             raw_password = raw_password.encode('utf-8')
         salt, hsh = self.pw_hash.split('$')
         return hsh == get_hexdigest(salt, raw_password)
+
+    def _set_status(self, status):
+        self._status = USER_STATUS_REVERSE_MAP[status]
+    def _get_status(self):
+        if self._status is None:
+            return None
+        return USER_STATUS_MAP[self._status]
+    status = db.synonym('_status', descriptor=property(_get_status, _set_status))
+
+    is_active = property(lambda self: self.status == 'normal')
 
     @property
     def display_name(self):

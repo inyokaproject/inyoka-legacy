@@ -167,7 +167,14 @@ class AuthSystemBase(object):
         return {'form':form.as_widget()}
 
     def after_register(self, request, user):
-        """Handles activation."""
+        """
+        Tasks to be performed after the registration.
+        Per default this sends an activation email.
+        """
+        self.send_activation_mail(request, user)
+
+    def send_activation_mail(self, request, user):
+        """Sends an activation mail."""
         #if settings.REGISTRATION_REQUIRES_ACTIVATION:
         #    user.is_active = False
         #    confirmation_url = url_for('core.activate_user', email=user.email,

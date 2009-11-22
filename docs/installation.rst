@@ -36,7 +36,7 @@ Now it's possible to install the virtual environment. This is done with a simple
 Python command::
 
     # required that you are located in ubuntuusers/inyoka
-    python make-bootstrap.py > ../bootstrap.py
+    python extra/make-bootstrap.py > ../bootstrap.py
     cd ..
     # make sure that the virtualenv is not activated. If yes, execute `deactivate`
     python bootstrap.py .
@@ -53,6 +53,10 @@ We are now ready to enter the virtual environment (assumed we are located in
 ``inyoka-dev/inyoka``)::
 
     . ../bin/activate
+    
+Before starting we have to initialate the database::
+
+    python manage-inyoka.py initdb
 
 Now start the development server::
 

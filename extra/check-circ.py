@@ -3,7 +3,7 @@
     check-circ.py
     ~~~~~~~~~~~~~
 
-    Tool for checking for circular imports in a python project.
+    Tool for checking for circular imports in a Python project.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for details.

@@ -5,7 +5,7 @@
 
     The inyoka portal system.  The system is devided into multiple modules
     to which we refer as applications.  The name inyoka means "snake" in
-    zulu and was chosen because it's a python application *cough*.
+    zulu and was chosen because it's a Python application *cough*.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.

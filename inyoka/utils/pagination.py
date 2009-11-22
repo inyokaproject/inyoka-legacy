@@ -9,11 +9,11 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-
 from werkzeug import Href
 from inyoka.core.exceptions import NotFound
 from inyoka.utils import escape
 from inyoka.i18n import _
+
 
 class Pagination(object):
     def __init__(self, query, page, link=None, args=None, per_page=15):
@@ -122,12 +122,6 @@ class Pagination(object):
                     add(u'<span class="page current">%d</a>' % type)
 
         return ''.join(ret)
-
-
-
-
-
-
 
 
 class URLPagination(Pagination):

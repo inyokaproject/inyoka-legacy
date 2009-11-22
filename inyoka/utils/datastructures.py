@@ -13,7 +13,7 @@ class BidiMap(dict):
     """
     A simpler API for simple Bidirectional Mappings.
     """
-    
+
     def __init__(self,items={}):
         """
         Constructor

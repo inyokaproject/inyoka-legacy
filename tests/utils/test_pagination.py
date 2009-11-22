@@ -61,4 +61,3 @@ def test_simple_pagination():
     assert_raises(NotFound, URLPagination, query, 7, '/entries/', per_page=15)
     assert_raises(NotFound, URLPagination, query, 1, '/entries/', per_page=15)
     assert_raises(NotFound, URLPagination, query, -1, '/entries/', per_page=15)
-

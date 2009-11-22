@@ -22,5 +22,3 @@ def test_user_status():
     me.status = 'normal'
     eq_(USER_STATUS_MAP[me._status], me.status)
     assert_true(me.is_active)
-
-

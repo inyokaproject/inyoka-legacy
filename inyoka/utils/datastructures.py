@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
     inyoka.core.datastructures
-    ~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Datastructures used for many Things to avoid duplicate code.
+    Datastructures used for many things to avoid duplicate code.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -12,22 +12,28 @@
 class BidiMap(dict):
     """
     A simpler API for simple Bidirectional Mappings.
+
+    Example Usage::
+
+        >>> map = BidiMap({1: 'dumb', 2: 'smartly', 3: 'clever'})
+        >>> map[1]
+        'dumb'
+        >>> map['dumb']
+        1
+
+    :param items: A `dict` like object where keys are integers.
     """
 
-    def __init__(self,items={}):
-        """
-        Constructor
+    def __init__(self, items=None):
+        items = items or {}
+        dict.__init__(self, **items)
+        self.reversed = dict((v,k) for k, v in self.iteritems())
 
-        items must be a Dict like Object, where keys are Integers.
+    def __getitem__(self, key):
         """
-        dict.__init__(self,**items)
-        self.reverse = dict((v,k) for k,v in self.items())
-
-    def __getitem__(self,key):
+        Implement object[item] access to this class.
         """
-        Implement object[item] Access to this Class.
-        """
-        if type(key) == int:
+        if isinstance(key, int):
             return dict.__getitem__(self, key)
         else:
-            return self.reverse[key]
+            return self.reversed[key]

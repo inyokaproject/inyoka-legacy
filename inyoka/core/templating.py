@@ -10,13 +10,13 @@
 """
 import os
 import simplejson
+import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from inyoka import INYOKA_REVISION
 from inyoka import i18n
 from inyoka.core.context import current_request, config
 from inyoka.core.http import Response
 from inyoka.core.routing import href
-from inyoka.utils import patch_wrapper
 
 
 TEMPLATE_CONTEXT = {}
@@ -49,9 +49,10 @@ def templated(template_name):
     default_mimetype = 'text/html'
     then used as context for the given template. Returns a Response object.
     """
-    def _proxy(f):
-        def _func(*args, **kwargs):
-            ret = f(*args, **kwargs)
+    def decorator(func):
+        @functools.wraps(func)
+        def templated_wrapper(*args, **kwargs):
+            ret = func(*args, **kwargs)
             if ret is None:
                 ret = {}
             if isinstance(ret, dict):
@@ -62,8 +63,8 @@ def templated(template_name):
                     TEMPLATE_CONTEXT.update(ret)
                 return response
             return Response.force_type(ret)
-        return patch_wrapper(_func, f)
-    return _proxy
+        return templated_wrapper
+    return decorator
 
 
 def url_filter(model_instance, action=None):

@@ -76,7 +76,7 @@ class User(db.Model):
         return hsh == get_hexdigest(salt, raw_password)
 
     def _set_status(self, status):
-        self._status = USER_STATUS_REVERSE[status]
+        self._status = USER_STATUS_MAP[status]
     def _get_status(self):
         if self._status is None:
             return None

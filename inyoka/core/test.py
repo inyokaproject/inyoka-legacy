@@ -25,7 +25,6 @@ from inyoka.core.database import db
 from inyoka.core.context import current_application, local, config
 from inyoka.core.http import Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
-from inyoka.utils import patch_wrapper
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
@@ -235,17 +234,18 @@ def with_fixtures(*names):
 
 
 #TODO: write unittests
-def future(fn):
+def future(func):
     """Mark a test as expected to unconditionally fail."""
-    fn_name = fn.func_name
-    def decorated(*args, **kw):
+    fn_name = func.func_name
+    @functools.wraps(func)
+    def future_decorator(*args, **kw):
         try:
-            fn(*args, **kw)
+            func(*args, **kw)
         except Exception, ex:
             print ("Future test '%s' failed as expected: %s " % (
                 fn_name, str(ex)))
             return True
         else:
             raise AssertionError(
-                "Unexpected success for future test '%s'" % fn.func_name)
-    return patch_wrapper(decorated, fn)
+                "Unexpected success for future test '%s'" % func.func_name)
+    return future_decorator

@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 # Released to the public domain, by Tim Peters, 03 October 2000.
 # -B option added by Georg Brandl, 2006.

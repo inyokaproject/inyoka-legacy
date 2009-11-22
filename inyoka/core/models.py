@@ -11,16 +11,15 @@
 import random
 
 from inyoka.core.database import db
+from inyoka.core.bidimap import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
-
-USER_STATUS_MAP = {
+USER_STATUS_MAP = BidiMap({
     0: 'inactive', #not yet activated
     1: 'normal',
     2: 'banned',
     3: 'deleted', #deleted itself
-}
-USER_STATUS_REVERSE_MAP = dict((v,k) for k,v in USER_STATUS_MAP.items())
+})
 
 class UserQuery(db.Query):
     def get(self, pk):
@@ -77,7 +76,7 @@ class User(db.Model):
         return hsh == get_hexdigest(salt, raw_password)
 
     def _set_status(self, status):
-        self._status = USER_STATUS_REVERSE_MAP[status]
+        self._status = USER_STATUS_REVERSE[status]
     def _get_status(self):
         if self._status is None:
             return None

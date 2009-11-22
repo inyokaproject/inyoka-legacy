@@ -11,7 +11,7 @@
 import random
 
 from inyoka.core.database import db
-from inyoka.core.bidimap import BidiMap
+from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
 USER_STATUS_MAP = BidiMap({

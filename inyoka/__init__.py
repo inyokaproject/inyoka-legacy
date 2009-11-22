@@ -80,12 +80,12 @@ class Component(object):
 
     @classmethod
     def get_components(cls):
-        """return a list of all component instances for this class"""
+        """Return a list of all component instances for this class."""
         return cls._instances
 
     @classmethod
     def get_component_classes(cls):
-        """returns a list of all component classes for this class"""
+        """Return a list of all component classes for this class."""
         return cls._implementations
 
 
@@ -105,7 +105,7 @@ def setup_components(accepted_components):
 
     :param accepted_components: Modules to import to setupt the components.
     :return: An instance map containing all registered and activated components
-    :return type: dict
+    :rtype: dict
     """
     from werkzeug import import_string
     from inyoka.core.api import ctx

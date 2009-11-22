@@ -71,7 +71,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
-import sys
+import sys, os
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
@@ -312,6 +312,14 @@ def init_db(**kwargs):
     # TODO: how to discover models?! SchemaController?
     from inyoka.core import models as core_models
     from inyoka.paste import models
+
+    # TODO: even uglier ;)
+    if config['debug']:
+        sys.path.insert(0, os.getcwd())
+        from tests.utils import test_pagination
+
+#    raise Exception(`metadata.tables.keys()`)
+
     metadata.create_all(**kwargs)
     # TODO: YES ugly, but for now…
     anon = core_models.User(u'anonymous', u'', u'')

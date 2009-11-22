@@ -1,5 +1,7 @@
 <h1>Inyoka Paste Service</h1>
 
+<p><a href="{{ href('paste/index') }}">Create one yourself!</a></p>
+
 <ul>
   {% for p in pastes %}
   <li>
@@ -9,3 +11,4 @@
   </li>
   {% endfor %}
 </ul>
+{{ pagination }}

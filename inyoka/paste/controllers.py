@@ -11,6 +11,7 @@
 from werkzeug.exceptions import NotFound
 from inyoka.core.api import IController, Rule, register, Response, \
     templated, href, db, redirect_to
+from inyoka.utils.pagination import URLPagination
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
 
@@ -23,6 +24,7 @@ class PasteController(IController):
         Rule('/paste/<int:id>/', endpoint='view'),
         Rule('/raw/<int:id>/', endpoint='raw'),
         Rule('/browse/', endpoint='browse'),
+        Rule('/browse/<int:page>/', endpoint='browse'),
     ]
 
 
@@ -65,8 +67,10 @@ class PasteController(IController):
 
     @register('browse')
     @templated('paste/browse.html')
-    def browse_pastes(self, request):
-        pastes = Entry.query.all()
+    def browse_pastes(self, request, page=None):
+        query = Entry.query
+        pagination = URLPagination(query, page)
         return {
-            'pastes': pastes,
+            'pastes': pagination.query,
+            'pagination': pagination.buttons(),
         }

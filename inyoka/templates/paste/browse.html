@@ -1,7 +1,17 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>Browse Pastes</title>
+    <script src="{{ href('static', file='/js/jQuery.js') }}"></script>
+    <script src="{{ href('static', file='/js/pagination.js') }}"></script>
+  </head>
+  <body>
 <h1>Inyoka Paste Service</h1>
 
 <p><a href="{{ href('paste/index') }}">Create one yourself!</a></p>
 
+{{ pagination }}
 <ul>
   {% for p in pastes %}
   <li>
@@ -12,3 +22,5 @@
   {% endfor %}
 </ul>
 {{ pagination }}
+</body>
+</html>

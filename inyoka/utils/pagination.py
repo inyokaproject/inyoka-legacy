@@ -90,11 +90,10 @@ class Pagination(object):
         was_ellipsis = True #no comma at beginning
         for type, link in self._get_buttons(threshold, prev=prev, next=next):
             if type == 'ellipsis':
-                add(u'<span class="ellipsis">%s' % escape(_(u' … ')))
+                add(u' <span class="ellipsis">%s</span> ' % escape(_(u'…')))
                 if link:
                     add(u'<input type="hidden" class="url-template" value="%s">'
                         % escape(link))
-                add(u'</span>')
                 was_ellipsis = True
                 continue
 
@@ -115,12 +114,15 @@ class Pagination(object):
                 else:
                     add(u'<span class="next disabled">%s</span>' % NEXT)
             else:
+                _pageclass = ' page1' if type == 1 else '' # required for JS
                 if link:
-                    add(u'<a href="%s" class="page">%d</a>'
-                        % (escape(link), type))
+                    add(u'<a href="%s" class="page%s">%d</a>'
+                        % (escape(link), _pageclass, type))
                 else:
-                    add(u'<span class="page current">%d</a>' % type)
+                    add(u'<span class="page current%s">%d</span>'
+                        % (_pageclass, type))
 
+        add('</div>')
         return ''.join(ret)
 
 

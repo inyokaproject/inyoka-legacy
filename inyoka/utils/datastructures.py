@@ -12,22 +12,32 @@
 class BidiMap(dict):
     """
     A simpler API for simple Bidirectional Mappings.
+
+    Example Usage::
+
+        >>> map = BidiMap({1: 'dumb', 2: 'smartly', 3: 'clever'})
+        >>> map[1]
+        'dumb'
+        >>> map['dumb']
+        1
+
     """
 
-    def __init__(self,items={}):
+    def __init__(self, items=None):
         """
         Constructor
 
         items must be a Dict like Object, where keys are Integers.
         """
-        dict.__init__(self,**items)
-        self.reverse = dict((v,k) for k,v in self.items())
+        items = items or {}
+        dict.__init__(self, **items)
+        self.reversed = dict((v,k) for k, v in self.iteritems())
 
-    def __getitem__(self,key):
+    def __getitem__(self, key):
         """
         Implement object[item] Access to this Class.
         """
-        if type(key) == int:
+        if isinstance(key, int):
             return dict.__getitem__(self, key)
         else:
-            return self.reverse[key]
+            return self.reversed[key]

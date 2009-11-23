@@ -180,7 +180,7 @@ register = IController.register
 register_service = IController.register_service
 
 
-def href(endpoint, _anchor=None, _external=False, **args):
+def href(endpoint, **args):
     """Get the URL to an endpoint.  The keyword arguments provided are used
     as URL values.  Unknown URL values are used as keyword argument.
     Additionally there are some special keyword arguments:
@@ -192,6 +192,9 @@ def href(endpoint, _anchor=None, _external=False, **args):
         If set to `True` the URL will be generated with the full server name
         and `http://` prefix.
     """
+    _anchor = args.pop('_anchor', None)
+    _external = args.pop('_external', False)
+
     from inyoka.core.database import db
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()

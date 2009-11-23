@@ -1,5 +1,10 @@
-<p>Das ist der <strong>Paste-Service</strong></p>
+{%- extends 'paste/base.html' %}
 
+{%- block content %}
+<h1>Pastebin</h1>
+<p>This is the <strong>Pastebin</strong>, our first app.</p>
+
+<h2>Paste something!</h2>
 {{ form() }}
 
 {% if recent_pastes %}
@@ -11,3 +16,4 @@
   </ul>
 {% endif %}
 <p><a href="{{ href('paste/browse') }}">Browse all pastes</a></p>
+{%- endblock %}

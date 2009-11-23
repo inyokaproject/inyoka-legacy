@@ -1,10 +1,13 @@
-<link rel="stylesheet" href="{{ href('static', file='style/highlighting.css') }}" type="text/css" />
+{%- extends 'paste/base.html' %}
+{%- set title_trace = [paste.display_title] %}
+{%- set styles = ['highlighting.css'] %}
 
-<h1>Inyoka Paste Service</h1>
-<h2>{{ paste.display_title }} by {{ paste.author }}</h2>
+{%- block content %}
+<h1>Paste {{ paste.display_title }} by {{ paste.author }}</h1>
 
 {{ paste.rendered_code }}
 <p><small>
   Created on {{ paste.pub_date.strftime('%F %T') }}.
   <a href={{ paste|url('raw') }}>Show raw text</a>
 </small></p>
+{%- endblock %}

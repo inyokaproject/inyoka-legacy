@@ -1,0 +1,31 @@
+  {%- set styles = ['main.css'] + styles|default([]) %}
+  {%- set scripts = ['jQuery.js'] + scripts|default([]) %}
+<html>
+  <head>
+    <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
+    {%- for script in scripts %}
+    <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
+    {%- endfor %}
+    {%- for style in styles %}
+    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" />
+    {%- endfor %}
+  </head>
+  <body>
+    <h1>Inyoka</h1> 
+    <div>
+    {% if REQUEST.user.is_anonymous %}
+      <a href="{{ href('portal/login') }}">Login</a>
+    {% else %}
+      Hallo {{ REQUEST.user.display_name }} <a href="{{ href('portal/logout') }}">Logout</a>
+    {% endif %} —
+    <a href="{{ href('portal/index') }}">Portal</a> ·
+    <a href="{{ href('paste/index') }}">Pastebin</a> ·
+    <a href="{{ href('news/index') }}">News</a>
+    </div>
+    <div id="content">
+    {% block content %}
+
+    {% endblock %}
+    </div>
+  </body>
+</html>

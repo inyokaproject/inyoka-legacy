@@ -16,6 +16,18 @@ from inyoka.i18n import _
 
 
 class Pagination(object):
+    """
+    :param query: A SQLAlchemy query object.
+    :param page: The page number. For the first page, this must be `None`;
+                 supplying 1 raises a `NotFound` exception. This is to ensure
+                 that there are is no URL ending with '/1/'.
+    :param link: The base link for the pagination. If it is not supplied, 
+                 relative links are used instead.
+    :param args: URL parameters, that, if given, are included in the generated
+                 urls.
+    :param per_page: Number of entries displayed on one page.
+    """
+
     def __init__(self, query, page, link=None, args=None, per_page=15):
         self.base_query = query
         self.page = page
@@ -42,12 +54,25 @@ class Pagination(object):
         self.query = query[index:index + self.per_page]
 
     def make_link(self, page):
+        """
+        Create a link to the given page.
+
+        Subclasses must implement this.
+        """
         raise NotImplementedError
 
     def make_template(self):
+        """
+        Return a template for creating links. It contains a '!' at the place
+        where the page number is to be inserted. This is used by JavaScript.
+
+        Subclasses may implement this to enable a JavaScript page selector.
+        """
+
         return None
 
     def _get_buttons(self, threshold=2, prev=True, next=True):
+        #TODO: threshold doesn't work as it should
         if prev:
             if self.page == 1:
                 yield 'prev', None
@@ -59,9 +84,10 @@ class Pagination(object):
             #: last two ones are to avoid things as `1 ... 3 4`
             if num == self.max_pages or \
                num == 1 or \
-               abs(self.page - num) <= 2 or \
-               ((self.max_pages - num) <= 1 and (num - self.page) == 3) or \
-               (num == 2 and (self.page - num) <= 3):
+               abs(self.page - num) <= threshold or \
+               ((self.max_pages - num) <= 1
+                   and (num - self.page) == (threshold + 1)) or \
+               (num == 2 and (self.page - num) <= (threshold + 1)):
                 if num == self.page:
                     yield num, None
                 else:
@@ -79,6 +105,18 @@ class Pagination(object):
                 yield 'next', self.make_link(self.page + 1)
 
     def buttons(self, threshold=2, prev=True, next=True, class_='pagination'):
+        """
+        Return HTML code for the page selector.
+
+        :param threshold: The number of pages before and after the current
+                          page for which direct links are shown (and not an
+                          ellipsis).
+        :param prev: If False, do not show an extra link to the previous page.
+        :param next: If False, do not show an extra link to the next page.
+        :param class_: The class attribute for the enclosing `div` element.
+                       Defaults to `pagination`.
+        """
+
         COMMA = '<span class="comma">, </span>'
         NEXT = escape(_(u'next »'))
         PREV = escape(_(u'« previous'))
@@ -127,11 +165,10 @@ class Pagination(object):
 
 
 class URLPagination(Pagination):
+    """
+    A Pagination that appends the page number to the URL.
+    """
     def make_link(self, page):
-        """
-        Makes a link to the given `page`.
-        If the the objects `link` attribute is `None`, a relative link is returned.
-        """
         if self.link is None:
             if self.page == 1:
                 href = Href()
@@ -158,4 +195,6 @@ class URLPagination(Pagination):
 
 
 class GETPagination(Pagination):
-    pass
+    """
+    A Pagination that uses GET parameters for the page number.
+    """

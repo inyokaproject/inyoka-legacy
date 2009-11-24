@@ -14,6 +14,7 @@ from inyoka.core.config import BooleanField, TextField, IntegerField
 
 
 DEFAULTS = {
+    # common config values
     'debug':                    BooleanField(default=False, help_text=lazy_gettext(
         u'Enable debug mode')),
     'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
@@ -33,47 +34,67 @@ DEFAULTS = {
         u'sqlalchemy log is written to a `db.log` file.')),
     'auth_system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',
         help_text=lazy_gettext(u'The Authsystem which should get used')),
-    'routing.portal.subdomain':     TextField(default=u'',
-        help_text=lazy_gettext(u'Subdomain used for the portal application')),
-    'routing.portal.submount':      TextField(default=u'/',
-        help_text=lazy_gettext(u'Submount used for the portal application')),
-    'routing.calendar.subdomain':   TextField(default=u'',
-        help_text=lazy_gettext(u'Subdomain used for the calendar application')),
-    'routing.calendar.submount':    TextField(default=u'/calendar',
-        help_text=lazy_gettext(u'Submount used for the calendar application')),
-    'routing.news.subdomain':       TextField(default=u'news',
-        help_text=lazy_gettext(u'Subdomain used for the news application')),
-    'routing.news.submount':        TextField(default=u'/',
-        help_text=lazy_gettext(u'Submount used for the news application')),
-    'routing.forum.subdomain':     TextField(default=u'forum',
-        help_text=lazy_gettext(u'Subdomain used for the forum application')),
-    'routing.forum.submount':      TextField(default=u'/',
-        help_text=lazy_gettext(u'Submount used for the forum application')),
-    'routing.wiki.subdomain':     TextField(default=u'wiki',
-        help_text=lazy_gettext(u'Subdomain used for the wiki application')),
-    'routing.wiki.submount':      TextField(default=u'/',
-        help_text=lazy_gettext(u'Submount used for the wiki application')),
-    'routing.paste.subdomain':     TextField(default=u'paste',
-        help_text=lazy_gettext(u'Subdomain used for the paste application')),
-    'routing.paste.submount':      TextField(default=u'/',
-        help_text=lazy_gettext(u'Submount used for the paste application')),
-    'routing.planet.subdomain':     TextField(default=u'planet',
-        help_text=lazy_gettext(u'Subdomain used for the forum application')),
-    'routing.planet.submount':      TextField(default=u'/',
-        help_text=lazy_gettext(u'Submount used for the planet application')),
-    'routing.testing.subdomain':    TextField(default=u'',
-        help_text=lazy_gettext(u'Subdomain used for the testing application')),
-    'routing.testing.submount':    TextField(default=u'/testing',
-        help_text=lazy_gettext(u'Submount used for the testing application')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
     'cookie_domain_name':           TextField(default=u'.inyoka.local',
         help_text=lazy_gettext(u'Cookie domain name')),
+
+    # routing specific config values
+    'routing.portal.subdomain':     TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the portal application')),
+    'routing.portal.submount':      TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the portal application')),
+
+    'routing.calendar.subdomain':   TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the calendar application')),
+    'routing.calendar.submount':    TextField(default=u'/calendar',
+        help_text=lazy_gettext(u'Submount used for the calendar application')),
+
+    'routing.news.subdomain':       TextField(default=u'news',
+        help_text=lazy_gettext(u'Subdomain used for the news application')),
+    'routing.news.submount':        TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the news application')),
+
+    'routing.forum.subdomain':     TextField(default=u'forum',
+        help_text=lazy_gettext(u'Subdomain used for the forum application')),
+    'routing.forum.submount':      TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the forum application')),
+
+    'routing.wiki.subdomain':     TextField(default=u'wiki',
+        help_text=lazy_gettext(u'Subdomain used for the wiki application')),
+    'routing.wiki.submount':      TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the wiki application')),
+
+    'routing.paste.subdomain':     TextField(default=u'paste',
+        help_text=lazy_gettext(u'Subdomain used for the paste application')),
+    'routing.paste.submount':      TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the paste application')),
+
+    'routing.planet.subdomain':     TextField(default=u'planet',
+        help_text=lazy_gettext(u'Subdomain used for the forum application')),
+    'routing.planet.submount':      TextField(default=u'/',
+        help_text=lazy_gettext(u'Submount used for the planet application')),
+
+    'routing.testing.subdomain':    TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for the testing application')),
+    'routing.testing.submount':    TextField(default=u'/testing',
+        help_text=lazy_gettext(u'Submount used for the testing application')),
+
+    # values for static and media serving
+    'routing.static.subdomain':     TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for static file serving')),
+    'routing.static.submount':      TextField(default=u'/_static',
+        help_text=lazy_gettext(u'Submount used for static file serving')),
+
+    'routing.media.subdomain':      TextField(default=u'',
+        help_text=lazy_gettext(u'Subdomain used for media file serving')),
+    'routing.media.submount':       TextField(default=u'/_media',
+        help_text=lazy_gettext(u'Submount used for media file serving')),
+
     'static_path':                  TextField(default=u'static',
         help_text=lazy_gettext(u'Path to the directory for static files. Relative to the directory where '
                                u'the inyoka package lies in.')),
     'media_path':                  TextField(default=u'media',
         help_text=lazy_gettext(u'Path to the directory for shared static files, aka media. Relative to '
                                u'the directory where the inyoka package lies in.')),
-
 }

@@ -10,10 +10,8 @@
 """
 import sys
 import logging
-from os import path
 from logging import Formatter
 from inyoka import INYOKA_REVISION
-from inyoka.core import environ
 from inyoka.core.context import config
 from inyoka.utils.colors import blue, green, red, yellow, white
 

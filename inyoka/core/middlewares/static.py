@@ -21,31 +21,50 @@ from inyoka.core.middlewares import IMiddleware
 STATIC_PATH = path.join(environ.PACKAGE_CONTENTS, config['static_path'])
 MEDIA_PATH = path.join(environ.PACKAGE_CONTENTS, config['media_path'])
 EXPORTS = {
-    '/_static': STATIC_PATH,
-    '/_media': MEDIA_PATH
+    config['routing.media.submount']: MEDIA_PATH,
+    config['routing.static.submount']: STATIC_PATH
 }
 
 
-class StaticMiddleware(IMiddleware, SharedDataMiddleware):
+class StaticMiddlewareBase(object):
     """Handles static file requests and dispatches those requests
     to :cls:`werkzeug.SharedDataMiddleware`.
+
+    This class represents the base implementation.  The concrete
+    implementations are shown below.
     """
-
     low_level = True
-
     priority = 99
 
-    #TODO: make the urls configurable
-    url_rules = [
-        Rule('/_static', defaults={'file': '/'}, endpoint='static'),
-        Rule('/_static/<path:file>', endpoint='static'),
-        Rule('/_media', defaults={'file': '/'}, endpoint='media'),
-        Rule('/_media/<path:file>', endpoint='media'),
-    ]
+    exports = None
+
+    build_only = True
+
+    ignore_prefix = True
 
     def __init__(self, ctx):
         IMiddleware.__init__(self, ctx)
-        SharedDataMiddleware.__init__(self, self.application, EXPORTS)
+        SharedDataMiddleware.__init__(self, self.application, self.exports)
 
     def __call__(self, *args, **kwargs):
         return SharedDataMiddleware.__call__(self, *args, **kwargs)
+
+
+class StaticMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
+    """Concrete static file serving middleware implementation"""
+    name = 'static'
+    exports = {config['routing.static.submount']: STATIC_PATH}
+    url_rules = [
+        Rule('/', defaults={'file': '/'}, endpoint='static'),
+        Rule('/<path:file>', endpoint='static')
+    ]
+
+
+class MediaMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
+    """Concrete media file serving middleware implementation"""
+    name = 'media'
+    exports = {config['routing.media.submount']: MEDIA_PATH}
+    url_rules = [
+        Rule('/', defaults={'file': '/'}, endpoint='media'),
+        Rule('/<path:file>', endpoint='media')
+    ]

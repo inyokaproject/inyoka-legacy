@@ -66,6 +66,9 @@ class UrlMixin(object):
     # all rules are for build only, they never match
     build_only = False
 
+    # if `True` we don't set a `EndpointPrefix`
+    ignore_prefix = False
+
     @classmethod
     def get_urlmap(cls):
         cls._endpoint_map = {}
@@ -91,10 +94,13 @@ class UrlMixin(object):
             #TODO: handle `None` component names properly
             name = comp.name
             if name:
-                val = Subdomain(config['routing.%s.subdomain' % name], [
-                Submount(config['routing.%s.submount' % name], [
-                    EndpointPrefix('%s/' % name, comp.url_rules)
-                ])])
+                subdomain = config['routing.%s.subdomain' % name]
+                submount = config['routing.%s.submount' % name]
+                if comp.ignore_prefix:
+                    rules = comp.url_rules
+                else:
+                    rules = [EndpointPrefix('%s/' % name, comp.url_rules)]
+                val = Subdomain(subdomain, [Submount(submount, rules)])
                 urls.append(val)
             else:
                 val = comp.url_rules

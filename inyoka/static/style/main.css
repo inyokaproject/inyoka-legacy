@@ -1,0 +1,77 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #FFFFFF;
+  font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
+}
+
+#head {
+  margin: 0 auto;
+  padding: 20px 10px 10px 10px;
+  width: 972px;
+  background-color: #90a818;
+  background-image: url(../img/head.png);
+  background-repeat: no-repeat;
+  -moz-border-radius: 0 0 5px 5px;
+}
+
+#head h1 {
+  margin-left: 10px;
+  padding: 90px 0 0 140px;
+  height: 62px;
+  color: #FFFFFF;
+  font-size: 3em;
+  background-image: url(../img/inyoka-logo.png);
+  background-repeat: no-repeat;
+}
+
+#navi {
+  float: right;
+  position: relative;
+  bottom: 2em;
+}
+
+#navi a {
+  color: #FFFFFF;
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 1em;
+}
+
+#page {
+  background-color: #CCCCCC;
+  margin: 8px 0;
+  padding: 8px 0;
+}
+
+#page-inner {
+  margin: 0 auto;
+  width: 992px;
+}
+
+#page-inner > div {
+  padding: 10px;
+  -moz-border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+#page-head {
+  background-color: #EEEEEE;
+  color: #001800;
+}
+
+#content {
+  background-color: #FFFFFF;
+  color: #2b2422;
+}
+
+#content h1, #content h2, #content h3 {
+  color: #304800;
+}
+
+#content a {
+  color: #304800;
+}

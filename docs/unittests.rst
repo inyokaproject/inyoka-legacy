@@ -30,3 +30,10 @@ working copy.  Every application (forum, portal, wiki) and larger modules get
 their own folder.  In this folder every file that should be recognized as a test
 providing file shall start with ``test`` in the name.  In these files our
 unittests are located.
+
+
+Run the unittests
+=================
+
+To run the unittests just go to the root inyoka folder (`inyoka-dev` as
+assumed in :doc:`installation`) and type in ``make test``.

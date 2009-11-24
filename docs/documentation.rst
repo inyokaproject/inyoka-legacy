@@ -16,7 +16,7 @@ Build a standard html documentation
 ===================================
 
 In the following we suppose that you activated the virtual environment (see
-:doc:`installation`) and that you are in the ``inyoka/docs`` directory. Now you
+:doc:`installation`) and that you are in the ``inyoka-dev/docs`` directory. Now you
 can run::
 
     sphinx-build -b html . build

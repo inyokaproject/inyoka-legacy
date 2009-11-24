@@ -73,8 +73,7 @@ class UrlMixin(object):
             #TODO: handle `None` component names properly
             name = comp.name
             if name:
-                subdomain = config['routing.%s.subdomain' % name]
-                submount = config['routing.%s.submount' % name]
+                subdomain, submount = config['routing.urls.' + name].split(':', 1)
                 if comp.ignore_prefix:
                     rules = comp.url_rules
                 else:

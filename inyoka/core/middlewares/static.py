@@ -49,7 +49,7 @@ class StaticMiddlewareBase(object):
 class StaticMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
     """Concrete static file serving middleware implementation"""
     name = 'static'
-    exports = {config['routing.static.submount']: STATIC_PATH}
+    exports = {config['routing.urls.static'].split(':', 1)[1]: STATIC_PATH}
     url_rules = [
         Rule('/', defaults={'file': '/'}, endpoint='static'),
         Rule('/<path:file>', endpoint='static')
@@ -59,7 +59,7 @@ class StaticMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
 class MediaMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
     """Concrete media file serving middleware implementation"""
     name = 'media'
-    exports = {config['routing.media.submount']: MEDIA_PATH}
+    exports = {config['routing.urls.media'].split(':', 1)[1]: MEDIA_PATH}
     url_rules = [
         Rule('/', defaults={'file': '/'}, endpoint='media'),
         Rule('/<path:file>', endpoint='media')

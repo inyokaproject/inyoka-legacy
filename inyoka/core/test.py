@@ -60,9 +60,8 @@ class ViewTestCase(unittest.TestSuite):
         #TODO: are fixtures required here or in the InyokaPlugin?
         self._client = Client(current_application, response_wrapper=TestResponse)
         self.base_domain = config['base_domain_name']
-        subdomain = config['routing.%s.subdomain' % self.controller.name]
-        submount = config['routing.%s.submount' %
-                           self.controller.name].strip('/')
+        name = self.controller.name
+        subdomain, submount = config['routing.urls.' + name].split(':', 1)
         self.base_url = make_full_domain(subdomain)
 
     def _post_teardown(self):

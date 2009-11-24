@@ -54,6 +54,19 @@ class TextField(ConfigField):
         return value
 
 
+class DottedField(ConfigField):
+    """A field representing many values but at least two.
+    This converter only fixes values that does not contain
+    a doublepoint so applications can safely split on it.
+
+    """
+
+    def converter(self, value):
+        if not ':' in value:
+            value = ':' + value
+        return value
+
+
 class BooleanField(ConfigField):
     """A field representing boolean values"""
 

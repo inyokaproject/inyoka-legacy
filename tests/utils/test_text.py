@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from functools import partial
 
 from nose.tools import *
 
@@ -36,6 +37,16 @@ def test_timestamped_slugs():
     eq_(gen_timestamped_slug(text, 'entry', pub_date, '///prefix/'),
         u'prefix/2009/10/12/my new slug')
 
+    # test fixed output length of the datetime key values
+    tester = partial(gen_timestamped_slug, text, 'entry', pub_date)
+    eq_(tester(url_format='%year%', fixed=True), '2009')
+    eq_(tester(url_format='%month%', fixed=True), '10')
+    eq_(tester(url_format='%day%', fixed=True), '12')
+    eq_(tester(url_format='%hour%', fixed=True), '08')
+    eq_(tester(url_format='%hour%'), '8') # default is fixed=False!
+    eq_(tester(url_format='%minute%', fixed=True), '03')
+    eq_(tester(url_format='%minute%'), '3') # default is fixed=False!
+    eq_(tester(url_format='%second%', fixed=True), '00')
 
 
 def test_wrap():

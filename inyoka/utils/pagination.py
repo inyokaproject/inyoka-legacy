@@ -21,7 +21,7 @@ class Pagination(object):
     :param page: The page number. For the first page, this must be `None`;
                  supplying 1 raises a `NotFound` exception. This is to ensure
                  that there are is no URL ending with '/1/'.
-    :param link: The base link for the pagination. If it is not supplied, 
+    :param link: The base link for the pagination. If it is not supplied,
                  relative links are used instead.
     :param args: URL parameters, that, if given, are included in the generated
                  urls.

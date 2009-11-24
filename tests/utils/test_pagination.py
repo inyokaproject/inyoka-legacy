@@ -25,6 +25,7 @@ def _setup_tables(model, set_position=False):
     db.session.commit()
     return by_group
 
+
 def setup():
     global test1_by_group, test2_by_group
     test1_by_group = _setup_tables(PaginationTest1)
@@ -36,12 +37,12 @@ class PaginationTest1(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     group = db.Column(db.Integer)
 
+
 class PaginationTest2(db.Model):
     __tablename__ = 'test_utils_pagination2'
     id = db.Column(db.Integer, primary_key=True)
     group = db.Column(db.Integer)
     position = db.Column(db.Integer)
-
 
 
 def test_simple_pagination():
@@ -147,7 +148,7 @@ def test_urlpagination_links():
     eq_(URLPagination(q, 2, args={"a":"b"}).make_link(2), '../2/?a=b')
     eq_(URLPagination(q, None, args={"a":"b"}).make_template(), '!/?a=b')
     eq_(URLPagination(q, 2, args={"a":"b"}).make_template(), '../!/?a=b')
-    eq_(URLPagination(q, None, '/entries/', args={"a":"b"}).make_link(1), 
+    eq_(URLPagination(q, None, '/entries/', args={"a":"b"}).make_link(1),
         '/entries/?a=b')
     eq_(URLPagination(q, 2, '/entries/', args={"a":"b"}).make_link(1),
         '/entries/?a=b')

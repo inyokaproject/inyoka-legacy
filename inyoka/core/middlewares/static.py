@@ -21,8 +21,8 @@ from inyoka.core.middlewares import IMiddleware
 STATIC_PATH = path.join(environ.PACKAGE_CONTENTS, config['static_path'])
 MEDIA_PATH = path.join(environ.PACKAGE_CONTENTS, config['media_path'])
 EXPORTS = {
-    '/__static__': STATIC_PATH,
-    '/__media__': MEDIA_PATH
+    '/_static': STATIC_PATH,
+    '/_media': MEDIA_PATH
 }
 
 
@@ -37,10 +37,10 @@ class StaticMiddleware(IMiddleware, SharedDataMiddleware):
 
     #TODO: make the urls configurable
     url_rules = [
-        Rule('/__static__', defaults={'file': '/'}, endpoint='static'),
-        Rule('/__static__/<path:file>', endpoint='static'),
-        Rule('/__media__', defaults={'file': '/'}, endpoint='media'),
-        Rule('/__media__/<path:file>', endpoint='media'),
+        Rule('/_static', defaults={'file': '/'}, endpoint='static'),
+        Rule('/_static/<path:file>', endpoint='static'),
+        Rule('/_media', defaults={'file': '/'}, endpoint='media'),
+        Rule('/_media/<path:file>', endpoint='media'),
     ]
 
     def __init__(self, ctx):

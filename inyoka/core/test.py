@@ -12,6 +12,7 @@
 import os, sys
 import unittest
 import warnings
+import functools
 
 import nose
 from nose.plugins import cover, base

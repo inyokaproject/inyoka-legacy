@@ -21,7 +21,6 @@ application = InyokaApplication('inyoka_tests.ini')
 
 from inyoka.core.api import config, environ
 from inyoka.core.test import InyokaPlugin
-from inyoka.core import database
 from inyoka.core.database import refresh_engine
 
 

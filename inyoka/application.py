@@ -21,7 +21,6 @@ from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 from inyoka.core.config import Configuration
-from inyoka.utils.urls import make_full_domain
 
 
 class InyokaApplication(object):
@@ -81,8 +80,9 @@ class InyokaApplication(object):
         try:
             urls = self.url_adapter
         except ValueError:
-            # we cannot use make_full_domain() here because there an adapter
-            # is required, too
+            # we cannot use make_full_domain() here because the url adapter
+            # is used there too.  So we raise a new `ValueError` here too.
+            # Thats why we do it the manual way
             return redirect('http://%s/' % config['base_domain_name'])
 
         for middleware in IMiddleware.iter_middlewares(False):

@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 from nose.tools import *
-from werkzeug import EnvironBuilder
-from inyoka.core.api import Request, href
+from inyoka.core.api import href
 from inyoka.core.test import ViewTestCase, fixture, with_fixtures
 from inyoka.core.models import User
 from inyoka.paste.controllers import PasteController

@@ -11,21 +11,30 @@
     {%- endfor %}
   </head>
   <body>
-    <h1>Inyoka</h1> 
-    <div>
-    {% if REQUEST.user.is_anonymous %}
-      <a href="{{ href('portal/login') }}">Login</a>
-    {% else %}
-      Hallo {{ REQUEST.user.display_name }} <a href="{{ href('portal/logout') }}">Logout</a>
-    {% endif %} —
-    <a href="{{ href('portal/index') }}">Portal</a> ·
-    <a href="{{ href('paste/index') }}">Pastebin</a> ·
-    <a href="{{ href('news/index') }}">News</a>
+    <div id="head">
+      <h1>Inyoka</h1> 
+      <div id="navi">
+      {% if REQUEST.user.is_anonymous %}
+        <a href="{{ href('portal/login') }}">Login</a>
+      {% else %}
+        Hallo {{ REQUEST.user.display_name }} <a href="{{ href('portal/logout') }}">Logout</a>
+      {% endif %}
+      <a href="{{ href('portal/index') }}">Portal</a>
+      <a href="{{ href('paste/index') }}">Pastebin</a>
+      <a href="{{ href('news/index') }}">News</a>
+      </div>
     </div>
-    <div id="content">
-    {% block content %}
+    <div id="page">
+      <div id="page-inner">
+        <div id="page-head">
+        Hier könnte eine Einleitung zum jeweiligen Content stehen :)
+        </div>
+        <div id="content">
+        {% block content %}
 
-    {% endblock %}
+        {% endblock %}
+        </div>
+      </div>
     </div>
   </body>
 </html>

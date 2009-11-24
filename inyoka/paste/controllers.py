@@ -53,7 +53,7 @@ class PasteController(IController):
     def view_paste(self, request, id):
         e = Entry.query.get(id)
         if e is None:
-            raise NotFound
+            raise NotFound()
         return {
             'paste': e,
         }
@@ -62,7 +62,7 @@ class PasteController(IController):
     def raw_paste(self, request, id):
         e = Entry.query.get(id)
         if e is None:
-            raise NotFound
+            raise NotFound()
         return Response(e.code, mimetype='text/plain')
 
     @register('browse')

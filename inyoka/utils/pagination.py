@@ -59,7 +59,7 @@ class Pagination(object):
 
         Subclasses must implement this.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def make_template(self):
         """
@@ -68,7 +68,6 @@ class Pagination(object):
 
         Subclasses may implement this to enable a JavaScript page selector.
         """
-
         return None
 
     def _get_buttons(self, threshold=2, prev=True, next=True):

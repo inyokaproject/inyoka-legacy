@@ -33,28 +33,7 @@ _date_formatter_mapping = {
 
 
 class UrlMixin(object):
-    """Mixin to make components able to implement own url rules
-
-    Usage::
-
-        class MyComponent(Component, UrlMixin):
-
-            constant = None
-
-            def some_method(self):
-                # ...
-
-
-        class MyComponentImplementation(MyComponent):
-
-            name = 'mycomponent'
-
-            url_rules = [
-                Rule('/', endpoint='foo'),
-                Rule('/bar/', endpoint='bar')
-            ]
-
-    """
+    """Mixin to make components able to implement own url rules."""
 
     # The name of the component. Used for `href`.
     name = None

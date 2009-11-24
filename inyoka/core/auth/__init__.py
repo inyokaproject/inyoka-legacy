@@ -19,7 +19,6 @@ from inyoka.core.middlewares import IMiddleware
 from inyoka.core.templating import templated
 from inyoka.core.models import User
 from inyoka.core.database import db
-from inyoka.core.routing import href
 from inyoka.core.http import redirect_to
 from inyoka.core.auth import forms
 

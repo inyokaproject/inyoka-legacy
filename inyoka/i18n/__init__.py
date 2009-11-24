@@ -4,7 +4,7 @@
 import os
 import pytz
 from gettext import NullTranslations
-from babel import Locale, dates, UnknownLocaleError
+from babel import Locale, UnknownLocaleError
 from babel.support import Translations, LazyProxy
 from babel.dates import format_date, format_datetime, format_time
 from inyoka.core.context import local

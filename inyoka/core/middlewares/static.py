@@ -20,10 +20,6 @@ from inyoka.core.middlewares import IMiddleware
 
 STATIC_PATH = path.join(environ.PACKAGE_CONTENTS, config['static_path'])
 MEDIA_PATH = path.join(environ.PACKAGE_CONTENTS, config['media_path'])
-EXPORTS = {
-    config['routing.media.submount']: MEDIA_PATH,
-    config['routing.static.submount']: STATIC_PATH
-}
 
 
 class StaticMiddlewareBase(object):

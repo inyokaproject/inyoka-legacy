@@ -11,7 +11,7 @@
 """
 from werkzeug import Href
 from inyoka.core.exceptions import NotFound
-from inyoka.utils import escape
+from inyoka.utils.html import escape
 from inyoka.i18n import _
 
 

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-02 17:46+0100\n"
-"PO-Revision-Date: 2009-11-02 17:46+0100\n"
+"PO-Revision-Date: 2009-11-25 01:46+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -18,112 +18,144 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.4\n"
 
-#: inyoka/core/config/defaults.py:17
+#: inyoka/core/auth/forms.py:16 inyoka/core/auth/forms.py:28
+msgid "Username"
+msgstr ""
+
+#: inyoka/core/auth/forms.py:17 inyoka/core/auth/forms.py:30
+msgid "Password"
+msgstr ""
+
+#: inyoka/core/auth/forms.py:29
+msgid "Email"
+msgstr ""
+
+#: inyoka/core/auth/forms.py:32
+msgid "Password again"
+msgstr ""
+
+#: inyoka/core/auth/forms.py:37
+msgid "The two passwords must be the same"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:22
 msgid "Enable debug mode"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:19
+#: inyoka/core/config/defaults.py:25
 msgid "The path to the media folder"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:21
+#: inyoka/core/config/defaults.py:26
 msgid "Custom template path which is searched before the default path."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:24
+#: inyoka/core/config/defaults.py:29
 msgid "The secret used for hashing the cookies"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:27
+#: inyoka/core/config/defaults.py:32
 msgid ""
 "The database URL.  For more information about database settings consult the "
 "Inyoka docs."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:30
+#: inyoka/core/config/defaults.py:35
 msgid ""
 "If enabled the database will collect the SQL statements and add them to the "
 "bottom of the page for easier debugging.  Beside that the sqlalchemy log is "
 "written to a `db.log` file."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:35
+#: inyoka/core/config/defaults.py:40
 msgid "The Authsystem which should get used"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:37
-msgid "Subdomain used for the portal application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:39
-msgid "Submount used for the portal application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:41
-msgid "Subdomain used for the calendar application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:43
-msgid "Submount used for the calendar application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:45
-msgid "Subdomain used for the news application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:47
-msgid "Submount used for the news application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:49 inyoka/core/config/defaults.py:57
-msgid "Subdomain used for the forum application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:51
-msgid "Submount used for the forum application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:53
-msgid "Subdomain used for the wiki application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:55
-msgid "Submount used for the wiki application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:59
-msgid "Submount used for the planet application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:61
-msgid "Subdomain used for the paste application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:63
-msgid "Submount used for the paste application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:65
-msgid "Subdomain used for the testing application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:67
-msgid "Submount used for the testing application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:69
+#: inyoka/core/config/defaults.py:42
 msgid "Base domain name"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:71
+#: inyoka/core/config/defaults.py:44
+msgid "Cookie domain name"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:50
+msgid "Url mapping used for the portal application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:52
+msgid "Url mapping used for the calendar application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:54
+msgid "Url mapping used for the news application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:56
+msgid "Url mapping used for the forum application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:58
+msgid "Url mapping used for the wiki application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:60
+msgid "Url mapping used for the paste application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:62
+msgid "Url mapping used for the planet application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:64
+msgid "Url mapping used for the testing application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:68
+msgid "Url mapping used for static file serving"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:70
+msgid "Url mapping used for media file serving"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:72
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:74
+#: inyoka/core/config/defaults.py:75
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
+msgstr ""
+
+#: inyoka/paste/forms.py:30
+msgid "Title (optional)"
+msgstr ""
+
+#: inyoka/paste/forms.py:31
+msgid "Code"
+msgstr ""
+
+#: inyoka/paste/forms.py:32
+msgid "Language"
+msgstr ""
+
+#: inyoka/templates/paste/base.html:2
+msgid "Paste"
+msgstr ""
+
+#: inyoka/utils/pagination.py:120
+msgid "next »"
+msgstr ""
+
+#: inyoka/utils/pagination.py:121
+msgid "« previous"
+msgstr ""
+
+#: inyoka/utils/pagination.py:130
+msgid "…"
 msgstr ""
 

@@ -131,6 +131,7 @@ def _bootstrap():
     """Get the inyoka version and store it."""
     global INYOKA_REVISION
     import os
+    from os.path import realpath, dirname, join, pardir, isdir
     from subprocess import Popen, PIPE
 
     # get inyoka revision
@@ -149,6 +150,11 @@ def _bootstrap():
                 hg_node = p[1].strip()
                 break
     INYOKA_REVISION = hg_node
+
+    # the path to the contents of the inyoka package
+    os.environ['inyoka_contents'] = conts = realpath(join(dirname(__file__)))
+    # the path to the folder where the inyoka package is stored in
+    os.environ['inyoka_location'] = realpath(join(conts, pardir))
 
 
 _bootstrap()

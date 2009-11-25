@@ -9,7 +9,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import nose, sys
+import nose, sys, os
 
 import coverage
 coverage.erase()
@@ -19,7 +19,7 @@ coverage.start()
 from inyoka.application import InyokaApplication
 application = InyokaApplication('inyoka_tests.ini')
 
-from inyoka.core.api import config, environ
+from inyoka.core.api import config
 from inyoka.core.test import InyokaPlugin
 from inyoka.core.database import refresh_engine
 
@@ -29,7 +29,7 @@ def run_suite(module='inyoka'):
 
     # initialize the app
 
-    tests_path = path.join(environ.PACKAGE_LOCATION, 'tests')
+    tests_path = path.join(os.environ['inyoka_location'], 'tests')
 
     trans = config.edit()
     trans['database_debug'] = True

@@ -2,7 +2,6 @@
 
 
 # Imports for easy API access
-from inyoka.core import environ
 from inyoka.core.context import current_request, current_application, config
 from inyoka.core.database import db
 from inyoka.core.http import Request, Response, redirect_to

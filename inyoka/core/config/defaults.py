@@ -8,17 +8,21 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import os
+from os.path import join
 from inyoka.i18n import lazy_gettext
-from inyoka.core.environ import MEDIA_DATA
 from inyoka.core.config import BooleanField, TextField, IntegerField, DottedField
+
+
+_default_media_data_path = join(os.environ['inyoka_contents'], 'media')
 
 
 DEFAULTS = {
     # common config values
     'debug':                    BooleanField(default=False, help_text=lazy_gettext(
         u'Enable debug mode')),
-    'media_root':               TextField(default=MEDIA_DATA, help_text=lazy_gettext(
-        u'The path to the media folder')),
+    'media_root':               TextField(default=_default_media_data_path,
+        help_text=lazy_gettext(u'The path to the media folder')),
     'template_path':            TextField(default='', help_text=lazy_gettext(
         u'Custom template path which is searched before the default path.')),
     'cookie_secret':            TextField(default='CHANGEME',

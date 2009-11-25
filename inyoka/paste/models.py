@@ -24,7 +24,7 @@ class Entry(db.Model):
     title =  db.Column(db.String(50), nullable=True)
     rendered_code = db.Column(db.Text, nullable=False)
     _language = db.Column('language', db.String(30))
-    author_id = db.Column(db.ForeignKey('core_user.id'), nullable=False)
+    author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     pub_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     author = db.relation(User)

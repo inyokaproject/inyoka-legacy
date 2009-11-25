@@ -9,6 +9,7 @@ from inyoka.core.routing import IController, view, service, Rule, href
 from inyoka.core.templating import templated, render_template
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.exceptions import *
+from inyoka.core import auth
 from inyoka.utils.logger import logger
 from inyoka.i18n import *
 

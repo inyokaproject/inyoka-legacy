@@ -10,7 +10,7 @@
 """
 from nose.tools import *
 from inyoka.core.database import db
-from inyoka.core.models import User, USER_STATUS_MAP
+from inyoka.core.auth.models import User, USER_STATUS_MAP
 
 def test_user_status():
     me = User('me', 'me@example.com', 's3cr3t')

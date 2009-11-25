@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 """
-    inyoka.core.models
-    ~~~~~~~~~~~~~~~~~~
+    inyoka.core.auth.models
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
     Core models not specific to a single app.
 

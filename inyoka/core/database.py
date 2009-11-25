@@ -310,7 +310,7 @@ ModelBase.query = session.query_property(Query)
 def init_db(**kwargs):
     # UGLY; BUT BEST TO GET TESTS ETC RUNNING NOW
     # TODO: how to discover models?! SchemaController?
-    from inyoka.core import models as core_models
+    from inyoka.core.auth import models as amodels
     from inyoka.paste import models
 
     # TODO: even uglier ;)
@@ -322,8 +322,8 @@ def init_db(**kwargs):
 
     metadata.create_all(**kwargs)
     # TODO: YES ugly, but for now…
-    anon = core_models.User(u'anonymous', u'', u'')
-    admin = core_models.User(u'admin', u'root@localhost', u'default')
+    anon = amodels.User(u'anonymous', u'', u'')
+    admin = amodels.User(u'admin', u'root@localhost', u'default')
     session.add_all((anon, admin))
     session.commit()
 

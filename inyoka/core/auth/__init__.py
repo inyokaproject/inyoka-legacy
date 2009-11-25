@@ -17,10 +17,10 @@ from inyoka import Component
 from inyoka.core.context import config
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.templating import templated
-from inyoka.core.models import User
 from inyoka.core.database import db
 from inyoka.core.http import redirect_to
-from inyoka.core.auth import forms
+from inyoka.core.auth import forms, models
+from inyoka.core.auth.models import User
 
 _auth_system = None
 _auth_system_lock = Lock()

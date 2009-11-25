@@ -13,6 +13,7 @@ import nose, sys, os
 
 import coverage
 coverage.erase()
+coverage.exclude('#pragma[: ]+[nN][oO] [cC][oO][vV][eE][rR]')
 coverage.coverage(auto_data=True, branch=True)
 coverage.start()
 

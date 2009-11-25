@@ -155,7 +155,7 @@ class InyokaPlugin(cover.Coverage):
         self.config_file = None
         self.conf = conf
         self.coverInclusive = True
-        self.coverHtmlDir = os.environ.get('NOSE_COVER_HTML_DIR', None)
+        self.coverHtmlDir = os.environ.get('NOSE_COVER_HTML_DIR', 'coverage_html')
         self.coverPackages = ['inyoka']
         if hasattr(options, self.enableOpt):
             self.enabled = bool(getattr(options, self.enableOpt))
@@ -210,6 +210,21 @@ class InyokaPlugin(cover.Coverage):
             return True
         else:
             return None
+
+    def report(self, stream):
+        """
+        Output code coverage report.
+        """
+        import coverage
+        coverage.stop()
+        modules = [ module
+                    for name, module in sys.modules.items()
+                    if self.wantModuleCoverage(name, module) ]
+        html_reporter = coverage.html.HtmlReporter(coverage._the_coverage)
+        if self.coverHtmlDir:
+            if not os.path.exists(self.coverHtmlDir):
+                os.makedirs(self.coverHtmlDir)
+            html_reporter.report(modules, self.coverHtmlDir)
 
 
 #TODO: write unittests

@@ -7,7 +7,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
+import sys
+import types
 import sre_constants
+from functools import update_wrapper
 from datetime import datetime
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
@@ -30,6 +33,7 @@ _date_formatter_mapping = {
     '%': r'%',
 }
 
+_function_types = (types.FunctionType, types.MethodType)
 
 
 class UrlMixin(object):
@@ -104,15 +108,15 @@ class IController(Component, UrlMixin):
                 Rule('/news/<int:id>', endpoint='news')
             ]
 
-            @register('index')
+            @view('index')
             def index_handler(self, request):
                 return Response('index view')
 
-            @register('news')
+            @view('news')
             def news_handler(self, request, id=None):
                 return Response('News %s' % (id is None and 'index' or id))
 
-    All “handlers” are registered with :meth:`register` as endpoint handlers.
+    All “handlers” are registered with :func:`view` as endpoint handlers.
 
     """
 
@@ -140,28 +144,34 @@ class IController(Component, UrlMixin):
         parts = endpoint.split('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
 
-    @staticmethod
-    def register(endpoint_name=None):
-        """Register a method as an endpoint handler"""
-        def wrap(func):
-            if endpoint_name is None:
-                func.endpoint = func.__name__
-            else:
-                func.endpoint = endpoint_name
-            return func
-        return wrap
+    def _wrapped(attr):
+        def _wrapper(func=None, alias=None):
+            def _proxy(func):
+                if alias is None:
+                    setattr(func, attr, func.__name__)
+                else:
+                    setattr(func, attr, alias)
+                return func
 
-    @staticmethod
-    def register_service(name):
-        """Register a method as a service handler"""
-        def wrap(func):
-            func.service_name = name
-            return func
-        return wrap
+            if isinstance(func, _function_types):
+                # @register_view
+                return _proxy(func)
+            elif func is None:
+                # @register_view()
+                return _proxy
+            elif isinstance(func, basestring):
+                # @register_view('alias')
+                alias = func
+                return _proxy
+        return _wrapper
+
+    register_view = staticmethod(_wrapped('endpoint'))
+    register_service = staticmethod(_wrapped('service_name'))
 
 
-register = IController.register
-register_service = IController.register_service
+
+view = IController.register_view
+service = IController.register_service
 
 
 def href(endpoint, **args):

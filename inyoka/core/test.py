@@ -81,8 +81,6 @@ class ViewTestCase(unittest.TestSuite):
         app = local.application
         if not 'follow_redirects' in kw:
             kw['follow_redirects'] = True
-        if not path.endswith('/'):
-            path += '/'
         kw['base_url'] = self.base_url
         kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
@@ -155,7 +153,7 @@ class InyokaPlugin(cover.Coverage):
         self.config_file = None
         self.conf = conf
         self.coverInclusive = True
-        self.coverHtmlDir = os.environ.get('NOSE_COVER_HTML_DIR', 'coverage_html')
+        self.coverHtmlDir = os.environ.get('NOSE_COVER_HTML_DIR', '.coverage_html')
         self.coverPackages = ['inyoka']
         if hasattr(options, self.enableOpt):
             self.enabled = bool(getattr(options, self.enableOpt))

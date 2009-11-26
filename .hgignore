@@ -10,3 +10,4 @@
 ^db\.log$
 ^dev\.db$
 \.pida-metadata/
+^\.coverage_html/

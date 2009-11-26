@@ -109,7 +109,7 @@ def quote_value(value):
     """Quote a configuration value."""
     if isinstance(value, bool):
         value = u'1' if value else u'0'
-    if isinstance(value, int):
+    if isinstance(value, (int, long)):
         value = unicode(value)
 
     if not value:

@@ -33,7 +33,7 @@ class BidiMap(dict):
         """
         Implement object[item] access to this class.
         """
-        if isinstance(key, int):
+        if isinstance(key, (int, long)):
             return dict.__getitem__(self, key)
         else:
             return self.reversed[key]

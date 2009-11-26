@@ -54,7 +54,7 @@ We are now ready to enter the virtual environment (assumed we are located in
 
     . ../bin/activate
     
-Before starting we have to initialate the database::
+Before starting we have to initialize the database::
 
     python manage-inyoka.py initdb
 

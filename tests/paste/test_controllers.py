@@ -2,7 +2,7 @@
 from nose.tools import *
 from inyoka.core.api import href
 from inyoka.core.test import ViewTestCase, fixture, with_fixtures
-from inyoka.core.models import User
+from inyoka.core.auth.models import User
 from inyoka.paste.controllers import PasteController
 from inyoka.paste.models import Entry
 

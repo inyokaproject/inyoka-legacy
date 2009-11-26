@@ -8,10 +8,10 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.auth import AuthSystemBase, LoginUnsucessful
-from inyoka.core.http import redirect_to
-from inyoka.core.models import User
 from inyoka.core.api import db
+from inyoka.core.http import redirect_to
+from inyoka.core.auth import AuthSystemBase, LoginUnsucessful
+from inyoka.core.auth.models import User
 
 
 class EasyAuth(AuthSystemBase):

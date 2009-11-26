@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug.exceptions import NotFound
-from inyoka.core.api import IController, Rule, register, Response, \
+from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, db, redirect_to
 from inyoka.utils.pagination import URLPagination
 from inyoka.paste.forms import AddPasteForm
@@ -28,7 +28,7 @@ class PasteController(IController):
     ]
 
 
-    @register()
+    @view
     @templated('paste/index.html')
     def index(self, request):
         form = AddPasteForm()
@@ -48,7 +48,7 @@ class PasteController(IController):
             'form': form.as_widget(),
         }
 
-    @register('view')
+    @view('view')
     @templated('paste/view.html')
     def view_paste(self, request, id):
         e = Entry.query.get(id)
@@ -58,14 +58,14 @@ class PasteController(IController):
             'paste': e,
         }
 
-    @register('raw')
+    @view('raw')
     def raw_paste(self, request, id):
         e = Entry.query.get(id)
         if e is None:
             raise NotFound()
         return Response(e.code, mimetype='text/plain')
 
-    @register('browse')
+    @view('browse')
     @templated('paste/browse.html')
     def browse_pastes(self, request, page=None):
         query = Entry.query

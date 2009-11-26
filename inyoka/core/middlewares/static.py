@@ -9,17 +9,16 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from os import path
+from os import path, environ
 from werkzeug import SharedDataMiddleware
 from werkzeug.routing import Rule
 
-from inyoka.core import environ
 from inyoka.core.context import config
 from inyoka.core.middlewares import IMiddleware
 
 
-STATIC_PATH = path.join(environ.PACKAGE_CONTENTS, config['static_path'])
-MEDIA_PATH = path.join(environ.PACKAGE_CONTENTS, config['media_path'])
+STATIC_PATH = path.join(environ['inyoka_contents'], config['static_path'])
+MEDIA_PATH = path.join(environ['inyoka_contents'], config['media_path'])
 
 
 class StaticMiddlewareBase(object):

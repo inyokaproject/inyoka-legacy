@@ -8,14 +8,14 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from os import path
+from os import path, environ
 
 from werkzeug import ClosingIterator, redirect
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka import setup_components
 from inyoka.core.api import db, config, logger, IController, Request, \
-    Response, IMiddleware, environ
+    Response, IMiddleware
 from inyoka.core.context import local, local_manager, current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
@@ -28,7 +28,7 @@ class InyokaApplication(object):
 
     def __init__(self, cfile='inyoka.ini'):
         local.config = self.config = Configuration(
-            path.join(environ.PACKAGE_LOCATION, cfile
+            path.join(environ['inyoka_location'], cfile
         ))
         self.bind()
         #TODO: this should go into some kind of setup process

@@ -11,6 +11,8 @@
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to
 from inyoka.core.auth import get_auth_system
+from inyoka.utils.confirm import call_confirm, Expired, KeyNotFound
+
 
 class PortalController(IController):
     name = 'portal'
@@ -20,28 +22,46 @@ class PortalController(IController):
         Rule('/login', endpoint='login'),
         Rule('/logout', endpoint='logout'),
         Rule('/register', endpoint='register'),
+        Rule('/confirm/<key>/', endpoint='confirm'),
     ]
 
-    @view('index')
+    @view
     @templated('portal/index.html')
     def index(self, request):
         return { 'called_url': request.build_absolute_url(),
                  'link': href('portal/index') }
 
-    @view('login')
+    @view
     @templated('portal/login.html')
     def login(self, request):
         #return { 'login_form': form.as_widget() }
         return get_auth_system().login(request)
 
-    @view('logout')
+    @view
     def logout(self, request):
         get_auth_system().logout(request)
         return redirect_to('portal/index')
 
-    @view('register')
+    @view
     def register(self, request):
         return get_auth_system().register(request)
+
+    @view
+    def confirm(self, request, key):
+        try:
+            ret = call_confirm(key)
+        except KeyNotFound:
+            ret = _('Key not found. Maybe it has already been used?'), False
+        except Expired:
+            ret = _('The supplied key is not valid anymore.'), False
+
+        if isinstance(ret, tuple) and len(ret) == 2:
+            # flash(*ret)
+            # return redirect_to('portal/index')
+            return Response('%s: %s' % (['fail', 'success'][not ret[1]],
+                                        ret[0]), mimetype='text/plain')
+        return ret
+
 
 
 class CalendarController(IController):

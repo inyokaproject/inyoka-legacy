@@ -36,7 +36,7 @@ class Form(FormBase):
     def _get_wsgi_environ(self):
         """Return the WSGI environment from the request info if possible."""
         request = self._lookup_request_info()
-        return request.environ if request != None else None
+        return request.environ if request is not None else None
 
     def _get_request_url(self):
         """The absolute url of the current request"""
@@ -51,4 +51,4 @@ class Form(FormBase):
 
     def _get_session(self):
         request = self._lookup_request_info()
-        return request.session if request != None else {}
+        return request.session if request is not None else {}

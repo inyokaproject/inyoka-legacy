@@ -79,7 +79,7 @@ class ViewTestCase(unittest.TestSuite):
 
     def open(self, path, *args, **kw):
         app = local.application
-        if not 'follow_redirects' in kw:
+        if 'follow_redirects' not in kw:
             kw['follow_redirects'] = True
         kw['base_url'] = self.base_url
         kw['buffered'] = True

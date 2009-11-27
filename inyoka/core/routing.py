@@ -136,7 +136,7 @@ class IController(Component, UrlMixin):
     @classmethod
     def get_view(cls, endpoint):
         """Return the proper view for :attr:`endpoint`"""
-        if not '/' in endpoint:
+        if '/' not in endpoint:
             # we assume that we have url_sections that point
             # to no name but to an empty string
             endpoint = '/' + endpoint

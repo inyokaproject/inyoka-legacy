@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 """
-    inyoka.core.auth.models
-    ~~~~~~~~~~~~~~~~~~~~~~~
+    inyoka.core.models
+    ~~~~~~~~~~~~~~~~~~
 
     Core models not specific to a single app.
 
@@ -70,7 +70,7 @@ class Confirm(db.Model):
     def __init__(self, action, data, expires):
         from inyoka.utils.confirm import CONFIRM_ACTIONS #TODO circular import
 
-        if not action in CONFIRM_ACTIONS:
+        if action not in CONFIRM_ACTIONS:
             raise KeyError('Action %r is not registered.' % action)
 
         if isinstance(expires, (datetime, date)):

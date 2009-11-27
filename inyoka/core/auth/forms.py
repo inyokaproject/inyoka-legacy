@@ -34,4 +34,6 @@ class RegistrationForm(forms.Form):
 
     def context_validate(self, data):
         if data['password'] != data['password_again']:
-            raise forms.ValidationError(lazy_gettext(u'The two passwords must be the same'))
+            raise forms.ValidationError(lazy_gettext(
+                u'The two passwords must be the same'
+            ))

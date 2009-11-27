@@ -135,8 +135,11 @@ class InyokaPlugin(cover.Coverage):
         # base.Plugin takes care of with-inyoka
         base.Plugin.options(self, parser, env)
 
-    # We already started coverage
     def begin(self):
+        """We overwrite this method to push in our database
+        setup and to not setup coverage again, since we start it
+        quite a lot earlier.
+        """
         self._engine = engine = database.get_engine()
         # first we cleanup the existing database
         database.metadata.drop_all(bind=engine)
@@ -146,7 +149,7 @@ class InyokaPlugin(cover.Coverage):
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
     def finalize(self, result):
-        database.metadata.drop_all(bind=database.get_engine())
+        database.metadata.drop_all(bind=self._engine)
 
     def configure(self, options, conf):
         """Configure the plugin"""
@@ -207,7 +210,7 @@ class InyokaPlugin(cover.Coverage):
         if issubclass(cls, ViewTestCase):
             return True
         else:
-            return None
+            return False
 
     def report(self, stream):
         """

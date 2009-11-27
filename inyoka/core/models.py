@@ -98,7 +98,3 @@ class Confirm(db.Model):
     @property
     def is_expired(self):
         return self.expires < date.today()
-
-
-
-

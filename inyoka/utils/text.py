@@ -20,9 +20,10 @@ _placeholder_re = re.compile(r'%(\w+)%')
 
 
 def gen_slug(text, delim=u'-', ascii=False):
-    """Generates a proper slug for the given text.  It calls either
-    `gen_ascii_slug` or `gen_unicode_slug` depending on the application
-    configuration.
+    """Generates a proper slug for the given text.
+
+    It calls either :func:`gen_ascii_slug` or :func:`gen_unicode_slug`
+    depending on the application configuration.
     """
     if ascii:
         return gen_ascii_slug(text, delim)
@@ -74,12 +75,15 @@ def gen_timestamped_slug(slug, content_type, pub_date=None, prefix='',
 
 
 def increment_string(string):
-    """Increment a string by one:
+    """Increment a string by one
 
-    >>> increment_string(u'test')
-    u'test2'
-    >>> increment_string(u'test2')
-    u'test3'
+    Usage Example::
+
+        >>> increment_string(u'test')
+        u'test2'
+        >>> increment_string(u'test2')
+        u'test3'
+
     """
     match = _string_inc_re.search(string)
     if match is None:
@@ -92,12 +96,13 @@ def wrap(text, width):
     and most spaces in the text. Expects that existing line breaks are
     posix newlines (\n).
     """
-    # code from http://code.activestate.com/recipes/148061/
-    return reduce(lambda line, word, width=width: '%s%s%s' %
-                  (line,
-                   ' \n'[len(line) - line.rfind('\n') - 1 +
-                         (word and len(word.split('\n', 1)[0]) or 0) >= width], word),
-                   text.split(' '))
+    # code based on http://code.activestate.com/recipes/148061/
+    def _wrap_text(line, word, width=width):
+        breaks = (u' \n'[len(line) - line.rfind('\n') - 1 +
+                  (word and len(word.split('\n', 1)[0]) or 0) >= width])
+        return '%s%s%s' % (line, breaks, word)
+
+    return reduce(_wrap_text, text.split(' '))
 
 
 def _make_date_slug_part(key, places):

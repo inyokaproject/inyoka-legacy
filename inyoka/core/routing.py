@@ -10,7 +10,6 @@ import re
 import sys
 import types
 import sre_constants
-from functools import update_wrapper
 from datetime import datetime
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError

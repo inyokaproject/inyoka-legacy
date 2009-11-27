@@ -1,4 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+    inyoka.utils.crypt
+    ~~~~~~~~~~~~~~~~~~
+
+    Various utilties for cryptographic tasks
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
 from hashlib import sha1
+
 
 def get_hexdigest(salt, raw_password):
     """

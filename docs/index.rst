@@ -21,6 +21,15 @@ This section covers the very basics of inyoka and its development.
     unittests
 
 
+References
+----------
+
+.. toctree::
+    :maxdepth: 2
+
+    components
+
+
 Utilities
 ---------
 
@@ -30,13 +39,11 @@ This section covers all utilities inyoka implements.
     :maxdepth: 2
 
     utils/confirm
-
-References
-----------
-
-.. toctree::
-    :maxdepth: 2
-
+    utils/crypt
+    utils/datastructures
+    utils/decorators
+    utils/text
+    utils/urls
 
 
 Indices and tables

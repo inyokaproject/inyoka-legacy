@@ -42,8 +42,6 @@ Well, once we've done that we can integrate that into our view function:
 
 .. _confirm-api:
 
-Cache System API
-================
 
 Often used functions
 --------------------

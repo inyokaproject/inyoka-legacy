@@ -6,8 +6,8 @@ from werkzeug import Client, Href
 from inyoka.core.api import db
 from inyoka.core.context import current_application, config
 from inyoka.core.models import Confirm
-from inyoka.utils.confirm import register_confirm, call_confirm, Expired, \
-    KeyNotFound
+from inyoka.utils.confirm import register_confirm, call_confirm, Expired
+
 
 CONFIRM_LOG = []
 
@@ -34,7 +34,7 @@ def test_base():
 
     def _second_run():
         call_confirm(c.key)
-    assert_raises(KeyNotFound, _second_run)
+    assert_raises(KeyError, _second_run)
 
     c = Confirm('__test_store2', data, 1)
     db.session.add(c)

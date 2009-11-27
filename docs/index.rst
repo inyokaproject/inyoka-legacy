@@ -29,6 +29,8 @@ This section covers all utilities inyoka implements.
 .. toctree::
     :maxdepth: 2
 
+    utils/confirm
+
 References
 ----------
 

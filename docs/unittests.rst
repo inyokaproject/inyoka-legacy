@@ -1,4 +1,4 @@
-.. module:: inyoka.utils.test
+.. module:: inyoka.core.test
 
 ===================
 Unittests in Inyoka

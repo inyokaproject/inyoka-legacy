@@ -7,7 +7,6 @@ from gettext import NullTranslations
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations, LazyProxy
 from babel.dates import format_date, format_datetime, format_time
-from inyoka.core.context import local
 
 
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
@@ -15,9 +14,7 @@ __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 UTC = pytz.timezone('UTC')
 
-local.translations = local.locale = None
-_translations = local('translations')
-_current_locale = local('locale')
+_current_locale = None
 
 _translations = {
     None: NullTranslations()

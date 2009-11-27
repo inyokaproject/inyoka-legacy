@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-02 17:46+0100\n"
-"PO-Revision-Date: 2009-11-25 01:46+0100\n"
+"PO-Revision-Date: 2009-11-27 18:11+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -141,6 +141,14 @@ msgstr ""
 
 #: inyoka/paste/forms.py:32
 msgid "Language"
+msgstr ""
+
+#: inyoka/portal/controllers.py:54
+msgid "Key not found. Maybe it has already been used?"
+msgstr ""
+
+#: inyoka/portal/controllers.py:56
+msgid "The supplied key is not valid anymore."
 msgstr ""
 
 #: inyoka/templates/paste/base.html:2

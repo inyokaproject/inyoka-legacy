@@ -47,5 +47,6 @@ Component Interfaces
 --------------------
 
 .. autoclass:: Component
+   :members: get_component_classes, get_components
 
 .. autofunction:: setup_components

@@ -17,7 +17,7 @@
       {% if REQUEST.user.is_anonymous %}
         <a href="{{ href('portal/login') }}">Login</a>
       {% else %}
-        Hallo {{ REQUEST.user.display_name }} <a href="{{ href('portal/logout') }}">Logout</a>
+        Hallo {{ REQUEST.user.display_name }} ({{ REQUEST.user.status }}) <a href="{{ href('portal/logout') }}">Logout</a>
       {% endif %}
       <a href="{{ href('portal/index') }}">Portal</a>
       <a href="{{ href('paste/index') }}">Pastebin</a>

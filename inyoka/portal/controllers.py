@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, href, redirect_to
+    templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
 from inyoka.utils.confirm import call_confirm, Expired, KeyNotFound
 
@@ -58,7 +58,7 @@ class PortalController(IController):
         if isinstance(ret, tuple) and len(ret) == 2:
             # flash(*ret)
             # return redirect_to('portal/index')
-            return Response('%s: %s' % (['fail', 'success'][not ret[1]],
+            return Response('%s: %s' % (['success', 'fail'][not ret[1]],
                                         ret[0]), mimetype='text/plain')
         return ret
 

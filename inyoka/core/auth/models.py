@@ -26,6 +26,7 @@ class UserQuery(db.Query):
         if isinstance(pk, basestring):
             return self.filter_by(username=pk).one()
         # We always want to raise if no user is found, get returns none…
+        #XXX: this is inconsistent
         return super(UserQuery, self).filter_by(id=pk).one()
 
 

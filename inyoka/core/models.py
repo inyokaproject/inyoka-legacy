@@ -93,7 +93,7 @@ class Confirm(db.Model):
 
     @property
     def url(self):
-        return href('portal/confirm', key=self.key)
+        return href('portal/confirm', key=self.key, _external=True)
 
     @property
     def is_expired(self):

@@ -12,15 +12,18 @@ from __future__ import with_statement
 
 from threading import Lock
 
+from sqlalchemy.orm.exc import NoResultFound
 from werkzeug import import_string
 from inyoka import Component
-from inyoka.core.context import config
-from inyoka.core.middlewares import IMiddleware
-from inyoka.core.templating import templated
-from inyoka.core.database import db
-from inyoka.core.http import redirect_to
 from inyoka.core.auth import forms, models
 from inyoka.core.auth.models import User
+from inyoka.core.context import config
+from inyoka.core.database import db
+from inyoka.core.http import redirect_to, Response
+from inyoka.core.middlewares import IMiddleware
+from inyoka.core.models import Confirm
+from inyoka.core.templating import templated
+from inyoka.utils.confirm import register_confirm
 
 _auth_system = None
 _auth_system_lock = Lock()
@@ -160,8 +163,10 @@ class AuthSystemBase(object):
             user = User(username=form['username'], email=form['email'],
                         password=form['password'])
             db.session.add(user)
-            self.after_register(request, user)
+            r = self.after_register(request, user)
             db.session.commit()
+            if isinstance(r, Response):
+                return r
             return redirect_to('portal/index')
         return {'form':form.as_widget()}
 
@@ -170,22 +175,29 @@ class AuthSystemBase(object):
         Tasks to be performed after the registration.
         Per default this sends an activation email.
         """
-        self.send_activation_mail(request, user)
+        return self.send_activation_mail(request, user)
 
     def send_activation_mail(self, request, user):
         """Sends an activation mail."""
-        #if settings.REGISTRATION_REQUIRES_ACTIVATION:
-        #    user.is_active = False
-        #    confirmation_url = url_for('core.activate_user', email=user.email,
-        #                               key=user.activation_key, _external=True)
-        #    send_email(_(u'Registration Confirmation'),
-        #               render_template('mails/activate_user.txt', user=user,
-        #                               confirmation_url=confirmation_url),
-        #               user.email)
-        #    request.flash(_(u'A mail was sent to %s with a link to finish the '
-        #                    u'registration.') % user.email)
-        #else:
-        #    request.flash(_(u'You\'re registered.  You can login now.'))
+        print 'send activation mail called'
+#        if settings.REGISTRATION_REQUIRES_ACTIVATION:
+        if True:
+            db.session.commit()
+            c = Confirm('activate_user', {'user': user.id}, 3)
+            db.session.add(c)
+            db.session.commit()
+#            send_email(_(u'Registration Confirmation'), user,
+#                       render_template('mails/activate_user.txt', user=user,
+#                                       confirmation_url=c.url))
+#            flash(_(u'An email was sent with a link to finish the '
+#                    u'registration.'))
+#            return redirect_to('portal/index')
+            return Response('activation link: %s' % c.url)
+        else:
+            user.status = 'normal'
+            db.session.commit()
+#            flash(_(u'You\'re registered.  You can login now.'))
+            return redirect_to('portal/login')
 
     def before_login(self, request):
         """If this login system uses an external login URL, this function
@@ -269,3 +281,16 @@ class AuthSystemBase(object):
         else:
             #user.last_login = datetime.utcnow()
             request.session['user_id'] = user.id
+
+@register_confirm('activate_user')
+def activate_user(data):
+    try:
+        u = User.query.get(data['user'])
+    except NoResultFound:
+#        flash(_('User not found.'))
+        print 'not found'
+        return redirect_to('portal/index')
+    u.status = 'normal'
+    db.session.commit()
+    flash(_('Registration confirmed. You may login now.'))
+    return redirect_to('portal/login')

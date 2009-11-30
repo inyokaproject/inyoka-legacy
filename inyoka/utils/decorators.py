@@ -3,11 +3,12 @@
     inyoka.utils.decorators
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    Some decorators and utilities for using decorators.
+    Decorators for every day usage.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from functools import wraps
 
 
 def abstract(func):
@@ -37,10 +38,9 @@ def abstract(func):
 
     """
 
+    @wraps(func)
     def wrapper(*__args, **__kw):
         raise NotImplementedError('Missing required %s() method' %\
                                   func.__name__)
-    wrapper.__name__ = func.__name__
-    wrapper.__dict__ = func.__dict__
-    wrapper.__doc__ = func.__doc__
+
     return wrapper

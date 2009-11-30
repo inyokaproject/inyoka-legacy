@@ -43,32 +43,11 @@ class Component(object):
     """Base component class.
 
     A component is some kind of functionality provider that needs to
-    be subclassed to implement the real features.  That way a :cls:`Component`
-    can keep track of all subclasses and thanks to that knows all
-    implemented “features” for that kind of component.
+    be subclassed to implement the real features.
 
-    A simple example:
+    That way a :class:`Component` can keep track of all subclasses and
+    thanks to that knows all implemented “features” for that kind of component.
 
-    .. sourcecode: python
-
-        >>> class AttachmentProvider(Component):
-        ...     def get_id(self):
-        ...         raise NotImplementedError()
-        ...
-        >>> class NonBoundAttachmentProvider(AttachmentProvider):
-        ...     def get_id(self):
-        ...         return 'non_bound'
-        ...
-        >>> class ForumPostAttachmentProvider(AttachmentProvider):
-        ...     def get_id(self):
-        ...         return 'forum_post'
-        ...
-        >>> AttachmentProvider.get_component_classes()
-        []
-
-    :meth:`get_component_classes` would return `ForumPostAttachmentProvider` and
-    `NonBoundAttachmentProvider` if they were activated (That's not the case,
-    in this example, so it returns []).
     """
     __metaclass__ = ComponentMeta
 
@@ -99,7 +78,7 @@ def component_is_activated(imp, accepted_components):
 
 
 def setup_components(accepted_components):
-    """Set up the :cls:`Component`'s implementation and instance lists.
+    """Set up the :class:`Component`'s implementation and instance lists.
     Should get called early during application setup, cause otherwise the
     components won't return any implementations.
 

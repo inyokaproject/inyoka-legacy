@@ -10,7 +10,6 @@ import re
 import sys
 import types
 import sre_constants
-from functools import update_wrapper
 from datetime import datetime
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
@@ -137,7 +136,7 @@ class IController(Component, UrlMixin):
     @classmethod
     def get_view(cls, endpoint):
         """Return the proper view for :attr:`endpoint`"""
-        if not '/' in endpoint:
+        if '/' not in endpoint:
             # we assume that we have url_sections that point
             # to no name but to an empty string
             endpoint = '/' + endpoint

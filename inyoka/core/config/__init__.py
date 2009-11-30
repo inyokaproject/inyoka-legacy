@@ -61,7 +61,7 @@ class DottedField(ConfigField):
     """
 
     def converter(self, value):
-        if not ':' in value:
+        if ':' not in value:
             value = ':' + value
         return value
 

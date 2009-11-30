@@ -6,29 +6,6 @@
     Provides various utilities to store confirmation data in the database and
     retrieve it.
 
-    Usage example::
-        def change_email(request):
-            if request.method == 'POST':
-                c = Confirm('change_email', 7, {
-                        'user': request.user.id,
-                        'email': request.POST['email']
-                    })
-                db.session.add(c)
-                db.session.commit()
-                send_mail(request.user, 'Confirm your email address',
-                          'Please click this link: %s' % c.url)
-
-        @register('change_email')
-        def set_email(data):
-            user = User.query.get(data['user'])
-            if user is None:
-                flash('This user has been deleted!')
-            else:
-                user.email = data['email']
-                flash('Your email has been changed to %s' % data['email'])
-            return redirect_to('portal/index')
-
-
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
@@ -47,8 +24,6 @@ _key_re = re.compile('^[a-z_][a-z_0-9]*$', re.I)
 class Expired(ValueError):
     """Raised by `call_confirm` when the confirm object has expired."""
 
-class KeyNotFound(ValueError):
-    """Raised by `call_confirm` when the supplied key is not found."""
 
 def register_confirm(key):
     """
@@ -90,7 +65,7 @@ def call_confirm(key):
     """
     c = Confirm.query.get(key)
     if c is None:
-        raise KeyNotFound('No such key: %s' % key)
+        raise KeyError('No such key: %s' % key)
     if c.is_expired:
         raise Expired('Expired on %s' % c.expires.strftime('%F'))
     ret = CONFIRM_ACTIONS[c.action](c.data)

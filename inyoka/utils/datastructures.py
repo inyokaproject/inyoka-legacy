@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
+
 class BidiMap(dict):
     """
     A simpler API for simple Bidirectional Mappings.

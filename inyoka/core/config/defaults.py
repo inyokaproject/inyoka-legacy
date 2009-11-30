@@ -10,8 +10,8 @@
 """
 import os
 from os.path import join
-from inyoka.i18n import lazy_gettext
 from inyoka.core.config import BooleanField, TextField, IntegerField, DottedField
+from inyoka.i18n import lazy_gettext
 
 
 _default_media_data_path = join(os.environ['inyoka_contents'], 'media')

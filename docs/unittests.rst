@@ -1,4 +1,4 @@
-.. module:: inyoka.utils.test
+.. module:: inyoka.core.test
 
 ===================
 Unittests in Inyoka
@@ -37,3 +37,33 @@ Run the unittests
 
 To run the unittests just go to the root inyoka folder (`inyoka-dev` as
 assumed in :doc:`installation`) and type in ``make test``.
+
+
+Unittest Helpers
+================
+
+Decorators
+----------
+
+.. autofunction:: fixture
+
+.. autofunction:: future
+
+.. autofunction:: with_fixtures
+
+
+Test Cases
+----------
+
+.. autoclass:: ViewTestCase
+   :members:
+
+
+Other Stuff
+-----------
+
+.. autoclass:: InyokaPlugin
+   :members:
+
+.. autoclass:: TestResponse
+   :members:

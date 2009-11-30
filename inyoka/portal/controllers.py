@@ -11,7 +11,7 @@
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
-from inyoka.utils.confirm import call_confirm, Expired, KeyNotFound
+from inyoka.utils.confirm import call_confirm, Expired
 
 
 class PortalController(IController):
@@ -50,7 +50,7 @@ class PortalController(IController):
     def confirm(self, request, key):
         try:
             ret = call_confirm(key)
-        except KeyNotFound:
+        except KeyError:
             ret = _('Key not found. Maybe it has already been used?'), False
         except Expired:
             ret = _('The supplied key is not valid anymore.'), False

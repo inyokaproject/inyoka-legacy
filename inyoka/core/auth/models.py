@@ -24,10 +24,8 @@ USER_STATUS_MAP = BidiMap({
 class UserQuery(db.Query):
     def get(self, pk):
         if isinstance(pk, basestring):
-            return self.filter_by(username=pk).one()
-        # We always want to raise if no user is found, get returns none…
-        #XXX: this is inconsistent
-        return super(UserQuery, self).filter_by(id=pk).one()
+            return self.filter_by(username=pk).first()
+        return super(UserQuery, self).filter_by(id=pk).first()
 
 
 #TODO: find a way to make models extensible e.g to add more properties

@@ -24,8 +24,8 @@ USER_STATUS_MAP = BidiMap({
 class UserQuery(db.Query):
     def get(self, pk):
         if isinstance(pk, basestring):
-            return self.filter_by(username=pk).first()
-        return super(UserQuery, self).filter_by(id=pk).first()
+            return self.filter_by(username=pk).one()
+        return super(UserQuery, self).get(pk)
 
 
 #TODO: find a way to make models extensible e.g to add more properties

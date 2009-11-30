@@ -1,7 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
-    inyoka.utils.highlighting
-    ~~~~~~~~~~~~~~~~~~~~~~~~~
+    inyoka.utils.highlight
+    ~~~~~~~~~~~~~~~~~~~~~~
 
     Utils for highlighting code.
 

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.config
-    ~~~~~~~~~~~~~
+    inyoka.core.config
+    ~~~~~~~~~~~~~~~~~~
 
     This module implements the configuration.  The configuration is a more or
     less flat thing saved as ini in the instance folder.  If the configuration
     changes the application is reloaded automatically.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
-    :license: MIT
+    :license: MIT, see LICENSE for more details.
 """
 from __future__ import with_statement
 import os

@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from nose.tools import *
 from inyoka.core.api import href
 from inyoka.core.context import config

@@ -29,6 +29,8 @@ class BidiMap(dict):
         items = items or {}
         dict.__init__(self, **items)
         self.reversed = dict((v,k) for k, v in self.iteritems())
+        if len(self) != len(self.reversed):
+            raise ValueError('Values are not unique')
 
     def __getitem__(self, key):
         """
@@ -38,3 +40,6 @@ class BidiMap(dict):
             return dict.__getitem__(self, key)
         else:
             return self.reversed[key]
+
+    def __repr__(self):
+        return 'BidiMap(%s)' % dict.__repr__(self)

@@ -96,13 +96,14 @@ def get_engine():
     global _engine
     with _engine_lock:
         if _engine is None:
-            info = make_url(config['database_url'])
+            info = make_url(config['database.url'])
             # convert_unicode: Let SQLAlchemy convert all values to unicode
             #                  before we get them
             # echo:            Set the database debug level
             # pool_recycle:    Enable long-living connection pools
+            #TODO: move these values to the configuration
             options = {'convert_unicode': True,
-                       'echo': config['database_debug'],
+                       'echo': config['database.debug'],
                        'pool_recycle': -1}
             if info.drivername == 'mysql':
                 info.query.setdefault('charset', 'utf8')
@@ -112,7 +113,7 @@ def get_engine():
                     'connect_args': {'timeout': 30}
                 })
             url = SafeURL(info)
-            _engine = create_engine(url, echo=False)#**options)
+            _engine = create_engine(url, **options)
         return _engine
 
 

@@ -23,25 +23,31 @@ DEFAULTS = {
         u'Enable debug mode')),
     'media_root':               TextField(default=_default_media_data_path,
         help_text=lazy_gettext(u'The path to the media folder')),
-    'template_path':            TextField(default='', help_text=lazy_gettext(
-        u'Custom template path which is searched before the default path.')),
     'cookie_secret':            TextField(default='CHANGEME',
                                           help_text=lazy_gettext(
         u'The secret used for hashing the cookies')),
-    'database_url':             TextField(default=u'sqlite:///dev.db',
-                                          help_text=lazy_gettext(
-        u'The database URL.  For more information about database settings '
-        u'consult the Inyoka docs.')),
-    'database_debug':           BooleanField(default=False, help_text=lazy_gettext(
-        u'If enabled the database will collect the SQL statements and add them '
-        u'to the bottom of the page for easier debugging.  Beside that the '
-        u'sqlalchemy log is written to a `db.log` file.')),
-    'auth_system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',
-        help_text=lazy_gettext(u'The Authsystem which should get used')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
     'cookie_domain_name':           TextField(default=u'.inyoka.local',
         help_text=lazy_gettext(u'Cookie domain name')),
+
+    # database specific values
+    'database.url':             TextField(default=u'sqlite:///dev.db',
+                                          help_text=lazy_gettext(
+        u'The database URL.  For more information about database settings '
+        u'consult the Inyoka docs.')),
+    'database.debug':           BooleanField(default=False, help_text=lazy_gettext(
+        u'If enabled the database will collect the SQL statements and add them '
+        u'to the bottom of the page for easier debugging.  Beside that the '
+        u'sqlalchemy log is written to a `db.log` file.')),
+
+    # template specific values
+    'templates.path':            TextField(default='', help_text=lazy_gettext(
+        u'Custom template path which is searched before the default path.')),
+
+    # auth system specific values
+    'auth.system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',
+        help_text=lazy_gettext(u'The Authsystem which should get used')),
 
     # routing specific config values
     # values are in the form of `subdomain:/submount`

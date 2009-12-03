@@ -33,7 +33,7 @@ def run_suite(module='inyoka'):
     tests_path = path.join(os.environ['inyoka_location'], 'tests')
 
     trans = config.edit()
-    trans['database_debug'] = True
+    trans['database.debug'] = True
     trans['debug'] = True
     trans.commit()
     config.touch()

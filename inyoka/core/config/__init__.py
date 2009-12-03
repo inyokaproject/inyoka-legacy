@@ -16,6 +16,8 @@ from os import path
 from threading import Lock
 from inyoka.core.context import local, config
 
+#TODO: add support for multiple values?
+
 
 class ConfigField(object):
     """A field representing a configuration entry.
@@ -168,6 +170,7 @@ class Configuration(object):
                     continue
                 elif line[0] == '[' and line[-1] == ']':
                     section = line[1:-1].strip()
+                    section = section.rstrip(u'.')
                 elif '=' not in line:
                     key = line.strip()
                     value = ''
@@ -175,7 +178,9 @@ class Configuration(object):
                     key, value = line.split('=', 1)
                     key = key.strip()
                     if section != 'inyoka':
-                        key = section + '/' + key
+                        if not section.endswith('.'):
+                            section += '.'
+                        key = section + key
                     self._values[key] = unquote_value(value.strip())
 
     def __getitem__(self, key):
@@ -367,7 +372,9 @@ class ConfigTransaction(object):
             sections = {}
             for key, value in all.iteritems():
                 if '.' in key:
-                    section, key = key.split('.', 1)
+                    splitted = key.split('.')
+                    section = u'.'.join(splitted[:-1])
+                    key = splitted[-1]
                 else:
                     section = 'inyoka'
                 sections.setdefault(section, []).append((key, value))
@@ -378,7 +385,7 @@ class ConfigTransaction(object):
             f = file(self.cfg.filename, 'w')
             f.write(CONFIG_HEADER)
             try:
-                for idx, (section, items) in enumerate(sections):
+                for idx, (section, items) in enumerate(reversed(sections)):
                     if idx:
                         f.write('\n')
                     f.write('[%s]\n' % section.encode('utf-8'))

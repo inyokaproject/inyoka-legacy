@@ -34,7 +34,7 @@ def get_auth_system():
     global _auth_system
     with _auth_system_lock:
         if _auth_system is None:
-            _auth_system = import_string(config['auth_system'])()
+            _auth_system = import_string(config['auth.system'])()
         return _auth_system
 
 

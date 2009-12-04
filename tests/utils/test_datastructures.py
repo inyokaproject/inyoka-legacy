@@ -24,6 +24,8 @@ def test_bidimap():
     eq_(map['dump'], 1)
     eq_(map['smartly'], 2)
     eq_(map['clever'], 3)
+    # __repr__
+    eq_(repr(map), "BidiMap({1: 'dump', 2: 'smartly', 3: 'clever'})")
 
 
 @raises(ValueError)

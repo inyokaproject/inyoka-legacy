@@ -1,6 +1,16 @@
+# -*- coding: utf-8 -*-
+"""
+    test_routing
+    ~~~~~~~~~~~~
+
+    Unittests for the inyoka routing utilities.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GN UGPL, see LICENSE for more details.
+"""
 from datetime import date
-from nose.tools import *
 from werkzeug.routing import ValidationError
+from inyoka.core.test import *
 from inyoka.core.routing import DateConverter
 
 

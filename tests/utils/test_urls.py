@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
-from nose.tools import *
+"""
+    test_urls
+
+    Unittests for the urls utilties.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
+from inyoka.core.test import *
 from inyoka.core.api import href
-from inyoka.core.context import config
 
 
 

@@ -1,10 +1,17 @@
-from nose.tools import *
+# -*- coding: utf-8 -*-
+"""
+    test_confirm
+    ~~~~~~~~~~~~
 
+    Unittests for the inyoka utilities.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
 from datetime import date, timedelta
 from sqlalchemy.sql import update
 from werkzeug import Client, Href
-from inyoka.core.api import db
-from inyoka.core.context import current_application, config
+from inyoka.core.test import *
 from inyoka.core.models import Confirm
 from inyoka.utils.confirm import register_confirm, call_confirm, Expired
 

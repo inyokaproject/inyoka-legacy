@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
+"""
+    test_text
+
+    Unittests for the text utilties.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
 import datetime
 from functools import partial
+from inyoka.core.test import *
+from inyoka.utils.text import gen_slug, gen_ascii_slug, gen_unicode_slug, \
+    gen_timestamped_slug, wrap
 
-from nose.tools import *
-
-from inyoka.utils.text import gen_slug, gen_ascii_slug, gen_unicode_slug,\
-                              gen_timestamped_slug, wrap
 
 def test_slugs():
     text = u'I do have unicode charz: öäü'

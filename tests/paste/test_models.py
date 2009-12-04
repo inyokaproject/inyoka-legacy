@@ -5,9 +5,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from nose.tools import *
-from inyoka.core.api import db
-from inyoka.core.test import mock, tracker
+from inyoka.core.test import *
 from inyoka.core.auth.models import User
 from inyoka.utils.highlight import highlight_code
 from inyoka.paste.models import Entry

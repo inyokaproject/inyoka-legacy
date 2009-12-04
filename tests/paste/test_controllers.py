@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
-from nose.tools import *
+"""
+    test_controllers
+    ~~~~~~~~~~~~~~~~
+
+    Unittests for the paste application.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
 from inyoka.core.api import href
-from inyoka.core.test import ViewTestCase, fixture, with_fixtures
+from inyoka.core.test import *
 from inyoka.core.auth.models import User
 from inyoka.paste.controllers import PasteController
 from inyoka.paste.models import Entry

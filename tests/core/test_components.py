@@ -8,9 +8,9 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from nose.tools import *
 from inyoka import Component, ComponentMeta, setup_components
 from inyoka.core.api import ctx
+from inyoka.core.test import *
 
 
 # cleanup metadata registry before testing 'cause it's possible that

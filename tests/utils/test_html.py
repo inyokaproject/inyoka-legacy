@@ -5,10 +5,10 @@
 
     tests for the inyoka html utilities
 
-    :copyright: 2009 by the Inyok Team, see AUTHORS for more details.
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from nose.tools import *
+from inyoka.core.test import *
 from inyoka.utils.html import escape
 
 

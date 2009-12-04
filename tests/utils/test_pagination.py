@@ -1,7 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+    test_pagination
+
+    Unittests for the pagination utility.
+
+    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
+"""
 import random
-from nose.tools import *
-from werkzeug.exceptions import NotFound
-from inyoka.core.database import db
+from inyoka.core.test import *
+from inyoka.core.exceptions import NotFound
 from inyoka.utils.pagination import URLPagination, GETPagination
 
 

@@ -8,9 +8,9 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from nose.tools import *
-from inyoka.core.database import db
+from inyoka.core.test import *
 from inyoka.core.auth.models import User, USER_STATUS_MAP
+
 
 def test_user_status():
     me = User('me', 'me@example.com', 's3cr3t')

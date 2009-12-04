@@ -15,6 +15,7 @@ import warnings
 import functools
 
 import nose
+import nose.tools
 from nose.plugins import cover, base
 
 from werkzeug import Client
@@ -36,6 +37,13 @@ logger.disabled = True
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
+__all__ = ('TestResponse', 'ViewTestCase', 'fixture', 'with_fixtures', 'future', 'tracker',
+           'mock', 'Mock', 'revert_mocks', 'db', 'Response', 'config')
+__all__ = __all__ + tuple(nose.tools.__all__)
+
+dct = globals()
+for obj in nose.tools.__all__:
+    dct[obj] = getattr(nose.tools, obj)
 
 # an overall trace tracker from minimock
 tracker = TraceTracker()

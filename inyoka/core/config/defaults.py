@@ -75,9 +75,11 @@ DEFAULTS = {
     'routing.urls.media':           DottedField(default=u':/_media',
         help_text=lazy_gettext(u'Url mapping used for media file serving')),
     'static_path':                  DottedField(default=u'static',
-        help_text=lazy_gettext(u'Path to the directory for static files. Relative to the directory where '
+        help_text=lazy_gettext(u'Path to the directory for static files. '
+                               u'Relative to the directory where '
                                u'the inyoka package lies in.')),
     'media_path':                   TextField(default=u'media',
-        help_text=lazy_gettext(u'Path to the directory for shared static files, aka media. Relative to '
+        help_text=lazy_gettext(u'Path to the directory for shared static files, '
+                               u'aka media. Relative to '
                                u'the directory where the inyoka package lies in.')),
 }

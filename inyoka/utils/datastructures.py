@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.core.datastructures
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    inyoka.utils.datastructures
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Datastructures used for many things to avoid duplicate code.
 

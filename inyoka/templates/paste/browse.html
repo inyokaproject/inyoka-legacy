@@ -11,8 +11,8 @@
   {% for p in pastes %}
   <li>
     <a href="{{ p|url }}">{{ p }}</a>
-    <small>written by {{ p.author }} on {{ p.pub_date.strftime('%F %T') }}
-      (language: {{ p.language|default('plain text') }})</small>
+    <span class="small">written by {{ p.author }} on {{ p.pub_date.strftime('%F %T') }}
+      (language: {{ p.language|default('plain text') }})</span>
   </li>
   {% endfor %}
 </ul>

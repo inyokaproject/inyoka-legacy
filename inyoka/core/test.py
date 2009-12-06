@@ -37,8 +37,8 @@ logger.disabled = True
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
-__all__ = ('TestResponse', 'ViewTestCase', 'fixture', 'with_fixtures', 'future', 'tracker',
-           'mock', 'Mock', 'revert_mocks', 'db', 'Response', 'config')
+__all__ = ('TestResponse', 'ViewTestCase', 'fixture', 'with_fixtures', 'future',
+           'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response', 'config')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()

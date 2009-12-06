@@ -75,3 +75,7 @@ body {
 #content a {
   color: #304800;
 }
+
+.small {
+  font-size: x-small;
+}

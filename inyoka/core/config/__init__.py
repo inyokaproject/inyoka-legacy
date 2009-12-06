@@ -90,15 +90,6 @@ class BooleanField(ConfigField):
 CONFIG_HEADER = '# Generated Configuration file\n'
 
 
-def config_overriding_val(app, default, default_arg, config_key, config_type):
-    """A value that is overriden with a default, and from the config"""
-    if default_arg is not None:
-        default = default_arg
-    app.add_config_var(config_key, config_type, default)
-    value = app.cfg[config_key]
-    return value
-
-
 def unquote_value(value):
     """Unquote a configuration value."""
     if not value:

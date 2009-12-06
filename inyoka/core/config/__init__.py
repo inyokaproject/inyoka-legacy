@@ -132,13 +132,12 @@ class Configuration(object):
     file.
     """
 
-    def __init__(self, filename, namespace=None):
+    def __init__(self, filename, defaults=None):
         self.filename = filename
-        self.namespace = {}
-        self.namespace.update(namespace) if namespace is not None else namespace
 
         from inyoka.core.config.defaults import DEFAULTS
-        self.config_vars = DEFAULTS.copy()
+        config_defaults = defaults if defaults is not None else DEFAULTS
+        self.config_vars = config_defaults.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()

@@ -4,8 +4,7 @@
     ~~~~~~~~~~~~~~~~~~
 
     This module implements the configuration.  The configuration is a more or
-    less flat thing saved as ini in the instance folder.  If the configuration
-    changes the application is reloaded automatically.
+    less flat thing saved as ini in the instance folder.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: MIT, see LICENSE for more details.
@@ -33,10 +32,10 @@ class ConfigField(object):
     def get_default(self):
         return self.default
 
-    def converter(self):
+    def converter(self, value=None):
         return self.default
 
-    def __call__(self, value):
+    def __call__(self, value=None):
         return self.converter(value)
 
 
@@ -49,6 +48,7 @@ class TextField(ConfigField):
     """A field representing unicode values"""
 
     def converter(self, value):
+        """Convert values to stripped unicode values"""
         if not isinstance(value, unicode):
             value = value.decode('utf-8')
         value = value.strip()
@@ -76,8 +76,10 @@ class BooleanField(ConfigField):
 
     def converter(self, value):
         if isinstance(value, basestring):
-            if value.lower in BooleanField.TRUE_STATES:
+            if value.lower() in BooleanField.TRUE_STATES:
                 return True
+            elif value.lower() in BooleanField.FALSE_STATES:
+                return False
         else:
             return bool(value)
 

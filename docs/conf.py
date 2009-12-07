@@ -207,6 +207,7 @@ latex_use_modindex = True
 intersphinx_mapping = {
     'http://docs.python.org/': None,
     'http://packages.python.org/sqlalchemy-migrate/': None,
+    'http://werkzeug.pocoo.org/documentation/dev/': None,
 }
 
 def setup(app):

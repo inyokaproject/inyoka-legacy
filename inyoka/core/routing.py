@@ -201,10 +201,11 @@ def href(endpoint, **args):
 class DateConverter(BaseConverter):
     """
     Converter for the werkzeug routing that converts date strings in URLs to
-    `datetime.date` objects.
+    :cls:`~datetime.date` objects.
 
-    :param format: A string as expected by the strftime methods. Note that only
-                   date related format characters such as m and d are supported.
+    :param map:     A :cls:`werkzeug.Map` instance passed by Werkzeug.
+    :param format:  A string as expected by the strftime methods. Note that only
+                    date related format characters such as m and d are supported.
     """
     def __init__(self, map, format='%Y/%m/%d'):
         # convert format string to a regex so that we don't have to be greedy.
@@ -222,6 +223,11 @@ class DateConverter(BaseConverter):
         super(DateConverter, self).__init__(map)
 
     def to_python(self, value):
+        """Convert `value` to a python `date` type.
+
+        Raises :exc:`ValidationError` if a invalid format is applied.
+        :param value: A valid date for :meth:`~datetime.datetime.strptime`.
+        """
         try:
             return datetime.strptime(value, self.format).date()
         except (ValueError, sre_constants.error):
@@ -229,6 +235,11 @@ class DateConverter(BaseConverter):
                                   'invalid format string or invalid data.')
 
     def to_url(self, value):
+        """Convert to a valid quoted URL value.
+
+        Raises :exc:`ValidationError` if a invalid object is applied.
+        :param value: A valid :class:`~datetime.date` instance.
+        """
         try:
             return url_quote(value.strftime(self.format))
         except sre_constants.error:

@@ -75,6 +75,7 @@ import sys, os
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
+import sqlalchemy
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
 from sqlalchemy.orm.session import Session
@@ -266,12 +267,12 @@ class Query(orm.Query):
         entity = self._mapper_zero()
         column = entity.columns[key]
 
-        KINDS = ['year', 'month', 'day', 'hour', 'minute', 'second']
-        i = KINDS.index(kind) + 1
-        q = self.session.query(column)
+        _kinds = ('year', 'month', 'day', 'hour', 'minute', 'second')
+        idx = _kinds.index(kind) + 1
+        query = self.session.query(column)
         result = set()
-        for date in (x[0] for x in q.all()):
-            result.add(date.timetuple()[:i])
+        for date in (x[0] for x in query.all()):
+            result.add(date.timetuple()[:idx])
         return result
 
     def lightweight(self, deferred=None, lazy=None):
@@ -335,9 +336,6 @@ def init_db(**kwargs):
 
 
 def _make_module():
-    import sqlalchemy
-    from sqlalchemy import orm
-
     db = ModuleType('db')
     for mod in sqlalchemy, orm:
         for key, value in mod.__dict__.iteritems():

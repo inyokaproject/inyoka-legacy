@@ -16,9 +16,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
+from inyoka import Component
 
 
-class Transformer(object):
+class ITransformer(Component):
     """
     Baseclass for all transformers.
     """
@@ -30,6 +31,3 @@ class Transformer(object):
         it's safe to return a new tree.
         """
         return tree
-
-
-DEFAULT_TRANSFORMERS = []

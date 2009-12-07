@@ -235,6 +235,34 @@ class Document(Container):
     allowed_in_signatures = True
 
 
+class Paragraph(Element):
+    """
+    A paragraph.  Everything is in there :-)
+    (except of block level stuff)
+    """
+    is_block_tag = True
+    is_paragraph = True
+    allowed_in_signatures = True
+    is_linebreak_node = True
+
+    @property
+    def text(self):
+        return Element.text.__get__(self).strip() + '\n\n'
+
+    def prepare_html(self):
+        yield build_html_tag(u'p', id=self.id, style=self.style,
+                             class_=self.class_)
+        for item in Element.prepare_html(self):
+            yield item
+        yield u'</p>'
+
+    def prepare_docbook(self):
+        yield u'<para>'
+        for item in Element.prepare_docbook(self):
+            yield item
+        yield u'</para>'
+
+
 class Strong(Element):
     """
     Holds children that are emphasized strongly.  For HTML this will

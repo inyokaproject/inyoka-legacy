@@ -91,11 +91,10 @@ class InyokaEnvironment(Environment):
 
         loader = FileSystemLoader(os.path.join(os.path.dirname(__file__),
                                                os.pardir, 'templates'))
-        #TODO: link `auto_reload` to a config setting
         Environment.__init__(self, loader=loader,
                              extensions=['jinja2.ext.i18n', 'jinja2.ext.do'],
-                             auto_reload=True, undefined=StrictUndefined,
-                             cache_size=-1)
+                             auto_reload=config['templates.auto_reload'],
+                             undefined=StrictUndefined, cache_size=-1)
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             href=href,

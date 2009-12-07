@@ -7,7 +7,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-import sys
 import types
 import sre_constants
 from datetime import datetime

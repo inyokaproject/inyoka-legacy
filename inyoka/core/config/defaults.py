@@ -44,6 +44,9 @@ DEFAULTS = {
     # template specific values
     'templates.path':            TextField(default='', help_text=lazy_gettext(
         u'Custom template path which is searched before the default path.')),
+    'templates.auto_reload':        BooleanField(default=True,
+        help_text=lazy_gettext(u'Auto reload template files if they changed '
+                               u'their contents.')),
 
     # auth system specific values
     'auth.system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',

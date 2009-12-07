@@ -219,6 +219,7 @@ class DateConverter(BaseConverter):
                 regex.append(re.escape(part))
         self.regex = ''.join(regex)
         self.format = format
+        super(DateConverter, self).__init__(map)
 
     def to_python(self, value):
         try:

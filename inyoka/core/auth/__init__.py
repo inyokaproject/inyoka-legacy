@@ -15,6 +15,7 @@ from threading import Lock
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug import import_string
 from inyoka import Component
+from inyoka.i18n import _
 from inyoka.core.auth import forms, models
 from inyoka.core.auth.models import User
 from inyoka.core.context import config
@@ -292,5 +293,5 @@ def activate_user(data):
         return redirect_to('portal/index')
     u.status = 'normal'
     db.session.commit()
-    flash(_('Registration confirmed. You may login now.'))
+    # flash(_('Registration confirmed. You may login now.'))
     return redirect_to('portal/login')

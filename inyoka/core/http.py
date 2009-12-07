@@ -17,12 +17,19 @@ from inyoka.core.routing import href
 
 
 class Request(BaseRequest):
+    """Our Request object with some special attributes and methods.
+
+    :param environ: The WSGI environ.
+    :param application: The current application instance.
+
+    """
 
     def __init__(self, environ, application):
         self.application = application
         BaseRequest.__init__(self, environ)
 
     def build_absolute_url(self):
+        """Get the current absolute URL from the WSGI environ"""
         return get_current_url(self.environ)
 
     @cached_property
@@ -31,10 +38,16 @@ class Request(BaseRequest):
 
 
 class Response(BaseResponse):
+    """Our default response class with default mimetype to text/html"""
     default_mimetype = 'text/html'
 
 
 class DirectResponse(Exception):
+    """A :exc:`DirectResponse` is used to pass a response object
+    to the user without executing any other routing or middleware
+    dispatching.
+
+    """
 
     def __init__(self, response):
         Exception.__init__(self, response)

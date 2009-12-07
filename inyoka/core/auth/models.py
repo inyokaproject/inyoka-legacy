@@ -21,6 +21,7 @@ USER_STATUS_MAP = BidiMap({
     3: 'deleted', #deleted itself
 })
 
+
 class UserQuery(db.Query):
     def get(self, pk):
         if isinstance(pk, basestring):

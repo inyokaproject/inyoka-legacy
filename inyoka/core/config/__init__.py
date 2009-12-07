@@ -47,7 +47,7 @@ class IntegerField(ConfigField):
 class TextField(ConfigField):
     """A field representing unicode values"""
 
-    def converter(self, value):
+    def converter(self, value=None):
         """Convert values to stripped unicode values"""
         if not isinstance(value, unicode):
             value = value.decode('utf-8')
@@ -62,7 +62,7 @@ class DottedField(ConfigField):
 
     """
 
-    def converter(self, value):
+    def converter(self, value=None):
         if ':' not in value:
             value = ':' + value
         return value
@@ -74,7 +74,7 @@ class BooleanField(ConfigField):
     TRUE_STATES = ['1', 'yes', 'true', 'on']
     FALSE_STATES = ['0', 'no', 'false', 'off']
 
-    def converter(self, value):
+    def converter(self, value=None):
         if isinstance(value, basestring):
             if value.lower() in BooleanField.TRUE_STATES:
                 return True
@@ -123,7 +123,7 @@ def from_string(value, field):
     from inyoka.core.forms import exceptions as exc
     try:
         return field(value)
-    except exc.ValidationError, e:
+    except exc.ValidationError:
         return field.get_default()
 
 

@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
-from functools import partial
 from inyoka.core.test import *
 from inyoka.core.config import Configuration, IntegerField, TextField, \
     DottedField, BooleanField, ConfigField
@@ -18,14 +17,14 @@ from inyoka.core.config import Configuration, IntegerField, TextField, \
 _config = None
 _config_file_name = '_inyoka_config_file'
 _default_values = {
-    'value1': 20,
-    'value2': 30
+    'value1': 1,
+    'value2': 2
 }
 
 
 def _setup_config_test():
     global _config
-    _config = Configuration(_config_file_name)
+    _config = Configuration(_config_file_name, _default_values)
     trans = config.edit()
     trans.commit(force=True)
     config.touch()

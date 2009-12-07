@@ -8,7 +8,7 @@
     :copyright: 2007-2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from os import environ
+import os
 import sys
 import logging
 from logging import Formatter
@@ -66,5 +66,5 @@ if config['debug']:
 #database logger
 #dblogger = logging.getLogger('sqlalchemy.engine')
 #dblogger.setLevel(logging.INFO)
-#_log_path = path.join(environ['inyoka_location'], 'db.log')
+#_log_path = path.join(os.environ['inyoka_location'], 'db.log')
 #dblogger.addHandler(logging.FileHandler(_log_path))

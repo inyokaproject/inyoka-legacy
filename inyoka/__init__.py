@@ -118,12 +118,12 @@ def _bootstrap():
                cwd=os.path.dirname(__file__))
     hg.stdin.close()
     hg.stderr.close()
-    rv = hg.stdout.read()
+    rev = hg.stdout.read()
     hg.stdout.close()
     hg.wait()
     hg_node = None
     if hg.wait() == 0:
-        for line in rv.splitlines():
+        for line in rev.splitlines():
             p = line.split(':', 1)
             if len(p) == 2 and p[0].lower().strip() == 'changeset':
                 hg_node = p[1].strip()

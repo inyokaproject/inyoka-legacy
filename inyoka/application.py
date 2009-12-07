@@ -8,7 +8,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from os import path, environ
+import os
+from os.path import join
 
 from werkzeug import ClosingIterator, redirect
 from sqlalchemy.exc import SQLAlchemyError
@@ -28,7 +29,7 @@ class InyokaApplication(object):
 
     def __init__(self, cfile='inyoka.ini'):
         local.config = self.config = Configuration(
-            path.join(environ['inyoka_location'], cfile
+            join(os.environ['inyoka_location'], cfile
         ))
         self.bind()
         #TODO: this should go into some kind of setup process
@@ -146,7 +147,9 @@ class InyokaApplication(object):
 
         # apply common response processors like cookies and etags
         if request.session.should_save:
-            request.session.save_cookie(response, domain=config['cookie_domain_name'])
+            request.session.save_cookie(
+                response, domain=config['cookie_domain_name']
+            )
 
         if response.status == 200:
             response.add_etag()

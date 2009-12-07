@@ -64,13 +64,6 @@ class NodeRenderer(object):
         """Constructs a renderer for this nodes and renders it."""
         return Renderer(self).render(context, format)
 
-    def to_markup(self, writer=None):
-        """Convert the node to markup."""
-        if writer is None:
-            writer = MarkupWriter()
-        self.generate_markup(writer)
-        return writer.finish().strip('\n').strip('\\\\')
-
 
 class NodeQueryInterface(object):
     """

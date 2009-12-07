@@ -17,6 +17,20 @@ from inyoka.core.routing import href
 _body_end_re = re.compile(r'</\s*(body|html)(?i)')
 
 
+def debug_repr(obj):
+    """
+    A function that does a debug repr for an object.  This is used by all the
+    `nodes`, `macros` and `parsers` so that we get a debuggable ast.
+    """
+    return '%s.%s(%s)' % (
+        obj.__class__.__module__.rsplit('.', 1)[-1],
+        obj.__class__.__name__,
+        ', '.join('%s=%r' % (key, value)
+        for key, value in sorted(getattr(obj, '__dict__', {}).items())
+        if not key.startswith('_'))
+    )
+
+
 def find_calling_context(skip=2):
     """Finds the calling context."""
     frame = sys._getframe(skip)

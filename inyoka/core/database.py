@@ -142,8 +142,8 @@ def atomic_add(obj, column, delta, expire=False):
     be used for reflection.
     """
     sess = orm.object_session(obj) or session
-    mapper = orm.object_mapper(obj)
-    pk = mapper.primary_key_from_instance(obj)
+    obj_mapper = orm.object_mapper(obj)
+    pk = obj_mapper.primary_key_from_instance(obj)
     assert len(pk) == 1, 'atomic_add not supported for classes with ' \
                          'more than one primary key'
 
@@ -153,8 +153,8 @@ def atomic_add(obj, column, delta, expire=False):
     else:
         orm.attributes.set_committed_value(obj, column, val + delta)
 
-    table = mapper.tables[0]
-    stmt = sql.update(table, mapper.primary_key[0] == pk[0], {
+    table = obj_mapper.tables[0]
+    stmt = sql.update(table, obj_mapper.primary_key[0] == pk[0], {
         column:     table.c[column] + delta
     })
     sess.execute(stmt)
@@ -213,6 +213,11 @@ class SafeURL(URL):
 
     def __init__(self, url):
         self.url = url
+        super(SafeURL, self).__init__(
+            drivername=url.drivername, username=url.username,
+            password=url.password, host=url.host, port=url.port,
+            database=url.database, query=url.query
+        )
 
     def __getattr__(self, attr):
         return getattr(self.url, attr)

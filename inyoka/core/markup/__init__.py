@@ -6,14 +6,13 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import re
-import unicodedata
 from inyoka.i18n import _
 from inyoka.core.markup.lexer import Lexer
 from inyoka.core.markup.machine import Renderer, RenderContext
 from inyoka.core.markup.transformers import ITransformer
 from inyoka.core.markup.constants import HTML_COLORS
 from inyoka.core.markup import nodes
+from unicodedata import lookup
 
 
 __all__ = ['parse', 'render', 'stream', 'escape']
@@ -33,7 +32,7 @@ def parse(markup, wiki_force_existing=False, catch_stack_errors=True,
             raise
         return nodes.Paragraph([
             nodes.Strong([nodes.Text(_(u'Internal parser error: '))]),
-            nodes.Text(_(u'The parser could hot process the text because '
+            nodes.Text(_(u'The parser could not process the text because '
                          u'it exceeded the maximum allowed depth for nested '
                          u'elements'))
         ])
@@ -99,7 +98,7 @@ def unescape_string(string):
                             break
                         seq.append(char)
                     try:
-                        write(unicodedata.lookup(u''.join(seq)))
+                        write(lookup(u''.join(seq)))
                     except KeyError:
                         pass
                 else:

@@ -83,7 +83,7 @@ class DatabaseCache(BaseCache):
         # Update database if key already present
         if key in self:
             if override:
-                db.sesison.query(Cache).filter_by(key=key).update({
+                db.session.query(Cache).filter_by(key=key).update({
                     'value': value,
                     'expires': expires,
                 })
@@ -102,21 +102,6 @@ class DatabaseCache(BaseCache):
 
     def delete_many(self, *keys):
         db.session.query(Cache).filter(Cache.key.in_(keys)).delete()
-
-    def inc(self, key, delta=1):
-        obj = db.session.query(Cache).filter_by(key=key).first()
-        if obj is None:
-            self.set(key, delta)
-        else:
-            db.atomic_add(obj, 'value', delta)
-
-    def dec(self, key, delta=1):
-        value = 0 - delta
-        obj = db.session.query(Cache).filter_by(key=key).first()
-        if obj is None:
-            self.set(key, value)
-        else:
-            db.atomic_add(obj, 'value', value)
 
     def _cull(self):
         """Remove not used or expired items in cache."""

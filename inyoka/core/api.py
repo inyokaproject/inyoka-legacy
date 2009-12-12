@@ -17,6 +17,7 @@ from inyoka.core.templating import templated, render_template
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.exceptions import *
 from inyoka.core import auth
+from inyoka.core import markup
 from inyoka.utils.logger import logger
 from inyoka.i18n import *
 

@@ -32,12 +32,6 @@ def run_suite(module='inyoka'):
 
     tests_path = path.join(os.environ['package_folder'], 'tests')
 
-    trans = config.edit()
-    trans['database.debug'] = True
-    trans['debug'] = True
-    trans.commit()
-    config.touch()
-
     # force the engine to be bound to the new database
     refresh_engine()
 

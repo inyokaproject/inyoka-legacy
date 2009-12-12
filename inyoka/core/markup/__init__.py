@@ -22,11 +22,10 @@ __all__ = ['parse', 'render', 'stream', 'escape']
 MAXIMUM_DEPTH = 200
 
 
-def parse(markup, wiki_force_existing=False, catch_stack_errors=True,
-          transformers=None):
+def parse(markup, catch_stack_errors=True, transformers=None):
     """Parse markup into a node."""
     try:
-        return Parser(markup, transformers, wiki_force_existing).parse()
+        return Parser(markup, transformers).parse()
     except StackExhaused:
         if not catch_stack_errors:
             raise
@@ -131,7 +130,7 @@ class Parser(object):
     parser unittests which can savely user the `Parser` class itself).
     """
 
-    def __init__(self, string, transformers=None, wiki_force_existing=False):
+    def __init__(self, string, transformers=None):
         """
         In theory you never have to instanciate this parser yourself because
         the high level `parse()` function encapsulates this.  However for the
@@ -145,7 +144,6 @@ class Parser(object):
         if transformers is None:
             transformers = ITransformer.get_components()
         self.transformers = transformers
-        self.wiki_force_existing = wiki_force_existing
 
         #: node dispatchers
         self._handlers = {

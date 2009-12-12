@@ -10,9 +10,11 @@
 """
 import random
 
+from inyoka import Component
 from inyoka.core.database import db
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
+
 
 USER_STATUS_MAP = BidiMap({
     0: 'inactive', #not yet activated
@@ -29,7 +31,6 @@ class UserQuery(db.Query):
         return super(UserQuery, self).get(pk)
 
 
-#TODO: find a way to make models extensible e.g to add more properties
 class User(db.Model):
     __tablename__ = 'core_user'
 
@@ -78,8 +79,6 @@ class User(db.Model):
     def _set_status(self, status):
         self._status = USER_STATUS_MAP[status]
     def _get_status(self):
-        if self._status is None:
-            return None
         return USER_STATUS_MAP[self._status]
     status = db.synonym('_status', descriptor=property(_get_status, _set_status))
 

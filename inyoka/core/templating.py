@@ -14,7 +14,7 @@ import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from inyoka import INYOKA_REVISION
 from inyoka import i18n
-from inyoka.core.context import current_request, config
+from inyoka.core.context import current_request, config, current_application
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 
@@ -107,8 +107,8 @@ class InyokaEnvironment(Environment):
         )
 
         self.install_gettext_translations(
-            i18n.get_translations(i18n.get_locale()
-        ))
+            i18n.get_translations()
+        )
 
 
 jinja_env = InyokaEnvironment()

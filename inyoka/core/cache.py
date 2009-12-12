@@ -27,7 +27,7 @@ systems = {
     'null':         lambda: NullCache(),
     'simple':       lambda: SimpleCache(config['caching.timeout']),
     'memcached':    lambda: MemcachedCache(
-        [x.strip() for x in config['caching.memcached_servers']],
+        [x.strip() for x in config['caching.memcached_servers'].split(',')],
         config['caching.timeout']),
     'filesystem':   lambda: FileSystemCache(
         join(os.environ['package_folder'],

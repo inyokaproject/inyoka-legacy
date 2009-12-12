@@ -142,6 +142,7 @@ def atomic_add(obj, column, delta, expire=False):
     of added of the local value.  This is a good idea if the value should
     be used for reflection.
     """
+    delta_type = type(delta)
     sess = orm.object_session(obj) or session
     obj_mapper = orm.object_mapper(obj)
     pk = obj_mapper.primary_key_from_instance(obj)
@@ -152,7 +153,7 @@ def atomic_add(obj, column, delta, expire=False):
     if expire:
         orm.attributes.instance_state(obj).expire_attributes([column])
     else:
-        orm.attributes.set_committed_value(obj, column, val + delta)
+        orm.attributes.set_committed_value(obj, column, delta_type(val) + delta)
 
     table = obj_mapper.tables[0]
     stmt = sql.update(table, obj_mapper.primary_key[0] == pk[0], {
@@ -347,6 +348,7 @@ def _make_module():
     db.session = session
     db.metadata = metadata
     db.mapper = mapper
+    db.atomic_add = atomic_add
     db.Model = Model
     db.Query = Query
     db.AttributeExtension = AttributeExtension

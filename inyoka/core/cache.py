@@ -15,7 +15,7 @@
 import os
 import time
 import random
-import pickle
+from operator import attrgetter
 from datetime import datetime
 from os.path import join
 from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
@@ -32,7 +32,7 @@ class Cache(db.Model):
     __tablename__ = 'core_cache'
 
     key = db.Column(db.String(60), primary_key=True, nullable=False)
-    value = db.Column(db.Binary, nullable=False)
+    value = db.Column(db.PickleType, nullable=False)
     expires = db.Column(db.DateTime, nullable=False)
 
 
@@ -57,21 +57,21 @@ class DatabaseCache(BaseCache):
             if item.expires < datetime.now().replace(microsecond=0):
                 self.delete(key)
                 return None
-            return pickle.loads(item.value)
+            return item.value
 
-    def __contains__(self, key):
-        value = self.get(key)
-        if value is not None:
-            return True
-        return False
+    def delete(self, key):
+        db.session.query(Cache).filter_by(key=key).delete()
 
-    def __len__(self):
-        return db.session.query(Cache).count()
+    def get_many(self, keys):
+        return db.session.query(Cache.value).fitler(Cache.key.in_(keys)).all()
 
-    def set(self, key, value, timeout=None):
+    def get_dict(self, *keys):
+        result = db.session.query(Cache).filter(Cache.key.in_(keys)).all()
+        return dict((x.key, x.value) for x in result)
+
+    def set(self, key, value, timeout=None, override=True):
         if timeout is None:
             timeout = self.default_timeout
-        value = pickle.dumps(value)
 
         if len(self) >= self.max_entries:
             self._cull()
@@ -82,18 +82,41 @@ class DatabaseCache(BaseCache):
 
         # Update database if key already present
         if key in self:
-            db.sesison.query(Cache).filter_by(key=key).update({
-                'value': value,
-                'expires': expires,
-            })
+            if override:
+                db.sesison.query(Cache).filter_by(key=key).update({
+                    'value': value,
+                    'expires': expires,
+                })
         else:
             # insert new key if key not present
             obj = Cache(key=key, value=value, expires=expires)
             db.session.add(obj)
             db.session.commit()
 
-    def delete(self, key):
-        db.session.query(Cache).filter_by(key=key).delete()
+    def add(self, key, value, timeout=None):
+        self.set(key, value, timeout, override=False)
+
+    def set_many(self, mapping, timeout=None):
+        for key, value in mapping.iteritems():
+            self.set(key, value, timeout)
+
+    def delete_many(self, *keys):
+        db.session.query(Cache).filter(Cache.key.in_(keys)).delete()
+
+    def inc(self, key, delta=1):
+        obj = db.session.query(Cache).filter_by(key=key).first()
+        if obj is None:
+            self.set(key, delta)
+        else:
+            db.atomic_add(obj, 'value', delta)
+
+    def dec(self, key, delta=1):
+        value = 0 - delta
+        obj = db.session.query(Cache).filter_by(key=key).first()
+        if obj is None:
+            self.set(key, value)
+        else:
+            db.atomic_add(obj, 'value', value)
 
     def _cull(self):
         """Remove not used or expired items in cache."""
@@ -110,6 +133,15 @@ class DatabaseCache(BaseCache):
             delkeys = list(random.choice(keys) for i in xrange(maxcull))
             # delete keys
             db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete()
+
+    def __contains__(self, key):
+        value = self.get(key)
+        if value is not None:
+            return True
+        return False
+
+    def __len__(self):
+        return db.session.query(Cache).count()
 
 
 #: the cache system factories.

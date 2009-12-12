@@ -27,16 +27,17 @@ __all__ = ('cache',)
 
 cache = (type('UnconfiguredCache', (NullCache,), {}))()
 
-_meta = db.metadata
-_meta.bind = db.get_engine()
-_cache_table = db.Table('core_cache', _meta,
-    db.Column('key', db.String(60), primary_key=True, nullable=False),
-    db.Column('value', db.Binary, nullable=False),
-    db.Column('expires', db.DateTime, nullable=False))
+
+class Cache(db.Model):
+    __tablename__ = 'core_cache'
+
+    key = db.Column(db.String(60), primary_key=True, nullable=False)
+    value = db.Column(db.Binary, nullable=False)
+    expires = db.Column(db.DateTime, nullable=False)
 
 
 class DatabaseCache(BaseCache):
-    """Database cache backend
+    """Database cache backend using Inyokas database framework.
 
     :param default_timeout:  The timeout a key is valid to use.
     :param max_entries:      The maximum number of entries in the cache.
@@ -46,26 +47,17 @@ class DatabaseCache(BaseCache):
 
     def __init__(self, default_timeout=300, max_entries=300, maxcull=10):
         BaseCache.__init__(self, default_timeout)
-
-        # create cache table if not exists
-        if not _cache_table.exists():
-            _cache_table.create()
-
         self.max_entries = max_entries
         self.maxcull = maxcull
 
     def get(self, key):
-        engine = db.get_engine()
-        row = engine.execute(db.select(
-            [_cache_table.c.value, _cache_table.c.expires],
-            _cache_table.c.key==key
-        )).fetchone()
-        if row is not None:
+        item = db.session.query(Cache).filter_by(key=key).first()
+        if item is not None:
             # remove if item exired
-            if row.expires < datetime.now().replace(microsecond=0):
+            if item.expires < datetime.now().replace(microsecond=0):
                 self.delete(key)
                 return None
-            return pickle.loads(row.value)
+            return pickle.loads(item.value)
 
     def __contains__(self, key):
         value = self.get(key)
@@ -74,16 +66,12 @@ class DatabaseCache(BaseCache):
         return False
 
     def __len__(self):
-        engine = db.get_engine()
-        return engine.execute(db.select(
-            [_cache_table.count()]
-        )).fetchone()[0]
+        return db.session.query(Cache).count()
 
     def set(self, key, value, timeout=None):
-        engine = db.get_engine()
         if timeout is None:
             timeout = self.default_timeout
-        value, cache = pickle.dumps(value), _cache_table
+        value = pickle.dumps(value)
 
         if len(self) >= self.max_entries:
             self._cull()
@@ -94,43 +82,34 @@ class DatabaseCache(BaseCache):
 
         # Update database if key already present
         if key in self:
-            engine.execute(db.update(cache,
-                cache.c.key==key,
-                dict(value=value, expires=expires)
-            ))
+            db.sesison.query(Cache).filter_by(key=key).update({
+                'value': value,
+                'expires': expires,
+            })
         else:
             # insert new key if key not present
-            engine.execute(db.insert(cache,
-                dict(key=key, value=value, expires=expires)
-            ))
+            obj = Cache(key=key, value=value, expires=expires)
+            db.session.add(obj)
+            db.session.commit()
 
     def delete(self, key):
-        db.get_engine().execute(db.delete(_cache_table,
-            _cache_table.c.key==key
-        ))
+        db.session.query(Cache).filter_by(key=key).delete()
 
     def _cull(self):
         """Remove not used or expired items in cache."""
-        engine = db.get_engine()
-        cache, maxcull = _cache_table, self.maxcull
         # remove items that have timed out
         now = datetime.now().replace(microsecond=0)
-        engine.execute(db.delete(cache, cache.c.expires < now))
+        db.session.query(Cache).filter(Cache.expires < now).delete()
         # remove any items over the maximum allowed number in the cache
         if len(self) >= self.max_entries:
             # upper limit for key query
             ul = maxcull * 2
             # get list of keys
-            keys = [i[0] for i in engine.execute(db.select(
-                [cache.c.key], limit=ul)).fetchall()
-            ]
+            keys = db.session.query(Cache.key).filter_by(limit=ul).all()
             # get some keys at random
             delkeys = list(random.choice(keys) for i in xrange(maxcull))
             # delete keys
-            fkeys = tuple({'key': k} for k in delkeys)
-            engine.execute(db.delete(cache,
-                cache.c.key.in_(db.bindparam('key')
-            )), *fkeys)
+            db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete()
 
 
 #: the cache system factories.

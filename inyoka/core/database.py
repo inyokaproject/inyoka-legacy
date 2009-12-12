@@ -319,6 +319,7 @@ def init_db(**kwargs):
     # TODO: how to discover models?! SchemaController?
     from inyoka.core.auth import models as amodels
     from inyoka.paste import models
+    from inyoka.core.cache import Cache
 
     # TODO: even uglier ;)
     if config['debug']:

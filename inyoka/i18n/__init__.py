@@ -129,7 +129,7 @@ def has_language(language):
 
 
 def rebase_to_timezone(datetime):
-    """Convert a datetime object to the blog timezone."""
+    """Convert a datetime object to the users timezone."""
     if datetime.tzinfo is None:
         datetime = datetime.replace(tzinfo=UTC)
     tzinfo = get_timezone()

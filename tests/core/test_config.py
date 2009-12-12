@@ -49,12 +49,14 @@ def test_base_config_field():
     eq_(field.converter(), 'value')
     eq_(field(), 'value')
 
+
 def test_integer_config_field():
-    field = IntegerField(20, 'Help')
+    field = IntegerField(20, 'Help', min_value=10)
+    eq_(field.min_value, 10)
     eq_(field.get_default(), 20)
     eq_(field.help_text, 'Help')
-    assert_true(field.converter is int)
     eq_(field('20'), 20)
+    eq_(field(5), 10)
 
 
 def test_text_config_field():

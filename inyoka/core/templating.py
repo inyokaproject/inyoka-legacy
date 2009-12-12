@@ -11,7 +11,9 @@
 import os
 import simplejson
 import functools
-from jinja2 import Environment, FileSystemLoader, StrictUndefined
+from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
+    ChoiceLoader, BytecodeCache, FileSystemBytecodeCache, \
+    MemcachedBytecodeCache
 from inyoka import INYOKA_REVISION
 from inyoka import i18n
 from inyoka.core.context import current_request, config, current_application
@@ -89,12 +91,33 @@ class InyokaEnvironment(Environment):
         if config['templates.path']:
             template_paths.insert(0,  config['templates.path'])
 
-        loader = FileSystemLoader(os.path.join(os.path.dirname(__file__),
-                                               os.pardir, 'templates'))
-        Environment.__init__(self, loader=loader,
-                             extensions=['jinja2.ext.i18n', 'jinja2.ext.do'],
-                             auto_reload=config['templates.auto_reload'],
-                             undefined=StrictUndefined, cache_size=-1)
+        loaders = []
+        for path in template_paths:
+            loaders.append(FileSystemLoader(
+                searchpath=path
+            ))
+
+        loader = ChoiceLoader(loaders)
+        cache_obj = None
+        if config['templates.use_cache']:
+            if config['templates.use_memcached_cache']:
+                cache_obj = MemcachedBytecodeCache(
+                    client=inyoka_cache,
+                    timeout=config['caching.timeout']
+                )
+            elif config['templates.use_filesystem_cache']:
+                cache_obj = FileSystemBytecodeCache(
+                    directory=config['caching.filesystem_cache_path'],
+                )
+
+        Environment.__init__(self,
+            loader=loader,
+            extensions=['jinja2.ext.i18n', 'jinja2.ext.do'],
+            auto_reload=config['templates.auto_reload'],
+            undefined=StrictUndefined,
+            cache_size=-1,
+            bytecode_cache=cache_obj
+        )
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             href=href,
@@ -105,7 +128,6 @@ class InyokaEnvironment(Environment):
             datetimeformat=i18n.format_datetime,
             dateformat=i18n.format_date,
         )
-
         self.install_gettext_translations(
             i18n.get_translations()
         )

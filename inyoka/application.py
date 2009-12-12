@@ -29,7 +29,7 @@ class InyokaApplication(object):
 
     def __init__(self, cfile='inyoka.ini'):
         self.config = Configuration(
-            join(os.environ['inyoka_location'], cfile
+            join(os.environ['package_folder'], cfile
         ))
         self.bind()
         #TODO: this should go into some kind of setup process

@@ -14,41 +14,59 @@ from inyoka.core.config import BooleanField, TextField, IntegerField, DottedFiel
 from inyoka.i18n import lazy_gettext
 
 
-_default_media_data_path = join(os.environ['inyoka_contents'], 'media')
+_default_media_data_path = join(os.environ['instance_folder'], 'media')
 
 
 DEFAULTS = {
     # common config values
-    'debug':                    BooleanField(default=False, help_text=lazy_gettext(
-        u'Enable debug mode')),
-    'media_root':               TextField(default=_default_media_data_path,
+    'debug':                        BooleanField(default=False,
+        help_text=lazy_gettext(u'Enable debug mode')),
+    'media_root':                   TextField(default=_default_media_data_path,
         help_text=lazy_gettext(u'The path to the media folder')),
-    'cookie_secret':            TextField(default='CHANGEME',
-                                          help_text=lazy_gettext(
-        u'The secret used for hashing the cookies')),
+    'cookie_secret':                TextField(default=u'CHANGEME',
+        help_text=lazy_gettext(u'The secret used for hashing the cookies')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
     'cookie_domain_name':           TextField(default=u'.inyoka.local',
         help_text=lazy_gettext(u'Cookie domain name')),
-    'language':                 TextField(default=u'en',
+    'language':                     TextField(default=u'en',
         help_text=lazy_gettext(u'The current language locale')),
 
     # database specific values
-    'database.url':             TextField(default=u'sqlite:///dev.db',
-                                          help_text=lazy_gettext(
-        u'The database URL.  For more information about database settings '
-        u'consult the Inyoka docs.')),
-    'database.debug':           BooleanField(default=False, help_text=lazy_gettext(
-        u'If enabled the database will collect the SQL statements and add them '
-        u'to the bottom of the page for easier debugging.  Beside that the '
-        u'sqlalchemy log is written to a `db.log` file.')),
+    'database.url':                 TextField(default=u'sqlite:///dev.db',
+        help_text=lazy_gettext(u'The database URL.  For more information '
+            u'about database settings consult the Inyoka docs.')),
+    'database.debug':           BooleanField(default=False,
+        help_text=lazy_gettext(u'If enabled the database will collect '
+            u'the SQL statements and add them to the bottom of the page '
+            u'for easier debugging.  Beside that the sqlalchemy log is '
+            u'written to a `db.log` file.')),
 
     # template specific values
-    'templates.path':            TextField(default='', help_text=lazy_gettext(
-        u'Custom template path which is searched before the default path.')),
+    'templates.path':               TextField(default=u'',
+        help_text=lazy_gettext(u'Custom template path which is '
+            u'searched before the default path.')),
     'templates.auto_reload':        BooleanField(default=True,
         help_text=lazy_gettext(u'Auto reload template files if they changed '
                                u'their contents.')),
+    'templates.use_cache':          BooleanField(default=False,
+        help_text=lazy_gettext(u'Use either memory, filesystem or memcached '
+                               u'bytecode caches')),
+    'templates.use_memcached_cache':      BooleanField(default=False,
+        help_text=lazy_gettext(u'Use Memcached for bytecode caching')),
+    'templates.use_filesystem_cache':     BooleanField(default=False,
+        help_text=lazy_gettext(u'Use filesystem for bytecode caching')),
+
+    # caching
+    'caching.system':               TextField(default=u'null',
+        help_text=lazy_gettext(u'Choose one of null, simple, memcached or filesystem '
+            u'for the caching system.')),
+    'caching.filesystem_cache_path': TextField(default=u'/tmp/_inyoka_cache',
+        help_text=lazy_gettext(u'The path for the filesystem caches')),
+    'caching.timeout':              IntegerField(default=300, min_value=10,
+        help_text=lazy_gettext(u'The timeout for the caching system')),
+    'caching.memcached_servers':    TextField(default=u'',
+        help_text=lazy_gettext(u'Comma seperated list of memcached servers')),
 
     # auth system specific values
     'auth.system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',

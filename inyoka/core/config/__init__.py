@@ -41,7 +41,19 @@ class ConfigField(object):
 
 class IntegerField(ConfigField):
     """A field representing integer values"""
-    converter = int
+
+    def __init__(self, default, help_text, min_value=-1):
+        ConfigField.__init__(self, default, help_text)
+        self.min_value = min_value
+
+    def converter(self, value=None):
+        """Convert values to int and assure that we regard
+        the minimum value
+        """
+        if value < self.min_value:
+            return int(self.min_value)
+        else:
+            return int(value)
 
 
 class TextField(ConfigField):
@@ -395,4 +407,4 @@ class ConfigTransaction(object):
         self._committed = True
 
 
-local.config = Configuration(path.join(os.environ['inyoka_location'], 'inyoka.ini'))
+local.config = Configuration(path.join(os.environ['package_folder'], 'inyoka.ini'))

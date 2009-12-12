@@ -34,7 +34,10 @@ class Request(BaseRequest):
 
     @cached_property
     def session(self):
-        return SecureCookie.load_cookie(self, secret_key=config['cookie_secret'])
+        #XXX: hmac seems not to support unicode values so we need to ensure
+        #     that we have a bytecode string here
+        secret = config['cookie_secret'].encode('utf-8')
+        return SecureCookie.load_cookie(self, secret_key=secret)
 
 
 class Response(BaseResponse):

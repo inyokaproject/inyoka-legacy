@@ -131,9 +131,9 @@ def _bootstrap():
     INYOKA_REVISION = hg_node
 
     # the path to the contents of the inyoka package
-    os.environ['inyoka_contents'] = conts = realpath(join(dirname(__file__)))
+    os.environ['instance_folder'] = conts = realpath(join(dirname(__file__)))
     # the path to the folder where the inyoka package is stored in
-    os.environ['inyoka_location'] = realpath(join(conts, pardir))
+    os.environ['package_folder'] = realpath(join(conts, pardir))
 
 
 _bootstrap()

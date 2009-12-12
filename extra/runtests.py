@@ -30,7 +30,7 @@ def run_suite(module='inyoka'):
 
     # initialize the app
 
-    tests_path = path.join(os.environ['inyoka_location'], 'tests')
+    tests_path = path.join(os.environ['package_folder'], 'tests')
 
     trans = config.edit()
     trans['database.debug'] = True

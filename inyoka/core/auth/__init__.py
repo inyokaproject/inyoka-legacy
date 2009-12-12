@@ -283,6 +283,7 @@ class AuthSystemBase(object):
             #user.last_login = datetime.utcnow()
             request.session['user_id'] = user.id
 
+
 @register_confirm('activate_user')
 def activate_user(data):
     try:

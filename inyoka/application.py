@@ -28,7 +28,7 @@ class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
     def __init__(self, cfile='inyoka.ini'):
-        local.config = self.config = Configuration(
+        self.config = Configuration(
             join(os.environ['inyoka_location'], cfile
         ))
         self.bind()

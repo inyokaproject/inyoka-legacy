@@ -30,6 +30,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Base domain name')),
     'cookie_domain_name':           TextField(default=u'.inyoka.local',
         help_text=lazy_gettext(u'Cookie domain name')),
+    'language':                 TextField(default=u'en',
+        help_text=lazy_gettext(u'The current language locale')),
 
     # database specific values
     'database.url':             TextField(default=u'sqlite:///dev.db',

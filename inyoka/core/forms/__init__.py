@@ -14,7 +14,7 @@ from bureaucracy.forms import *
 from bureaucracy import csrf, exceptions, recaptcha, redirects, utils, \
     widgets
 
-from inyoka.i18n import get_locale, get_translations
+from inyoka.i18n import get_translations
 from inyoka.core.http import redirect_to
 from inyoka.core.context import local
 
@@ -26,7 +26,7 @@ class Form(FormBase):
 
     def _get_translations(self):
         """Return our translations"""
-        return get_translations(get_locale())
+        return get_translations()
 
     def _lookup_request_info(self):
         """Return our current request object"""

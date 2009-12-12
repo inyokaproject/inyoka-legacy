@@ -10,10 +10,12 @@
 """
 import os
 import pytz
+from os.path import realpath, dirname
 from gettext import NullTranslations
 from babel import Locale, UnknownLocaleError
-from babel.support import Translations, LazyProxy
+from babel.support import Translations as TranslationsBase, LazyProxy
 from babel.dates import format_date, format_datetime, format_time
+from inyoka.core.context import config
 
 
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
@@ -21,37 +23,50 @@ __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 UTC = pytz.timezone('UTC')
 
-_current_locale = None
+_translations = None
 
-_translations = {
-    None: NullTranslations()
-}
-
-
-def get_translations(locale):
-    """Get the translation for a locale.  This sets up the i18n process."""
-    locale = Locale.parse(locale)
-    translations = _translations.get(str(locale))
-    if translations is not None:
-        return translations
-    rv = Translations.load(os.path.dirname(__file__), [locale])
-    _translations[str(locale)] = rv
-    _current_locale = locale
-    return rv
+def load_core_translations(locale):
+    """Return the matching locale catalog for `locale`"""
+    global _translations
+    base = realpath(dirname(__file__))
+    ret = _translations = Translations.load(base, locale)
+    return ret
 
 
-def get_timezone(name=None):
-    """Return the timezone for the given identifier or the timezone
-    of the application based on the configuration.
+def get_translations():
+    global _translations
+    if _translations is None:
+        _translations = load_core_translations(config['language'])
+    return _translations
+
+
+class Translations(TranslationsBase):
+
+    @classmethod
+    def load(cls, path, locale=None, domain='messages',
+             gettext_lookup=False):
+        """Load the translations from the given path."""
+        locale = Locale.parse(locale)
+        catalog = find_catalog(path, domain, locale, gettext_lookup)
+        if catalog:
+            return Translations(fileobj=open(catalog))
+        return NullTranslations()
+
+    # Always use the unicode versions, we don't support byte strings
+    gettext = TranslationsBase.ugettext
+    ngettext = TranslationsBase.ungettext
+
+
+def find_catalog(path, domain, locale, gettext_lookup=False):
+    """Finds the catalog for the given locale on the path.  Return sthe
+    filename of the .mo file if found, otherwise `None` is returned.
     """
-    if name is None:
-        return UTC
-    return pytz.timezone(name)
-
-
-def get_locale():
-    """Return the current locale."""
-    return _current_locale or None
+    args = [path, str(Locale.parse(locale)), domain + '.mo']
+    if gettext_lookup:
+        args.insert(-1, 'LC_MESSAGES')
+    catalog = os.path.join(*args)
+    if os.path.isfile(catalog):
+        return catalog
 
 
 def lazy_gettext(string):
@@ -66,7 +81,7 @@ def lazy_ngettext(singular, plural, n):
 
 def gettext(string):
     """Translate the given string to the language of the application."""
-    return unicode(_translations[get_locale()].ugettext(string))
+    return unicode(get_translations().ugettext(string))
 
 
 def ngettext(singular, plural, n):
@@ -77,7 +92,16 @@ def ngettext(singular, plural, n):
         if n == 1:
             return singular
         return plural
-    return unicode(_translations[get_locale()].ungettext(singular, plural, n))
+    return unicode(get_translations().ungettext((singular, plural, n)))
+
+
+def get_timezone(name=None):
+    """Return the timezone for the given identifier or the timezone
+    of the application based on the configuration.
+    """
+    if name is None:
+        return UTC
+    return pytz.timezone(name)
 
 
 def list_languages():

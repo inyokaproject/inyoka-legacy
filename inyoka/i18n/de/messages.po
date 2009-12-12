@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-02 17:46+0100\n"
-"PO-Revision-Date: 2009-12-08 00:38+0100\n"
+"PO-Revision-Date: 2009-12-12 09:10+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -58,78 +58,82 @@ msgstr ""
 msgid "Cookie domain name"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:36
+#: inyoka/core/config/defaults.py:34
+msgid "The current language locale"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:38
 msgid ""
 "The database URL.  For more information about database settings consult the "
 "Inyoka docs."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:39
+#: inyoka/core/config/defaults.py:41
 msgid ""
 "If enabled the database will collect the SQL statements and add them to the "
 "bottom of the page for easier debugging.  Beside that the sqlalchemy log is "
 "written to a `db.log` file."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:45
+#: inyoka/core/config/defaults.py:47
 msgid "Custom template path which is searched before the default path."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:48
+#: inyoka/core/config/defaults.py:50
 msgid "Auto reload template files if they changed their contents."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:53
+#: inyoka/core/config/defaults.py:55
 msgid "The Authsystem which should get used"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:59
+#: inyoka/core/config/defaults.py:61
 msgid "Url mapping used for the portal application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:61
+#: inyoka/core/config/defaults.py:63
 msgid "Url mapping used for the calendar application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:63
+#: inyoka/core/config/defaults.py:65
 msgid "Url mapping used for the news application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:65
+#: inyoka/core/config/defaults.py:67
 msgid "Url mapping used for the forum application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:67
+#: inyoka/core/config/defaults.py:69
 msgid "Url mapping used for the wiki application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:69
+#: inyoka/core/config/defaults.py:71
 msgid "Url mapping used for the paste application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:71
+#: inyoka/core/config/defaults.py:73
 msgid "Url mapping used for the planet application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:73
+#: inyoka/core/config/defaults.py:75
 msgid "Url mapping used for the testing application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:77
+#: inyoka/core/config/defaults.py:79
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:79
+#: inyoka/core/config/defaults.py:81
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:81
+#: inyoka/core/config/defaults.py:83
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:85
+#: inyoka/core/config/defaults.py:87
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."

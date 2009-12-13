@@ -52,8 +52,8 @@ class Component(object):
     """
     __metaclass__ = ComponentMeta
 
-    _implementations = []
-    _instances = []
+    _implementations = ()
+    _instances = ()
 
     def __init__(self, ctx=None):
         self.ctx = ctx
@@ -101,15 +101,15 @@ def setup_components(accepted_components):
         for imp in implementations:
             if component_is_activated(imp, accepted_components):
                 appender.append(imp)
-            imp._implementations = subimplements = imp.__subclasses__()
+            imp._implementations = subimplements = tuple(imp.__subclasses__())
             appender.extend(subimplements)
-        comp._implementations = appender[:]
+        comp._implementations = tuple(appender[:])
 
         for i in comp._implementations:
             if i not in instance_map:
                 instance_map[i] = i(ctx)
 
-        comp._instances = [instance_map[i] for i in comp._implementations]
+        comp._instances = tuple(instance_map[i] for i in comp._implementations)
     return instance_map
 
 

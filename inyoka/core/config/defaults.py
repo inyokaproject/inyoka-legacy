@@ -29,6 +29,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Base domain name')),
     'cookie_domain_name':           TextField(default=u'.inyoka.local',
         help_text=lazy_gettext(u'Cookie domain name')),
+    'cookie_name':                  TextField(default=u'inyoka-session',
+        help_text=lazy_gettext(u'Cookie name')),
     'language':                     TextField(default=u'en',
         help_text=lazy_gettext(u'The current language locale')),
 

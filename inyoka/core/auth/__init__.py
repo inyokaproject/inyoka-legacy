@@ -268,7 +268,6 @@ class AuthSystemBase(object):
     def get_user(self, request):
         raise NotImplementedError()
 
-
     def set_user(self, request, user):
         """Can be used by the login function to set the user.  This function
         should only be used for auth systems internally if they are not using

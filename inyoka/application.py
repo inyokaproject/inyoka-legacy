@@ -10,6 +10,7 @@
 """
 import os
 from os.path import join
+from time import time
 
 from werkzeug import ClosingIterator, redirect
 from sqlalchemy.exc import SQLAlchemyError
@@ -168,9 +169,15 @@ class InyokaApplication(object):
 
         # apply common response processors like cookies and etags
         if request.session.should_save:
-            request.session.save_cookie(
-                response, domain=config['cookie_domain_name']
-            )
+            # check for permanent session saving
+            if request.session.get('_permanent_session'):
+                max_age = 60 * 60 * 24 * 31 # one month
+                expires = time() + max_age
+            else:
+                max_age = expires = None
+            request.session.save_cookie(response, config['cookie_name'],
+                max_age=max_age, expires=expires, httponly=True,
+                domain=config['cookie_domain_name'])
 
         if response.status == 200:
             response.add_etag()

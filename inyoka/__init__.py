@@ -27,6 +27,7 @@ class ComponentMeta(type):
 
         if Component not in bases:
             obj._comptypes = comptypes = []
+            obj._iscomptype = False
             for base in bases:
                 if issubclass(base, Component):
                     comptypes.append(base)
@@ -96,8 +97,14 @@ def setup_components(accepted_components):
     for comp, implementations in ComponentMeta._registry.items():
         # Only add those components to the implementation list,
         # which are activated
-        comp._implementations = [imp for imp in implementations if
-                                 component_is_activated(imp, accepted_components)]
+        appender = []
+        for imp in implementations:
+            if component_is_activated(imp, accepted_components):
+                appender.append(imp)
+            imp._implementations = subimplements = imp.__subclasses__()
+            appender.extend(subimplements)
+        comp._implementations = appender[:]
+
         for i in comp._implementations:
             if i not in instance_map:
                 instance_map[i] = i(ctx)

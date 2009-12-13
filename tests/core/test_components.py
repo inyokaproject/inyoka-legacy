@@ -18,27 +18,32 @@ from inyoka.core.test import *
 ComponentMeta._registry = {}
 
 
-class ComponentType(Component):
+class Interface(Component):
     pass
 
-
-class ComponentType2(Component):
+class Interface2(Component):
     pass
 
-
-class Implementation(ComponentType):
+class InterfaceDescription(Interface):
     pass
 
+class Implementation1(Interface):
+    pass
 
-class Implementation2(ComponentType, ComponentType2):
+class Implementation2(InterfaceDescription):
+    pass
+
+class Implementation3(Interface, Interface2):
     pass
 
 
 def test_components():
-    assert_true(ComponentType._iscomptype)
-    assert_true(Implementation._iscomptype)
-    eq_(Implementation._comptypes, [ComponentType])
-    eq_(Implementation2._comptypes, [ComponentType, ComponentType2])
+    assert_true(Interface._iscomptype)
+    assert_false(InterfaceDescription._iscomptype)
+    assert_false(Implementation1._iscomptype)
+    eq_(Implementation1._comptypes, [Interface])
+    eq_(Implementation2._comptypes, [InterfaceDescription])
+    eq_(Implementation3._comptypes, [Interface, Interface2])
 
     # we return the component object unchanged so it does not
     # have any special attributes
@@ -49,10 +54,10 @@ def test_components():
 
 def test_setup_components():
     map = setup_components(['tests.core.test_components.*'])
-    eq_(len(map), 2)
-    assert_true(isinstance(map[Implementation], Implementation))
+    eq_(len(map), 4)
+    assert_true(isinstance(map[Implementation1], Implementation1))
     assert_true(isinstance(map[Implementation2], Implementation2))
-    assert_false(ComponentType in map)
-    assert_false(ComponentType2 in map)
-    eq_(len(ComponentType.get_component_classes()), 2)
-    eq_(len(ComponentType2.get_component_classes()), 1)
+    assert_false(Interface in map)
+    assert_false(Interface2 in map)
+    eq_(len(Interface.get_component_classes()), 4)
+    eq_(len(Interface2.get_component_classes()), 1)

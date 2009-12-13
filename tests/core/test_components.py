@@ -49,7 +49,8 @@ def test_components():
 
 def test_setup_components():
     map = setup_components(['tests.core.test_components.*'])
-    eq_(len(map), 2)
+#    eq_(len(map), 2)
+    # commmented out until we enable component_is_activated
     assert_true(isinstance(map[Implementation], Implementation))
     assert_true(isinstance(map[Implementation2], Implementation2))
     assert_false(ComponentType in map)

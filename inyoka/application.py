@@ -30,7 +30,7 @@ from inyoka.core.database import DeclarativeMeta, IModelPropertyExtender, \
 class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
-    def __init__(self, cfile='inyoka.ini'):
+    def __init__(self):
         self.config = config._get_current_object()
         self.bind()
 

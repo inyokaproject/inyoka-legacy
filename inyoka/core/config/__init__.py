@@ -407,4 +407,5 @@ class ConfigTransaction(object):
         self._committed = True
 
 
-local.config = Configuration(path.join(os.environ['INYOKA_INSTANCE'], 'inyoka.ini'))
+#: get's overwritten by :func:`inyoka._bootstrap`
+local.config = None

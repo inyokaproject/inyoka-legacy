@@ -12,7 +12,16 @@
 import sys
 from operator import itemgetter
 
-_missing = object()
+class _Missing(object):
+
+    def __repr__(self):
+        return 'no value'
+
+    def __reduce__(self):
+        return '_missing'
+
+_missing = _Missing()
+del _Missing
 
 
 class BidiMap(dict):

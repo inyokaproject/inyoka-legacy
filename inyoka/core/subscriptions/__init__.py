@@ -16,7 +16,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Component
-from inyoka.core.api import _missing
+from inyoka.utils.datastructures import _missing
 
 
 class SubscriptionType(Component):

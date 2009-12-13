@@ -94,7 +94,8 @@ class User(db.Model):
         return True if self.username == 'anonymous' else False
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        i = self.id and '#%d' % self.id or '(no id)'
+        return '<User %s %r>' % (i, self.username)
 
     def __unicode__(self):
         return self.display_name

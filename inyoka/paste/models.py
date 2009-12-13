@@ -76,3 +76,11 @@ class Entry(db.Model):
 
     def __unicode__(self):
         return self.display_title
+
+    def __repr__(self):
+        if self.title:
+            s = repr(self.title)
+        else:
+            s = '#%d' % self.id
+        u = self.author_id and self.author.username
+        return '<Entry %s by %s>' % (s, u)

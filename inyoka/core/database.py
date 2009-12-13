@@ -320,11 +320,13 @@ def init_db(**kwargs):
     from inyoka.core.auth import models as amodels
     from inyoka.paste import models
     from inyoka.core.cache import Cache
+    import inyoka.core.subscriptions.models
 
     # TODO: even uglier ;)
     if config['debug']:
         sys.path.insert(0, os.getcwd())
         from tests.utils import test_pagination
+        from tests.core import test_subscriptions
 
     metadata.create_all(**kwargs)
     # TODO: YES ugly, but for now…

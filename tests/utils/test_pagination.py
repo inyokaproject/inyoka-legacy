@@ -41,13 +41,13 @@ def setup():
 
 
 class PaginationTest1(db.Model):
-    __tablename__ = 'test_utils_pagination1'
+    __tablename__ = '_test_utils_pagination1'
     id = db.Column(db.Integer, primary_key=True)
     group = db.Column(db.Integer)
 
 
 class PaginationTest2(db.Model):
-    __tablename__ = 'test_utils_pagination2'
+    __tablename__ = '_test_utils_pagination2'
     id = db.Column(db.Integer, primary_key=True)
     group = db.Column(db.Integer)
     position = db.Column(db.Integer)

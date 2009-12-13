@@ -201,7 +201,7 @@ def _bootstrap():
                 continue
 
             for key, value in extender.properties.iteritems():
-                if not key in model.__dict__:
+                if key not in model.__dict__:
                     setattr(model, key, value)
                 else:
                     raise ModelPropertyExtenderGoesWild(

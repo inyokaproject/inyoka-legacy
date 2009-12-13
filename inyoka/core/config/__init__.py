@@ -405,7 +405,3 @@ class ConfigTransaction(object):
         finally:
             self.cfg._lock.release()
         self._committed = True
-
-
-#: get's overwritten by :func:`inyoka._bootstrap`
-local.config = None

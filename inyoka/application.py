@@ -22,7 +22,7 @@ from inyoka.core.context import local, local_manager, current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
-from inyoka.core.config import Configuration
+from inyoka.core.config import Configuration, config
 from inyoka.core.database import DeclarativeMeta, IModelPropertyExtender, \
     ModelPropertyExtenderGoesWild
 
@@ -31,16 +31,8 @@ class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
     def __init__(self, cfile='inyoka.ini'):
-        self.config = Configuration(
-            join(os.environ['package_folder'], cfile
-        ))
+        self.config = config._get_current_object()
         self.bind()
-
-        # setup the config
-        if not config.exists:
-            trans = config.edit()
-            trans.commit(force=True)
-            config.touch()
 
         url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
         self.url_map = Map(url_map)

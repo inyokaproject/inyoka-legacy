@@ -17,8 +17,12 @@ coverage.exclude('#pragma[: ]+[nN][oO] [cC][oO][vV][eE][rR]')
 coverage.coverage(auto_data=True, branch=True)
 coverage.start()
 
+# set the configuration file
+os.environ['INYOKA_CONFIG'] = 'inyoka_tests.ini'
+# we need to setup the inyoka application at this time
+# to setup the thread local cache properly
 from inyoka.application import InyokaApplication
-application = InyokaApplication('inyoka_tests.ini')
+application = InyokaApplication()
 
 from inyoka.core.api import config
 from inyoka.core.test import InyokaPlugin
@@ -30,7 +34,7 @@ def run_suite(module='inyoka'):
 
     # initialize the app
 
-    tests_path = path.join(os.environ['package_folder'], 'tests')
+    tests_path = path.join(os.environ['INYOKA_INSTANCE'], 'tests')
 
     # force the engine to be bound to the new database
     refresh_engine()

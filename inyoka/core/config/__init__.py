@@ -407,4 +407,4 @@ class ConfigTransaction(object):
         self._committed = True
 
 
-local.config = Configuration(path.join(os.environ['package_folder'], 'inyoka.ini'))
+local.config = Configuration(path.join(os.environ['INYOKA_INSTANCE'], 'inyoka.ini'))

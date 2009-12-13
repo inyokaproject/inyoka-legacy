@@ -155,10 +155,24 @@ def _bootstrap():
                 break
     INYOKA_REVISION = hg_node
 
-    # the path to the contents of the inyoka package
-    os.environ['instance_folder'] = conts = realpath(join(dirname(__file__)))
-    # the path to the folder where the inyoka package is stored in
-    os.environ['package_folder'] = realpath(join(conts, pardir))
+    # the path to the contents of the inyoka module
+    os.environ.setdefault('INYOKA_MODULE', realpath(join(dirname(__file__))))
+    conts = os.environ['INYOKA_MODULE']
+    # the path to the inyoka instance folder
+    os.environ.setdefault('INYOKA_INSTANCE', realpath(join(conts, pardir)))
+
+    # setup config
+    from inyoka.core.context import local
+    from inyoka.core.config import Configuration, config
+    cfile = os.environ.get('INYOKA_CONFIG', 'inyoka.ini')
+    local.config = config = Configuration(
+        join(realpath(os.environ['INYOKA_INSTANCE']), cfile))
+
+    if not config.exists:
+        trans = config.edit()
+        trans.commit(force=True)
+        config.touch()
+
 
     # setup components
     # TODO: make it configurable

@@ -66,5 +66,5 @@ if config['debug']:
 #database logger
 #dblogger = logging.getLogger('sqlalchemy.engine')
 #dblogger.setLevel(logging.INFO)
-#_log_path = path.join(os.environ['package_folder'], 'db.log')
+#_log_path = path.join(os.environ['INYOKA_INSTANCE'], 'db.log')
 #dblogger.addHandler(logging.FileHandler(_log_path))

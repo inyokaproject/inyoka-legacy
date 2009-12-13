@@ -137,8 +137,7 @@ systems = {
         [x.strip() for x in config['caching.memcached_servers'].split(',')],
         config['caching.timeout']),
     'filesystem':   lambda: FileSystemCache(
-        join(os.environ['package_folder'],
-             config['caching.filesystem_cache_path']),
+        join(config['caching.filesystem_cache_path']),
         threshold=500,
         default_timeout=config['caching.timeout']),
     'database':     lambda: DatabaseCache(config['caching.timeout'])

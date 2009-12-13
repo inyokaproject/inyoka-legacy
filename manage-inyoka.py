@@ -14,8 +14,9 @@ from flickzeug import debug as fdebug, leakfinder, profiling
 
 
 def make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
+    os.environ['INYOKA_CONFIG'] = cfg
     from inyoka.application import InyokaApplication
-    application = InyokaApplication(cfg)
+    application = InyokaApplication()
     if debug:
         application = fdebug.DebuggedApplication(application, evalex=True,
             show_hidden_frames=True)

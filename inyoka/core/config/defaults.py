@@ -14,7 +14,7 @@ from inyoka.core.config import BooleanField, TextField, IntegerField, DottedFiel
 from inyoka.i18n import lazy_gettext
 
 
-_default_media_data_path = join(os.environ['instance_folder'], 'media')
+_default_media_data_path = join(os.environ['INYOKA_MODULE'], 'media')
 
 
 DEFAULTS = {

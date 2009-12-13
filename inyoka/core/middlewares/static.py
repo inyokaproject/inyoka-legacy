@@ -18,8 +18,8 @@ from inyoka.core.context import config
 from inyoka.core.middlewares import IMiddleware
 
 
-STATIC_PATH = join(os.environ['instance_folder'], config['static_path'])
-MEDIA_PATH = join(os.environ['instance_folder'], config['media_path'])
+STATIC_PATH = join(os.environ['INYOKA_MODULE'], config['static_path'])
+MEDIA_PATH = join(os.environ['INYOKA_MODULE'], config['media_path'])
 
 
 class StaticMiddlewareBase(object):

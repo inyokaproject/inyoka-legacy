@@ -82,7 +82,9 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
 from sqlalchemy.orm.interfaces import AttributeExtension
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, \
+    DeclarativeMeta as SADeclarativeMeta
+from inyoka import Component
 from inyoka.core.context import config
 
 
@@ -283,12 +285,68 @@ class Query(orm.Query):
         return self.options(*args)
 
 
+class IModelPropertyExtender(Component):
+    """A subclass of this interface is able to extend a models
+    columns and various other properties.
+
+    To be able to extend a model the model must be defined as extendable
+    by setting `__extendable__` to `True`.
+
+    Example::
+
+        class UserPropertyExtender(IModelPropertyExtender):
+            model = User
+            properties = {
+                'credit_card':  db.Column(db.String(30))
+            }
+
+    Note that every extender that tries to overwrite already existing
+    columns breaks yet the whole application since that is not supported.
+
+    This also applies to multiple extenders overwriting the same column.  The
+    extender that get's first loaded wins all others will break.
+
+    """
+
+    #: The model to extend
+    model = None
+
+    #: A dictionary with the properties to extend.  Example:
+    #:
+    #: properties = {
+    #:    'credit_card':  db.Column(db.String(60), nullable=True),
+    #:    'credit_card_owner': db.Column(db.String(60), nullable=True)
+    #: }
+    #:
+    #: You can define everything as a “property” that can be defined as
+    #: a models attribute.  Including relations, synonyms and such.
+    properties = {}
+
+
+class ModelPropertyExtenderGoesWild(RuntimeError):
+    """A model property extender has gone too far and we need to stop here"""
+
+
+class DeclarativeMeta(SADeclarativeMeta):
+    """Our own metaclass to register all model classes
+    so that we are able to hook up our model property extension
+    system
+    """
+
+    _models = []
+
+    def __init__(cls, classname, bases, dict_):
+        SADeclarativeMeta.__init__(cls, classname, bases, dict_)
+        DeclarativeMeta._models.append(cls)
+
+
 class ModelBase(object):
     """Internal baseclass for all models.  It provides some syntactic
     sugar and maps the default query property.
 
     We use the declarative model api from sqlalchemy.
     """
+    __extendable__ = False
 
     def __eq__(self, other):
         equal = True
@@ -311,15 +369,17 @@ class ModelBase(object):
 
 # configure the declarative base
 Model = declarative_base(name='Model', cls=ModelBase,
-    mapper=mapper, metadata=metadata)
+    mapper=mapper, metadata=metadata, metaclass=DeclarativeMeta)
 ModelBase.query = session.query_property(Query)
+
+
 
 def init_db(**kwargs):
     # UGLY; BUT BEST TO GET TESTS ETC RUNNING NOW
     # TODO: how to discover models?! SchemaController?
     from inyoka.core.auth import models as amodels
-    from inyoka.paste import models
     from inyoka.core.cache import Cache
+    from inyoka.paste import models
     import inyoka.core.subscriptions.models
 
     # TODO: even uglier ;)

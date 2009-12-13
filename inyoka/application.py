@@ -22,6 +22,8 @@ from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 from inyoka.core.config import Configuration
+from inyoka.core.database import DeclarativeMeta, IModelPropertyExtender, \
+    ModelPropertyExtenderGoesWild
 
 
 class InyokaApplication(object):
@@ -32,7 +34,13 @@ class InyokaApplication(object):
             join(os.environ['package_folder'], cfile
         ))
         self.bind()
-        #TODO: this should go into some kind of setup process
+        self._setup_components()
+
+        url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
+        self.url_map = Map(url_map)
+
+    def _setup_components(self):
+        #TODO: move this into inyoka._bootstrap but make it lazy
         if not config.exists:
             # write the inyoka.ini file
             trans = config.edit()
@@ -52,8 +60,21 @@ class InyokaApplication(object):
             'inyoka.core.middlewares.static.*',
         ])
 
-        url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
-        self.url_map = Map(url_map)
+        property_extenders = IModelPropertyExtender.get_component_classes()
+        for model in DeclarativeMeta._models:
+            extendable = getattr(model, '__extendable__', False)
+            dict_ = model.__dict__
+            if extendable:
+                for extender in property_extenders:
+                    if extender.model is model:
+                        for key, value in extender.properties.iteritems():
+                            if not key in dict_:
+                                setattr(model, key, value)
+                            else:
+                                raise ModelPropertyExtenderGoesWild(
+                                    u'%r tried to overwrite already existing '
+                                    u'properties on %r, aborting'
+                                        % (extender, model))
 
     @property
     def url_adapter(self):

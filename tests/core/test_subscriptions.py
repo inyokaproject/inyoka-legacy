@@ -186,4 +186,3 @@ def test_subscribing():
         # here vier accesses entry 1
         ('__test_comments', users['vier'], c[4], e1),
     ]))
-

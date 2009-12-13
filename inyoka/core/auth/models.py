@@ -11,7 +11,7 @@
 import random
 
 from inyoka import Component
-from inyoka.core.database import db
+from inyoka.core.database import db, IModelPropertyExtender
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
@@ -33,6 +33,7 @@ class UserQuery(db.Query):
 
 class User(db.Model):
     __tablename__ = 'core_user'
+    __extendable__ = True
 
     query = db.session.query_property(UserQuery)
 

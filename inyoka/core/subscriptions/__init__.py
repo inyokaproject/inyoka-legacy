@@ -65,7 +65,7 @@ class SubscriptionType(Component):
         """
         Returns the subject holding the given object.
 
-        Subclasses must implement this unless they are a singleton 
+        Subclasses must implement this unless they are a singleton
         """
         if cls.is_singleton:
             raise ValueError('%s is a singleton, there are no subjects.' % cls.__name__)

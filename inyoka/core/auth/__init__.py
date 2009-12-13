@@ -248,12 +248,10 @@ class AuthSystemBase(object):
         """
         raise NotImplementedError()
 
-
     @templated('portal/login.html')
     def render_login_template(self, request, form):
         """Renders the login template"""
         return { 'login_form':form.as_widget() }
-
 
     def logout(self, request):
         """This has to logout the user again.  This method must not fail.
@@ -266,7 +264,6 @@ class AuthSystemBase(object):
         default one calls `set_user(request, None)`.
         """
         self.set_user(request, None)
-
 
     def get_user(self, request):
         raise NotImplementedError()

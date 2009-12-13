@@ -13,6 +13,8 @@ from inyoka.core.routing import UrlMixin
 
 
 class IMiddleware(Component, UrlMixin):
+    __lazy_loading__ = True
+
     # cache for imported middlewares
     _middlewares = []
 

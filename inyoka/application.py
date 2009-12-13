@@ -35,47 +35,15 @@ class InyokaApplication(object):
             join(os.environ['package_folder'], cfile
         ))
         self.bind()
-        self._setup_components()
 
-        url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
-        self.url_map = Map(url_map)
-
-    def _setup_components(self):
-        #TODO: move this into inyoka._bootstrap but make it lazy
+        # setup the config
         if not config.exists:
-            # write the inyoka.ini file
             trans = config.edit()
             trans.commit(force=True)
             config.touch()
 
-        #TODO: utilize that!
-        setup_components([
-            'inyoka.testing.components.*',
-            'inyoka.core.routing.*',
-            'inyoka.core.auth.*',
-            'inyoka.portal.controllers.*',
-            'inyoka.news.controllers.*',
-            'inyoka.forum.controllers.*',
-            'inyoka.paste.controllers.*',
-            'inyoka.core.middlewares.services.*',
-            'inyoka.core.middlewares.static.*',
-        ])
-
-        property_extenders = IModelPropertyExtender.get_component_classes()
-        for model in DeclarativeMeta._models:
-            extendable = getattr(model, '__extendable__', False)
-            dict_ = model.__dict__
-            if extendable:
-                for extender in property_extenders:
-                    if extender.model is model:
-                        for key, value in extender.properties.iteritems():
-                            if not key in dict_:
-                                setattr(model, key, value)
-                            else:
-                                raise ModelPropertyExtenderGoesWild(
-                                    u'%r tried to overwrite already existing '
-                                    u'properties on %r, aborting'
-                                        % (extender, model))
+        url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
+        self.url_map = Map(url_map)
 
     @property
     def url_adapter(self):

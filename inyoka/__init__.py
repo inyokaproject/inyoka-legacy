@@ -10,6 +10,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from functools import partial
 
 INYOKA_REVISION = 'unknown'
 
@@ -52,6 +53,11 @@ class Component(object):
     """
     __metaclass__ = ComponentMeta
 
+    #: If `True` a component will be lazy loaded (instanciated) on first
+    #: access.  If `False` (default) it will be instanciated immediatly
+    #: till imported.
+    __lazy_loading__ = False
+
     _implementations = ()
     _instances = ()
 
@@ -61,6 +67,14 @@ class Component(object):
     @classmethod
     def get_components(cls):
         """Return a list of all component instances for this class."""
+        def _init():
+            for impl in cls._instances:
+                yield impl()
+        # setup lazy loading components and disable loading after that process
+        # so that we don't load them twice
+        if cls.__lazy_loading__:
+            cls._instances = tuple(_init())
+            cls.__lazy_loading__ = False
         return cls._instances
 
     @classmethod
@@ -105,9 +119,13 @@ def setup_components(accepted_components):
             appender.extend(subimplements)
         comp._implementations = tuple(appender[:])
 
-        for i in comp._implementations:
-            if i not in instance_map:
-                instance_map[i] = i(ctx)
+        for impl in comp._implementations:
+            if impl not in instance_map:
+                if impl.__lazy_loading__:
+                    instance = partial(impl, ctx)
+                else:
+                    instance = impl(ctx)
+                instance_map[impl] = instance
 
         comp._instances = tuple(instance_map[i] for i in comp._implementations)
     return instance_map
@@ -141,6 +159,41 @@ def _bootstrap():
     os.environ['instance_folder'] = conts = realpath(join(dirname(__file__)))
     # the path to the folder where the inyoka package is stored in
     os.environ['package_folder'] = realpath(join(conts, pardir))
+
+    # setup components
+    # TODO: make it configurable
+    setup_components([
+        'inyoka.testing.components.*',
+        'inyoka.core.routing.*',
+        'inyoka.core.auth.*',
+        'inyoka.portal.controllers.*',
+        'inyoka.news.controllers.*',
+        'inyoka.forum.controllers.*',
+        'inyoka.paste.controllers.*',
+        'inyoka.core.middlewares.services.*',
+        'inyoka.core.middlewares.static.*',
+    ])
+
+    # setup model property extenders
+    from inyoka.core.database import (IModelPropertyExtender, DeclarativeMeta,
+                                      ModelPropertyExtenderGoesWild)
+
+    property_extenders = IModelPropertyExtender.get_component_classes()
+    extendable_models = [m for m in DeclarativeMeta._models
+                         if getattr(m, '__extendable__', False)]
+    for model in extendable_models:
+        for extender in property_extenders:
+            if extender.model is not model:
+                continue
+
+            for key, value in extender.properties.iteritems():
+                if not key in model.__dict__:
+                    setattr(model, key, value)
+                else:
+                    raise ModelPropertyExtenderGoesWild(
+                        u'%r tried to overwrite already existing '
+                        u'properties on %r, aborting'
+                            % (extender, model))
 
 
 _bootstrap()

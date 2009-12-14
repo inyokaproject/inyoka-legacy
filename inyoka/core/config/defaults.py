@@ -38,11 +38,20 @@ DEFAULTS = {
     'database.url':                 TextField(default=u'sqlite:///dev.db',
         help_text=lazy_gettext(u'The database URL.  For more information '
             u'about database settings consult the Inyoka docs.')),
-    'database.debug':           BooleanField(default=False,
+    'database.debug':               BooleanField(default=False,
         help_text=lazy_gettext(u'If enabled the database will collect '
             u'the SQL statements and add them to the bottom of the page '
             u'for easier debugging.  Beside that the sqlalchemy log is '
             u'written to a `db.log` file.')),
+    'database.pool_recycle':        IntegerField(default=-1, min_value=-1,
+        help_text=lazy_gettext(u'If set to non -1, number of seconds between '
+            u'connection recycling. If this timeout is surpassed the '
+            u'connection will be closed and replaced with a newly opened connection.')),
+    'database.pool_timeout':        IntegerField(default=30, min_value=5,
+        help_text=lazy_gettext(u'The number of seconds to wait before giving '
+            u'up on returning a connection.  This will not be used if the used'
+            u' database is one of SQLite, Access or Informix as those don\'t '
+            u'support queued connection pools.')),
 
     # template specific values
     'templates.path':               TextField(default=u'',

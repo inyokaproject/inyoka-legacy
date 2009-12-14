@@ -20,8 +20,8 @@ class ComponentMeta(type):
 
     _registry = {}
 
-    def __new__(mcs, name, bases, dict_):
-        obj = type.__new__(mcs, name, bases, dict_)
+    def __new__(mcs, classname, bases, dict_):
+        obj = type.__new__(mcs, classname, bases, dict_)
         if bases == (object,):
             # `Component` itself
             return obj

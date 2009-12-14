@@ -78,10 +78,11 @@ from contextlib import contextmanager
 import sqlalchemy
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql
-from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.session import Session as SASession
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
 from sqlalchemy.orm.interfaces import AttributeExtension
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
 from inyoka import Component
@@ -104,16 +105,16 @@ def get_engine():
             #                  before we get them
             # echo:            Set the database debug level
             # pool_recycle:    Enable long-living connection pools
-            #TODO: move these values to the configuration
-            options = {'convert_unicode': True,
-                       'echo': config['database.debug'],
-                       'pool_recycle': -1}
-            if info.drivername == 'mysql':
-                info.query.setdefault('charset', 'utf8')
-            elif info.drivername == 'sqlite':
-                # enable longer timeouts for sqlite
+            # pool_timeout:    Timeout before giving up returning on a connection
+            options = {'convert_unicode':   True,
+                       'echo':              config['database.debug'],
+                       'pool_recycle':      config['database.pool_recycle']}
+            # SQLite, Access and Informix uses ThreadLocalQueuePool per default
+            # and as such cannot use a timeout for pooled connections.
+            if not info.drivername in ('sqlite', 'access', 'informix'):
                 options.update({
-                    'connect_args': {'timeout': 30}
+                    'poolclass': QueuePool,
+                    'pool_timeout': config['database.pool_timeout']
                 })
             url = SafeURL(info)
             _engine = create_engine(url, **options)
@@ -146,9 +147,9 @@ def atomic_add(obj, column, delta, expire=False):
     """
     sess = orm.object_session(obj) or session
     obj_mapper = orm.object_mapper(obj)
-    pk = obj_mapper.primary_key_from_instance(obj)
-    assert len(pk) == 1, 'atomic_add not supported for classes with ' \
-                         'more than one primary key'
+    primary_key = obj_mapper.primary_key_from_instance(obj)
+    assert len(primary_keyk) == 1, 'atomic_add not supported for '\
+        'classes with more than one primary key'
 
     val = orm.attributes.get_attribute(obj, column)
     if expire:
@@ -157,18 +158,18 @@ def atomic_add(obj, column, delta, expire=False):
         orm.attributes.set_committed_value(obj, column, val + delta)
 
     table = obj_mapper.tables[0]
-    stmt = sql.update(table, obj_mapper.primary_key[0] == pk[0], {
+    stmt = sql.update(table, obj_mapper.primary_key[0] == primary_key[0], {
         column:     table.c[column] + delta
     })
     sess.execute(stmt)
 
 
-def select_blocks(query, pk, block_size=1000, start_with=0, max_fails=10):
+def select_blocks(query, column, block_size=1000, start_with=0, max_fails=10):
     """
     Execute a query blockwise to prevent lack of memory.
 
     :param query: The SQLAlchemy query object.
-    :param pk: The SQLAlchemy column object to use for selecting.
+    :param column: The SQLAlchemy column object to use for selecting.
     :param block_size: The range of objects to fetch.
     :param start_with: The object number to start with.
     :param max_fails: Sets the number of failours (empty query sets).
@@ -177,7 +178,7 @@ def select_blocks(query, pk, block_size=1000, start_with=0, max_fails=10):
     range = (start_with, start_with + block_size)
     failed = 0
     while failed < max_fails:
-        result = query.where(pk.between(*range)).execute()
+        result = query.where(column.between(*range)).execute()
         i = 0
         for i, row in enumerate(result):
             yield row
@@ -242,10 +243,10 @@ def mapper(model, table, **options):
     return orm.mapper(model, table, **options)
 
 
-class InyokaSession(Session):
-    # Session that binds the engine as late as possible
+class InyokaSession(SASession):
+    """Session that binds the engine as late as possible"""
     def __init__(self):
-        Session.__init__(self, get_engine(), autoflush=True,
+        SASession.__init__(self, get_engine(), autoflush=True,
                          autocommit=False)
 
 
@@ -335,7 +336,7 @@ class DeclarativeMeta(SADeclarativeMeta):
 
     _models = []
 
-    def __init__(cls, classname, bases, dict_):
+    def __init__(mcs, classname, bases, dict_):
         SADeclarativeMeta.__init__(cls, classname, bases, dict_)
         DeclarativeMeta._models.append(cls)
 

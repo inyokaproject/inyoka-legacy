@@ -73,9 +73,9 @@ def url_filter(model_instance, action=None):
     """
     Call `get_absolute_url` on a model instance.
     """
-    # filters don't take **kwargs?
-    kwargs = {}
-    if action is not None: kwargs['action'] = action
+    kwargs = {
+        'action': action
+    } if action else {}
     return model_instance.get_absolute_url(**kwargs)
 
 

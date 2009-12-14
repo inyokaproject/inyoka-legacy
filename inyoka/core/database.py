@@ -337,8 +337,8 @@ class DeclarativeMeta(SADeclarativeMeta):
     _models = []
 
     def __init__(mcs, classname, bases, dict_):
-        SADeclarativeMeta.__init__(cls, classname, bases, dict_)
-        DeclarativeMeta._models.append(cls)
+        SADeclarativeMeta.__init__(mcs, classname, bases, dict_)
+        DeclarativeMeta._models.append(mcs)
 
 
 class ModelBase(object):

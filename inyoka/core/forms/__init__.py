@@ -52,3 +52,7 @@ class Form(FormBase):
     def _get_session(self):
         request = self._lookup_request_info()
         return request.session if request is not None else {}
+
+    def _autodiscover_data(self):
+        request = self._lookup_request_info()
+        return request.form

@@ -20,7 +20,6 @@ class IMiddleware(Component, UrlMixin):
 
     # The higher the number the earlier the middleware will get called during
     # request, for the response, the result is reversed
-    # TODO: maybe we need different orders for request and response
     # TODO: document sensible priority values
     priority = 0
 
@@ -51,9 +50,21 @@ class IMiddleware(Component, UrlMixin):
         ctx.application.dispatch_wsgi = self
 
     def process_request(self, request):
+        """Process a request.
+
+        If this method returns a response object no further dispatching
+        will be continued and this response object is returned
+        after some valididity checking.
+
+        :param request: The actual request object to process.
+        """
         pass
 
     def process_response(self, request, response):
+        """Process the response object.
+
+        This method must return a valid response object.
+        """
         return response
 
     def __call__(self, environ, start_response):
@@ -61,6 +72,7 @@ class IMiddleware(Component, UrlMixin):
 
     @classmethod
     def iter_middlewares(cls, low_level=False):
+        """Return all middlewares ordered by priority."""
         if not cls._middlewares:
             cls._middlewares = sorted(
                 cls.get_components(),

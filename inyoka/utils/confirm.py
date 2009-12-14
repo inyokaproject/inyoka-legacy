@@ -10,14 +10,9 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-import string
-from datetime import date, datetime, timedelta
-from random import sample
 from inyoka.core.database import db
-from inyoka.core.models import Confirm
-from inyoka.core.routing import href
+from inyoka.core.models import Confirm, CONFIRM_ACTIONS
 
-CONFIRM_ACTIONS = {}
 _key_re = re.compile('^[a-z_][a-z_0-9]*$', re.I)
 
 

@@ -44,6 +44,7 @@ __all__ = __all__ + tuple(nose.tools.__all__)
 dct = globals()
 for obj in nose.tools.__all__:
     dct[obj] = getattr(nose.tools, obj)
+del dct
 
 # an overall trace tracker from minimock
 tracker = TraceTracker()
@@ -54,6 +55,7 @@ class TestResponse(Response, ContentAccessors):
 
 
 class ViewTestCase(unittest.TestSuite):
+    """A test case suitable to test view methods properly"""
 
     controller = None
 
@@ -65,11 +67,10 @@ class ViewTestCase(unittest.TestSuite):
         Note that this method is called right *before*
         fixtures and such stuff are set up.
         """
-        #TODO: are fixtures required here or in the InyokaPlugin?
         self._client = Client(current_application, response_wrapper=TestResponse)
         self.base_domain = config['base_domain_name']
         name = self.controller.name
-        subdomain, submount = config['routing.urls.' + name].split(':', 1)
+        subdomain = config['routing.urls.' + name].split(':', 1)[0]
         self.base_url = make_full_domain(subdomain)
 
     def _post_teardown(self):
@@ -82,10 +83,14 @@ class ViewTestCase(unittest.TestSuite):
         return
 
     def get_context(self, path, method='GET', **kwargs):
-        ret = self.open(path, method=method, **kwargs)
+        """Return the template context from a view wrapped
+        by :func:`templated`."""
+        self.open(path, method=method, **kwargs)
         return TEMPLATE_CONTEXT
 
     def open(self, path, *args, **kw):
+        """Open a connection to `path` and return
+        the proper response object"""
         app = local.application
         if 'follow_redirects' not in kw:
             kw['follow_redirects'] = True
@@ -114,6 +119,12 @@ class ViewTestCase(unittest.TestSuite):
         return path
 
     def submit_form(self, path, data, follow_redirects=False):
+        """Submit a form to `path` with `data`
+
+        :param path: The path to query.
+        :param data: A dictionary containing the form data.
+        :param follow_redirects: Follow redirects.
+        """
         response = self.get(path)
         try:
             form = response.lxml.xpath('//form')[0]

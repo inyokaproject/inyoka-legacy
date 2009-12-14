@@ -12,10 +12,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os
 import time
 import random
-from operator import attrgetter
 from datetime import datetime
 from os.path import join
 from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
@@ -51,6 +49,10 @@ class DatabaseCache(BaseCache):
         self.maxcull = maxcull
 
     def get(self, key):
+        """Return the cached value or `None`.
+
+        :param key: The key to retrieve.
+        """
         item = db.session.query(Cache).filter_by(key=key).first()
         if item is not None:
             # remove if item exired
@@ -60,16 +62,29 @@ class DatabaseCache(BaseCache):
             return item.value
 
     def delete(self, key):
+        """Delete all cached values for `key`"""
         db.session.query(Cache).filter_by(key=key).delete()
 
     def get_many(self, keys):
+        """Return a list of values cached with one key of `keys`.
+
+        :param keys: A list of keys to retrieve.
+        """
         return db.session.query(Cache.value).fitler(Cache.key.in_(keys)).all()
 
     def get_dict(self, *keys):
+        """Return a key/value dictionary for all `keys`"""
         result = db.session.query(Cache).filter(Cache.key.in_(keys)).all()
         return dict((x.key, x.value) for x in result)
 
-    def set(self, key, value, timeout=None, override=True):
+    def set(self, key, value, timeout=None, overwrite=True):
+        """Set a cached value.
+
+        :param key: The key to identify the cached value.
+        :param value: The value to cache.
+        :param timeout: The timeout in seconds till the key decays.
+        :param overwrite: Overwrite existing values or not.
+        """
         if timeout is None:
             timeout = self.default_timeout
 
@@ -94,13 +109,19 @@ class DatabaseCache(BaseCache):
             db.session.commit()
 
     def add(self, key, value, timeout=None):
-        self.set(key, value, timeout, override=False)
+        """Same as :method:`set` but does not overwrite values per default."""
+        self.set(key, value, timeout, overwrite=False)
 
     def set_many(self, mapping, timeout=None):
+        """Set many values for caching.
+
+        :param mapping: A dictionary containing the key/value pairs.
+        """
         for key, value in mapping.iteritems():
             self.set(key, value, timeout)
 
     def delete_many(self, *keys):
+        """Delete many cached values"""
         db.session.query(Cache).filter(Cache.key.in_(keys)).delete()
 
     def _cull(self):
@@ -130,7 +151,7 @@ class DatabaseCache(BaseCache):
 
 
 #: the cache system factories.
-systems = {
+CACHE_SYSTEMS = {
     'null':         lambda: NullCache(),
     'simple':       lambda: SimpleCache(config['caching.timeout']),
     'memcached':    lambda: MemcachedCache(
@@ -149,7 +170,7 @@ def set_cache():
     the application setup.  No need to call that afterwards.
     """
     global cache
-    cache = systems[config['caching.system']]()
+    cache = CACHE_SYSTEMS[config['caching.system']]()
     return cache
 
 # enable the caching system

@@ -227,7 +227,7 @@ class AuthSystemBase(object):
         # only validate if the before_login handler did not already cause
         # an error.  In that case there is not much win in validating
         # twice, it would clear the error added.
-        if form.is_valid and request.method == 'POST' and form.validate(request.form):
+        if request.method == 'POST' and form.validate(request.form):
             try:
                 rv = self.perform_login(request, **form.data)
             except LoginUnsucessful, e:

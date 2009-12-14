@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import division
-import re
 from xml.sax.saxutils import quoteattr
 from werkzeug import escape as wzescape
 

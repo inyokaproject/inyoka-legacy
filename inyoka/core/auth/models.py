@@ -10,8 +10,7 @@
 """
 import random
 
-from inyoka import Component
-from inyoka.core.database import db, IModelPropertyExtender
+from inyoka.core.database import db
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 

@@ -18,6 +18,8 @@ from inyoka.core.database import db
 from inyoka.core.routing import href
 
 
+CONFIRM_ACTIONS = {}
+
 
 class ConfirmMapperExtension(MapperExtension):
     def before_insert(self, mapper, connection, instance):
@@ -68,8 +70,6 @@ class Confirm(db.Model):
     expires = db.Column(db.Date)
 
     def __init__(self, action, data, expires):
-        from inyoka.utils.confirm import CONFIRM_ACTIONS #TODO circular import
-
         if action not in CONFIRM_ACTIONS:
             raise KeyError('Action %r is not registered.' % action)
 

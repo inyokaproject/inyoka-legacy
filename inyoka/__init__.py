@@ -134,7 +134,7 @@ def _bootstrap():
     """Get the inyoka version and store it."""
     global INYOKA_REVISION
     import os
-    from os.path import realpath, dirname, join, pardir, isdir
+    from os.path import realpath, dirname, join, pardir
     from subprocess import Popen, PIPE
 
     # get inyoka revision
@@ -148,9 +148,9 @@ def _bootstrap():
     hg_node = None
     if hg.wait() == 0:
         for line in rev.splitlines():
-            p = line.split(':', 1)
-            if len(p) == 2 and p[0].lower().strip() == 'changeset':
-                hg_node = p[1].strip()
+            bucket = line.split(':', 1)
+            if len(bucket) == 2 and bucket[0].lower().strip() == 'changeset':
+                hg_node = bucket[1].strip()
                 break
     INYOKA_REVISION = hg_node
 

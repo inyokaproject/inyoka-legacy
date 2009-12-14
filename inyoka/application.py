@@ -8,23 +8,18 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os
-from os.path import join
 from time import time
 
 from werkzeug import ClosingIterator, redirect
 from sqlalchemy.exc import SQLAlchemyError
 
-from inyoka import setup_components
 from inyoka.core.api import db, config, logger, IController, Request, \
     Response, IMiddleware
 from inyoka.core.context import local, local_manager, current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
-from inyoka.core.config import Configuration, config
-from inyoka.core.database import DeclarativeMeta, IModelPropertyExtender, \
-    ModelPropertyExtenderGoesWild
+from inyoka.core.config import config
 
 
 class InyokaApplication(object):

@@ -10,6 +10,7 @@ import re
 import types
 import sre_constants
 from datetime import datetime
+from functools import update_wrapper
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
 from werkzeug import url_quote
@@ -37,7 +38,9 @@ _function_types = (types.FunctionType, types.MethodType)
 class UrlMixin(object):
     """Mixin to make components able to implement own url rules."""
 
-    # The name of the component. Used for `href`.
+    #: The name of the component. Used for `href`.
+    #: If `None` the url rules will be mounted to the root
+    #: of the domain.
     name = None
 
     # The url objects, without Subdomain or EndpointPrefix,
@@ -72,15 +75,14 @@ class UrlMixin(object):
                 if endpoint is not None and endpoint not in url_map:
                     url_map[endpoint] = method
 
-            #TODO: handle `None` component names properly
             name = comp.name
             if name:
-                subdomain, submount = config['routing.urls.' + name].split(':', 1)
+                domain, mount = config['routing.urls.' + name].split(':', 1)
                 if comp.ignore_prefix:
                     rules = comp.url_rules
                 else:
                     rules = [EndpointPrefix('%s/' % name, comp.url_rules)]
-                val = Subdomain(subdomain, [Submount(submount, rules)])
+                val = Subdomain(domain, [Submount(mount, rules)])
                 urls.append(val)
             else:
                 val = comp.url_rules
@@ -143,7 +145,14 @@ class IController(Component, UrlMixin):
         return cls._endpoint_map[parts[0]][parts[1]]
 
     def _wrapped(attr):
+        """Return a method usable as a multifunctional decorator
+        to make methods available under some alias.
+
+        :param attr: A string determining what attribute will be set
+                     to the alias value.
+        """
         def _wrapper(func=None, alias=None):
+            """Decorator to register `alias` to `func`."""
             def _proxy(func):
                 if alias is None:
                     setattr(func, attr, func.__name__)
@@ -153,13 +162,12 @@ class IController(Component, UrlMixin):
 
             if isinstance(func, _function_types):
                 # @register_view
-                return _proxy(func)
+                return update_wrapper(_proxy, func)(func)
             elif func is None:
                 # @register_view()
-                return _proxy
+                return update_wrapper(_proxy, func)
             elif isinstance(func, basestring):
                 # @register_view('alias')
-                alias = func
                 return _proxy
         return _wrapper
 
@@ -190,11 +198,11 @@ def href(endpoint, **args):
     from inyoka.core.database import db
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
-    rv = current_application.url_adapter.build(endpoint, args,
+    ret = current_application.url_adapter.build(endpoint, args,
         force_external=_external)
     if _anchor is not None:
-        rv += '#' + url_quote(_anchor)
-    return rv
+        ret += '#' + url_quote(_anchor)
+    return ret
 
 
 class DateConverter(BaseConverter):

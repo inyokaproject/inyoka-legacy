@@ -11,6 +11,13 @@
     {%- endfor %}
   </head>
   <body>
+
+    {%- for message in REQUEST.flash_messages %}
+    <div class="flash_message{% if message.success == true %} success{%elif message.success == false %} fail{% endif %}">
+      {{ message.text }}
+    </div>
+    {%- endfor %}
+
     <div id="head">
       <h1>Inyoka</h1>
       <div id="navi">

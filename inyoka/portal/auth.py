@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import db
+from inyoka.core.api import db, _
 from inyoka.core.http import redirect_to
 from inyoka.core.auth import AuthSystemBase, LoginUnsucessful
 from inyoka.core.auth.models import User
@@ -19,14 +19,15 @@ class EasyAuth(AuthSystemBase):
         try:
             user = User.query.get(username)
         except db.NoResultFound:
-            raise LoginUnsucessful('This username doesn\'t exist.')
+            raise LoginUnsucessful(_('This username doesn\'t exist.'))
         if user.check_password(password):
             self.set_user(request, user)
             if permanent:
                 request.session['_permanent_session'] = True
+            request.flash(_(u'You are now logged in.'))
             return redirect_to('portal/index')
         else:
-            raise LoginUnsucessful('The password is not correct.')
+            raise LoginUnsucessful(_('The password is not correct.'))
 
     def get_user(self, request):
         if request.session.get('user_id'):

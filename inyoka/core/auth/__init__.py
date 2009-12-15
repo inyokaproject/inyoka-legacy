@@ -180,7 +180,6 @@ class AuthSystemBase(object):
 
     def send_activation_mail(self, request, user):
         """Sends an activation mail."""
-        print 'send activation mail called'
 #        if settings.REGISTRATION_REQUIRES_ACTIVATION:
         if True:
             db.session.commit()
@@ -233,10 +232,9 @@ class AuthSystemBase(object):
             except LoginUnsucessful, e:
                 form.add_error(unicode(e))
             else:
-#                session.commit()
                 if rv is not None:
                     return rv
-#                request.flash(_(u'You are now logged in.'))
+                request.flash(_(u'You are now logged in.'))
                 return form.redirect('portal/index')
 
         return self.render_login_template(request, form)
@@ -264,6 +262,7 @@ class AuthSystemBase(object):
         default one calls `set_user(request, None)`.
         """
         self.set_user(request, None)
+        request.flash(_(u'You was successfully logged out'))
 
     def get_user(self, request):
         raise NotImplementedError()
@@ -286,7 +285,6 @@ def activate_user(data):
         u = User.query.get(data['user'])
     except NoResultFound:
 #        flash(_('User not found.'))
-        print 'not found'
         return redirect_to('portal/index')
     u.status = 'normal'
     db.session.commit()

@@ -45,9 +45,10 @@ class IMiddleware(Component, UrlMixin):
         self.application = ctx.application.dispatch_wsgi
         # then initialize the middleware with the global context module
         super(IMiddleware, self).__init__(ctx)
-        # and bind the dispatcher to the middleware.  That way we get a
-        # stacked request -> response pipeline
-        ctx.application.dispatch_wsgi = self
+        if self.low_level:
+            # and bind the dispatcher to the middleware.  That way we get a
+            # stacked request -> response pipeline
+            ctx.application.dispatch_wsgi = self
 
     def process_request(self, request):
         """Process a request.
@@ -71,13 +72,11 @@ class IMiddleware(Component, UrlMixin):
         return self.application(environ, start_response)
 
     @classmethod
-    def iter_middlewares(cls, low_level=False):
+    def iter_middlewares(cls):
         """Return all middlewares ordered by priority."""
         if not cls._middlewares:
             cls._middlewares = sorted(
                 cls.get_components(),
                 key=lambda x: -x.priority)
         ret = cls._middlewares
-        if low_level:
-            ret = filter(lambda x: x.low_level, ret)
         return ret

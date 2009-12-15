@@ -30,6 +30,7 @@ class StaticMiddlewareBase(object):
     implementations are shown below.
     """
     low_level = True
+
     priority = 99
 
     exports = None

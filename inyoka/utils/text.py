@@ -11,12 +11,13 @@
 import re
 from datetime import datetime
 from itertools import starmap
-from inyoka.i18n import rebase_to_timezone
+from inyoka.l10n import rebase_to_timezone
 
 
 _punctuation_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 _string_inc_re = re.compile(r'(\d+)$')
 _placeholder_re = re.compile(r'%(\w+)%')
+_default_slug_format = u'%year%/%month%/%day%/%slug%'
 
 
 def gen_slug(text, delim=u'-', ascii=False):
@@ -47,18 +48,18 @@ def gen_unicode_slug(text, delim=u'-'):
 
 
 def gen_timestamped_slug(slug, content_type, pub_date=None, prefix='',
-                         fixed=False, url_format=None):
-    """Generate a timestamped slug, suitable for use as final URL path."""
+                         fixed=False, url_format=_default_slug_format):
+    """Generate a timestamped slug, suitable for use as final URL path.
+
+    Note: `pub_date` will never be touched, neither localized nor converted
+          to any timezone.
+    """
     if pub_date is None:
         pub_date = datetime.utcnow()
-    pub_date = rebase_to_timezone(pub_date)
 
     if prefix:
         prefix = prefix.strip(u'/')
         prefix += u'/'
-
-    if url_format is None:
-        url_format = u'%year%/%month%/%day%/%slug%'
 
     if content_type == 'entry':
         def handle_match(match):

@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
-import pytz
 from os.path import realpath, dirname
 from gettext import NullTranslations
 from babel import Locale, UnknownLocaleError
@@ -21,9 +20,9 @@ from inyoka.core.context import config
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 
-UTC = pytz.timezone('UTC')
 
 _translations = None
+
 
 def load_core_translations(locale):
     """Return the matching locale catalog for `locale`"""
@@ -34,10 +33,26 @@ def load_core_translations(locale):
 
 
 def get_translations():
+    """Return the translations required for translating.
+
+    Note that this function only returns cached values but neither
+    regenerates already cached values.  For that purpose use
+    :func:`load_core_translations`
+    """
     global _translations
     if _translations is None:
         _translations = load_core_translations(config['language'])
     return _translations
+
+
+def get_locale(locale=None):
+    """Return a :cls:`Locale` instance for `locale` or the current
+    configured locale if none is given.
+    """
+    if locale is None:
+        locale = config['language']
+    locale = Locale.parse(locale)
+    return locale
 
 
 class Translations(TranslationsBase):
@@ -46,7 +61,7 @@ class Translations(TranslationsBase):
     def load(cls, path, locale=None, domain='messages',
              gettext_lookup=False):
         """Load the translations from the given path."""
-        locale = Locale.parse(locale)
+        locale = get_locale(locale)
         catalog = find_catalog(path, domain, locale, gettext_lookup)
         if catalog:
             return Translations(fileobj=open(catalog))
@@ -61,7 +76,7 @@ def find_catalog(path, domain, locale, gettext_lookup=False):
     """Finds the catalog for the given locale on the path.  Return sthe
     filename of the .mo file if found, otherwise `None` is returned.
     """
-    args = [path, str(Locale.parse(locale)), domain + '.mo']
+    args = [path, str(get_locale(locale)), domain + '.mo']
     if gettext_lookup:
         args.insert(-1, 'LC_MESSAGES')
     catalog = os.path.join(*args)
@@ -95,15 +110,6 @@ def ngettext(singular, plural, n):
     return unicode(get_translations().ungettext((singular, plural, n)))
 
 
-def get_timezone(name=None):
-    """Return the timezone for the given identifier or the timezone
-    of the application based on the configuration.
-    """
-    if name is None:
-        return UTC
-    return pytz.timezone(name)
-
-
 def list_languages():
     """Return a list of all languages."""
     languages = [('en', Locale('en').display_name)]
@@ -126,14 +132,5 @@ def list_languages():
 def has_language(language):
     """Check if a language exists."""
     return language in dict(list_languages())
-
-
-def rebase_to_timezone(datetime):
-    """Convert a datetime object to the users timezone."""
-    if datetime.tzinfo is None:
-        datetime = datetime.replace(tzinfo=UTC)
-    tzinfo = get_timezone()
-    return tzinfo.normalize(datetime.astimezone(tzinfo))
-
 
 _ = gettext

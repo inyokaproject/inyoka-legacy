@@ -33,6 +33,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Cookie name')),
     'language':                     TextField(default=u'en',
         help_text=lazy_gettext(u'The current language locale')),
+    'default_timezone':             TextField(default=u'Europe/Berlin',
+        help_text=lazy_gettext(u'The default timezone for all users.')),
 
     # database specific values
     'database.url':                 TextField(default=u'sqlite:///dev.db',

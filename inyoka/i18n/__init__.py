@@ -13,7 +13,6 @@ from os.path import realpath, dirname
 from gettext import NullTranslations
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
-from babel.dates import format_date, format_datetime, format_time
 from inyoka.core.context import config
 
 

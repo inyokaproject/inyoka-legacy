@@ -168,6 +168,7 @@ class IController(Component, UrlMixin):
                 return update_wrapper(_proxy, func)
             elif isinstance(func, basestring):
                 # @register_view('alias')
+                alias = func
                 return _proxy
         return _wrapper
 

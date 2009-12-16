@@ -83,6 +83,7 @@ def get_dummy(func):
     def _inner(*args, **kwargs):
         if not ('locale' in kwargs and not kwargs['locale'] is dates.LC_TIME):
             kwargs['locale'] = get_locale()
+        kwargs['tzinfo'] = get_timezone(kwargs.get('tzinfo', None))
         return func(*args, **kwargs)
     return _inner
 

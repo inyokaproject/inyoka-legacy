@@ -17,10 +17,7 @@ help:
 docs/: docs
 # bash_completion completes to docs/
 
-base:
-	@PYTHONPATH=`pwd`:${PYTHONPATH}
-
-docs: base
+docs:
 	@(cd docs; make html)
 	@(echo; echo '[32mDocs have been built in [1mdocs/_build/html/[0m[32m[0m')
 
@@ -37,8 +34,8 @@ test-venv:
 test:
 	@extra/buildbottest.sh `pwd`
 
-runtests: base
-	python extra/runtests.py
+runtests:
+	@python extra/runtests.py
 
 reindent:
 	@extra/reindent.py -r -B .

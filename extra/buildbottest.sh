@@ -12,4 +12,4 @@ fi
 if [ -f .noseids ]; then
 	rm .noseids
 fi
-make runtests
+fab runtests

@@ -231,6 +231,11 @@ class InyokaPlugin(cover.Coverage):
         else:
             return False
 
+    def wantFile(self, file):
+        if 'fabfile.py' in file:
+            return False
+        return cover.Coverage.wantFile(self, file)
+
     def report(self, stream):
         """
         Output code coverage report.

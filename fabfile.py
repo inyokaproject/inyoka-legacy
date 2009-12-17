@@ -116,7 +116,7 @@ def build_docs(clean='no', browse='no'):
 def build_test_venv(pyver=None):
     if pyver is None:
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
-    local('python extra/make-bootstrap.py > ../bootstrap.py %s' % pyver,
+    local('python extra/make-bootstrap.py %s > ../bootstrap.py' % pyver,
           capture=False)
     local('cd .. && python bootstrap.py inyoka-testsuite', capture=False)
 

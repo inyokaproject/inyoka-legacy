@@ -5,7 +5,6 @@
 
 .PHONY: help docs docs/ server shell dbshell test-venv test runtests reindent clean-files
 
-PYTHONPATH := `pwd`:${PYTHONPATH}
 
 help:
 	@echo "Commands understood:"
@@ -18,7 +17,10 @@ help:
 docs/: docs
 # bash_completion completes to docs/
 
-docs:
+base:
+	@PYTHONPATH=`pwd`:${PYTHONPATH}
+
+docs: base
 	@(cd docs; make html)
 	@(echo; echo '[32mDocs have been built in [1mdocs/_build/html/[0m[32m[0m')
 
@@ -35,7 +37,7 @@ test-venv:
 test:
 	@extra/buildbottest.sh `pwd`
 
-runtests:
+runtests: base
 	python extra/runtests.py
 
 reindent:

@@ -12,6 +12,8 @@ Please note that this file is work in progress.  Adapt it whenever you think
 some urgent things needs to be written down so that other developers can use
 them.  But try to keep it simple so that it's easy and fast to read.
 
+If you want to know how to setup or use Inyoka see README for more details.
+
 
 Style Guide
 ~~~~~~~~~~~
@@ -20,9 +22,10 @@ All filenames have to be lowercase and ASCII only.
 
 Python
 ------
-Inyoka follows the PEP 8 for Python code.  The rule you should follow follow
+
+Inyoka follows the PEP 8 for Python code.  The rule you should follow
 is “adapt the code style used in the file”.  And that also means, put
-whitespace where the original author put it and so on
+whitespace where the original author put it and so on.
 
 Indent with 4 *spaces* only.
 
@@ -34,25 +37,26 @@ Ordering of import statements is as defined in PEP 8, additionally:
 
 No relative imports.
 
-No imports from `inyoka.api` in core and utils (to avoid recursive imports)
+No imports from `inyoka.core.api` in core and utils (to avoid recursive imports)
 (except middlewares)
 
 JavaScript
 ----------
+
 JavaScript code is intended with 2 spaces and *only two spaces*.
 
 HTML
 ----
-HTML code is also indentedwith 2 spaces.
+
+HTML code is also indented with 2 spaces.
 
 **Every page has to be valid `HTML 5 <http://www.whatwg.org/html5>`**
 
 CSS
 ---
 
-Instead of using plain CSS 2.1 we're using `CleverCSS <http://sandbox.pocoo.org/clevercss/>`
-to format our pages.  That gives us the ability to create a painless
-color-schema for better designs and easier designer work.
+Indent your CSS 2.1 valid code with 4 spaces and adapt common formatting
+styles.
 
 URLs
 ~~~~
@@ -64,7 +68,7 @@ Examples:
 
     /topic/new
     /topic/what-the-hack/edit
-    /topic/what-the-hack/reply?pid=12345
+    /topic/what-the-hack/reply
 
     Ajax calls:
 
@@ -84,7 +88,7 @@ without JavaScript.
 Templates
 ~~~~~~~~~
 
-Templates must not contain any CSS information besides classes.
+Templates may not contain any CSS information besides classes.
 Use classes as appropriate, and use as many of them as you like.
 Keep them easy to read.
 
@@ -96,8 +100,8 @@ Unit Tests
 ~~~~~~~~~~
 
 Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/0.11.1/>` for all
-tests.  If you don't use functions or doctests you must inherit either 
-:class:`inyoka.core.test.TestCase` for common unittests or 
+tests.  If you don't use functions or doctests you must inherit either
+:class:`inyoka.core.test.TestCase` for common unittests or
 :class:`inyoka.core.test.ViewTestCase` to test view functions.  See the docs
 of :mod:`inyoka.core.test` for more details.
 

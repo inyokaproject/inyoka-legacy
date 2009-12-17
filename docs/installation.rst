@@ -18,9 +18,9 @@ For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
     aptitude install python-dev python-setuptools python-virtualenv mercurial
 
 Now we can install Inyoka. But first we need to check out inyoka from the
-mercurial repository. To do that we create a new folder ``inyoka-dev`` in our
-projects directory. There we initialize the virtual environment and check out
-Inyoka (main branch)::
+mercurial repository. To do that we create a new folder ``inyoka-dev`` in your
+projects directory and change into it. There we initialize the virtual
+environment and check out Inyoka (main branch)::
 
     hg clone http://bitbucket.org/inyoka/inyoka-main/ inyoka
 
@@ -53,7 +53,7 @@ for you own purposes.
 Database and other things
 =========================
 
-We are now ready to enter the virtual environment (assumed we are located in
+We are now ready to enter the virtual environment (assumed you are located in
 ``inyoka-dev/inyoka``)::
 
     . ../bin/activate

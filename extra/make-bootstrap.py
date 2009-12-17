@@ -10,7 +10,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
-import virtualenv
+from optparse import OptionParser
+from virtualenv import create_bootstrap_script
 
 EXTRA_TEXT = """
 import os
@@ -44,9 +45,12 @@ def easy_install(package, home_dir, optional_args=None):
 """
 
 
-def main():
-    print virtualenv.create_bootstrap_script(EXTRA_TEXT)
+cmdlineparser = OptionParser()
+cmdlineparser.add_option('-p', '--python', dest='python',
+                         default='',
+                         help='python version to use (like 2.5)')
 
 
 if __name__ == '__main__':
-    main()
+    (options, args) = cmdlineparser.parse_args()
+    print create_bootstrap_script(EXTRA_TEXT,python_version=options.python)

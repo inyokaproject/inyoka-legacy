@@ -80,7 +80,7 @@ class Entry(db.Model):
     def __repr__(self):
         if self.title:
             s = repr(self.title)
-        elif:
+        else:
             s = '#%d' % self.id or 'NaN'
         u = self.author_id and self.author.username
         return '<Entry %s by %s>' % (s, u)

@@ -23,7 +23,7 @@ class PasteController(IController):
         Rule('/', endpoint='index'),
         Rule('/paste/<int:id>/', endpoint='view'),
         Rule('/raw/<int:id>/', endpoint='raw'),
-        Rule('/browse/', endpoint='browse'),
+        Rule('/browse/', defaults={'page': 1}, endpoint='browse'),
         Rule('/browse/<int:page>/', endpoint='browse'),
     ]
 
@@ -67,7 +67,7 @@ class PasteController(IController):
 
     @view('browse')
     @templated('paste/browse.html')
-    def browse_pastes(self, request, page=None):
+    def browse_pastes(self, request, page):
         query = Entry.query
         pagination = URLPagination(query, page)
         return {

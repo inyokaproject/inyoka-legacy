@@ -28,7 +28,7 @@ class Pagination(object):
     :param per_page: Number of entries displayed on one page.
     """
 
-    def __init__(self, query, page, link=None, args=None, per_page=15):
+    def __init__(self, query, page=1, link=None, args=None, per_page=15):
         self.base_query = query
         self.page = page
         self.link = link
@@ -42,10 +42,6 @@ class Pagination(object):
 
         self.max_pages = (max(0, self.total - 1) // self.per_page) + 1
 
-        if self.page == 1:
-            raise NotFound()
-        if self.page is None:
-            self.page = 1
         if self.page > self.max_pages or self.page < 1:
             raise NotFound()
 

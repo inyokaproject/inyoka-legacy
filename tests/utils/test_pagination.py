@@ -68,7 +68,6 @@ def test_simple_pagination():
         ('next', '/entries/2/'),
     ])
     assert_raises(NotFound, URLPagination, query, 7, '/entries/', per_page=15)
-    assert_raises(NotFound, URLPagination, query, 1, '/entries/', per_page=15)
     assert_raises(NotFound, URLPagination, query, -1, '/entries/', per_page=15)
 
     for group, qlen in enumerate(GROUP_COUNTS[:5]):

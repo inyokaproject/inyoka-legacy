@@ -257,9 +257,17 @@ session = orm.scoped_session(InyokaSession)
 class Query(orm.Query):
     """Default query class."""
 
-    def dates(self, key, kind):
+    def get(self, pk):
+        """Modify the default get to raise ``inyoka.core.database.db.NoResultFound``
+        instead of returning ``None``.
         """
-        Return all dates for which an entry exists in `column`.
+        result = super(Query, self).get(pk)
+        if not result:
+            raise orm.exc.NoResultFound()
+        return result
+
+    def dates(self, key, kind):
+        """Return all dates for which an entry exists in `column`.
 
         For example, dates(Article.pub_date, 'month') returns all months where an
         Article was published (a tuple (year, month) for each month).

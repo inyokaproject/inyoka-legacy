@@ -8,7 +8,6 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug.exceptions import NotFound
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, db, redirect_to
 from inyoka.utils.pagination import URLPagination
@@ -23,7 +22,7 @@ class PasteController(IController):
         Rule('/', endpoint='index'),
         Rule('/paste/<int:id>/', endpoint='view'),
         Rule('/raw/<int:id>/', endpoint='raw'),
-        Rule('/browse/', endpoint='browse'),
+        Rule('/browse/', defaults={'page': 1}, endpoint='browse'),
         Rule('/browse/<int:page>/', endpoint='browse'),
     ]
 
@@ -52,8 +51,6 @@ class PasteController(IController):
     @templated('paste/view.html')
     def view_paste(self, request, id):
         e = Entry.query.get(id)
-        if e is None:
-            raise NotFound()
         return {
             'paste': e,
         }
@@ -61,13 +58,11 @@ class PasteController(IController):
     @view('raw')
     def raw_paste(self, request, id):
         e = Entry.query.get(id)
-        if e is None:
-            raise NotFound()
         return Response(e.code, mimetype='text/plain')
 
     @view('browse')
     @templated('paste/browse.html')
-    def browse_pastes(self, request, page=None):
+    def browse_pastes(self, request, page):
         query = Entry.query
         pagination = URLPagination(query, page)
         return {

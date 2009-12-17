@@ -81,6 +81,6 @@ class Entry(db.Model):
         if self.title:
             s = repr(self.title)
         else:
-            s = '#%d' % self.id
-        u = self.author_id and self.author.username
+            s = '#%s' % self.id if self.id else '[no id]'
+        u = self.author.username
         return '<Entry %s by %s>' % (s, u)

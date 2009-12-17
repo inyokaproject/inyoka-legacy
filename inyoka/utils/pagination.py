@@ -18,9 +18,7 @@ from inyoka.i18n import _
 class Pagination(object):
     """
     :param query: A SQLAlchemy query object.
-    :param page: The page number. For the first page, this must be `None`;
-                 supplying 1 raises a `NotFound` exception. This is to ensure
-                 that there are is no URL ending with '/1/'.
+    :param page: The page number.
     :param link: The base link for the pagination. If it is not supplied,
                  relative links are used instead.
     :param args: URL parameters, that, if given, are included in the generated
@@ -28,9 +26,9 @@ class Pagination(object):
     :param per_page: Number of entries displayed on one page.
     """
 
-    def __init__(self, query, page, link=None, args=None, per_page=15):
+    def __init__(self, query, page=None, link=None, args=None, per_page=15):
         self.base_query = query
-        self.page = page
+        self.page = page or 1
         self.link = link
         self.args = args
         if args is None:
@@ -42,10 +40,6 @@ class Pagination(object):
 
         self.max_pages = (max(0, self.total - 1) // self.per_page) + 1
 
-        if self.page == 1:
-            raise NotFound()
-        if self.page is None:
-            self.page = 1
         if self.page > self.max_pages or self.page < 1:
             raise NotFound()
 

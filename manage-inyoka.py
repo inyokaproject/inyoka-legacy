@@ -43,7 +43,7 @@ def make_action(app_factory, hostname='localhost', port=5000,
                 threaded=False, processes=1):
     from inyoka.core.api import config
     parts = config['base_domain_name'].split(':')
-    port = int(parts[1]) if len(parts) == 2 else 80
+    port = int(parts[1]) if len(parts) == 2 else port
     def action(hostname=('h', hostname), port=('p', port),
                threaded=threaded, processes=processes):
         """Start a new development server."""

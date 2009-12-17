@@ -97,6 +97,7 @@ def setup_components(accepted_components):
     components won't return any implementations.
 
     :param accepted_components: Modules to import to setupt the components.
+                                Can be an empty list to setup only known components.
     :return: An instance map containing all registered and activated components
     :rtype: dict
     """

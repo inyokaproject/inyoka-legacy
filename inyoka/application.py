@@ -11,6 +11,7 @@
 from time import time
 
 from werkzeug import ClosingIterator, redirect
+from werkzeug.exceptions import NotFound
 from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka.core.api import db, config, logger, IController, Request, \
@@ -75,6 +76,8 @@ class InyokaApplication(object):
             response = IController.get_view(rule.endpoint)(request, **args)
         except HTTPException, err:
             response = err.get_response(request)
+        except db.NoResultFound:
+            response = NotFound().get_response(request)
         except SQLAlchemyError, err:
             db.session.rollback()
             logger.error(err)

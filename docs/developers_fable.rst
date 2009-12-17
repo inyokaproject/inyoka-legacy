@@ -12,7 +12,7 @@ Please note that this file is work in progress.  Adapt it whenever you think
 some urgent things needs to be written down so that other developers can use
 them.  But try to keep it simple so that it's easy and fast to read.
 
-If you want to know how to setup or use Inyoka see README for more details.
+If you want to know how to setup or use Inyoka see :doc:`installation` for more details.
 
 
 Style Guide
@@ -50,7 +50,7 @@ HTML
 
 HTML code is also indented with 2 spaces.
 
-**Every page has to be valid `HTML 5 <http://www.whatwg.org/html5>`**
+**Every** page has to be valid `HTML 5 <http://www.whatwg.org/html5>`_
 
 CSS
 ---
@@ -99,11 +99,11 @@ classes for the same widget (tags, users, badges etc.)
 Unit Tests
 ~~~~~~~~~~
 
-Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/0.11.1/>` for all
+Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/0.11.1/>`_ for all
 tests.  If you don't use functions or doctests you must inherit either
-:class:`inyoka.core.test.TestCase` for common unittests or
-:class:`inyoka.core.test.ViewTestCase` to test view functions.  See the docs
-of :mod:`inyoka.core.test` for more details.
+:class:`~inyoka.core.test.TestCase` for common unittests or
+:class:`~inyoka.core.test.ViewTestCase` to test view functions.  See the 
+:doc:`unittests` documentation for more details
 
 Well, try to write the tests first, but we don't thrash you if you don't.
 TDD is cool but not easy to use everywhere.  So our development cycle depends
@@ -113,4 +113,4 @@ on the hackers not on some kind of protocol nobody likes to use :)
 Documentation
 ~~~~~~~~~~~~~
 
-This part is not written yet…
+See :doc:`documentation` for details about how to document your work.

@@ -19,7 +19,7 @@ docs/: docs
 
 docs:
 	@(cd docs; make html)
-	@(echo; echo '[32mDocs have been built in [1mdocs/_build/html/[0m[32m.[0m')
+	@(echo; echo '[32mDocs have been built in [1mdocs/_build/html/[0m[32m[0m')
 
 server:
 	@python manage-inyoka.py runserver

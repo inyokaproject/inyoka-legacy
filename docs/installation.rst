@@ -20,9 +20,13 @@ For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 Now we can install Inyoka. But first we need to check out inyoka from the
 mercurial repository. To do that we create a new folder ``inyoka-dev`` in our
 projects directory. There we initialize the virtual environment and check out
-Inyoka (dev branch)::
+Inyoka (main branch)::
 
     hg clone http://bitbucket.org/inyoka/inyoka-main/ inyoka
+
+Or use the current experimental branch::
+
+    hg clone http://bitbucket.org/EnTeQuAk/inyoka-sandbox/ inyoka
 
 Right before we can initialize the virtual environment we need to install some
 development packages.

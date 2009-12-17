@@ -19,6 +19,7 @@ This section covers the very basics of inyoka and its development.
     installation
     documentation
     unittests
+    developers_fable
 
 
 References

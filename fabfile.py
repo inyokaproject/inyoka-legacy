@@ -11,10 +11,18 @@
 from __future__ import with_statement
 import os
 import sys
+from os import path as _path
 from functools import partial as _partial
 from fabric.api import *
 from flickzeug import debug as _debug, leakfinder as _leakfinder, \
     profiling as _profiling
+
+
+# setup PYTHONPATH and current sys.path
+_base_dir = _path.realpath(_path.join(_path.dirname(__file__)))
+sys.path.append(_base_dir)
+_python_path = os.environ.get('PYTHONPATH', '')
+os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 
 
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
@@ -89,7 +97,7 @@ def runtests(args=None):
     """
     if args is None:
         args = ""
-    print(local('PYTHONPATH=`pwd`:${PYTHONPATH} python extra/runtests.py %s' % args, capture=False))
+    print(local('python extra/runtests.py %s' % args, capture=False))
 
 
 def build_docs(clean='no', browse='no'):

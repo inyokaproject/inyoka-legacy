@@ -35,7 +35,7 @@ test:
 	@extra/buildbottest.sh `pwd`
 
 runtests:
-	@python extra/runtests.py
+	@PYTHONPATH=`pwd`:${PYTHONPATH} python extra/runtests.py
 
 reindent:
 	@extra/reindent.py -r -B .

@@ -46,12 +46,30 @@ def test_automatic_rendering():
     assert_false(tracker.check('Called Entry._rerender()'))
 
 
-def test_display_title():
-    e1 = Entry('void', User.query.get('anonymous'), title=u'some paste')
-    e2 = Entry('void', User.query.get('anonymous'))
-    db.session.add_all((e1, e2))
-    db.session.commit()
-    eq_(e1.display_title, 'some paste')
-    eq_(e2.display_title, '#%d' % e2.id)
-    eq_(unicode(e1), 'some paste')
-    eq_(unicode(e2), '#%d' % e2.id)
+def get_data_callback(title=None):
+    def callback():
+        data = {
+            'author': User.query.get('anonymous'),
+            'code': 'void'
+        }
+        if title is not None:
+            data['title'] = title
+        return data
+    return callback
+
+
+class TestEntryModel(TestSuite):
+
+    fixtures = {
+        'pastes': [
+            fixture(Entry, get_data_callback(u'some paste')),
+            fixture(Entry, get_data_callback()),
+    ]}
+
+    @with_fixtures('pastes')
+    def test_display_title(self, fixtures):
+        e1, e2 = fixtures['pastes']
+        eq_(e1.display_title, 'some paste')
+        eq_(e2.display_title, '#%d' % e2.id)
+        eq_(unicode(e1), 'some paste')
+        eq_(unicode(e2), '#%d' % e2.id)

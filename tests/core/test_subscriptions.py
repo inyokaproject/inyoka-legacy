@@ -71,13 +71,13 @@ class CommentsSubscriptionType(SubscriptionType, NotifyTrackerMixin):
 
 
 
-class SubscriptionTest(unittest.TestCase):
+class TestSubscriptions(TestSuite):
 
     fixtures = {
-        'u1': fixture(User, username='eins', email='eins@example.com'),
-        'u2': fixture(User, username='zwei', email='zwei@example.com'),
-        'u3': fixture(User, username='drei', email='drei@example.com'),
-        'u3': fixture(User, username='vier', email='vier@example.com')
+        'eins': fixture(User, username='eins', email='eins@example.com'),
+        'zwei': fixture(User, username='zwei', email='zwei@example.com'),
+        'drei': fixture(User, username='drei', email='drei@example.com'),
+        'vier': fixture(User, username='vier', email='vier@example.com')
     }
 
     def setUp(self):
@@ -108,9 +108,8 @@ class SubscriptionTest(unittest.TestCase):
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
         eq_(SubscriptionType.by_subject_type()[Category], [CategorySubscriptionType])
 
-    def test_subscribing(self):
-        _setup_users()
-
+    @with_fixtures('eins', 'zwei', 'drei', 'vier')
+    def test_subscribing(self, users):
         cat1 = Category(name='cat1')
         cat2 = Category(name='cat2')
         db.session.add_all([cat1, cat2])

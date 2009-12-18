@@ -24,7 +24,7 @@ def get_data():
     }
 
 
-class PasteTester(ViewTestCase):
+class PasteTester(ViewTestSuite):
 
     controller = PasteController
 
@@ -34,7 +34,7 @@ class PasteTester(ViewTestCase):
     ]}
 
     @with_fixtures('pastes')
-    def test_index(self):
+    def test_index(self, fixtures):
         #TODO: for now this mostly just tests the fixture
         #      feature, so add real tests!
         context = self.get_context('/')

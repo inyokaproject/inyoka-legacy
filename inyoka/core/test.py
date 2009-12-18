@@ -37,8 +37,9 @@ logger.disabled = True
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
-__all__ = ('TestResponse', 'ViewTestCase', 'fixture', 'with_fixtures', 'future',
-           'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response', 'config')
+__all__ = ('TestResponse', 'ViewTestSuite','TestSuite', 'fixture', 'with_fixtures',
+           'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
+           'config')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -50,28 +51,29 @@ del dct
 tracker = TraceTracker()
 
 
+_iterables = (list, tuple, set, frozenset)
+
+
 class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
 
 
-class ViewTestCase(unittest.TestSuite):
-    """A test case suitable to test view methods properly"""
+class TestSuite(unittest.TestSuite):
+    """TestSuite for the Inyoka test framework.
 
-    controller = None
+    A TestSuite holds various test methods for unittesting and
+    is able to use our own fixtures framework.
+    """
+
+    #: dictionary full of fixtures
+    fixtures = {}
 
     def _pre_setup(self):
-        """Performs any pre-test setup. This includes:
+        """Internal setup method so that unittests can implement setUp.
 
-            * install the test client
-            * set up the base url and base domain values
         Note that this method is called right *before*
         fixtures and such stuff are set up.
         """
-        self._client = Client(current_application, response_wrapper=TestResponse)
-        self.base_domain = config['base_domain_name']
-        name = self.controller.name
-        subdomain = config['routing.urls.' + name].split(':', 1)[0]
-        self.base_url = make_full_domain(subdomain)
 
     def _post_teardown(self):
         """Performs any post-test things.
@@ -80,7 +82,21 @@ class ViewTestCase(unittest.TestSuite):
         the internal test suite cleans up it's trash.  So you
         can still access the fixtures and other things here.
         """
-        return
+
+
+class ViewTestSuite(TestSuite):
+    """A test case suitable to test view methods properly"""
+
+    controller = None
+
+    def _pre_setup(self):
+        """Setup the test client and url and base domain values"""
+        self._client = Client(current_application, response_wrapper=TestResponse)
+        self.base_domain = config['base_domain_name']
+        name = self.controller.name
+        subdomain = config['routing.urls.' + name].split(':', 1)[0]
+        self.base_url = make_full_domain(subdomain)
+
 
     def get_context(self, path, method='GET', **kwargs):
         """Return the template context from a view wrapped
@@ -204,11 +220,18 @@ class InyokaPlugin(cover.Coverage):
             self._started = True
             # reset the database data.  That way we can assure
             # that we get a clear database
+            loaded = {}
             for fixture in t.test._required_fixtures:
-                functions = test.context.fixtures[fixture]
-                instances = [func() for func in functions]
-                db.session.add_all(instances)
+                loader = test.context.fixtures[fixture]
+                if isinstance(loader, _iterables):
+                    instances = [func() for func in loader]
+                    db.session.add_all(instances)
+                else:
+                    instances = loader()
+                    db.session.add(instances)
+                loaded[fixture] = instances
                 db.session.commit()
+            t.test = functools.partial(t.test, loaded)
 
     def stopTest(self, test):
         if self._started:
@@ -224,12 +247,9 @@ class InyokaPlugin(cover.Coverage):
         self._transaction.rollback()
 
     def wantClass(self, cls):
-        # we want view test cases to be loaded with no matter
-        # if they are
-        if issubclass(cls, ViewTestCase):
+        if issubclass(cls, ViewTestSuite):
             return True
-        else:
-            return False
+        return None
 
     def wantFile(self, file):
         if 'fabfile.py' in file:
@@ -256,6 +276,7 @@ class InyokaPlugin(cover.Coverage):
 def fixture(model, _callback=None, **kwargs):
     """Insert some test fixtures into the database"""
     def onload():
+        data = {}
         if _callback is not None:
             data = _callback()
         kwargs.update(data)

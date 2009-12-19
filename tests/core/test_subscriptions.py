@@ -103,11 +103,13 @@ class TestSubscriptions(TestSuite):
         eq_(s.unread_object_ids, unread_object_ids)
         eq_(s.count, count)
 
+    @future
     def test_subscriptiontype(self):
         eq_(SubscriptionType.by_name('__test_comments'), CommentsSubscriptionType)
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
         eq_(SubscriptionType.by_subject_type()[Category], [CategorySubscriptionType])
 
+    @future
     @with_fixtures('eins', 'zwei', 'drei', 'vier')
     def test_subscribing(self, users):
         cat1 = Category(name='cat1')

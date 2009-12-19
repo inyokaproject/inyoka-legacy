@@ -14,6 +14,8 @@ from functools import partial
 
 INYOKA_REVISION = 'unknown'
 
+__all__ = ('Component', 'setup_components', 'teardown_component')
+
 
 class ComponentMeta(type):
     """Metaclass that keeps track of all derived component implementations."""
@@ -83,15 +85,22 @@ class Component(object):
         return cls._implementations
 
 
-def component_is_activated(imp, accepted_modules):
+def component_is_activated(imp, accepted, type):
     """This method is used to determine whether a component should get
     activated or not.
     """
-    # TODO: only do the splitting once…
-    modules = [i.strip('.*') for i in accepted_modules]
-    cname = imp.__module__ + '.' + imp.__name__
+    get_cname = lambda c: c.__module__ + '.' + c.__name__
+
+    if issubclass(type, basestring):
+        # TODO: only do the splitting once…
+        accepted = [i.strip('.*') for i in accepted]
+        cname = get_cname(imp)
+    else:
+        accepted = [get_cname(a) for a in accepted]
+
+    cname = get_cname(imp)
     while cname:
-        if cname in modules:
+        if cname in accepted:
             return True
         idx = cname.rfind('.')
         if idx < 0:
@@ -101,20 +110,31 @@ def component_is_activated(imp, accepted_modules):
     return False
 
 
-def setup_components(accepted_modules):
-    """Set up the :class:`Component`'s implementation and instance lists.
-    Should get called early during application setup, cause otherwise the
-    components won't return any implementations.
-
-    :param accepted_modules: Modules to import to setupt the components.
-                                Can be an empty list to setup only known components.
-    :return: An instance map containing all registered and activated components
-    :rtype: dict
+def _assert_one_type(collection):
+    """Raise AssertionError if collection does not contain *only*
+    objects from `type`.
     """
+    if isinstance(collection[0], basestring):
+        _assumed_type, cmp_type = basestring, basestring
+    elif issubclass(type(collection[0]), type(Component)):
+        _assumed_type, cmp_type = Component, type(Component)
+    else:
+        raise AssertionError(u'Type %r is not supported for components!'
+                             % type(collection[0]))
+
+    items = [item for item in collection if not issubclass(type(item), cmp_type)]
+    if any(items):
+        raise AssertionError(u'Not all items are from type %r, '
+            u'we do not support mixed collection setups or the applied type. '
+            u'Please check %r'
+            % (_assumed_type, items))
+    return cmp_type
+
+
+def _import_modules(modules):
     from werkzeug import import_string, find_modules
-    from inyoka.core.api import ctx, logger
     # Import the components to setup the metaclass magic.
-    for module in accepted_modules:
+    for module in modules:
         # No star at the end means a package/module/class but nothing below.
         if module[-1] != '*':
             import_string(module[:-2])
@@ -125,14 +145,37 @@ def setup_components(accepted_modules):
             except ValueError: # module is a module and not a package
                 import_string(module[:-2])
 
+
+def setup_components(accepted):
+    """Set up the :class:`Component`'s implementation and instance lists.
+    Should get called early during application setup, cause otherwise the
+    components won't return any implementations.
+
+    :param accepted: Modules to import to setupt the components.
+                                Can be an empty list to setup only known components.
+    :return: An instance map containing all registered and activated components
+    :rtype: dict
+    """
+    from inyoka.core.api import ctx, logger
+
+    # we pass the setup procedure if no modules were applied to setup
+    if not accepted:
+        return {}
+
+    # check for type consistency
+    mod_type = _assert_one_type(accepted)
+
+    collection = ComponentMeta._registry.items()
+
     instance_map = {}
-    for comp, implementations in ComponentMeta._registry.items():
+    logger.debug(u'Setup %s' % collection)
+    for comp, implementations in collection:
         # Only add those components to the implementation list,
         # which are activated
         appender = []
         logger.debug(u'Load %s component' % comp)
         for imp in implementations:
-            if component_is_activated(imp, accepted_modules):
+            if component_is_activated(imp, accepted, mod_type):
                 logger.debug(u'Activate %s implementation of %s' % (imp, comp))
                 appender.append(imp)
             imp._implementations = subimplements = tuple(imp.__subclasses__())
@@ -140,6 +183,7 @@ def setup_components(accepted_modules):
         comp._implementations = tuple(appender[:])
 
         for impl in comp._implementations:
+            logger.debug(u'Check %s implemention' % impl)
             if impl not in instance_map:
                 logger.debug(u'Load %s%s implementation' % (
                     'lazy loading ' if impl.__lazy_loading__ else '',
@@ -152,6 +196,15 @@ def setup_components(accepted_modules):
 
         comp._instances = tuple(instance_map[i] for i in comp._implementations)
     return instance_map
+
+
+def teardown_components(components):
+    #TODO: find more places where we have to deregister those components
+    _registry = ComponentMeta._registry
+    for component in components:
+        if component in _registry:
+            del _registry[component]
+    return True
 
 
 def _bootstrap():

@@ -55,7 +55,7 @@ class SimpleFormatter(Formatter):
 
 
 logger = logging.getLogger('inyoka')
-logging_handler = logging.StreamHandler(sys.stdout)
+logging_handler = logging.StreamHandler(sys.stderr)
 logging_handler.setFormatter(SimpleFormatter())
 logger.addHandler(logging_handler)
 

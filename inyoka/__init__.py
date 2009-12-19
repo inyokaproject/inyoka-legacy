@@ -136,7 +136,7 @@ def _import_modules(modules):
     for module in modules:
         # No star at the end means a package/module/class but nothing below.
         if module[-1] != '*':
-            import_string(module[:-2])
+            import_string(module)
         else:
             try:
                 for mod in find_modules(module[:-2], recursive=True):

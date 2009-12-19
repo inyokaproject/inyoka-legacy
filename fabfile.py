@@ -100,17 +100,6 @@ def version():
           (INYOKA_REVISION, u'.'.join(str(x) for x in sys.version_info[:3]))
 
 
-def runtests(args=None):
-    """
-    Run all unit tests and doctests.
-
-    Specify string argument ``args`` for additional args to ``nosetests``.
-    """
-    if args is None:
-        args = ""
-    print(local('python extra/runtests.py %s' % args, capture=False))
-
-
 def build_docs(clean='no', browse='no'):
     """
     Generate the Sphinx documentation.
@@ -147,8 +136,24 @@ def i18n():
     local("python extra/compile-translations", capture=False)
 
 
-def test():
-    local("extra/buildbottest.sh %s" % os.getcwd(), capture=False)
+def test(clean='yes'):
+    """
+    Run all unit tests and doctests.
+
+    Specify clean=no if you don't want to remove old .coverage/.noseid files.
+    """
+
+    clean = True if clean == 'yes' else False
+
+    if clean:
+        try:
+            os.unlink('.coverage')
+            os.unlink('.noseids')
+        except:
+            pass 
+
+    print(local('python extra/runtests.py', capture=False))
+
 
 
 def reindent():

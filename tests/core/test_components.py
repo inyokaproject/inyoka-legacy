@@ -67,19 +67,26 @@ def test_assert_one_type():
 
 
 def test_setup_components():
-    map = setup_components([Interface])
-    eq_(len(map), 4)
-    eq_(map.keys(), Implementation1, Implementation2, Implementation3)
+    map = setup_components([Implementation1, Implementation2, Implementation3])
+    eq_(len(map), 3)
+
+    implementations = [Implementation1, Implementation2, Implementation3]
+
+    keys = map.keys()
+    for idx in xrange(3):
+        assert_true(keys.pop() in implementations)
+
+    eq_(keys, [])
 
     assert_true(isinstance(map[Implementation1], Implementation1))
     assert_true(isinstance(map[Implementation2], Implementation2))
     assert_false(Interface in map)
     assert_false(Interface2 in map)
 
-    eq_(len(Interface.get_component_classes()), 4)
+    eq_(len(Interface.get_component_classes()), 3)
     eq_(len(Interface2.get_component_classes()), 1)
 
-    teardown_components([Interface])
+    teardown_components([Implementation1, Implementation2, Implementation3])
 
 
 @with_setup(_setup_components)

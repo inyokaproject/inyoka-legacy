@@ -14,7 +14,7 @@ from functools import partial
 
 INYOKA_REVISION = 'unknown'
 
-__all__ = ('Component', 'setup_components', 'teardown_component')
+__all__ = ('Component', 'setup_components', 'teardown_components')
 
 
 class ComponentMeta(type):
@@ -94,7 +94,6 @@ def component_is_activated(imp, accepted, type):
     if issubclass(type, basestring):
         # TODO: only do the splitting once…
         accepted = [i.strip('.*') for i in accepted]
-        cname = get_cname(imp)
     else:
         accepted = [get_cname(a) for a in accepted]
 
@@ -168,7 +167,6 @@ def setup_components(accepted):
     collection = ComponentMeta._registry.items()
 
     instance_map = {}
-    logger.debug(u'Setup %s' % collection)
     for comp, implementations in collection:
         # Only add those components to the implementation list,
         # which are activated
@@ -183,7 +181,6 @@ def setup_components(accepted):
         comp._implementations = tuple(appender[:])
 
         for impl in comp._implementations:
-            logger.debug(u'Check %s implemention' % impl)
             if impl not in instance_map:
                 logger.debug(u'Load %s%s implementation' % (
                     'lazy loading ' if impl.__lazy_loading__ else '',

@@ -152,7 +152,7 @@ def test(clean='yes'):
         except:
             pass 
 
-    print(local('python extra/runtests.py', capture=False))
+    local('python extra/runtests.py', capture=False)
 
 
 

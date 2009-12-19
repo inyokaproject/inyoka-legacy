@@ -173,20 +173,26 @@ def _bootstrap():
         trans.commit(force=True)
         config.touch()
 
-
     # setup components
+    test_components = []
+    if config['debug']:
+        test_components = [
+            'tests.core.test_subscriptions.*',
+        ]
+
     # TODO: make it configurable
     setup_components([
         'inyoka.testing.components.*',
         'inyoka.core.routing.*',
         'inyoka.core.auth.*',
+        'inyoka.core.subscriptions.*',
         'inyoka.portal.controllers.*',
         'inyoka.news.controllers.*',
         'inyoka.forum.controllers.*',
         'inyoka.paste.controllers.*',
         'inyoka.core.middlewares.services.*',
         'inyoka.core.middlewares.static.*',
-    ])
+    ] + test_components)
 
     # setup model property extenders
     from inyoka.core.database import (IModelPropertyExtender, DeclarativeMeta,

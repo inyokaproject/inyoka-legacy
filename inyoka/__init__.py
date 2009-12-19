@@ -83,29 +83,47 @@ class Component(object):
         return cls._implementations
 
 
-def component_is_activated(imp, accepted_components):
+def component_is_activated(imp, accepted_modules):
     """This method is used to determine whether a component should get
     activated or not.
     """
-    return ("%s.%s" % (imp.__module__, imp.__name__) in accepted_components or
-            "%s.*" % imp.__module__ in accepted_components)
+    # TODO: only do the splitting once…
+    modules = [i.strip('.*') for i in accepted_modules]
+    cname = imp.__module__ + '.' + imp.__name__
+    while cname:
+        if cname in modules:
+            return True
+        idx = cname.rfind('.')
+        if idx < 0:
+            break
+        cname = cname[:idx]
+
+    return False
 
 
-def setup_components(accepted_components):
+def setup_components(accepted_modules):
     """Set up the :class:`Component`'s implementation and instance lists.
     Should get called early during application setup, cause otherwise the
     components won't return any implementations.
 
-    :param accepted_components: Modules to import to setupt the components.
+    :param accepted_modules: Modules to import to setupt the components.
                                 Can be an empty list to setup only known components.
     :return: An instance map containing all registered and activated components
     :rtype: dict
     """
-    from werkzeug import import_string
+    from werkzeug import import_string, find_modules
     from inyoka.core.api import ctx
     # Import the components to setup the metaclass magic.
-    for comp in accepted_components:
-        import_string(comp if comp[-1] != '*' else comp[:-2])
+    for module in accepted_modules:
+        # No star at the end means a package/module/class but nothing below.
+        if module[-1] != '*':
+            import_string(module[:-2])
+        else:
+            try:
+                for mod in find_modules(module[:-2], recursive=True):
+                    import_string(mod)
+            except ValueError: # module is a module and not a package
+                import_string(module[:-2])
 
     instance_map = {}
     for comp, implementations in ComponentMeta._registry.items():
@@ -113,7 +131,7 @@ def setup_components(accepted_components):
         # which are activated
         appender = []
         for imp in implementations:
-            if component_is_activated(imp, accepted_components):
+            if component_is_activated(imp, accepted_modules):
                 appender.append(imp)
             imp._implementations = subimplements = tuple(imp.__subclasses__())
             appender.extend(subimplements)
@@ -182,16 +200,12 @@ def _bootstrap():
 
     # TODO: make it configurable
     setup_components([
-        'inyoka.testing.components.*',
-        'inyoka.core.routing.*',
-        'inyoka.core.auth.*',
-        'inyoka.core.subscriptions.*',
-        'inyoka.portal.controllers.*',
-        'inyoka.news.controllers.*',
-        'inyoka.forum.controllers.*',
-        'inyoka.paste.controllers.*',
-        'inyoka.core.middlewares.services.*',
-        'inyoka.core.middlewares.static.*',
+        'inyoka.testing.*',
+        'inyoka.core.*',
+        'inyoka.portal.*',
+        'inyoka.news.*',
+        'inyoka.forum.*',
+        'inyoka.paste.*',
     ] + test_components)
 
     # setup model property extenders

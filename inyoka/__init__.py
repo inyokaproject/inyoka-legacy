@@ -85,19 +85,13 @@ class Component(object):
         return cls._implementations
 
 
-def component_is_activated(imp, accepted, type):
+def component_is_activated(imp, accepted):
     """This method is used to determine whether a component should get
     activated or not.
     """
-    get_cname = lambda c: c.__module__ + '.' + c.__name__
 
-    if issubclass(type, basestring):
-        # TODO: only do the splitting once…
-        accepted = [i.strip('.*') for i in accepted]
-    else:
-        accepted = [get_cname(a) for a in accepted]
+    cname = imp.__module__ + '.' + imp.__name__
 
-    cname = get_cname(imp)
     while cname:
         if cname in accepted:
             return True
@@ -144,6 +138,11 @@ def _import_modules(modules):
             except ValueError: # module is a module and not a package
                 import_string(module[:-2])
 
+def _component_name(name_or_class):
+    name = name_or_class
+    if not isinstance(name_or_class, basestring):
+        name = name_or_class.__module__ + '.' + name_or_class.__name__
+    return name
 
 def setup_components(accepted):
     """Set up the :class:`Component`'s implementation and instance lists.
@@ -157,12 +156,18 @@ def setup_components(accepted):
     """
     from inyoka.core.api import ctx, logger
 
-    # we pass the setup procedure if no modules were applied to setup
+    # we skip the setup procedure if no modules were applied to setup
     if not accepted:
         return {}
 
     # check for type consistency
     mod_type = _assert_one_type(accepted)
+
+    if issubclass(mod_type, basestring):
+        _import_modules(accepted)
+        accepted = [i.strip('.*') for i in accepted]
+    else:
+        accepted = [i.__module__ + '.' + i.__name__ for i in accepted]
 
     collection = ComponentMeta._registry.items()
 
@@ -173,7 +178,7 @@ def setup_components(accepted):
         appender = []
         logger.debug(u'Load %s component' % comp)
         for imp in implementations:
-            if component_is_activated(imp, accepted, mod_type):
+            if component_is_activated(imp, accepted):
                 logger.debug(u'Activate %s implementation of %s' % (imp, comp))
                 appender.append(imp)
             imp._implementations = subimplements = tuple(imp.__subclasses__())

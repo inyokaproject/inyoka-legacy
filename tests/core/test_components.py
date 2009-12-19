@@ -45,7 +45,7 @@ def _setup_components():
     setup_components(_components)
 
 
-
+@future
 def test_component_is_activated():
     _activated, comp_type = [Implementation1, Implementation2], type(Component)
 

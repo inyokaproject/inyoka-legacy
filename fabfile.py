@@ -147,6 +147,7 @@ def test(clean='yes'):
 
     if clean:
         try:
+            local("find . -name '*.pyc' -delete")
             os.unlink('.coverage')
             os.unlink('.noseids')
         except:

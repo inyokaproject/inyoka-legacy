@@ -68,20 +68,31 @@ leakfinder = _action(lambda: _make_app(debug=True, leaky=True))
 leakfinder.__doc__ = u'Run a development server with activated leakfinder.'
 
 
-def shell(use_ipython=True, banner=u'Interactive Inyoka Shell'):
-    """Spawn a new interactive python shell"""
-    namespace = {}
-    try:
-        import IPython
-    except ImportError:
-        pass
-    else:
-        sh = IPython.Shell.IPShellEmbed(banner=banner)
-        sh(global_ns={}, local_ns=namespace)
-        return
-    from code import interact
-    interact(banner, local=namespace)
+def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
+    """Spawn a new interactive python shell
 
+    :param app: choose between common python shell, ipyhon or bpython.
+                Possible values are: python, ipython and bpython.
+    """
+    from code import interact
+    namespace = {}
+    assert app in ('python', 'ipython', 'bpython'), u'Your shell is not supported!'
+    try:
+        if app == 'python':
+            interact(banner, local=namespace)
+        elif app == 'ipython':
+            import IPython
+            sh = IPython.Shell.IPShellEmbed(banner=banner)
+            sh(global_ns={}, local_ns=namespace)
+        elif app == 'bpython':
+            from bpython import embed
+            embed(locals_=namespace, args=['-i', '-q'])
+        else:
+            raise ImportError()
+    except ImportError:
+        # fallback to default python interpreter
+        from code import interact
+        interact(banner, local=namespace)
 
 def version():
     from inyoka import INYOKA_REVISION

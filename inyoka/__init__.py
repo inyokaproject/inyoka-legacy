@@ -102,7 +102,7 @@ def setup_components(accepted_components):
     :rtype: dict
     """
     from werkzeug import import_string
-    from inyoka.core.api import ctx
+    from inyoka.core.api import ctx, logger
     # Import the components to setup the metaclass magic.
     for comp in accepted_components:
         import_string(comp if comp[-1] != '*' else comp[:-2])
@@ -112,8 +112,10 @@ def setup_components(accepted_components):
         # Only add those components to the implementation list,
         # which are activated
         appender = []
+        logger.debug(u'Load %s component' % comp)
         for imp in implementations:
             if component_is_activated(imp, accepted_components):
+                logger.debug(u'Activate %s implementation of %s' % (imp, comp))
                 appender.append(imp)
             imp._implementations = subimplements = tuple(imp.__subclasses__())
             appender.extend(subimplements)
@@ -121,6 +123,9 @@ def setup_components(accepted_components):
 
         for impl in comp._implementations:
             if impl not in instance_map:
+                logger.debug(u'Load %s%s implementation' % (
+                    'lazy loading ' if impl.__lazy_loading__ else '',
+                    impl))
                 if impl.__lazy_loading__:
                     instance = partial(impl, ctx)
                 else:

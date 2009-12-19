@@ -31,9 +31,6 @@ from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
 
-# disable the logger
-logger.disabled = True
-
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 

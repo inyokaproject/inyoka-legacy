@@ -132,7 +132,7 @@ def setup_components(accepted_modules):
         appender = []
         logger.debug(u'Load %s component' % comp)
         for imp in implementations:
-            if component_is_activated(imp, accepted_components):
+            if component_is_activated(imp, accepted_modules):
                 logger.debug(u'Activate %s implementation of %s' % (imp, comp))
                 appender.append(imp)
             imp._implementations = subimplements = tuple(imp.__subclasses__())

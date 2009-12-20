@@ -92,6 +92,11 @@ class Response(BaseResponse):
     """Our default response class with default mimetype to text/html"""
     default_mimetype = 'text/html'
 
+    def prevent_caching(self):
+        """Prevent downstream Proxies to cache this page"""
+        self.headers['Cache-Control'] = 'no-cache'
+        self.headers['Pragma'] = 'no-cache'
+
 
 class DirectResponse(Exception):
     """A :exc:`DirectResponse` is used to pass a response object

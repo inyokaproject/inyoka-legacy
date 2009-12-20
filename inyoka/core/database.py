@@ -393,21 +393,21 @@ ModelBase.query = session.query_property(Query)
 
 
 def init_db(**kwargs):
-     tables = []
-  
-     for comp in ctx.get_component_instances(ISchemaController):
-         tables.extend([i.__table__ for i in comp.models])
-  
-     kwargs['tables'] = tables
- 
-     if tables:
-         metadata.create_all(**kwargs)
-         # TODO: YES ugly, but for now…
-         from inyoka.core.auth import models as amodels
-         anon = amodels.User(u'anonymous', u'', u'')
-         admin = amodels.User(u'admin', u'root@localhost', u'default')
-         session.add_all((anon, admin))
-         session.commit()
+    tables = []
+
+    for comp in ctx.get_component_instances(ISchemaController):
+        tables.extend([i.__table__ for i in comp.models])
+
+    kwargs['tables'] = tables
+
+    if tables:
+        metadata.create_all(**kwargs)
+        # TODO: YES ugly, but for now…
+        from inyoka.core.auth import models as amodels
+        anon = amodels.User(u'anonymous', u'', u'')
+        admin = amodels.User(u'admin', u'root@localhost', u'default')
+        session.add_all((anon, admin))
+        session.commit()
 
 
 def _make_module():

@@ -82,8 +82,16 @@ class IMiddleware(Component, UrlMixin):
 
 
 class CommonMiddleware(IMiddleware):
+    """A common middleware that implements various features commonly required
+    to get the inyoka core work properly.
+
+    Currently it takes care of:
+
+     * Prevent HTTP-Cache if flashed messages are present in the current session.
+
+    """
+
     def process_response(self, request, response):
-        print request.has_flashed_messages()
         if request.has_flashed_messages():
             response.prevent_caching()
         return response

@@ -145,14 +145,17 @@ def test(clean='yes'):
     """
 
     clean = True if clean == 'yes' else False
-
-    if clean:
+    def _clean():
         try:
             clean_files()
             os.unlink('.coverage')
             os.unlink('.noseids')
-        except:
+        except OSError:
             pass
+
+    if clean:
+        with settings(hide('running')):
+            _clean()
 
     local('python extra/runtests.py', capture=False)
 

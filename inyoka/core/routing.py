@@ -16,7 +16,7 @@ from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
 from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
 from inyoka import Component
-from inyoka.core.context import current_application, config
+from inyoka.core.context import ctx
 
 
 _date_formatter_split_re = re.compile('(%.)')
@@ -58,7 +58,7 @@ class UrlMixin(object):
         cls._endpoint_map = {}
         urls = []
 
-        for comp in cls.get_components():
+        for comp in ctx.get_component_instances(cls):
             url_map = {}
 
             # check if url rules are for build only
@@ -77,7 +77,7 @@ class UrlMixin(object):
 
             name = comp.name
             if name:
-                domain, mount = config['routing.urls.' + name].split(':', 1)
+                domain, mount = ctx.cfg['routing.urls.' + name].split(':', 1)
                 if comp.ignore_prefix:
                     rules = comp.url_rules
                 else:
@@ -126,7 +126,7 @@ class IController(Component, UrlMixin):
             return cls._services
 
         cls._services = {}
-        for comp in cls.get_components():
+        for comp in ctx.get_component_instances(cls):
             for method in dir(comp):
                 method = getattr(comp, method)
                 if getattr(method, 'service_name', None) is not None:
@@ -199,7 +199,7 @@ def href(endpoint, **args):
     from inyoka.core.database import db
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
-    ret = current_application.url_adapter.build(endpoint, args,
+    ret = ctx.application.url_adapter.build(endpoint, args,
         force_external=_external)
     if _anchor is not None:
         ret += '#' + url_quote(_anchor)

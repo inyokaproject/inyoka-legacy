@@ -13,7 +13,6 @@ from __future__ import with_statement
 import os
 from os import path
 from threading import Lock
-from inyoka.core.context import local, config
 
 #TODO: add support for multiple values?
 

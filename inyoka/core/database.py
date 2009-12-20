@@ -86,7 +86,7 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
 from inyoka import Component
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 
 
 _engine = None
@@ -100,21 +100,21 @@ def get_engine():
     global _engine
     with _engine_lock:
         if _engine is None:
-            info = make_url(config['database.url'])
+            info = make_url(ctx.cfg['database.url'])
             # convert_unicode: Let SQLAlchemy convert all values to unicode
             #                  before we get them
             # echo:            Set the database debug level
             # pool_recycle:    Enable long-living connection pools
             # pool_timeout:    Timeout before giving up returning on a connection
             options = {'convert_unicode':   True,
-                       'echo':              config['database.debug'],
-                       'pool_recycle':      config['database.pool_recycle']}
+                       'echo':              ctx.cfg['database.debug'],
+                       'pool_recycle':      ctx.cfg['database.pool_recycle']}
             # SQLite, Access and Informix uses ThreadLocalQueuePool per default
             # and as such cannot use a timeout for pooled connections.
             if not info.drivername in ('sqlite', 'access', 'informix'):
                 options.update({
                     'poolclass': QueuePool,
-                    'pool_timeout': config['database.pool_timeout']
+                    'pool_timeout': ctx.cfg['database.pool_timeout']
                 })
             url = SafeURL(info)
             _engine = create_engine(url, **options)
@@ -303,7 +303,7 @@ class IModelPropertyExtender(Component):
 
     Example::
 
-        class UserPropertyExtender(IModelPropertyExtender):
+        class UserCreditcardPropertyExtender(IModelPropertyExtender):
             model = User
             properties = {
                 'credit_card':  db.Column(db.String(30))
@@ -392,7 +392,7 @@ def init_db(**kwargs):
     import inyoka.core.subscriptions.models
 
     # TODO: even uglier ;)
-    if config['debug']:
+    if ctx.cfg['debug']:
         sys.path.insert(0, os.getcwd())
         from tests.utils import test_pagination
         from tests.core import test_subscriptions

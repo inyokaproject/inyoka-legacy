@@ -21,10 +21,9 @@ coverage.start()
 os.environ['INYOKA_CONFIG'] = 'inyoka_tests.ini'
 # we need to setup the inyoka application at this time
 # to setup the thread local cache properly
-from inyoka.application import InyokaApplication
-application = InyokaApplication()
+from inyoka import ApplicationContext
+application = ApplicationContext()
 
-from inyoka.core.api import config
 from inyoka.core.test import InyokaPlugin
 from inyoka.core.database import refresh_engine
 

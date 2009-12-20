@@ -12,7 +12,7 @@ import sys
 import logging
 from logging import Formatter
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 from inyoka.utils.colors import blue, green, red, yellow, white
 
 
@@ -59,7 +59,7 @@ logging_handler = logging.StreamHandler(sys.stderr)
 logging_handler.setFormatter(SimpleFormatter())
 logger.addHandler(logging_handler)
 
-if config['debug']:
+if ctx.cfg['debug']:
     logger.setLevel(logging.DEBUG)
 
 #database logger

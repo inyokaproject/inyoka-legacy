@@ -10,11 +10,13 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from functools import partial
+import os
+from os.path import realpath, dirname, join, pardir
+from inspect import getmembers, isclass
+from werkzeug import import_string, find_modules, cached_property
+
 
 INYOKA_REVISION = 'unknown'
-
-__all__ = ('Component', 'setup_components', 'teardown_components')
 
 
 class ComponentMeta(type):
@@ -28,18 +30,24 @@ class ComponentMeta(type):
             # `Component` itself
             return obj
 
-        if Component not in bases:
+        if Component in bases:
+            # A component type
+            module = dict_['__module__']
+            obj._iscomptype = True
+            uniquename = module + '.' + classname
+            if uniquename in ComponentMeta._registry:
+                raise RuntimeError(u'Component type with name %r already '
+                                   u'exists' % uniquename)
+            ComponentMeta._registry[uniquename] = True
+        else:
+            # A component
             obj._comptypes = comptypes = []
             obj._iscomptype = False
             for base in bases:
-                if issubclass(base, Component):
+                if '_iscomptype' in base.__dict__:
                     comptypes.append(base)
-
-            for comp in comptypes:
-                ComponentMeta._registry.setdefault(comp, []).append(obj)
-        else:
-            obj._iscomptype = True
-
+                elif '_comptypes' in base.__dict__:
+                    comptypes.extend(base._comptypes)
         return obj
 
 
@@ -55,165 +63,130 @@ class Component(object):
     """
     __metaclass__ = ComponentMeta
 
-    #: If `True` a component will be lazy loaded (instanciated) on first
-    #: access.  If `False` (default) it will be instanciated immediatly
-    #: till imported.
-    __lazy_loading__ = False
-
-    _implementations = ()
-    _instances = ()
-
     def __init__(self, ctx=None):
         self.ctx = ctx
 
-    @classmethod
-    def get_components(cls):
-        """Return a list of all component instances for this class."""
-        def _init():
-            for impl in cls._instances:
-                yield impl()
-        # setup lazy loading components and disable loading after that process
-        # so that we don't load them twice
-        if cls.__lazy_loading__:
-            cls._instances = tuple(_init())
-            cls.__lazy_loading__ = False
-        return cls._instances
 
-    @classmethod
-    def get_component_classes(cls):
-        """Return a list of all component classes for this class."""
-        return cls._implementations
-
-
-def component_is_activated(imp, accepted):
-    """This method is used to determine whether a component should get
-    activated or not.
-    """
-
-    cname = imp.__module__ + '.' + imp.__name__
-
-    while cname:
-        if cname in accepted:
-            return True
-        idx = cname.rfind('.')
-        if idx < 0:
-            break
-        cname = cname[:idx]
-
-    return False
-
-
-def _assert_one_type(collection):
-    """Raise AssertionError if collection does not contain *only*
-    objects from `type`.
-    """
-    if isinstance(collection[0], basestring):
-        _assumed_type, cmp_type = basestring, basestring
-    elif issubclass(type(collection[0]), type(Component)):
-        _assumed_type, cmp_type = Component, type(Component)
-    else:
-        raise AssertionError(u'Type %r is not supported for components!'
-                             % type(collection[0]))
-
-    items = [item for item in collection if not issubclass(type(item), cmp_type)]
-    if any(items):
-        raise AssertionError(u'Not all items are from type %r, '
-            u'we do not support mixed collection setups or the applied type. '
-            u'Please check %r'
-            % (_assumed_type, items))
-    return cmp_type
+def _is_component(value):
+    _registry = ComponentMeta._registry
+    return (isclass(value) and issubclass(value, Component) and
+            not value is Component)
 
 
 def _import_modules(modules):
-    from werkzeug import import_string, find_modules
     # Import the components to setup the metaclass magic.
     for module in modules:
         # No star at the end means a package/module/class but nothing below.
         if module[-1] != '*':
-            import_string(module)
+            yield import_string(module)
         else:
             try:
                 for mod in find_modules(module[:-2], recursive=True):
-                    import_string(mod)
+                    yield import_string(mod)
             except ValueError: # module is a module and not a package
-                import_string(module[:-2])
-
-def _component_name(name_or_class):
-    name = name_or_class
-    if not isinstance(name_or_class, basestring):
-        name = name_or_class.__module__ + '.' + name_or_class.__name__
-    return name
-
-def setup_components(accepted):
-    """Set up the :class:`Component`'s implementation and instance lists.
-    Should get called early during application setup, cause otherwise the
-    components won't return any implementations.
-
-    :param accepted: Modules to import to setupt the components.
-                                Can be an empty list to setup only known components.
-    :return: An instance map containing all registered and activated components
-    :rtype: dict
-    """
-    from inyoka.core.api import ctx, logger
-
-    # we skip the setup procedure if no modules were applied to setup
-    if not accepted:
-        return {}
-
-    # check for type consistency
-    mod_type = _assert_one_type(accepted)
-
-    if issubclass(mod_type, basestring):
-        _import_modules(accepted)
-        accepted = [i.strip('.*') for i in accepted]
-    else:
-        accepted = [i.__module__ + '.' + i.__name__ for i in accepted]
-
-    collection = ComponentMeta._registry.items()
-
-    instance_map = {}
-    for comp, implementations in collection:
-        # Only add those components to the implementation list,
-        # which are activated
-        appender = []
-        logger.debug(u'Load %s component' % comp)
-        for imp in implementations:
-            if component_is_activated(imp, accepted):
-                logger.debug(u'Activate %s implementation of %s' % (imp, comp))
-                appender.append(imp)
-            imp._implementations = subimplements = tuple(imp.__subclasses__())
-            appender.extend(subimplements)
-        comp._implementations = tuple(appender[:])
-
-        for impl in comp._implementations:
-            if impl not in instance_map:
-                logger.debug(u'Load %s%s implementation' % (
-                    'lazy loading ' if impl.__lazy_loading__ else '',
-                    impl))
-                if impl.__lazy_loading__:
-                    instance = partial(impl, ctx)
-                else:
-                    instance = impl(ctx)
-                instance_map[impl] = instance
-
-        comp._instances = tuple(instance_map[i] for i in comp._implementations)
-    return instance_map
+                yield import_string(module[:-2])
 
 
-def teardown_components(components):
-    #TODO: find more places where we have to deregister those components
-    _registry = ComponentMeta._registry
-    for component in components:
-        if component in _registry:
-            del _registry[component]
-    return True
+class ApplicationContext(object):
+    """"""
+
+    def __init__(self):
+        #: Component type -> classes mapping
+        self._components = {}
+        #: Component class -> instance mapping
+        self._instances = {}
+
+        # setup config
+        from inyoka.core.config import Configuration
+        cfile = os.environ.get('INYOKA_CONFIG', 'inyoka.ini')
+        self.cfg = cfg = Configuration(join(realpath(
+            os.environ['INYOKA_INSTANCE']), cfile
+        ))
+
+        if not cfg.exists:
+            trans = cfg.edit()
+            trans.commit(force=True)
+            cfg.touch()
+
+        # bind to the context
+        self.bind()
+
+    def bind(self):
+        from inyoka.core.context import local
+        local.ctx = self
+        local.config = self.cfg
+
+    @cached_property
+    def application(self):
+        from inyoka.application import make_app
+        return make_app(self)
+
+    def load_component(self, component):
+        print 'load %s' % component
+        try:
+            for comptype in component._comptypes:
+                self._components.setdefault(comptype, []).append(component)
+        except (AttributeError, TypeError):
+            # fail silently if we try to register an interface but raise
+            # if there's something compleatly wrong
+            if not hasattr(component, '_iscomptype'):
+                raise RuntimeError(u'Type %r is not a component' % component)
+        else:
+            return component
+
+    def load_components(self, components):
+        ret = []
+        for component in components:
+            loaded = self.load_component(component)
+            if loaded:
+                ret.append(loaded)
+        return ret
+
+    def unload_components(self, components):
+        unloaded = []
+        for component in components:
+            print "unload %s" % component
+            try:
+                if getattr(component, '_iscomptype', False):
+                    unloaded.append(self._components.pop(component))
+            except:
+                # fail silently if component is not loaded
+                continue
+
+    def load_packages(self, packages):
+        print "load packages %s" % packages
+        modules = _import_modules(packages)
+        components = list(m[1] for m in
+            sum((getmembers(mod, _is_component) for mod in modules), [])
+        )
+        return self.load_components(components)
+
+    def get_component_classes(self, comptype):
+        return self._components.get(comptype, ())
+
+    def get_component_instances(self, comptype):
+        instances = []
+        for cls in self.get_component_classes(comptype):
+            instances.append(self.get_component(cls))
+        return instances
+
+    def get_component(self, compcls):
+        """Return the instance of a component class."""
+        if compcls not in self._instances:
+            print "instanciate %s" % compcls
+            self._instances[compcls] = compcls(self)
+        return self._instances[compcls]
+
+    def __call__(self, environ, start_response):
+        retval = self.application(environ, start_response)
+        # rebind everything to the thread local
+        self.bind()
+        return retval
 
 
 def _bootstrap():
     """Get the inyoka version and store it."""
     global INYOKA_REVISION
-    import os
-    from os.path import realpath, dirname, join, pardir
     from subprocess import Popen, PIPE
 
     # get inyoka revision
@@ -239,27 +212,19 @@ def _bootstrap():
     # the path to the inyoka instance folder
     os.environ.setdefault('INYOKA_INSTANCE', realpath(join(conts, pardir)))
 
-    # setup config
-    from inyoka.core.context import local
-    from inyoka.core.config import Configuration, config
-    cfile = os.environ.get('INYOKA_CONFIG', 'inyoka.ini')
-    local.config = config = Configuration(
-        join(realpath(os.environ['INYOKA_INSTANCE']), cfile))
-
-    if not config.exists:
-        trans = config.edit()
-        trans.commit(force=True)
-        config.touch()
+    #: bind the context
+    from inyoka.core.context import local, ctx
+    ctx = local.ctx = ApplicationContext()
 
     # setup components
     test_components = []
-    if config['debug']:
+    if ctx.cfg['debug']:
         test_components = [
             'tests.core.test_subscriptions.*',
         ]
 
     # TODO: make it configurable
-    setup_components([
+    ctx.load_packages([
         'inyoka.testing.*',
         'inyoka.core.*',
         'inyoka.portal.*',
@@ -272,7 +237,7 @@ def _bootstrap():
     from inyoka.core.database import (IModelPropertyExtender, DeclarativeMeta,
                                       ModelPropertyExtenderGoesWild)
 
-    property_extenders = IModelPropertyExtender.get_component_classes()
+    property_extenders = ctx.get_component_classes(IModelPropertyExtender)
     extendable_models = [m for m in DeclarativeMeta._models
                          if getattr(m, '__extendable__', False)]
     for model in extendable_models:
@@ -288,7 +253,6 @@ def _bootstrap():
                         u'%r tried to overwrite already existing '
                         u'properties on %r, aborting'
                             % (extender, model))
-
 
 _bootstrap()
 del _bootstrap

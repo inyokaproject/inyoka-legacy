@@ -24,7 +24,7 @@ from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.context import current_application, local, config
+from inyoka.core.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.templating import TEMPLATE_CONTEXT
 from inyoka.utils.logger import logger
@@ -38,7 +38,7 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 
 __all__ = ('TestResponse', 'ViewTestSuite','TestSuite', 'fixture', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
-           'config')
+           'ctx')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -90,12 +90,11 @@ class ViewTestSuite(TestSuite):
 
     def _pre_setup(self):
         """Setup the test client and url and base domain values"""
-        self._client = Client(current_application, response_wrapper=TestResponse)
-        self.base_domain = config['base_domain_name']
+        self._client = Client(ctx.application, response_wrapper=TestResponse)
+        self.base_domain = ctx.cfg['base_domain_name']
         name = self.controller.name
-        subdomain = config['routing.urls.' + name].split(':', 1)[0]
+        subdomain = ctx.cfg['routing.urls.' + name].split(':', 1)[0]
         self.base_url = make_full_domain(subdomain)
-
 
     def get_context(self, path, method='GET', **kwargs):
         """Return the template context from a view wrapped
@@ -106,14 +105,11 @@ class ViewTestSuite(TestSuite):
     def open(self, path, *args, **kw):
         """Open a connection to `path` and return
         the proper response object"""
-        app = local.application
         if 'follow_redirects' not in kw:
             kw['follow_redirects'] = True
         kw['base_url'] = self.base_url
         kw['buffered'] = True
         response = self._client.open(path, *args, **kw)
-
-        app.bind()
         return response
 
     def get(self, *args, **kw):
@@ -302,8 +298,9 @@ def future(func):
         try:
             func(*args, **kw)
         except Exception, ex:
-            print ("Future test '%s' failed as expected: %s " % (
-                fn_name, str(ex)))
+            sys.stdout.write("Future test '%s' failed as expected: %s ... "
+                % (fn_name, str(ex)))
+            sys.stdout.flush()
             return True
         else:
             raise AssertionError(

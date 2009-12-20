@@ -18,7 +18,7 @@ from inyoka import Component
 from inyoka.i18n import _
 from inyoka.core.auth import forms, models
 from inyoka.core.auth.models import User
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.core.http import redirect_to, Response
 from inyoka.core.middlewares import IMiddleware
@@ -35,7 +35,7 @@ def get_auth_system():
     global _auth_system
     with _auth_system_lock:
         if _auth_system is None:
-            _auth_system = import_string(config['auth.system'])()
+            _auth_system = import_string(ctx.cfg['auth.system'])()
         return _auth_system
 
 
@@ -70,7 +70,7 @@ class IPermissionChecker(Component):
     def has_perm(cls, user, perm, obj=None):
         has_permission = False
 
-        for comp in cls.get_components():
+        for comp in ctx.get_component_instances(cls):
             flag = comp.has_perm(user, perm, obj)
             # The component doesn't care about the permission.
             if flag is None:

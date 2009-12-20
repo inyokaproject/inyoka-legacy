@@ -12,7 +12,7 @@
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect as _redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 from inyoka.core.routing import href
 
 
@@ -56,8 +56,8 @@ class Request(BaseRequest):
     def session(self):
         # hmac does not to support unicode values so we need to ensure
         # that we have a bytecode string here
-        secret = config['cookie_secret'].encode('utf-8')
-        name = config['cookie_name']
+        secret = ctx.cfg['cookie_secret'].encode('utf-8')
+        name = ctx.cfg['cookie_name']
         return SecureCookie.load_cookie(self, name, secret_key=secret)
 
     @property

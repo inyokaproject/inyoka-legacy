@@ -15,7 +15,7 @@ import pytz
 from babel import Locale, UnknownLocaleError
 from babel import dates
 from inyoka.i18n import get_locale
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 
 
 UTC = pytz.timezone('UTC')
@@ -29,7 +29,7 @@ def get_timezone(name=None):
 
     """
     if name is None:
-        name = config['default_timezone']
+        name = ctx.cfg['default_timezone']
     return pytz.timezone(name)
 
 

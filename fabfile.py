@@ -27,8 +27,8 @@ os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
     os.environ['INYOKA_CONFIG'] = cfg
-    from inyoka.application import InyokaApplication
-    application = InyokaApplication()
+    from inyoka import ApplicationContext
+    application = ApplicationContext()
     if debug:
         application = _debug.DebuggedApplication(application, evalex=True,
             show_hidden_frames=True)
@@ -51,8 +51,8 @@ def initdb():
 def _action(*args, **kwargs):
     def _inner(app_factory, hostname='localhost', port=5000, threaded=False, processes=1):
         from werkzeug.serving import run_simple
-        from inyoka.core.api import config
-        parts = config['base_domain_name'].split(':')
+        from inyoka.core.api import ctx
+        parts = ctx.cfg['base_domain_name'].split(':')
         port = int(parts[1]) if len(parts) == 2 else port
         app = app_factory()
         run_simple(hostname, port, app, threaded=threaded,
@@ -151,7 +151,7 @@ def test(clean='yes'):
             os.unlink('.coverage')
             os.unlink('.noseids')
         except:
-            pass 
+            pass
 
     local('python extra/runtests.py', capture=False)
 

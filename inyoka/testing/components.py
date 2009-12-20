@@ -11,7 +11,7 @@
 import sys, os
 from operator import attrgetter
 from inyoka.core.api import Response, IController, Rule, view, \
-    render_template, config
+    render_template
 from inyoka.core.auth import get_auth_system
 from inyoka.core.subscriptions import SubscriptionType
 from werkzeug import redirect

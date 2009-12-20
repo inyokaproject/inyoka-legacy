@@ -16,6 +16,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Component
+from inyoka.core.api import ctx
 from inyoka.utils.datastructures import _missing
 
 
@@ -75,20 +76,20 @@ class SubscriptionType(Component):
     def _by_attr(cls, attrname, value=_missing):
         if value is _missing:
             map = {}
-            for c in cls.get_component_classes():
+            for c in ctx.get_component_classes(cls):
                 map.setdefault(getattr(c, attrname, None), []).append(c)
             return map
 
-        return [c for c in cls.get_component_classes()
+        return [c for c in ctx.get_component_classes(cls)
                 if getattr(c, attrname, None) is value]
 
     @classmethod
     def by_name(cls, name=_missing):
         if name is not _missing:
-            for c in cls.get_component_classes():
+            for c in ctx.get_component_classes(cls):
                 if c.name == name:
                     return c
-        return dict((c.name, c) for c in cls.get_component_classes())
+        return dict((c.name, c) for c in ctx.get_component_classes(cls))
 
     @classmethod
     def by_object_type(cls, object_type=_missing):

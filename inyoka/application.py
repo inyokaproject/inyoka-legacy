@@ -10,32 +10,36 @@
 """
 from time import time
 
-from werkzeug import ClosingIterator, redirect
+from werkzeug import ClosingIterator, redirect, cached_property
 from werkzeug.exceptions import NotFound
 from sqlalchemy.exc import SQLAlchemyError
 
-from inyoka.core.api import db, config, logger, IController, Request, \
+from inyoka.core.api import db, ctx, logger, IController, Request, \
     Response, IMiddleware
-from inyoka.core.context import local, local_manager, current_request
+from inyoka.core.context import local, local_manager, request as current_request
 from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
-from inyoka.core.config import config
 
 
 class InyokaApplication(object):
     """The WSGI application that binds everything."""
 
-    def __init__(self):
-        self.config = config._get_current_object()
-        self.bind()
+    def __init__(self, ctx):
+        self.ctx = ctx
 
-        url_map = IController.get_urlmap() + IMiddleware.get_urlmap()
-        self.url_map = Map(url_map)
+    @cached_property
+    def url_map(self):
+        map = []
+        for provider in (IController, IMiddleware):
+            print "load map from %s" % provider
+            map.extend(provider.get_urlmap())
+            print map
+        return Map(map)
 
     @property
     def url_adapter(self):
-        domain = config['base_domain_name']
+        domain = self.ctx.cfg['base_domain_name']
         try:
             adapter = self.url_map.bind_to_environ(
                 current_request.environ,
@@ -43,11 +47,6 @@ class InyokaApplication(object):
         except RuntimeError:
             adapter = self.url_map.bind(domain)
         return adapter
-
-    def bind(self):
-        """Bind the application to a thread local"""
-        local.application = self
-        local.config = self.config
 
     def dispatch_request(self, request):
         """Dispatch the request.
@@ -62,7 +61,7 @@ class InyokaApplication(object):
             # we cannot use make_full_domain() here because the url adapter
             # is used there too.  So we raise a new `ValueError` here too.
             # Thats why we do it the manual way
-            return redirect('http://%s/' % config['base_domain_name'])
+            return redirect('http://%s/' % ctx.cfg['base_domain_name'])
 
         for middleware in IMiddleware.iter_middlewares():
             response = middleware.process_request(request)
@@ -97,7 +96,7 @@ class InyokaApplication(object):
         # and all the other stuff on the current thread but initialize
         # it afterwards.  We do this so that the request object can query
         # the database in the initialization method.
-        self.bind()
+        self.ctx.bind()
         request = object.__new__(Request)
         local.request = request
         request.__init__(environ, self)
@@ -133,9 +132,9 @@ class InyokaApplication(object):
                 expires = time() + max_age
             else:
                 max_age = expires = None
-            request.session.save_cookie(response, config['cookie_name'],
+            request.session.save_cookie(response, ctx.cfg['cookie_name'],
                 max_age=max_age, expires=expires, httponly=True,
-                domain=config['cookie_domain_name'])
+                domain=ctx.cfg['cookie_domain_name'])
 
         if response.status == 200:
             response.add_etag()
@@ -146,4 +145,13 @@ class InyokaApplication(object):
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""
         return ClosingIterator(self.dispatch_wsgi(environ, start_response),
-                               [db.session.close, local_manager.cleanup])
+                               [db.session.close, local_manager.cleanup,
+                               self.ctx.bind])
+
+
+def make_app(ctx):
+    """Create the application object, wrap all middlewares and return
+    it to the context.
+    """
+    app = InyokaApplication(ctx)
+    return app

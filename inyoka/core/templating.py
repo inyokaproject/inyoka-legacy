@@ -16,7 +16,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     MemcachedBytecodeCache
 from inyoka import INYOKA_REVISION
 from inyoka import l10n, i18n
-from inyoka.core.context import current_request, config, current_application
+from inyoka.core.context import request as current_request, ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 
@@ -60,7 +60,7 @@ def templated(template_name):
             if isinstance(ret, dict):
                 data = render_template(template_name, ret)
                 response = Response(data)
-                if config['debug']:
+                if ctx.cfg['debug']:
                     TEMPLATE_CONTEXT.clear()
                     TEMPLATE_CONTEXT.update(ret)
                 return response
@@ -88,8 +88,8 @@ class InyokaEnvironment(Environment):
     def __init__(self):
         template_paths = [os.path.join(os.path.dirname(__file__), os.pardir,
                                        'templates')]
-        if config['templates.path']:
-            template_paths.insert(0,  config['templates.path'])
+        if ctx.cfg['templates.path']:
+            template_paths.insert(0,  ctx.cfg['templates.path'])
 
         loaders = []
         for path in template_paths:
@@ -99,21 +99,21 @@ class InyokaEnvironment(Environment):
 
         loader = ChoiceLoader(loaders)
         cache_obj = None
-        if config['templates.use_cache']:
-            if config['templates.use_memcached_cache']:
+        if ctx.cfg['templates.use_cache']:
+            if ctx.cfg['templates.use_memcached_cache']:
                 cache_obj = MemcachedBytecodeCache(
                     client=inyoka_cache,
-                    timeout=config['caching.timeout']
+                    timeout=ctx.cfg['caching.timeout']
                 )
-            elif config['templates.use_filesystem_cache']:
+            elif ctx.cfg['templates.use_filesystem_cache']:
                 cache_obj = FileSystemBytecodeCache(
-                    directory=config['caching.filesystem_cache_path'],
+                    directory=ctx.cfg['caching.filesystem_cache_path'],
                 )
 
         Environment.__init__(self,
             loader=loader,
             extensions=['jinja2.ext.i18n', 'jinja2.ext.do'],
-            auto_reload=config['templates.auto_reload'],
+            auto_reload=ctx.cfg['templates.auto_reload'],
             undefined=StrictUndefined,
             cache_size=-1,
             bytecode_cache=cache_obj

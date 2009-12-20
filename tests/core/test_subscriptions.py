@@ -10,8 +10,7 @@
 """
 import unittest
 from operator import attrgetter
-from inyoka import setup_components
-from inyoka.core.api import db
+from inyoka.core.api import db, ctx
 from inyoka.core.auth.models import User
 from inyoka.core.subscriptions import SubscriptionType
 from inyoka.core.subscriptions.models import Subscription
@@ -81,7 +80,16 @@ class TestSubscriptions(TestSuite):
     }
 
     def setUp(self):
-        setup_components([])
+        ctx.load_components([
+            CategorySubscriptionType, BlogSubscriptionType,
+            CommentsSubscriptionType
+        ])
+
+    def tearDown(self):
+        ctx.unload_components([
+            CategorySubscriptionType, BlogSubscriptionType,
+            CommentsSubscriptionType
+        ])
 
     def _check_sequent_state(self, user, type_name, subject_id, first_unread, count):
         """
@@ -103,13 +111,11 @@ class TestSubscriptions(TestSuite):
         eq_(s.unread_object_ids, unread_object_ids)
         eq_(s.count, count)
 
-    @future
     def test_subscriptiontype(self):
         eq_(SubscriptionType.by_name('__test_comments'), CommentsSubscriptionType)
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
         eq_(SubscriptionType.by_subject_type()[Category], [CategorySubscriptionType])
 
-    @future
     @with_fixtures('eins', 'zwei', 'drei', 'vier')
     def test_subscribing(self, users):
         cat1 = Category(name='cat1')

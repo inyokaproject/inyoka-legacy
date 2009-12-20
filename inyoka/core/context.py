@@ -32,9 +32,5 @@ from werkzeug import Local, LocalManager
 local = Local()
 local_manager = LocalManager(local)
 
-current_request = local('request')
-current_application = local('application')
-config = local('config')
-
-# import inyoka.core.config to setup the thread locals there
-import inyoka.core.config
+ctx = local('ctx')
+request = local('request')

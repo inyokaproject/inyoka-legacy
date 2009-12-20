@@ -7,6 +7,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
+from inyoka.core.context import ctx
 from inyoka.core.markup.lexer import Lexer
 from inyoka.core.markup.machine import Renderer, RenderContext
 from inyoka.core.markup.transformers import ITransformer
@@ -142,7 +143,7 @@ class Parser(object):
         self.lexer = Lexer()
         self.stack_depth = 0
         if transformers is None:
-            transformers = ITransformer.get_components()
+            transformers = ctx.get_component_instances(ITransformer)
         self.transformers = transformers
 
         #: node dispatchers

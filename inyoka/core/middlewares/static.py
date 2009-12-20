@@ -14,12 +14,12 @@ from os.path import join
 from werkzeug import SharedDataMiddleware
 from werkzeug.routing import Rule
 
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 from inyoka.core.middlewares import IMiddleware
 
 
-STATIC_PATH = join(os.environ['INYOKA_MODULE'], config['static_path'])
-MEDIA_PATH = join(os.environ['INYOKA_MODULE'], config['media_path'])
+STATIC_PATH = join(os.environ['INYOKA_MODULE'], ctx.cfg['static_path'])
+MEDIA_PATH = join(os.environ['INYOKA_MODULE'], ctx.cfg['media_path'])
 
 
 class StaticMiddlewareBase(object):
@@ -50,7 +50,7 @@ class StaticMiddlewareBase(object):
 class StaticMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
     """Concrete static file serving middleware implementation"""
     name = 'static'
-    exports = {config['routing.urls.static'].split(':', 1)[1]: STATIC_PATH}
+    exports = {ctx.cfg['routing.urls.static'].split(':', 1)[1]: STATIC_PATH}
     url_rules = [
         Rule('/', defaults={'file': '/'}, endpoint='static'),
         Rule('/<path:file>', endpoint='static')
@@ -60,7 +60,7 @@ class StaticMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
 class MediaMiddleware(StaticMiddlewareBase, IMiddleware, SharedDataMiddleware):
     """Concrete media file serving middleware implementation"""
     name = 'media'
-    exports = {config['routing.urls.media'].split(':', 1)[1]: MEDIA_PATH}
+    exports = {ctx.cfg['routing.urls.media'].split(':', 1)[1]: MEDIA_PATH}
     url_rules = [
         Rule('/', defaults={'file': '/'}, endpoint='media'),
         Rule('/<path:file>', endpoint='media')

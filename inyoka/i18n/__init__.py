@@ -13,7 +13,7 @@ from os.path import realpath, dirname
 from gettext import NullTranslations
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
-from inyoka.core.context import config
+from inyoka.core.context import ctx
 
 
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
@@ -40,7 +40,7 @@ def get_translations():
     """
     global _translations
     if _translations is None:
-        _translations = load_core_translations(config['language'])
+        _translations = load_core_translations(ctx.cfg['language'])
     return _translations
 
 
@@ -49,7 +49,7 @@ def get_locale(locale=None):
     configured locale if none is given.
     """
     if locale is None:
-        locale = config['language']
+        locale = ctx.cfg['language']
     locale = Locale.parse(locale)
     return locale
 

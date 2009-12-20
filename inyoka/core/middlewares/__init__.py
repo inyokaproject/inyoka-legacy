@@ -9,12 +9,11 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Component
+from inyoka.core.context import ctx
 from inyoka.core.routing import UrlMixin
 
 
 class IMiddleware(Component, UrlMixin):
-    __lazy_loading__ = True
-
     # cache for imported middlewares
     _middlewares = []
 
@@ -76,7 +75,7 @@ class IMiddleware(Component, UrlMixin):
         """Return all middlewares ordered by priority."""
         if not cls._middlewares:
             cls._middlewares = sorted(
-                cls.get_components(),
+                ctx.get_component_instances(cls),
                 key=lambda x: -x.priority)
         ret = cls._middlewares
         return ret

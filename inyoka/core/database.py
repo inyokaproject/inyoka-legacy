@@ -294,6 +294,15 @@ class Query(orm.Query):
         return self.options(*args)
 
 
+class ISchemaController(Component):
+    """A schemacontroller, which takes care of models and migrations.
+
+    Only models for now…
+    """
+
+    models = []
+
+
 class IModelPropertyExtender(Component):
     """A subclass of this interface is able to extend a models
     columns and various other properties.
@@ -384,25 +393,21 @@ ModelBase.query = session.query_property(Query)
 
 
 def init_db(**kwargs):
-    # UGLY; BUT BEST TO GET TESTS ETC RUNNING NOW
-    # TODO: how to discover models?! SchemaController?
-    from inyoka.core.auth import models as amodels
-    from inyoka.core.cache import Cache
-    from inyoka.paste import models
-    import inyoka.core.subscriptions.models
-
-    # TODO: even uglier ;)
-    if ctx.cfg['debug']:
-        sys.path.insert(0, os.getcwd())
-        from tests.utils import test_pagination
-        from tests.core import test_subscriptions
-
-    metadata.create_all(**kwargs)
-    # TODO: YES ugly, but for now…
-    anon = amodels.User(u'anonymous', u'', u'')
-    admin = amodels.User(u'admin', u'root@localhost', u'default')
-    session.add_all((anon, admin))
-    session.commit()
+     tables = []
+  
+     for comp in ctx.get_component_instances(ISchemaController):
+         tables.extend([i.__table__ for i in comp.models])
+  
+     kwargs['tables'] = tables
+ 
+     if tables:
+         metadata.create_all(**kwargs)
+         # TODO: YES ugly, but for now…
+         from inyoka.core.auth import models as amodels
+         anon = amodels.User(u'anonymous', u'', u'')
+         admin = amodels.User(u'admin', u'root@localhost', u'default')
+         session.add_all((anon, admin))
+         session.commit()
 
 
 def _make_module():
@@ -421,6 +426,7 @@ def _make_module():
     db.Query = Query
     db.AttributeExtension = AttributeExtension
     db.NoResultFound = orm.exc.NoResultFound
+    db.ISchemaController = ISchemaController
     return db
 
 sys.modules['inyoka.core.database.db'] = db = _make_module()

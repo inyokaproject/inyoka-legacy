@@ -98,3 +98,7 @@ class Confirm(db.Model):
     @property
     def is_expired(self):
         return self.expires < date.today()
+
+
+class ConfirmSchemaController(db.ISchemaController):
+    models = [Confirm]

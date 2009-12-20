@@ -175,3 +175,7 @@ def set_cache():
 
 # enable the caching system
 set_cache()
+
+
+class CacheSchemaController(db.ISchemaController):
+    models = [Cache]

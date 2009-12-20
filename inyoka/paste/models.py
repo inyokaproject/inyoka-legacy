@@ -84,3 +84,7 @@ class Entry(db.Model):
             s = '#%s' % self.id if self.id else '[no id]'
         u = self.author.username
         return '<Entry %s by %s>' % (s, u)
+
+
+class PasteSchemaController(db.ISchemaController):
+    models = [Entry]

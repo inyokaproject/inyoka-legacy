@@ -70,7 +70,7 @@ class Component(object):
 def _is_component(value):
     _registry = ComponentMeta._registry
     return (isclass(value) and issubclass(value, Component) and
-            not value is Component)
+            value is not Component)
 
 
 def _import_modules(modules):

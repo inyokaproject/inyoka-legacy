@@ -49,7 +49,8 @@ def initdb():
 
 
 def _action(*args, **kwargs):
-    def _inner(app_factory, hostname='localhost', port=5000, threaded=False, processes=1):
+    def _inner(app_factory, hostname='localhost', port=5000,
+               threaded=False, processes=1):
         from werkzeug.serving import run_simple
         from inyoka.core.api import ctx
         parts = ctx.cfg['base_domain_name'].split(':')
@@ -118,7 +119,7 @@ def build_test_venv(pyver=None):
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python extra/make-bootstrap.py -p %s > ../bootstrap.py' % pyver,
           capture=False)
-    local('cd .. && chmod 775 bootstrap.py && ./bootstrap.py inyoka-testsuite', capture=False)
+    local('cd .. && python ./bootstrap.py inyoka-testsuite', capture=False)
 
 
 def clean_files():

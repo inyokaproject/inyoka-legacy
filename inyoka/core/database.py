@@ -111,7 +111,7 @@ def get_engine():
                        'pool_recycle':      ctx.cfg['database.pool_recycle']}
             # SQLite, Access and Informix uses ThreadLocalQueuePool per default
             # and as such cannot use a timeout for pooled connections.
-            if not info.drivername in ('sqlite', 'access', 'informix'):
+            if info.drivername not in ('sqlite', 'access', 'informix'):
                 options.update({
                     'poolclass': QueuePool,
                     'pool_timeout': ctx.cfg['database.pool_timeout']

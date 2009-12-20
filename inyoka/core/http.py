@@ -68,7 +68,7 @@ class Request(BaseRequest):
 
     def flash(self, message, success=None, id=None):
         """Flash a message to the user."""
-        if not 'flash_buffer' in self.session:
+        if 'flash_buffer' not in self.session:
             self.session['flash_buffer'] = []
         self.session['flash_buffer'].append(FlashMessage(message, success, id))
         self.session.modified = True

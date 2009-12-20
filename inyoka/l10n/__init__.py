@@ -81,7 +81,7 @@ def to_datetime(obj):
 def get_dummy(func):
     @wraps(func)
     def _inner(*args, **kwargs):
-        if not ('locale' in kwargs and not kwargs['locale'] is dates.LC_TIME):
+        if 'locale' not in kwargs and not kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()
         # yet only a few methods can work with timezone information properly
         if func.func_name in ('format_datetime', 'format_time'):

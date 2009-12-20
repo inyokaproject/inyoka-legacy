@@ -108,9 +108,6 @@ class ApplicationContext(object):
             trans.commit(force=True)
             cfg.touch()
 
-        # bind to the context
-        self.bind()
-
     def bind(self):
         from inyoka.core.context import local
         local.ctx = self
@@ -209,8 +206,9 @@ def _bootstrap():
     os.environ.setdefault('INYOKA_INSTANCE', realpath(join(conts, pardir)))
 
     #: bind the context
-    from inyoka.core.context import local, ctx
-    ctx = local.ctx = ApplicationContext()
+    ctx = ApplicationContext()
+    ctx.bind()
+
 
     # setup components
     test_components = []

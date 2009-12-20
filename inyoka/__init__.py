@@ -81,7 +81,7 @@ def _import_modules(modules):
             yield import_string(module)
         else:
             try:
-                for mod in find_modules(module[:-2], recursive=True):
+                for mod in find_modules(module[:-2], True, True):
                     yield import_string(mod)
             except ValueError: # module is a module and not a package
                 yield import_string(module[:-2])

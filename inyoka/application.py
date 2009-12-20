@@ -28,7 +28,7 @@ class InyokaApplication(object):
     def __init__(self, ctx):
         self.ctx = ctx
 
-    @cached_property
+    @property
     def url_map(self):
         map = []
         for provider in (IController, IMiddleware):

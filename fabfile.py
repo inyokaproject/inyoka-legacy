@@ -27,8 +27,8 @@ os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
     os.environ['INYOKA_CONFIG'] = cfg
-    from inyoka import ApplicationContext
-    application = ApplicationContext()
+    from inyoka.core.api import ctx
+    application = ctx.application
     if debug:
         application = _debug.DebuggedApplication(application, evalex=True,
             show_hidden_frames=True)

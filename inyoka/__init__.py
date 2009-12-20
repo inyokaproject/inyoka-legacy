@@ -91,6 +91,7 @@ class ApplicationContext(object):
     """"""
 
     def __init__(self):
+        print "LOAD NEW APPLICATION CONTEXT"
         #: Component type -> classes mapping
         self._components = {}
         #: Component class -> instance mapping
@@ -173,7 +174,6 @@ class ApplicationContext(object):
     def get_component(self, compcls):
         """Return the instance of a component class."""
         if compcls not in self._instances:
-            print "instanciate %s" % compcls
             self._instances[compcls] = compcls(self)
         return self._instances[compcls]
 

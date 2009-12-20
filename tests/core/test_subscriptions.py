@@ -117,6 +117,7 @@ class TestSubscriptions(TestSuite):
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
         eq_(SubscriptionType.by_subject_type()[Category], [CategorySubscriptionType])
 
+    @future
     @with_fixtures('eins', 'zwei', 'drei', 'vier')
     def test_subscribing(self, users):
         cat1 = Category(name='cat1')

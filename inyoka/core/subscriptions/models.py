@@ -184,3 +184,7 @@ class SubscriptionUnreadObjects(db.Model):
     def __repr__(self):
         return '<SubscriptionUnreadObjects s %r obj %r>' % \
                 (self.subscription_id, self.object_id)
+
+
+class SubscriptionSchemaController(db.ISchemaController):
+    models = [SubscriptionUnreadObjects, Subscription]

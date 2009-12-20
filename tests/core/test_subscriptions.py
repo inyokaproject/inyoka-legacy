@@ -24,6 +24,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
 
+
 class Entry(db.Model):
     __tablename__ = '_test_subscription_entry'
     id = db.Column(db.Integer, primary_key=True)
@@ -31,11 +32,16 @@ class Entry(db.Model):
     category = db.relation(Category)
     title = db.Column(db.String(30))
 
+
 class Comment(db.Model):
     __tablename__ = '_test_subscription_comment'
     id = db.Column(db.Integer, primary_key=True)
     entry_id = db.Column(db.ForeignKey(Entry.id), nullable=False)
     entry = db.relation(Entry)
+
+
+class SubscriptionTestSchemaController(db.ISchemaController):
+    models = [Category, Entry, Comment]
 
 
 class NotifyTrackerMixin(object):

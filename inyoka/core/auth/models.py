@@ -99,3 +99,7 @@ class User(db.Model):
 
     def __unicode__(self):
         return self.display_name
+
+
+class UserSchemaController(db.ISchemaController):
+    models = [User]

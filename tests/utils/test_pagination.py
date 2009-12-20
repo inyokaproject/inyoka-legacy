@@ -53,6 +53,10 @@ class PaginationTest2(db.Model):
     position = db.Column(db.Integer)
 
 
+class PaginationTestSchemaController(db.ISchemaController):
+    models = [PaginationTest1, PaginationTest2]
+
+
 def test_simple_pagination():
     query = PaginationTest1.query.filter_by(group=10)
     p = URLPagination(query, None, '/entries/', per_page=15)

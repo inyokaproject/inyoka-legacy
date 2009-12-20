@@ -217,6 +217,7 @@ def _bootstrap():
     if ctx.cfg['debug']:
         test_components = [
             'tests.core.test_subscriptions.*',
+            'tests.utils.*',
         ]
 
     # TODO: make it configurable

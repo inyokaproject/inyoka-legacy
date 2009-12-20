@@ -91,7 +91,6 @@ class ApplicationContext(object):
     """"""
 
     def __init__(self):
-        print "LOAD NEW APPLICATION CONTEXT"
         #: Component type -> classes mapping
         self._components = {}
         #: Component class -> instance mapping
@@ -123,7 +122,6 @@ class ApplicationContext(object):
         return make_app(self)
 
     def load_component(self, component):
-        print 'load %s' % component
         try:
             for comptype in component._comptypes:
                 self._components.setdefault(comptype, []).append(component)
@@ -146,7 +144,6 @@ class ApplicationContext(object):
     def unload_components(self, components):
         unloaded = []
         for component in components:
-            print "unload %s" % component
             try:
                 if getattr(component, '_iscomptype', False):
                     unloaded.append(self._components.pop(component))
@@ -155,7 +152,6 @@ class ApplicationContext(object):
                 continue
 
     def load_packages(self, packages):
-        print "load packages %s" % packages
         modules = _import_modules(packages)
         components = list(m[1] for m in
             sum((getmembers(mod, _is_component) for mod in modules), [])

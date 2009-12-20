@@ -32,9 +32,7 @@ class InyokaApplication(object):
     def url_map(self):
         map = []
         for provider in (IController, IMiddleware):
-            print "load map from %s" % provider
             map.extend(provider.get_urlmap())
-            print map
         return Map(map)
 
     @property

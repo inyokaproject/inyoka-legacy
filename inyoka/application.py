@@ -101,10 +101,7 @@ class InyokaApplication(object):
 
         try:
             response = self.dispatch_request(request)
-
-            # force the response type to be a werkzeug response
-            if isinstance(response, Response):
-                response = Response.force_type(response, environ)
+            response = Response.force_type(response, environ)
         except DirectResponse, exc:
             # a response type that works around the call with
             # (environ, start_response).  Use it with care and only

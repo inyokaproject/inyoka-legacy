@@ -60,7 +60,8 @@ class AuthMiddleware(IMiddleware):
         request.user = user
 
     def process_response(self, request, response):
-        # TODO: set cache headers to no cache
+        if not request.user.is_anonymous:
+            response.prevent_caching()
         return response
 
 

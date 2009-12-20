@@ -79,3 +79,11 @@ class IMiddleware(Component, UrlMixin):
                 key=lambda x: -x.priority)
         ret = cls._middlewares
         return ret
+
+
+class CommonMiddleware(IMiddleware):
+    def process_response(self, request, response):
+        print request.has_flashed_messages()
+        if request.has_flashed_messages():
+            response.prevent_caching()
+        return response

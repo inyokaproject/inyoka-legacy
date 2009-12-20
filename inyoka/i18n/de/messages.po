@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-02 17:46+0100\n"
-"PO-Revision-Date: 2009-12-12 09:10+0100\n"
+"PO-Revision-Date: 2009-12-20 17:42+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -18,27 +18,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.4\n"
 
-#: inyoka/core/auth/forms.py:16 inyoka/core/auth/forms.py:28
+#: inyoka/core/auth/__init__.py:238 inyoka/portal/auth.py:27
+msgid "You are now logged in."
+msgstr ""
+
+#: inyoka/core/auth/__init__.py:266
+msgid "You was successfully logged out"
+msgstr ""
+
+#: inyoka/core/auth/forms.py:16 inyoka/core/auth/forms.py:29
 msgid "Username"
 msgstr ""
 
-#: inyoka/core/auth/forms.py:17 inyoka/core/auth/forms.py:30
+#: inyoka/core/auth/forms.py:17 inyoka/core/auth/forms.py:31
 msgid "Password"
 msgstr ""
 
-#: inyoka/core/auth/forms.py:29
+#: inyoka/core/auth/forms.py:19
+msgid "Permanent Login"
+msgstr ""
+
+#: inyoka/core/auth/forms.py:30
 msgid "Email"
 msgstr ""
 
-#: inyoka/core/auth/forms.py:32
+#: inyoka/core/auth/forms.py:33
 msgid "Password again"
 msgstr ""
 
-#: inyoka/core/auth/forms.py:37
+#: inyoka/core/auth/forms.py:38
 msgid "The two passwords must be the same"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:22
+#: inyoka/core/config/defaults.py:23
 msgid "Enable debug mode"
 msgstr ""
 
@@ -50,102 +62,152 @@ msgstr ""
 msgid "The secret used for hashing the cookies"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:30
+#: inyoka/core/config/defaults.py:29
 msgid "Base domain name"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:32
+#: inyoka/core/config/defaults.py:31
 msgid "Cookie domain name"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:34
+#: inyoka/core/config/defaults.py:33
+msgid "Cookie name"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:35
 msgid "The current language locale"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:38
+#: inyoka/core/config/defaults.py:37
+msgid "The default timezone for all users."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:41
 msgid ""
 "The database URL.  For more information about database settings consult the "
 "Inyoka docs."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:41
+#: inyoka/core/config/defaults.py:44
 msgid ""
 "If enabled the database will collect the SQL statements and add them to the "
 "bottom of the page for easier debugging.  Beside that the sqlalchemy log is "
 "written to a `db.log` file."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:47
+#: inyoka/core/config/defaults.py:49
+msgid ""
+"If set to non -1, number of seconds between connection recycling. If this "
+"timeout is surpassed the connection will be closed and replaced with a newly"
+" opened connection."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:53
+msgid ""
+"The number of seconds to wait before giving up on returning a connection.  "
+"This will not be used if the used database is one of SQLite, Access or "
+"Informix as those don't support queued connection pools."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:60
 msgid "Custom template path which is searched before the default path."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:50
+#: inyoka/core/config/defaults.py:63
 msgid "Auto reload template files if they changed their contents."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:55
-msgid "The Authsystem which should get used"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:61
-msgid "Url mapping used for the portal application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:63
-msgid "Url mapping used for the calendar application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:65
-msgid "Url mapping used for the news application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:67
-msgid "Url mapping used for the forum application"
+#: inyoka/core/config/defaults.py:66
+msgid "Use either memory, filesystem or memcached bytecode caches"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:69
-msgid "Url mapping used for the wiki application"
+msgid "Use Memcached for bytecode caching"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:71
-msgid "Url mapping used for the paste application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:73
-msgid "Url mapping used for the planet application"
+msgid "Use filesystem for bytecode caching"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:75
+msgid "Choose one of null, simple, memcached or filesystem for the caching system."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:78
+msgid "The path for the filesystem caches"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:80
+msgid "The timeout for the caching system"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:82
+msgid "Comma seperated list of memcached servers"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:86
+msgid "The Authsystem which should get used"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:92
+msgid "Url mapping used for the portal application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:94
+msgid "Url mapping used for the calendar application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:96
+msgid "Url mapping used for the news application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:98
+msgid "Url mapping used for the forum application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:100
+msgid "Url mapping used for the wiki application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:102
+msgid "Url mapping used for the paste application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:104
+msgid "Url mapping used for the planet application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:106
 msgid "Url mapping used for the testing application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:79
+#: inyoka/core/config/defaults.py:110
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:81
+#: inyoka/core/config/defaults.py:112
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:83
+#: inyoka/core/config/defaults.py:114
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:87
+#: inyoka/core/config/defaults.py:118
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/markup/__init__.py:35
+#: inyoka/core/markup/__init__.py:34
 msgid "Internal parser error: "
 msgstr ""
 
-#: inyoka/core/markup/__init__.py:36
+#: inyoka/core/markup/__init__.py:35
 msgid ""
-"The parser could hot process the text because it exceeded the maximum "
+"The parser could not process the text because it exceeded the maximum "
 "allowed depth for nested elements"
 msgstr ""
 
@@ -161,6 +223,14 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+#: inyoka/portal/auth.py:22
+msgid "This username doesn't exist."
+msgstr ""
+
+#: inyoka/portal/auth.py:30
+msgid "The password is not correct."
+msgstr ""
+
 #: inyoka/portal/controllers.py:54
 msgid "Key not found. Maybe it has already been used?"
 msgstr ""
@@ -173,15 +243,15 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
-#: inyoka/utils/pagination.py:120
+#: inyoka/utils/pagination.py:114
 msgid "next »"
 msgstr ""
 
-#: inyoka/utils/pagination.py:121
+#: inyoka/utils/pagination.py:115
 msgid "« previous"
 msgstr ""
 
-#: inyoka/utils/pagination.py:130
+#: inyoka/utils/pagination.py:124
 msgid "…"
 msgstr ""
 

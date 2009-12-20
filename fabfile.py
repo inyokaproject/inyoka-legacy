@@ -160,7 +160,6 @@ def test(clean='yes'):
     local('python extra/runtests.py', capture=False)
 
 
-
 def reindent():
     local("extra/reindent.py -r -B .", capture=False)
 

@@ -248,6 +248,8 @@ class InyokaPlugin(cover.Coverage):
             raise
         # rollback the transaction
         self._transaction.rollback()
+        for callback in ctx.application.cleanup_callbacks:
+            callback()
 
     def wantClass(self, cls):
         if issubclass(cls, ViewTestSuite):

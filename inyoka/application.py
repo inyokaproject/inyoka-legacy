@@ -25,6 +25,10 @@ class InyokaApplication(object):
 
     def __init__(self, ctx):
         self.ctx = ctx
+        self.cleanup_callbacks = [db.session.close, local_manager.cleanup,
+                                  self.ctx.bind]
+
+
 
     @property
     def url_map(self):
@@ -127,8 +131,7 @@ class InyokaApplication(object):
     def __call__(self, environ, start_response):
         """Make the application object a WSGI application."""
         return ClosingIterator(self.dispatch_wsgi(environ, start_response),
-                               [db.session.close, local_manager.cleanup,
-                               self.ctx.bind])
+                               self.cleanup_callbacks)
 
 
 def make_app(ctx):

@@ -242,7 +242,6 @@ class InyokaPlugin(cover.Coverage):
         # revert all mock objects to get clear passage on the next test
         revert_mocks()
         try:
-            db.session.commit()
             db.session.close()
         except db.SQLAlchemyError:
             db.session.rollback()

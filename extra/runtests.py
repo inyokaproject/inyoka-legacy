@@ -9,7 +9,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import nose, sys, os
+import nose, os
 
 import coverage
 coverage.erase()
@@ -39,4 +39,4 @@ def run_suite(module='inyoka'):
 
 
 if __name__ == '__main__':
-    sys.exit(run_suite())
+    run_suite()

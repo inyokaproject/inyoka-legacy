@@ -12,7 +12,6 @@ from time import time
 
 from werkzeug import ClosingIterator, redirect, cached_property
 from werkzeug.exceptions import NotFound
-from sqlalchemy.exc import SQLAlchemyError
 
 from inyoka.core.api import db, ctx, logger, IController, Request, \
     Response, IMiddleware
@@ -73,7 +72,7 @@ class InyokaApplication(object):
             response = err.get_response(request)
         except db.NoResultFound:
             response = NotFound().get_response(request)
-        except SQLAlchemyError, err:
+        except db.SQLAlchemyError, err:
             db.session.rollback()
             logger.error(err)
             raise

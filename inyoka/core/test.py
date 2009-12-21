@@ -31,6 +31,7 @@ from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
 
+
 logger.disabled = True
 
 warnings.filterwarnings('ignore', message='lxml does not preserve')
@@ -225,7 +226,11 @@ class InyokaPlugin(cover.Coverage):
                     instances = loader()
                     db.session.add(instances)
                 loaded[fixture] = instances
-                db.session.commit()
+                try:
+                    db.session.commit()
+                except db.SQLAlchemyError:
+                    db.session.rollback()
+                    raise
             t.test = functools.partial(t.test, loaded)
 
     def stopTest(self, test):
@@ -236,9 +241,13 @@ class InyokaPlugin(cover.Coverage):
 
         # revert all mock objects to get clear passage on the next test
         revert_mocks()
+        try:
+            db.session.commit()
+            db.session.close()
+        except db.SQLAlchemyError:
+            db.session.rollback()
+            raise
         # rollback the transaction
-        db.session.commit()
-        db.session.close()
         self._transaction.rollback()
 
     def wantClass(self, cls):

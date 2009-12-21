@@ -77,7 +77,7 @@ from threading import Lock
 from contextlib import contextmanager
 import sqlalchemy
 from sqlalchemy import MetaData, create_engine
-from sqlalchemy import orm, sql
+from sqlalchemy import orm, sql, exc
 from sqlalchemy.orm.session import Session as SASession
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
@@ -426,6 +426,7 @@ def _make_module():
     db.Query = Query
     db.AttributeExtension = AttributeExtension
     db.NoResultFound = orm.exc.NoResultFound
+    db.SQLAlchemyError = exc.SQLAlchemyError
     db.ISchemaController = ISchemaController
     return db
 

@@ -11,24 +11,34 @@
 
 class BaseImage(object):
     """
+
+    :param filename: Either a filelike object or a filename.
     """
 
     def __init__(self, filename):
+        pass
+
+    def resize(self, x, y):
+        """
+
+        :param x: Destination X resolution
+        :param y: Designation Y resolution
+        """
+        pass
+
+    def thumbnail(self):
         """
         """
         pass
 
-    def resize(self, filename, newsize):
+    def avatar(self):
         """
         """
         pass
 
-    def thumbnail(self, filename):
+    def save(self, filename):
         """
-        """
-        pass
 
-    def avatar(self, filename):
-        """
+        :param filename: Either a filelike object or a filename.
         """
         pass

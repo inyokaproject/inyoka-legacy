@@ -11,10 +11,10 @@ Dependencies and virtual environment
 ====================================
 
 To get Inyoka work properly we need those dependencies:
-* Python (at least 2.5)
-* python-setuptools
-* mercurial
-* fabric
+ * Python (at least 2.5)
+ * python-setuptools
+ * mercurial
+ * fabric
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 

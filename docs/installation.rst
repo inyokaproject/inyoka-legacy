@@ -10,12 +10,19 @@ on the following slides.
 Dependencies and virtual environment
 ====================================
 
-To get Inyoka work properly we need those dependencies: Python (at least 2.5),
-python-setuptools and mercurial.
+To get Inyoka work properly we need those dependencies:
+* Python (at least 2.5)
+* python-setuptools
+* mercurial
+* fabric
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 
     aptitude install python-dev python-setuptools python-virtualenv mercurial
+
+Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::
+
+    easy_install fabric
 
 Now we can install Inyoka. But first we need to check out inyoka from the
 mercurial repository. To do that we create a new folder ``inyoka-dev`` in your
@@ -60,10 +67,10 @@ We are now ready to enter the virtual environment (assumed you are located in
     
 Before starting we have to initialize the database::
 
-    python manage-inyoka.py initdb
+    fab initdb
 
 Now start the development server::
 
-    python manage-inyoka.py runserver
+    fab runserver
 
 Ready!

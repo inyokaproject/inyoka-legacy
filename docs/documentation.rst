@@ -19,7 +19,7 @@ In the following we suppose that you activated the virtual environment (see
 :doc:`installation`) and that you are in the ``inyoka-dev/docs`` directory. Now you
 can run::
 
-    sphinx-build -b html . build
+    make html
 
 The complete documentation is now located in ``build`` and it can be opened with
 the browser of your choice.

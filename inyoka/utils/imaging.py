@@ -23,13 +23,11 @@ class BaseImage(object):
         """
         pass
 
-    @classmethod
     def thumbnail(self, filename):
         """
         """
         pass
 
-    @classmethod
     def avatar(self, filename):
         """
         """

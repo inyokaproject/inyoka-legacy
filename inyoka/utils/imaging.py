@@ -13,24 +13,24 @@ class BaseImage(object):
     """
     """
 
-    def __init__(self,filename):
+    def __init__(self, filename):
         """
         """
         pass
 
-    def resize(self,filename,newsize):
-        """
-        """
-        pass
-
-    @classmethod
-    def thumbnail(self,filename):
+    def resize(self, filename, newsize):
         """
         """
         pass
 
     @classmethod
-    def avatar(self,filename):
+    def thumbnail(self, filename):
+        """
+        """
+        pass
+
+    @classmethod
+    def avatar(self, filename):
         """
         """
         pass

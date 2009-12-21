@@ -16,7 +16,7 @@ import functools
 
 import nose
 import nose.tools
-from nose.plugins import cover, base
+from nose.plugins import cover, base, errorclass
 
 from werkzeug import Client
 from werkzeug.contrib.testtools import ContentAccessors
@@ -298,6 +298,19 @@ def with_fixtures(*names):
         return func
     return proxy
 
+class ExpectedFailure(Exception):
+    pass
+
+class UnexpectedSuccess(Exception):
+    pass
+
+class FuturePlugin(errorclass.ErrorClassPlugin):
+    enabled = True
+    name = "future"
+
+    future = errorclass.ErrorClass(ExpectedFailure, label='FUTURE', isfailure=False)
+    unexpected = errorclass.ErrorClass(UnexpectedSuccess, label='UNEXPECTED', isfailure=True)
+
 
 #TODO: write unittests
 def future(func):
@@ -308,11 +321,7 @@ def future(func):
         try:
             func(*args, **kw)
         except Exception, ex:
-            sys.stdout.write("Future test '%s' failed as expected: %s ... "
-                % (fn_name, str(ex)))
-            sys.stdout.flush()
-            return True
+            raise ExpectedFailure("Test failed as expected: %s ... " % str(ex))
         else:
-            raise AssertionError(
-                "Unexpected success for future test '%s'" % func.func_name)
+            raise UnexpectedSuccess("Unexpected success for future test")
     return future_decorator

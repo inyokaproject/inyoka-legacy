@@ -17,7 +17,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from inyoka.core.api import db, ctx, logger, IController, Request, \
     Response, IMiddleware
 from inyoka.core.context import local, local_manager, request as current_request
-from inyoka.core.http import DirectResponse
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 
@@ -46,12 +45,11 @@ class InyokaApplication(object):
             adapter = self.url_map.bind(domain)
         return adapter
 
-    def dispatch_request(self, request):
+    def dispatch_request(self, request, environ):
         """Dispatch the request.
 
-        This method tries to find the proper controller and view
-        for the request path and does the request middleware wrapping
-        as well.
+        This method tries to find the proper controller and view for the
+        request and does the request/response middleware wrapping.
         """
         try:
             urls = self.url_adapter
@@ -80,6 +78,15 @@ class InyokaApplication(object):
             logger.error(err)
             raise
 
+        response = Response.force_type(response, environ)
+
+        # let middlewares process the response.  Note that we *only*
+        # process the response object, if it's returned from some view.
+        # If an request modifing middleware is in-place we never reach
+        # this code block.
+        for middleware in reversed(IMiddleware.iter_middlewares()):
+            response = middleware.process_response(request, response)
+
         return response
 
     def dispatch_wsgi(self, environ, start_response):
@@ -87,8 +94,7 @@ class InyokaApplication(object):
 
         This method binds the request, application and config to the
         current thread local and dispatches the request.
-        It also wraps the response middleware processing and handles
-        cookies.
+        It handles cookies and etags.
         """
         # Create a new request object, register it with the application
         # and all the other stuff on the current thread but initialize
@@ -99,25 +105,7 @@ class InyokaApplication(object):
         local.request = request
         request.__init__(environ, self)
 
-        try:
-            response = self.dispatch_request(request)
-            response = Response.force_type(response, environ)
-        except DirectResponse, exc:
-            # a response type that works around the call with
-            # (environ, start_response).  Use it with care and only
-            # if there's no other way!
-            # Some usage example is a middleware that needs to respond
-            # directly to the client and needs to be sure that no other
-            # middlewares can modify the response object what, generally
-            # all middlewares can do in the common request-pipeline
-            return exc.response
-
-        # let middlewares process the response.  Note that we *only*
-        # process the response object, if it's returned from some view.
-        # If an request modifing middleware is in-place we never reach
-        # this code block.
-        for middleware in reversed(IMiddleware.iter_middlewares()):
-            response = middleware.process_response(request, response)
+        response = self.dispatch_request(request, environ)
 
         # apply common response processors like cookies and etags
         if request.session.should_save:

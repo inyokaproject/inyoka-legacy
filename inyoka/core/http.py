@@ -98,19 +98,6 @@ class Response(BaseResponse):
         self.headers['Pragma'] = 'no-cache'
 
 
-class DirectResponse(Exception):
-    """A :exc:`DirectResponse` is used to pass a response object
-    to the user without executing any other routing or middleware
-    dispatching.
-
-    """
-
-    def __init__(self, response):
-        Exception.__init__(self, response)
-        self.message = 'direct response %r' % response
-        self.response = response
-
-
 def redirect_to(*args, **kwargs):
     """Temporarily redirect to an URL rule."""
     return _redirect(href(*args, **kwargs))

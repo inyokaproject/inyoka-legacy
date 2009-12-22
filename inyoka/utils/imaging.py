@@ -59,3 +59,6 @@ class BaseImage(object):
         :param filename: Either a filelike object or a filename.
         """
         pass
+
+# Fixes Doctest (i know, just a ugly workaround)
+Image = BaseImage

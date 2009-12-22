@@ -55,6 +55,14 @@ DEFAULTS = {
             u' database is one of SQLite, Access or Informix as those don\'t '
             u'support queued connection pools.')),
 
+    # imaging specific values
+    'imaging.backend':              TextField(default=u'pil',
+        help_text=lazy_gettext(u'Imaging backend to use.')),
+    'imaging.avatarsize':           TextField(default=u'50x50',
+        help_text=lazy_gettext(u'Portal avatar size.')),
+    'imaging.thumbnail':            TextField(default=u'100x100',
+        help_text=lazy_gettext(u'Portal thumbnail size.')),
+
     # template specific values
     'templates.path':               TextField(default=u'',
         help_text=lazy_gettext(u'Custom template path which is '

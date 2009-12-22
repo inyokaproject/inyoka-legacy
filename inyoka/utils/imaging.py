@@ -9,6 +9,21 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
+def string_to_xy(string):
+    """
+    Convert a string `100x50` to a tuple like `(100, 50)`.
+
+    Example Usage:
+        >>> string_to_xy(u'100x50')
+        (100, 50)
+
+    :param string: A string object.
+    :returns: A tuple with (x, y)
+    :rtype: Tuple with integers
+    """
+    return tuple([int(x) for x in string.strip().split(u'x')[:2]])
+
+
 class BaseImage(object):
     """
     Base class for all imaging related stuff, you never use this class directly.

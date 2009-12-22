@@ -8,6 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka.core.context import ctx
 
 def string_to_xy(string):
     """
@@ -37,43 +38,90 @@ class BaseImage(object):
     """
 
     def __init__(self, filename):
-        pass
+        raise NotImplementedError
 
     def resize(self, x, y):
         """
+        Resizes this image object, you should overwrite this method in
+        your own backends. Take a look at PilImage for an example.
 
         :param x: Destination X resolution
-        :param y: Designation Y resolution
+        :param y: Destination Y resolution
         """
-        pass
+        raise NotImplementedError
 
     def thumbnail(self):
         """
         Resize image to thumbnail size, as definied in inyoka.ini.
         """
-        pass
+        self.resize(*string_to_xy(ctx.cfg["imaging.thumbnailsize"]))
 
     def avatar(self):
         """
         Resize image to avatar size, as definied in inoka.ini.
         """
-        pass
+        self.resize(*string_to_xy(ctx.cfg["imaging.avatarsize"]))
 
     def size(self):
         """
         Get the size of this image.
 
+        It is required to override this method on your own backends.
+
         :return: Imagesize as tuple (width, height)
         """
-        pass
+        raise NotImplementedError
 
     def save(self, filename):
         """
         Saves this image object to a new file named `filename`.
 
+        It is required to override this method on your own backends.
+
         :param filename: Either a filelike object or a filename.
         """
+        raise NotImplementedError
+
+
+class PilImage(BaseImage):
+    """
+    Python Imaging based backend.
+    """
+    
+    def __init__(self, filename):
         pass
 
-# Fixes Doctest (i know, just a ugly workaround)
-Image = BaseImage
+    def resize(self, x, y):
+        pass
+
+    def size(self):
+        pass
+
+    def save(self, filename):
+        pass
+
+
+class GdkImage(BaseImage):
+    """
+    Gdk based backend.
+    """
+    
+    def __init__(self, filename):
+        pass
+
+    def resize(self, x, y):
+        pass
+
+    def size(self):
+        pass
+
+    def save(self, filename):
+        pass
+
+
+# Setup Backend
+_backend = ctx.cfg["imaging.backend"]
+if _backend == "gdk":
+    Image = GdkImage
+else:
+    Image = PilImage

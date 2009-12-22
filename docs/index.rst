@@ -43,6 +43,7 @@ This section covers all utilities inyoka implements.
     utils/crypt
     utils/datastructures
     utils/decorators
+    utils/imaging
     utils/text
     utils/urls
 

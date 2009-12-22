@@ -60,7 +60,7 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Imaging backend to use.')),
     'imaging.avatarsize':           TextField(default=u'50x50',
         help_text=lazy_gettext(u'Portal avatar size.')),
-    'imaging.thumbnail':            TextField(default=u'100x100',
+    'imaging.thumbnailsize':            TextField(default=u'100x100',
         help_text=lazy_gettext(u'Portal thumbnail size.')),
 
     # template specific values

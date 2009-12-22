@@ -87,6 +87,8 @@ from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
 from inyoka import Component
 from inyoka.core.context import ctx
+from inyoka.utils import flatten_iterator
+from inyoka.utils.text import get_next_increment
 
 
 _engine = None
@@ -162,6 +164,18 @@ def atomic_add(obj, column, delta, expire=False):
         column:     table.c[column] + delta
     })
     sess.execute(stmt)
+
+
+def find_next_increment(column, string):
+    """Get the next incremented string based on `column` and `string`.
+
+    Example::
+
+        find_next_increment(Category.slug, 'category name')
+    """
+
+    existing = session.query(column).filter(column.like('%s%%' % string)).all()
+    return get_next_increment(flatten_iterator(existing), string)
 
 
 def select_blocks(query, column, block_size=1000, start_with=0, max_fails=10):
@@ -422,6 +436,7 @@ def _make_module():
     db.metadata = metadata
     db.mapper = mapper
     db.atomic_add = atomic_add
+    db.find_next_increment = find_next_increment
     db.Model = Model
     db.Query = Query
     db.AttributeExtension = AttributeExtension

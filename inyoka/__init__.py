@@ -214,6 +214,7 @@ def _bootstrap():
     test_components = []
     if ctx.cfg['debug']:
         test_components = [
+            'tests.core.test_database.*',
             'tests.core.test_subscriptions.*',
             'tests.utils.*',
         ]

@@ -29,6 +29,7 @@ References
     :maxdepth: 2
 
     components
+    dispatcher
 
 
 Utilities

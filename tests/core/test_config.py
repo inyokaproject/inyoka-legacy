@@ -25,9 +25,9 @@ _default_values = {
 def _setup_config_test():
     global _config
     _config = Configuration(_config_file_name, _default_values)
-    trans = config.edit()
+    trans = _config.edit()
     trans.commit(force=True)
-    config.touch()
+    _config.touch()
 
 
 def _teardown_config_test():

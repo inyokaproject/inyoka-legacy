@@ -32,13 +32,14 @@ Example Usage
     ...     def get_id(self):
     ...         return 'forum_post'
     ...
-    >>> IAttachmentProvider.get_component_classes()
+    >>> from inyoka.core.api import ctx
+    >>> ctx.get_component_classes(IAttachmentProvider)
     []
     # now we setup those components.  The empty list tells the function
     # that it only has to setup already known components.
-    >>> setup_components([])
+    >>> ctx.load_components([NonBoundAttachmentProvider, ForumPostAttachmentProvider])
     ...
-    >>> IAttachmentProvider.get_component_classes()
+    >>> ctx.get_component_classes(IAttachmentProvider)
     [<class '__main__.NonBoundAttachmentProvider'>, <class '__main__.ForumPostAttachmentProvider'>]
 
 As you see you need to setup the component system before using it.
@@ -47,6 +48,7 @@ Component Interfaces
 --------------------
 
 .. autoclass:: Component
-   :members: get_component_classes, get_components
+   :members:
 
-.. autofunction:: setup_components
+.. autoclass:: ApplicationContext
+   :members:

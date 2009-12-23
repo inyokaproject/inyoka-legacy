@@ -88,7 +88,16 @@ def _import_modules(modules):
 
 
 class ApplicationContext(object):
-    """"""
+    """Overall application context for Inyoka.
+
+    This class acts as a wrapper for the whole Inyoka component system.
+    It is used to keep track of all components, to load or unload them
+    and to manage the thread-locals.
+
+    Next to that the :class:`ApplicationContext` is the real WSGI-Application
+    and only wraps :class:`~inyoka.application.InyokaApplication` for
+    dispatching purposes.
+    """
 
     def __init__(self):
         #: Component type -> classes mapping
@@ -109,9 +118,11 @@ class ApplicationContext(object):
             cfg.touch()
 
     def bind(self):
+        """This method binds the :class:`ApplicationContext` to
+        our thread-local so that all components can access it.
+        """
         from inyoka.core.context import local
         local.ctx = self
-        local.config = self.cfg
 
     @cached_property
     def application(self):
@@ -119,6 +130,11 @@ class ApplicationContext(object):
         return make_app(self)
 
     def load_component(self, component):
+        """Load a :class:`Component`.
+
+        :param component: A component object.  This must be an
+                          an implementation not an interface to get loaded.
+        """
         try:
             for comptype in component._comptypes:
                 self._components.setdefault(comptype, []).append(component)
@@ -131,6 +147,9 @@ class ApplicationContext(object):
             return component
 
     def load_components(self, components):
+        """Load various components, see
+        :meth:`~ApplicationContext.load_component` for more details.
+        """
         ret = []
         for component in components:
             loaded = self.load_component(component)
@@ -139,6 +158,10 @@ class ApplicationContext(object):
         return ret
 
     def unload_components(self, components):
+        """Remove various :class:`Component` classes from the context.
+
+        :param components:  A list of components to unload.
+        """
         unloaded = []
         for component in components:
             try:
@@ -149,6 +172,17 @@ class ApplicationContext(object):
                 continue
 
     def load_packages(self, packages):
+        """Load all components from a known python package.
+
+        Example::
+
+            ctx.load_packages(['inyoka.core.*'])
+
+        This loads recursivly all packages found in :mod:`inyoka.core`.
+
+        :param packages:  A list of strings of import paths.
+        :returns: A list of loaded component classes.
+        """
         modules = _import_modules(packages)
         components = list(m[1] for m in
             sum((getmembers(mod, _is_component) for mod in modules), [])
@@ -156,16 +190,24 @@ class ApplicationContext(object):
         return self.load_components(components)
 
     def get_component_classes(self, comptype):
+        """Return all known :class:`Component` of `comptype`"""
         return self._components.get(comptype, ())
 
     def get_component_instances(self, comptype):
+        """Return all known instances :class:`Component` of `comptype`.
+        If a component was not yet accessed by instance it is instanciated
+        instantly.
+        """
         instances = []
         for cls in self.get_component_classes(comptype):
             instances.append(self.get_component(cls))
         return instances
 
     def get_component(self, compcls):
-        """Return the instance of a component class."""
+        """Return the instance of a component class.
+        If a component was not yet accessed by instance it is instanciated
+        instantly.
+        """
         if compcls not in self._instances:
             self._instances[compcls] = compcls(self)
         return self._instances[compcls]

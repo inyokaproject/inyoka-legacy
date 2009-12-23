@@ -209,9 +209,9 @@ def href(endpoint, **args):
 class DateConverter(BaseConverter):
     """
     Converter for the werkzeug routing that converts date strings in URLs to
-    :cls:`~datetime.date` objects.
+    :class:`~datetime.date` objects.
 
-    :param map:     A :cls:`werkzeug.Map` instance passed by Werkzeug.
+    :param map:     A :class:`werkzeug.Map` instance passed by Werkzeug.
     :param format:  A string as expected by the strftime methods. Note that only
                     date related format characters such as m and d are supported.
     """

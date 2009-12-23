@@ -30,6 +30,7 @@ References
 
     components
     dispatcher
+    internationalisation
 
 
 Utilities

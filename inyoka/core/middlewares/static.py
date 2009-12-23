@@ -24,7 +24,7 @@ MEDIA_PATH = join(os.environ['INYOKA_MODULE'], ctx.cfg['media_path'])
 
 class StaticMiddlewareBase(object):
     """Handles static file requests and dispatches those requests
-    to :cls:`werkzeug.SharedDataMiddleware`.
+    to :class:`werkzeug.SharedDataMiddleware`.
 
     This class represents the base implementation.  The concrete
     implementations are shown below.

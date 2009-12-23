@@ -7,8 +7,8 @@
     around various babel functions than a complete l10n system.
 
     All formatting and parsing methods are automatically wrapped to use our
-    :func:`get_timezone` and :func:`get_locale` functions to be aware of
-    locales and timezones.
+    :func:`~inyoka.l10n.get_timezone` and :func:`~inyoka.i18n.get_locale`
+    functions to be aware of locales and timezones.
 
     Please note that all functions here always return a localized object so
     do not use those for calculations only for presentation purposes!

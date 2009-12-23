@@ -40,13 +40,8 @@ class Request(BaseRequest):
     """Our Request object with some special attributes and methods.
 
     :param environ: The WSGI environ.
-    :param application: The current application instance.
 
     """
-
-    def __init__(self, environ, application):
-        self.application = application
-        BaseRequest.__init__(self, environ)
 
     def build_absolute_url(self):
         """Get the current absolute URL from the WSGI environ"""

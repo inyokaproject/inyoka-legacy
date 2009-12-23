@@ -23,7 +23,7 @@ def make_full_domain(subdomain=''):
     >>> del ctx.cfg['base_domain_name']
 
     """
-    adapter = ctx.application.url_adapter
+    adapter = ctx.dispatcher.url_adapter
 
     return unicode('%s://%s%s%s/' % (
         adapter.url_scheme,

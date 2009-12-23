@@ -41,13 +41,13 @@ class IMiddleware(Component, UrlMixin):
     def __init__(self, ctx):
         # bind the wsgi dispatcher to self.application so that the middleware
         # can on that
-        self.application = ctx.application.dispatch_wsgi
+        self.application = ctx.dispatcher.dispatch_wsgi
         # then initialize the middleware with the global context module
         super(IMiddleware, self).__init__(ctx)
         if self.low_level:
             # and bind the dispatcher to the middleware.  That way we get a
             # stacked request -> response pipeline
-            ctx.application.dispatch_wsgi = self
+            ctx.dispatcher.dispatch_wsgi = self
 
     def process_request(self, request):
         """Process a request.

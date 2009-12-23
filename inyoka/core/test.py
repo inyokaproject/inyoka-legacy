@@ -91,7 +91,7 @@ class ViewTestSuite(TestSuite):
 
     def _pre_setup(self):
         """Setup the test client and url and base domain values"""
-        self._client = Client(ctx.application, response_wrapper=TestResponse)
+        self._client = Client(ctx.dispatcher, response_wrapper=TestResponse)
         self.base_domain = ctx.cfg['base_domain_name']
         name = self.controller.name
         subdomain = ctx.cfg['routing.urls.' + name].split(':', 1)[0]
@@ -248,7 +248,7 @@ class InyokaPlugin(cover.Coverage):
             raise
         # rollback the transaction
         self._transaction.rollback()
-        for callback in ctx.application.cleanup_callbacks:
+        for callback in ctx.dispatcher.cleanup_callbacks:
             callback()
 
     def wantClass(self, cls):

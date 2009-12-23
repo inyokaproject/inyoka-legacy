@@ -95,7 +95,7 @@ class ApplicationContext(object):
     and to manage the thread-locals.
 
     Next to that the :class:`ApplicationContext` is the real WSGI-Application
-    and only wraps :class:`~inyoka.application.InyokaApplication` for
+    and only wraps :class:`~inyoka.dispatcher.RequestDispatcher` for
     dispatching purposes.
     """
 
@@ -125,9 +125,9 @@ class ApplicationContext(object):
         local.ctx = self
 
     @cached_property
-    def application(self):
-        from inyoka.application import make_app
-        return make_app(self)
+    def dispatcher(self):
+        from inyoka.dispatcher import make_dispatcher
+        return make_dispatcher(self)
 
     def load_component(self, component):
         """Load a :class:`Component`.

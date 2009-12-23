@@ -28,22 +28,22 @@ os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
     os.environ['INYOKA_CONFIG'] = cfg
     from inyoka.core.api import ctx
-    application = ctx.application
+    dispatcher = ctx.dispatcher
     if debug:
-        application = _debug.DebuggedApplication(application, evalex=True,
+        dispatcher = _debug.DebuggedApplication(dispatcher, evalex=True,
             show_hidden_frames=True)
     if profile:
         if not os.path.exists('profiles'):
             os.mkdir('profiles')
-        application = _profiling.Profiler(application, 'profiles')
+        dispatcher = _profiling.Profiler(dispatcher, 'profiles')
     if leaky:
-        application = _leakfinder.LeakFinder(application, async_ajax=True)
-    return application
+        dispatcher = _leakfinder.LeakFinder(dispatcher, async_ajax=True)
+    return dispatcher
 
 
 def initdb():
     """Initialize the database"""
-    application = _make_app()
+    dispatcher = _make_app()
     from inyoka.core.database import init_db, get_engine
     init_db(bind=get_engine())
 

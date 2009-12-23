@@ -199,7 +199,7 @@ def href(endpoint, **args):
     from inyoka.core.database import db
     if isinstance(endpoint, db.Model):
         return endpoint.get_absolute_url()
-    ret = ctx.application.url_adapter.build(endpoint, args,
+    ret = ctx.dispatcher.url_adapter.build(endpoint, args,
         force_external=_external)
     if _anchor is not None:
         ret += '#' + url_quote(_anchor)

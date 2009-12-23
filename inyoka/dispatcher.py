@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.application
-    ~~~~~~~~~~~~~~~~~~
+    inyoka.dispatcher
+    ~~~~~~~~~~~~~~~~~
 
-    The main WSGI application.
+    The main dispatching system.  This module handles various
+    subsystems souch as url routing and dispatching as well
+    as cleaning up various parts such as thread-locals after
+    a request was successfully returned to the user.
+
+    The dispatching system is wrapped by :class:`~inyoka.ApplicationContext`
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -20,15 +25,14 @@ from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 
 
-class InyokaApplication(object):
-    """The WSGI application that binds everything."""
+
+class RequestDispatcher(object):
+    """The main dispatcher that handles all the dispatching and routing stuff."""
 
     def __init__(self, ctx):
         self.ctx = ctx
-        self.cleanup_callbacks = [db.session.close, local_manager.cleanup,
-                                  self.ctx.bind]
-
-
+        self.cleanup_callbacks = (db.session.close, local_manager.cleanup,
+                                  self.ctx.bind)
 
     @property
     def url_map(self):
@@ -129,14 +133,14 @@ class InyokaApplication(object):
         return response(environ, start_response)
 
     def __call__(self, environ, start_response):
-        """Make the application object a WSGI application."""
+        """The main dispatching interface of the Inyoka WSGI application."""
         return ClosingIterator(self.dispatch_wsgi(environ, start_response),
                                self.cleanup_callbacks)
 
 
-def make_app(ctx):
-    """Create the application object, wrap all middlewares and return
+def make_dispatcher(ctx):
+    """Create the dispatcher object, wrap all middlewares and return
     it to the context.
     """
-    app = InyokaApplication(ctx)
-    return app
+    dispatcher = RequestDispatcher(ctx)
+    return dispatcher

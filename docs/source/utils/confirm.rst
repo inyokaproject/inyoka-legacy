@@ -15,6 +15,21 @@ stuff that needs to be done:
 
 .. sourcecode:: python
 
+    @register_confirm('change_email')
+    def set_email(data):
+        user = User.query.get(data['user'])
+        if user is None:
+            flash('This user has been deleted!')
+        else:
+            user.email = data['email']
+            flash('Your email has been changed to %s' % data['email'])
+        return redirect_to('portal/index')
+
+Well, once we've done that we can integrate that into our view function:
+
+.. sourcecode:: python
+
+    @view('change_email')
     def change_email(request):
         if request.method == 'POST':
             c = Confirm('change_email', 7, {
@@ -25,20 +40,6 @@ stuff that needs to be done:
             db.session.commit()
             send_mail(request.user, 'Confirm your email address',
                       'Please click this link: %s' % c.url)
-
-Well, once we've done that we can integrate that into our view function:
-
-.. sourcecode:: python
-
-    @view('change_email')
-    def set_email(data):
-        user = User.query.get(data['user'])
-        if user is None:
-            flash('This user has been deleted!')
-        else:
-            user.email = data['email']
-            flash('Your email has been changed to %s' % data['email'])
-        return redirect_to('portal/index')
 
 .. _confirm-api:
 

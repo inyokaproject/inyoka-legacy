@@ -57,23 +57,25 @@ class CategorySubscriptionType(SubscriptionType, NotifyTrackerMixin):
     subject_type = Category
     object_type = Entry
     mode = 'multiple'
+    actions = ['__test_new_entry']
 
     get_subject = attrgetter('category')
 
 class BlogSubscriptionType(SubscriptionType, NotifyTrackerMixin):
     name = '__test_blog'
-    is_singleton = True
+    subject_type = None
     object_type = Entry
     mode = 'multiple'
+    actions = ['__test_new_entry']
 
 class CommentsSubscriptionType(SubscriptionType, NotifyTrackerMixin):
     name = '__test_comments'
     subject_type = Entry
     object_type = Comment
     mode = 'sequent'
+    actions = ['__test_new_comment']
 
     get_subject = attrgetter('entry')
-
 
 
 class TestSubscriptions(TestSuite):
@@ -137,95 +139,104 @@ class TestSubscriptions(TestSuite):
         Subscription.subscribe(users['zwei'], '__test_blog')
 
         NotifyTrackerMixin.tracker = []
-        e = [Entry(category=cat1), Entry(category=cat2), Entry(category=cat1),
-             Entry(category=cat1), Entry(category=cat1), Entry(category=cat1)]
-        db.session.add_all(e)
+        entries = [Entry(category=cat1), Entry(category=cat2), Entry(category=cat1),
+                  Entry(category=cat1), Entry(category=cat1), Entry(category=cat1)]
+        db.session.add_all(entries)
 
-        Subscription.new(e[0])
-        Subscription.new(e[1])
+        Subscription.new(entries[0], '__test_new_entry')
+        Subscription.new(entries[1], '__test_new_entry')
         self._check_multiple_state(users['eins'], '__test_category', cat1.id,
-                              set((e[0].id,)), 1)
+                              set((entries[0].id,)), 1)
         self._check_multiple_state(users['zwei'], '__test_blog', None,
-                              set((e[0].id, e[1].id)), 2)
+                              set((entries[0].id, entries[1].id)), 2)
 
-        Subscription.new(e[2])
-        Subscription.new(e[3])
+        Subscription.new(entries[2], '__test_new_entry')
+        Subscription.new(entries[3], '__test_new_entry')
         self._check_multiple_state(users['eins'], '__test_category', cat1.id,
-                              set((e[0].id, e[2].id, e[3].id)), 3)
+                              set((entries[0].id, entries[2].id, entries[3].id)), 3)
         self._check_multiple_state(users['zwei'], '__test_blog', None,
-                              set((e[0].id, e[1].id, e[2].id, e[3].id)), 4)
+                              set((entries[0].id, entries[1].id,
+                                   entries[2].id, entries[3].id)), 4)
 
-        Subscription.accessed(users['zwei'], e[2])
-        Subscription.accessed(users['zwei'], e[1])
+        Subscription.accessed(users['zwei'], entries[2])
+        Subscription.accessed(users['zwei'], entries[1])
         self._check_multiple_state(users['zwei'], '__test_blog', None,
-                              set((e[0].id, e[3].id)), 2)
+                              set((entries[0].id, entries[3].id)), 2)
 
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
-            ('__test_blog', users['zwei'], e[0], None),
-            ('__test_category', users['eins'], e[0], cat1),
-            ('__test_blog', users['zwei'], e[1], None),
-            ('__test_category', users['eins'], e[2], cat1),
-            ('__test_blog', users['zwei'], e[2], None),
-            ('__test_category', users['eins'], e[3], cat1),
-            ('__test_blog', users['zwei'], e[3], None),
+            ('__test_blog', users['zwei'], entries[0], None),
+            ('__test_category', users['eins'], entries[0], cat1),
+            ('__test_blog', users['zwei'], entries[1], None),
+            ('__test_category', users['eins'], entries[2], cat1),
+            ('__test_blog', users['zwei'], entries[2], None),
+            ('__test_category', users['eins'], entries[3], cat1),
+            ('__test_blog', users['zwei'], entries[3], None),
         ]))
 
 
         # mode=sequent:
-        Subscription.subscribe(users['drei'], '__test_comments', e[0])
-        Subscription.subscribe(users['drei'], '__test_comments', e[1])
-        Subscription.subscribe(users['vier'], '__test_comments', e[0])
+        e1, e2 = entries[:2]
 
-        e1, e2 = e[:2]
+        Subscription.subscribe(users['drei'], '__test_comments', e1)
+        Subscription.subscribe(users['drei'], '__test_comments', e2)
+        Subscription.subscribe(users['vier'], '__test_comments', e1)
+
+        self._check_sequent_state(users['drei'], '__test_comments', e1.id,
+                                  None, 0)
+        self._check_sequent_state(users['drei'], '__test_comments', e2.id,
+                                  None, 0)
+        self._check_sequent_state(users['vier'], '__test_comments', e1.id,
+                                  None, 0)
+
         NotifyTrackerMixin.tracker = []
-        c = [Comment(entry=e1), Comment(entry=e2), Comment(entry=e1),
+        comments = [Comment(entry=e1), Comment(entry=e2), Comment(entry=e1),
                     Comment(entry=e1), Comment(entry=e1), Comment(entry=e2)]
-        db.session.add_all(c)
+        db.session.add_all(comments)
         db.session.commit()
 
-        Subscription.new(c[0]) # e1
-        Subscription.new(c[1]) # e2
+        Subscription.new(comments[0], '__test_new_comment') # e1
+        Subscription.new(comments[1], '__test_new_comment') # e2
 
         self._check_sequent_state(users['drei'], '__test_comments', e1.id,
-                            c[0].id, 1)
+                                  comments[0].id, 1)
         self._check_sequent_state(users['drei'], '__test_comments', e2.id,
-                            c[1].id, 1)
+                                  comments[1].id, 1)
         self._check_sequent_state(users['vier'], '__test_comments', e1.id,
-                            c[0].id, 1)
+                                  comments[0].id, 1)
 
-        Subscription.accessed(users['drei'], c[0])
+        Subscription.accessed(users['drei'], comments[0])
         self._check_sequent_state(users['drei'], '__test_comments', e1.id,
+                                  None, 0)
+
+        Subscription.new(comments[2], '__test_new_comment') # e1
+        self._check_sequent_state(users['drei'], '__test_comments', e1.id,
+                             comments[2].id, 1)
+
+        Subscription.new(comments[3], '__test_new_comment') # e1
+        self._check_sequent_state(users['drei'], '__test_comments', e1.id,
+                             comments[2].id, 2)
+        self._check_sequent_state(users['vier'], '__test_comments', e1.id,
+                             comments[0].id, 3)
+
+        Subscription.accessed(users['vier'], comments[3])
+        self._check_sequent_state(users['vier'], '__test_comments', e1.id,
                              None, 0)
 
-        Subscription.new(c[2]) # e1
+        Subscription.new(comments[4], '__test_new_comment') # e1
+        Subscription.new(comments[5], '__test_new_comment') # e2
         self._check_sequent_state(users['drei'], '__test_comments', e1.id,
-                             c[2].id, 1)
-
-        Subscription.new(c[3]) # e1
-        self._check_sequent_state(users['drei'], '__test_comments', e1.id,
-                             c[2].id, 2)
-        self._check_sequent_state(users['vier'], '__test_comments', e1.id,
-                             c[0].id, 3)
-
-        Subscription.accessed(users['vier'], c[3])
-        self._check_sequent_state(users['vier'], '__test_comments', e1.id,
-                             None, 0)
-
-        Subscription.new(c[4]) # e1
-        Subscription.new(c[5]) # e2
-        self._check_sequent_state(users['drei'], '__test_comments', e1.id,
-                             c[2].id, 3)
+                             comments[2].id, 3)
         self._check_sequent_state(users['drei'], '__test_comments', e2.id,
-                             c[1].id, 2)
+                             comments[1].id, 2)
         self._check_sequent_state(users['vier'], '__test_comments', e1.id,
-                             c[4].id, 1)
+                             comments[4].id, 1)
 
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
-            ('__test_comments', users['drei'], c[0], e1),
-            ('__test_comments', users['vier'], c[0], e1),
-            ('__test_comments', users['drei'], c[1], e2),
+            ('__test_comments', users['drei'], comments[0], e1),
+            ('__test_comments', users['vier'], comments[0], e1),
+            ('__test_comments', users['drei'], comments[1], e2),
             # here drei accesses entry 1
-            ('__test_comments', users['drei'], c[2], e1),
+            ('__test_comments', users['drei'], comments[2], e1),
             # here vier accesses entry 1
-            ('__test_comments', users['vier'], c[4], e1),
+            ('__test_comments', users['vier'], comments[4], e1),
         ]))

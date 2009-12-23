@@ -21,6 +21,13 @@ This section covers the very basics of inyoka and its development.
     unittests
     developers_fable
 
+Core Tools
+----------
+
+.. toctree::
+    :maxdepth: 2
+
+    core/subscriptions
 
 References
 ----------

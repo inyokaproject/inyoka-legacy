@@ -140,7 +140,7 @@ class ApplicationContext(object):
                 self._components.setdefault(comptype, []).append(component)
         except (AttributeError, TypeError):
             # fail silently if we try to register an interface but raise
-            # if there's something compleatly wrong
+            # if there's something completely wrong
             if not hasattr(component, '_iscomptype'):
                 raise RuntimeError(u'Type %r is not a component' % component)
         else:

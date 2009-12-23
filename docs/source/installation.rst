@@ -40,8 +40,8 @@ development packages.
 
 For Ubuntu again ``aptitude`` (as root)::
 
-    sudo aptitude install libmemcache-dev build-essential zlib1g-dev python-lxml
-    apt-get build-dep python-imaging
+    sudo aptitude install libmemcache-dev build-essential zlib1g-dev
+    apt-get build-dep python-imaging python-lxml
 
 Now it's possible to install the virtual environment. This is done with a simple
 Python command::

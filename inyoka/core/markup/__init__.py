@@ -16,7 +16,7 @@ from inyoka.core.markup import nodes
 from unicodedata import lookup
 
 
-__all__ = ['parse', 'render', 'stream', 'escape']
+__all__ = ['parse', 'render', 'stream', 'escape', 'RenderContext']
 
 
 # the maximum depth of stack-protected nodes

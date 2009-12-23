@@ -3,7 +3,15 @@
     inyoka.l10n
     ~~~~~~~~~~~
 
-    The localisation system for Inyoka.
+    The localisation system for Inyoka.  This module is mostly more a wrapper
+    around various babel functions than a complete l10n system.
+
+    All formatting and parsing methods are automatically wrapped to use our
+    :func:`get_timezone` and :func:`get_locale` functions to be aware of
+    locales and timezones.
+
+    Please note that all functions here always return a localized object so
+    do not use those for calculations only for presentation purposes!
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.

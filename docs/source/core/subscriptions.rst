@@ -39,6 +39,7 @@ and subject, the action is the formation of that relation.
 
 There are two basic **mode**\s how a subscription can work. Each subscription
 type uses one of theses modes:
+
  * For example there are posts in a topic or comments on a blog entry: They are
    presented in a consecutive manner, the user can (which is the important
    point for the way subscriptions work) simply read on with the next object
@@ -59,6 +60,7 @@ Each subscription (means: each instance of the
 *user* subscribed to a *subject* of some *type*, and contains some additional
 attributes that are needed to create the list of new objects and to not send
 messages when not necessary:
+
  * The **count** of unread objects. This is only vital for the sequent mode,
    where it controls whether to send out a message or not; in multiple mode it
    is just used to allow displaying a number of unread objects.

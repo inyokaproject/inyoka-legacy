@@ -45,7 +45,7 @@ def get_translations():
 
 
 def get_locale(locale=None):
-    """Return a :calss:`Locale` instance for `locale` or the current
+    """Return a :class:`Locale` instance for `locale` or the current
     configured locale if none is given.
     """
     if locale is None:

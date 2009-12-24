@@ -130,8 +130,8 @@ class IController(Component, UrlMixin):
             for method in dir(comp):
                 method = getattr(comp, method)
                 if getattr(method, 'service_name', None) is not None:
-                    cls._services['%s.%s' % (comp.name, method.service_name)] \
-                        = method
+                    name = '%s.%s' % (comp.name, method.service_name)
+                    cls._services[name] = method
         return cls._services
 
     @classmethod

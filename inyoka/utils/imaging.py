@@ -87,7 +87,7 @@ class PilImage(BaseImage):
     """
     Python Imaging based backend.
     """
-    
+
     def __init__(self, filename):
         pass
 
@@ -105,7 +105,7 @@ class GdkImage(BaseImage):
     """
     Gdk based backend.
     """
-    
+
     def __init__(self, filename):
         pass
 

@@ -8,6 +8,7 @@
 """
 
 # Imports for easy API access
+from inyoka import Component
 from inyoka.core.context import request as current_request, ctx
 from inyoka.core.database import db
 from inyoka.core.http import Request, Response, redirect_to

@@ -58,6 +58,7 @@ class Category(db.Model):
             self.id,
             self.slug,
         )
+
     def __unicode__(self):
         return self.name
 

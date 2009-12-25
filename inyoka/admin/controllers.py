@@ -38,7 +38,7 @@ class AdminController(IController):
 
     def get_endpoint_map(self):
         """Register all view methods from remote admin providers"""
-        endpoint_map = {}
+        endpoint_map = super(AdminController, self).get_endpoint_map()
         providers = ctx.get_implementations(IAdminProvider, instances=True)
         for provider in providers:
             for name in dir(provider):

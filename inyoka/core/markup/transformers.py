@@ -15,10 +15,10 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Component
+from inyoka import Interface
 
 
-class ITransformer(Component):
+class ITransformer(Interface):
     """
     Baseclass for all transformers.
     """

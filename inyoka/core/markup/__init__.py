@@ -143,7 +143,7 @@ class Parser(object):
         self.lexer = Lexer()
         self.stack_depth = 0
         if transformers is None:
-            transformers = ctx.get_component_instances(ITransformer)
+            transformers = ctx.get_implementations(ITransformer, instances=True)
         self.transformers = transformers
 
         #: node dispatchers

@@ -8,28 +8,28 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Component, ComponentMeta
+from inyoka import Interface, InterfaceMeta
 from inyoka.core.api import ctx
 from inyoka.core.test import *
 
 
-class Interface(Component):
+class Interface1(Interface):
     pass
 
-class Interface2(Component):
+class Interface2(Interface):
     pass
 
-class Implementation1(Interface):
+class Implementation1(Interface1):
     pass
 
-class Implementation2(Interface, Interface2):
+class Implementation2(Interface1, Interface2):
     pass
 
 class Implementation3(Interface2):
     pass
 
 
-_test_components = [Interface, Interface2, Implementation1, Implementation2,
+_test_components = [Interface1, Interface2, Implementation1, Implementation2,
                     Implementation3]
 
 def _teardown_components():
@@ -61,30 +61,30 @@ def test_load_components():
 
     assert_true(loaded[0] is Implementation1)
     assert_true(loaded[1] is Implementation2)
-    assert_false(Interface in loaded)
+    assert_false(Interface1 in loaded)
     assert_false(Interface2 in loaded)
 
-    eq_(len(ctx.get_component_classes(Interface)), 2)
-    eq_(len(ctx.get_component_classes(Interface2)), 1)
+    eq_(len(ctx.get_implementations(Interface1)), 2)
+    eq_(len(ctx.get_implementations(Interface2)), 1)
 
 
 @with_setup(_setup_components)
 def test_unload_components():
-    _comps = (Interface, Interface2)
+    _comps = (Interface1, Interface2)
     ctx.unload_components(_comps)
     for comp in _comps:
-        assert_false(comp in ComponentMeta._registry)
+        assert_false(comp in InterfaceMeta._registry)
 
 
 def test_components():
-    assert_true(Interface._iscomptype)
-    assert_false(hasattr(Interface, '_comptypes'))
-    assert_false(Implementation1._iscomptype)
-    eq_(Implementation1._comptypes, [Interface])
-    eq_(Implementation2._comptypes, [Interface, Interface2])
+    assert_true(Interface1._isinterface)
+    assert_false(hasattr(Interface1, '_interfaces'))
+    assert_false(Implementation1._isinterface)
+    eq_(Implementation1._interfaces, [Interface1])
+    eq_(Implementation2._interfaces, [Interface1, Interface2])
 
     # we return the component object unchanged so it does not
     # have any special attributes
-    obj = Component(ctx)
-    assert_false(hasattr(obj, '_iscomptype'))
-    assert_false(hasattr(obj, '_comptypes'))
+    obj = Interface(ctx)
+    assert_false(hasattr(obj, '_isinterface'))
+    assert_false(hasattr(obj, '_interfaces'))

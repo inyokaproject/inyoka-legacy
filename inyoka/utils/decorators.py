@@ -17,9 +17,9 @@ def abstract(func):
 
     Usage::
 
-        >>> from inyoka import Component
+        >>> from inyoka import Interface
         >>> from inyoka.utils.decorators import abstract
-        >>> class MyCoolNewInterface(Component):
+        >>> class MyCoolNewInterface(Interface):
         ...     '''Some interface that only implements the interface'''
         ...
         ...     @abstract

@@ -19,58 +19,58 @@ from werkzeug import import_string, find_modules, cached_property
 INYOKA_REVISION = 'unknown'
 
 
-class ComponentMeta(type):
-    """Metaclass that keeps track of all derived component implementations."""
+class InterfaceMeta(type):
+    """Metaclass that keeps track of all derived interface implementations."""
 
     _registry = {}
 
     def __new__(mcs, classname, bases, dict_):
         obj = type.__new__(mcs, classname, bases, dict_)
         if bases == (object,):
-            # `Component` itself
+            # `Interface` itself
             return obj
 
-        if Component in bases:
-            # A component type
+        if Interface in bases:
+            # A Interface type
             module = dict_['__module__']
-            obj._iscomptype = True
+            obj._isinterface = True
             uniquename = module + '.' + classname
-            if uniquename in ComponentMeta._registry:
-                raise RuntimeError(u'Component type with name %r already '
+            if uniquename in InterfaceMeta._registry:
+                raise RuntimeError(u'Interface type with name %r already '
                                    u'exists' % uniquename)
-            ComponentMeta._registry[uniquename] = True
+            InterfaceMeta._registry[uniquename] = True
         else:
-            # A component
-            obj._comptypes = comptypes = []
-            obj._iscomptype = False
+            # A Interface
+            obj._interfaces = interfaces = []
+            obj._isinterface = False
             for base in bases:
-                if '_iscomptype' in base.__dict__:
-                    comptypes.append(base)
-                elif '_comptypes' in base.__dict__:
-                    comptypes.extend(base._comptypes)
+                if '_isinterface' in base.__dict__:
+                    interfaces.append(base)
+                elif '_interfaces' in base.__dict__:
+                    interfaces.extend(base._interfaces)
         return obj
 
 
-class Component(object):
-    """Base component class.
+class Interface(object):
+    """Base Interface class.
 
-    A component is some kind of functionality provider that needs to
+    A interface is some kind of functionality provider that needs to
     be subclassed to implement the real features.
 
-    That way a :class:`Component` can keep track of all subclasses and
-    thanks to that knows all implemented “features” for that kind of component.
+    That way a :class:`Interface` can keep track of all subclasses and
+    thanks to that knows all implemented “features” for that kind of Interface.
 
     """
-    __metaclass__ = ComponentMeta
+    __metaclass__ = InterfaceMeta
 
     def __init__(self, ctx=None):
         self.ctx = ctx
 
 
-def _is_component(value):
-    _registry = ComponentMeta._registry
-    return (isclass(value) and issubclass(value, Component) and
-            value is not Component)
+def _is_interface(value):
+    _registry = InterfaceMeta._registry
+    return (isclass(value) and issubclass(value, Interface) and
+            value is not Interface)
 
 
 def _import_modules(modules):
@@ -100,9 +100,9 @@ class ApplicationContext(object):
     """
 
     def __init__(self):
-        #: Component type -> classes mapping
+        #: Interface type -> classes mapping
         self._components = {}
-        #: Component class -> instance mapping
+        #: component class -> instance mapping
         self._instances = {}
 
         # setup config
@@ -130,18 +130,18 @@ class ApplicationContext(object):
         return make_dispatcher(self)
 
     def load_component(self, component):
-        """Load a :class:`Component`.
+        """Load a component.
 
         :param component: A component object.  This must be an
                           an implementation not an interface to get loaded.
         """
         try:
-            for comptype in component._comptypes:
-                self._components.setdefault(comptype, []).append(component)
+            for interface in component._interfaces:
+                self._components.setdefault(interface, []).append(component)
         except (AttributeError, TypeError):
             # fail silently if we try to register an interface but raise
             # if there's something completely wrong
-            if not hasattr(component, '_iscomptype'):
+            if not hasattr(component, '_isinterface'):
                 raise RuntimeError(u'Type %r is not a component' % component)
         else:
             return component
@@ -158,14 +158,14 @@ class ApplicationContext(object):
         return ret
 
     def unload_components(self, components):
-        """Remove various :class:`Component` classes from the context.
+        """Remove various components from the context.
 
         :param components:  A list of components to unload.
         """
         unloaded = []
         for component in components:
             try:
-                if getattr(component, '_iscomptype', False):
+                if getattr(component, '_isinterface', False):
                     unloaded.append(self._components.pop(component))
             except:
                 # fail silently if component is not loaded
@@ -185,25 +185,23 @@ class ApplicationContext(object):
         """
         modules = _import_modules(packages)
         components = list(m[1] for m in
-            sum((getmembers(mod, _is_component) for mod in modules), [])
+            sum((getmembers(mod, _is_interface) for mod in modules), [])
         )
         return self.load_components(components)
 
-    def get_component_classes(self, comptype):
-        """Return all known :class:`Component` of `comptype`"""
-        return self._components.get(comptype, ())
+    def get_implementations(self, interface, instances=False):
+        """Return all known implementations of `interface`.
 
-    def get_component_instances(self, comptype):
-        """Return all known instances :class:`Component` of `comptype`.
-        If a component was not yet accessed by instance it is instanciated
-        instantly.
+        :param interface: The interface all implementations need to implement
+        :param instances: Return all implementations as instances not classes.
+
         """
-        instances = []
-        for cls in self.get_component_classes(comptype):
-            instances.append(self.get_component(cls))
-        return instances
+        if not instances:
+            return self._components.get(interface, ())
+        return [self.get_instance(impl) for impl in
+                self._components.get(interface, ())]
 
-    def get_component(self, compcls):
+    def get_instance(self, compcls):
         """Return the instance of a component class.
         If a component was not yet accessed by instance it is instanciated
         instantly.
@@ -276,7 +274,7 @@ def _bootstrap():
     from inyoka.core.database import (IModelPropertyExtender, DeclarativeMeta,
                                       ModelPropertyExtenderGoesWild)
 
-    property_extenders = ctx.get_component_classes(IModelPropertyExtender)
+    property_extenders = ctx.get_implementations(IModelPropertyExtender)
     extendable_models = [m for m in DeclarativeMeta._models
                          if getattr(m, '__extendable__', False)]
     for model in extendable_models:

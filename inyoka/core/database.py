@@ -85,7 +85,7 @@ from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
-from inyoka import Component
+from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment
@@ -308,7 +308,7 @@ class Query(orm.Query):
         return self.options(*args)
 
 
-class ISchemaController(Component):
+class ISchemaController(Interface):
     """A schemacontroller, which takes care of models and migrations.
 
     Only models for now…
@@ -317,7 +317,7 @@ class ISchemaController(Component):
     models = []
 
 
-class IModelPropertyExtender(Component):
+class IModelPropertyExtender(Interface):
     """A subclass of this interface is able to extend a models
     columns and various other properties.
 
@@ -409,7 +409,7 @@ ModelBase.query = session.query_property(Query)
 def init_db(**kwargs):
     tables = []
 
-    for comp in ctx.get_component_instances(ISchemaController):
+    for comp in ctx.get_implementations(ISchemaController, instances=True):
         tables.extend([i.__table__ for i in comp.models])
 
     kwargs['tables'] = tables

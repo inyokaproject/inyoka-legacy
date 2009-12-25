@@ -15,7 +15,7 @@ from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
 from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
-from inyoka import Component
+from inyoka import Interface
 from inyoka.core.context import ctx
 
 
@@ -58,7 +58,7 @@ class UrlMixin(object):
         cls._endpoint_map = {}
         urls = []
 
-        for comp in ctx.get_component_instances(cls):
+        for comp in ctx.get_implementations(cls, instances=True):
 
             # check if url rules are for build only
             if comp.build_only:
@@ -101,7 +101,7 @@ class UrlMixin(object):
         return endpoint_map
 
 
-class IController(Component, UrlMixin):
+class IController(Interface, UrlMixin):
     """Interface for controllers.
 
     A controller is some kind of wrapper around differend
@@ -134,7 +134,7 @@ class IController(Component, UrlMixin):
             return cls._services
 
         cls._services = {}
-        for comp in ctx.get_component_instances(cls):
+        for comp in ctx.get_implementations(cls, instances=True):
             for method in dir(comp):
                 method = getattr(comp, method)
                 if getattr(method, 'service_name', None) is not None:

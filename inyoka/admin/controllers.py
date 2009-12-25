@@ -10,7 +10,7 @@
 """
 from os.path import join
 from werkzeug import cached_property
-from inyoka.core.api import Component, IController, ctx, view, Rule, Response
+from inyoka.core.api import Interface, IController, ctx, view, Rule, Response
 from inyoka.core.routing import Submount, EndpointPrefix
 from inyoka.utils.decorators import abstract
 
@@ -28,7 +28,7 @@ class AdminController(IController):
     @cached_property
     def url_rules(self):
         rules = [Rule('/', endpoint='index')]
-        providers = ctx.get_component_instances(IAdminProvider)
+        providers = ctx.get_implementations(IAdminProvider, instances=True)
         for provider in providers:
             map = EndpointPrefix(provider.name + '/', [
                 Submount('/' + provider.name, provider.url_rules)
@@ -39,7 +39,7 @@ class AdminController(IController):
     def get_endpoint_map(self):
         """Register all view methods from remote admin providers"""
         endpoint_map = {}
-        providers = ctx.get_component_instances(IAdminProvider)
+        providers = ctx.get_implementations(IAdminProvider, instances=True)
         for provider in providers:
             for name in dir(provider):
                 obj = getattr(provider, name)

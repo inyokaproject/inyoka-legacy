@@ -15,12 +15,12 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Component
+from inyoka import Interface
 from inyoka.core.api import ctx
 from inyoka.utils.datastructures import _missing
 
 
-class SubscriptionType(Component):
+class SubscriptionType(Interface):
     """
     Must be subclassed to represent a type of Subscription.
 
@@ -82,20 +82,20 @@ class SubscriptionType(Component):
     def _by_attr(cls, attrname, value=_missing):
         if value is _missing:
             map = {}
-            for c in ctx.get_component_classes(cls):
+            for c in ctx.get_implementations(cls):
                 map.setdefault(getattr(c, attrname, None), []).append(c)
             return map
 
-        return [c for c in ctx.get_component_classes(cls)
+        return [c for c in ctx.get_implementations(cls)
                 if getattr(c, attrname, None) is value]
 
     @classmethod
     def by_name(cls, name=_missing):
         if name is not _missing:
-            for c in ctx.get_component_classes(cls):
+            for c in ctx.get_implementations(cls):
                 if c.name == name:
                     return c
-        return dict((c.name, c) for c in ctx.get_component_classes(cls))
+        return dict((c.name, c) for c in ctx.get_implementations(cls))
 
     @classmethod
     def by_object_type(cls, object_type=_missing):
@@ -109,8 +109,8 @@ class SubscriptionType(Component):
     def by_action(cls, action=None):
         if action is None:
             map = {}
-            for c in ctx.get_component_classes(cls):
+            for c in ctx.get_implementations(cls):
                 for action in c.actions:
                     map.setdefault(action, []).append(c)
             return map
-        return [c for c in ctx.get_component_classes(cls) if action in c.actions]
+        return [c for c in ctx.get_implementations(cls) if action in c.actions]

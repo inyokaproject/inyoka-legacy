@@ -14,7 +14,7 @@ from threading import Lock
 
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug import import_string
-from inyoka import Component
+from inyoka import Interface
 from inyoka.i18n import _
 from inyoka.core.auth import forms, models
 from inyoka.core.auth.models import User
@@ -65,13 +65,13 @@ class AuthMiddleware(IMiddleware):
         return response
 
 
-class IPermissionChecker(Component):
+class IPermissionChecker(Interface):
 
     @classmethod
     def has_perm(cls, user, perm, obj=None):
         has_permission = False
 
-        for comp in ctx.get_component_instances(cls):
+        for comp in ctx.get_implementations(cls, instances=True):
             flag = comp.has_perm(user, perm, obj)
             # The component doesn't care about the permission.
             if flag is None:

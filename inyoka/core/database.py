@@ -317,7 +317,7 @@ class ISchemaController(Interface):
     models = []
 
 
-class IModelPropertyExtender(Interface):
+class IModelPropertyProvider(Interface):
     """A subclass of this interface is able to extend a models
     columns and various other properties.
 
@@ -326,17 +326,17 @@ class IModelPropertyExtender(Interface):
 
     Example::
 
-        class UserCreditcardPropertyExtender(IModelPropertyExtender):
+        class UserCreditcardPropertyProvider(IModelPropertyProvider):
             model = User
             properties = {
                 'credit_card':  db.Column(db.String(30))
             }
 
-    Note that every extender that tries to overwrite already existing
+    Note that every property provider that tries to overwrite already existing
     columns breaks yet the whole application since that is not supported.
 
-    This also applies to multiple extenders overwriting the same column.  The
-    extender that get's first loaded wins all others will break.
+    This also applies to multiple providers overwriting the same column.  The
+    property provider that get's first loaded wins all others will break.
 
     """
 
@@ -355,8 +355,8 @@ class IModelPropertyExtender(Interface):
     properties = {}
 
 
-class ModelPropertyExtenderGoesWild(RuntimeError):
-    """A model property extender has gone too far and we need to stop here"""
+class ModelPropertyProviderGoesWild(RuntimeError):
+    """A model property provider has gone too far and we need to stop here"""
 
 
 class DeclarativeMeta(SADeclarativeMeta):

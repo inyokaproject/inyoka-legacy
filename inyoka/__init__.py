@@ -270,26 +270,26 @@ def _bootstrap():
         'inyoka.paste.*',
     ] + test_components)
 
-    # setup model property extenders
-    from inyoka.core.database import (IModelPropertyExtender, DeclarativeMeta,
-                                      ModelPropertyExtenderGoesWild)
+    # setup model property providers
+    from inyoka.core.database import (IModelPropertyProvider, DeclarativeMeta,
+                                      ModelPropertyProviderGoesWild)
 
-    property_extenders = ctx.get_implementations(IModelPropertyExtender)
+    property_providers = ctx.get_implementations(IModelPropertyProvider)
     extendable_models = [m for m in DeclarativeMeta._models
                          if getattr(m, '__extendable__', False)]
     for model in extendable_models:
-        for extender in property_extenders:
-            if extender.model is not model:
+        for provider in property_providers:
+            if provider.model is not model:
                 continue
 
-            for key, value in extender.properties.iteritems():
+            for key, value in provider.properties.iteritems():
                 if key not in model.__dict__:
                     setattr(model, key, value)
                 else:
-                    raise ModelPropertyExtenderGoesWild(
+                    raise ModelPropertyProviderGoesWild(
                         u'%r tried to overwrite already existing '
                         u'properties on %r, aborting'
-                            % (extender, model))
+                            % (provider, model))
 
 _bootstrap()
 del _bootstrap

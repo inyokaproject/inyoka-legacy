@@ -59,21 +59,14 @@ class UrlMixin(object):
         urls = []
 
         for comp in ctx.get_component_instances(cls):
-            url_map = {}
 
             # check if url rules are for build only
-            if cls.build_only:
+            if comp.build_only:
                 new_map = []
                 for rule in comp.url_rules:
                     rule.build_only = True
                     new_map.append(rule)
                 comp.url_rules = new_map
-
-            for name in dir(comp):
-                method = getattr(comp, name)
-                endpoint = getattr(method, 'endpoint', None)
-                if endpoint is not None and endpoint not in url_map:
-                    url_map[endpoint] = method
 
             name = comp.name
             if name:
@@ -88,9 +81,24 @@ class UrlMixin(object):
                 val = comp.url_rules
                 urls.extend(val)
 
-            cls._endpoint_map.setdefault(name, {}).update(url_map)
+            cls._endpoint_map.setdefault(name, {}).update(
+                comp.get_endpoint_map()
+            )
 
         return urls
+
+    def get_endpoint_map(self):
+        """This method returns a dictionary with a mapping out of
+        endpoint name -> bound method
+        """
+        endpoint_map = {}
+        for name in dir(self):
+            method = getattr(self, name)
+            endpoint = getattr(method, 'endpoint', None)
+            if endpoint is not None and endpoint not in endpoint_map:
+                #TODO: raise a warning?
+                endpoint_map[endpoint] = method
+        return endpoint_map
 
 
 class IController(Component, UrlMixin):
@@ -174,7 +182,6 @@ class IController(Component, UrlMixin):
 
     register_view = staticmethod(_wrapped('endpoint'))
     register_service = staticmethod(_wrapped('service_name'))
-
 
 
 view = IController.register_view

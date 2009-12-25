@@ -265,6 +265,7 @@ def _bootstrap():
     ctx.load_packages([
         'inyoka.testing.*',
         'inyoka.core.*',
+        'inyoka.admin.*',
         'inyoka.portal.*',
         'inyoka.news.*',
         'inyoka.forum.*',

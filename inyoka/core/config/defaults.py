@@ -112,6 +112,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Url mapping used for the planet application')),
     'routing.urls.testing':         DottedField(default=u':/testing',
         help_text=lazy_gettext(u'Url mapping used for the testing application')),
+    'routing.urls.admin':           DottedField(default=u'admin:/',
+        help_text=lazy_gettext(u'Url mapping used for the admin application')),
 
     # values for static and media serving
     'routing.urls.static':          DottedField(default=u':/_static',

@@ -46,6 +46,8 @@ class AdminController(IController):
                 endpoint = getattr(obj, 'endpoint', None)
                 if endpoint is not None and endpoint not in endpoint_map:
                     endpoint_map[join(provider.name, endpoint)] = obj
+        # register the admin controller views
+        endpoint_map.update(IController.get_endpoint_map(self))
         return endpoint_map
 
     @view

@@ -8,9 +8,9 @@ in the user interface are created using HTML5 and jQuery.
 This file should give you a brief overview how the code works and what
 you should keep in mind working on it.
 
-Please note that this file is work in progress.  Adapt it whenever you think
-some urgent things needs to be written down so that other developers can use
-them.  But try to keep it simple so that it's easy and fast to read.
+.. note: This file is work in progress.  Adapt it whenever you think
+         some urgent things needs to be written down so that other developers can use
+         them.  But try to keep it simple so that it's easy and fast to read.
 
 If you want to know how to setup or use Inyoka see :doc:`installation` for more details.
 
@@ -57,6 +57,64 @@ CSS
 
 Indent your CSS 2.1 valid code with 4 spaces and adapt common formatting
 styles.
+
+
+Naming Guide
+~~~~~~~~~~~~
+
+Besides the style there are some naming conventions we try to assert in our
+internal modules.  These concern mostly our component system.
+
+Interfaces
+----------
+
+An “interface” is a class that provides some general structure and does not
+implement anything concrete.  An interface name must be prefixed with a
+uppercased I.  Example::
+
+    class IController(Interface):
+        # ...
+
+An interface generally inherits from :class:`~inyoka.Interface`.
+
+Implementations
+---------------
+
+An “implementation” inherits an interface and implements concrete features.
+They are generally named with Pythons PEP08 in mind::
+
+    class NewsController(IController):
+        # ...
+
+Providers
+----------
+
+A “provider“ is commonly a small interface whose implementations are wrapped 
+within another component.  For example our admin interface is implemented with
+the help of “providers”.  A small example::
+
+    class IAdminProvider(Interface):
+        name = None
+
+
+    class IAdminController(IController):
+        def get_endpoint_map(self):
+            providers = ctx.get_component_instances(IAdminProvider)
+            # ...
+
+A provider interface inherits from :class:`inyoka.Interface` and follows it's
+naming guides.
+
+Controllers
+-----------
+
+As seen in the examples above we have “providers“ and those implementations
+are wrapped.  These wrappers are commonly called “controllers” because they
+control other provides and control the concrete flow.
+
+A controll interface inherits from :class:`inyoka.Interface` and follows it's
+naming guides.
+
 
 URLs
 ~~~~

@@ -63,8 +63,9 @@ class Category(db.Model):
         return self.name
 
     def get_absolute_url(self, action='show'):
-        return href(*{
-        }[action])
+        return href({
+            'edit': 'admin/news/category_edit'
+        }[action], slug=self.slug)
 
 
 class Article(db.Model):

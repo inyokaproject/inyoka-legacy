@@ -1,0 +1,13 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_content %}
+  {{ _('All categories') }}
+  <ul>
+  {% for category in categories %}
+    <li><a href="{{ category|url('edit') }}">{{ category.name }}</a></li>
+  {% endfor %}
+  </ul>
+  {% trans link=href('admin/news/category_edit') %}
+  …or <a href="{{ link }}">create a new category</a>
+  {% endtrans %}
+{% endblock %}

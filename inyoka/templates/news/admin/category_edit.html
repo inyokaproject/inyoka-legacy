@@ -1,0 +1,12 @@
+{%- extends 'admin/base.html' %}
+
+{%- block admin_content %}
+{% if category.name %}
+  <h3>{% trans category=category.name %}Edit “{{ category }}”{% endtrans %}</h3>
+{% else %}
+  <h3>{{ _('New Category') }}</h3>
+{% endif %}
+
+{{ form() }}
+
+{%- endblock %}

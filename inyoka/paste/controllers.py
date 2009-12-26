@@ -28,7 +28,6 @@ class PasteController(IController):
         Rule('/browse/<int:page>/', endpoint='browse'),
     ]
 
-
     @view
     @templated('paste/index.html')
     def index(self, request):

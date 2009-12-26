@@ -44,6 +44,17 @@ def model_to_dict(instance, fields=None, exclude=None):
 
 
 def update_model(instance, form, includes=None):
+    """Update a model with the applied `form`.
+
+    Example Usage::
+
+        if request.method == 'POST' and form.validate(request.form):
+            user = update_model(user, form)
+            db.session.update(user)
+            db.session.commit()
+
+    If `includes` is applied only these fields will be updated.
+    """
     attrs = _get_attrs(instance)
 
     for key, value in form.data.iteritems():

@@ -10,6 +10,7 @@
 """
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, db, redirect_to, _
+from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.utils.pagination import URLPagination
 from inyoka.admin.api import IAdminProvider
 from inyoka.paste.forms import AddPasteForm, EditPasteForm
@@ -91,19 +92,12 @@ class PasteAdminProvider(IAdminProvider):
     @templated('paste/admin/edit.html')
     def edit(self, request, id):
         entry = Entry.query.get(id)
-        form = EditPasteForm({
-            'code': entry.code,
-            'language': entry.language,
-            'title': entry.title,
-            'author': entry.author,
-            'hidden': entry.hidden
-        })
+        form = EditPasteForm(model_to_dict(entry,
+            exclude=('rendered_code', 'id', 'author_id')
+        ))
         if request.method == 'POST' and form.validate(request.form):
-            entry.code = form.data['code']
-            entry.language = form.data['language'] or None
-            entry.title = form.data['title']
-            entry.author = request.user
-            entry.hidden = form.data['hidden']
+            entry = update_model(entry, form,
+                ('code', 'language', 'title', 'author', 'hidden'))
             db.session.update(entry)
             db.session.commit()
             return redirect_to(entry)

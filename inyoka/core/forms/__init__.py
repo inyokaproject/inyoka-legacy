@@ -6,13 +6,15 @@
     This module uses `bureaucracy <http://dev.pocoo.org/hg/bureaucracy-main/>`_
     as it's base and stays here for API reasons.
 
+    The :module:`inyoka.core.forms` module is a complete wrapper around bureaucracy
+    and implements some features special for Inyoka.
+
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import redirect
 from bureaucracy.forms import *
-from bureaucracy import csrf, exceptions, recaptcha, redirects, utils, \
-    widgets
+from bureaucracy import csrf, exceptions, recaptcha, redirects
 
 from inyoka.i18n import get_translations
 from inyoka.core.http import redirect_to

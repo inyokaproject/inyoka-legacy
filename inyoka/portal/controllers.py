@@ -35,7 +35,8 @@ class PortalController(IController):
     @templated('portal/login.html')
     def login(self, request):
         #return { 'login_form': form.as_widget() }
-        return get_auth_system().login(request)
+        get_auth_system().login(request)
+        return redirect_to('portal/index')
 
     @view
     def logout(self, request):

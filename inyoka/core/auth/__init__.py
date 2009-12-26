@@ -62,6 +62,7 @@ class AuthMiddleware(IMiddleware):
     def process_response(self, request, response):
         if not request.user.is_anonymous:
             response.prevent_caching()
+
         return response
 
 

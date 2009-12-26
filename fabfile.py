@@ -14,8 +14,6 @@ import sys
 from os import path as _path
 from functools import partial as _partial
 from fabric.api import *
-from flickzeug import debug as _debug, leakfinder as _leakfinder, \
-    profiling as _profiling
 
 
 # setup PYTHONPATH and current sys.path
@@ -28,16 +26,17 @@ os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
     os.environ['INYOKA_CONFIG'] = cfg
     from inyoka.core.api import ctx
+    from flickzeug import debug as debugger, leakfinder, profiling
     dispatcher = ctx.dispatcher
     if debug:
-        dispatcher = _debug.DebuggedApplication(dispatcher, evalex=True,
+        dispatcher = debugger.DebuggedApplication(dispatcher, evalex=True,
             show_hidden_frames=True)
     if profile:
         if not os.path.exists('profiles'):
             os.mkdir('profiles')
-        dispatcher = _profiling.Profiler(dispatcher, 'profiles')
+        dispatcher = profiling.Profiler(dispatcher, 'profiles')
     if leaky:
-        dispatcher = _leakfinder.LeakFinder(dispatcher, async_ajax=True)
+        dispatcher = leakfinder.LeakFinder(dispatcher, async_ajax=True)
     return dispatcher
 
 

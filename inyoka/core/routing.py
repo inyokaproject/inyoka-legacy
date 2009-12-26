@@ -92,8 +92,10 @@ class UrlMixin(object):
         """This method returns a dictionary with a mapping out of
         endpoint name -> bound method
         """
+
         def _predicate(value):
-            return ismethod(value) and getattr(value, 'endpoint', None) is not None
+            return (ismethod(value) and
+                    getattr(value, 'endpoint', None) is not None)
 
         members = tuple(x[1] for x in getmembers(self, _predicate))
         endpoint_map = dict((m.endpoint, m) for m in members)
@@ -187,7 +189,7 @@ view = IController.register_view
 service = IController.register_service
 
 
-def href(endpoint, **args):
+def href(endpoint, **kwargs):
     """Get the URL to an endpoint.  The keyword arguments provided are used
     as URL values.  Unknown URL values are used as keyword argument.
     Additionally there are some special keyword arguments:
@@ -202,14 +204,13 @@ def href(endpoint, **args):
     _anchor = args.pop('_anchor', None)
     _external = args.pop('_external', False)
 
-    from inyoka.core.database import db
-    if isinstance(endpoint, db.Model):
-        return endpoint.get_absolute_url()
-    ret = ctx.dispatcher.url_adapter.build(endpoint, args,
-        force_external=_external)
+    if hasattr(endpoint, 'get_url_values'):
+        endpoint, values = endpoint.get_url_values(**kwargs)
+    url = ctx.dispatcher.url_adapter.build(endpoint, values,
+                                              force_external=_external)
     if _anchor is not None:
-        ret += '#' + url_quote(_anchor)
-    return ret
+        url += '#' + url_quote(_anchor)
+    return url
 
 
 class DateConverter(BaseConverter):

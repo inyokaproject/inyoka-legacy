@@ -170,7 +170,7 @@ class AuthSystemBase(object):
             if isinstance(r, Response):
                 return r
             return redirect_to('portal/index')
-        return {'form':form.as_widget()}
+        return {'form': form.as_widget()}
 
     def after_register(self, request, user):
         """

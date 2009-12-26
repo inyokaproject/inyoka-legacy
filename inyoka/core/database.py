@@ -3,7 +3,7 @@
     inyoka.core.database
     ~~~~~~~~~~~~~~~~~~~~
 
-    This module implements our interface to `SQLAlchemy <http://sqlalchemy.org>`_.
+    This module implements our interface to`SQLAlchemy`_.
 
     It uses scoped sessions to represent the database connection and
     implements some useful classes and functions to ease the database
@@ -67,11 +67,15 @@
 
     … some tipps and tricks could be mentioned here…
 
+
+    .. _SQLAlchemy: <http://sqlalchemy.org>
+
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
-import sys, os
+import sys
+import os
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
@@ -259,9 +263,10 @@ def mapper(model, table, **options):
 
 class InyokaSession(SASession):
     """Session that binds the engine as late as possible"""
+
     def __init__(self):
         SASession.__init__(self, get_engine(), autoflush=True,
-                         autocommit=False)
+                           autocommit=False)
 
 
 metadata = MetaData()
@@ -403,7 +408,6 @@ class ModelBase(object):
 Model = declarative_base(name='Model', cls=ModelBase,
     mapper=mapper, metadata=metadata, metaclass=DeclarativeMeta)
 ModelBase.query = session.query_property(Query)
-
 
 
 def init_db(**kwargs):

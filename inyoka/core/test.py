@@ -9,7 +9,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os, sys
+import os
+import sys
 import unittest
 import warnings
 import functools
@@ -31,13 +32,12 @@ from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
 
-
 logger.disabled = True
 
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
-__all__ = ('TestResponse', 'ViewTestSuite','TestSuite', 'fixture', 'with_fixtures',
+__all__ = ('TestResponse', 'ViewTestSuite', 'TestSuite', 'fixture', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
            'ctx')
 __all__ = __all__ + tuple(nose.tools.__all__)
@@ -267,9 +267,8 @@ class InyokaPlugin(cover.Coverage):
         """
         import coverage
         coverage.stop()
-        modules = [ module
-                    for name, module in sys.modules.items()
-                    if self.wantModuleCoverage(name, module) ]
+        modules = [module for name, module in sys.modules.items()
+                   if self.wantModuleCoverage(name, module)]
         html_reporter = coverage.html.HtmlReporter(coverage._the_coverage)
         if self.coverHtmlDir:
             if not os.path.exists(self.coverHtmlDir):
@@ -298,11 +297,14 @@ def with_fixtures(*names):
         return func
     return proxy
 
+
 class ExpectedFailure(Exception):
     pass
 
+
 class UnexpectedSuccess(Exception):
     pass
+
 
 class FuturePlugin(errorclass.ErrorClassPlugin):
     enabled = True

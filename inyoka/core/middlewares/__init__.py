@@ -76,7 +76,7 @@ class IMiddleware(Interface, UrlMixin):
         if not cls._middlewares:
             cls._middlewares = sorted(
                 ctx.get_implementations(cls, instances=True),
-                key=lambda x: -x.priority)
+                key=lambda x: (- x.priority))
         ret = cls._middlewares
         return ret
 

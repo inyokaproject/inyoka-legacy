@@ -19,7 +19,6 @@ from inyoka.core.context import ctx
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 
-
 _translations = None
 
 

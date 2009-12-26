@@ -22,6 +22,7 @@ CONFIRM_ACTIONS = {}
 
 
 class ConfirmMapperExtension(MapperExtension):
+
     def before_insert(self, mapper, connection, instance):
         while instance.key is None:
             key = mapper.class_._make_key()
@@ -30,6 +31,7 @@ class ConfirmMapperExtension(MapperExtension):
 
 
 class ConfirmQuery(db.Query):
+
     def get(self, pk):
         if isinstance(pk, basestring):
             try:

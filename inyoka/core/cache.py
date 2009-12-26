@@ -152,16 +152,16 @@ class DatabaseCache(BaseCache):
 
 #: the cache system factories.
 CACHE_SYSTEMS = {
-    'null':         lambda: NullCache(),
-    'simple':       lambda: SimpleCache(ctx.cfg['caching.timeout']),
-    'memcached':    lambda: MemcachedCache(
+    'null': lambda: NullCache(),
+    'simple': lambda: SimpleCache(ctx.cfg['caching.timeout']),
+    'memcached': lambda: MemcachedCache(
         [x.strip() for x in ctx.cfg['caching.memcached_servers'].split(',')],
         ctx.cfg['caching.timeout']),
-    'filesystem':   lambda: FileSystemCache(
+    'filesystem': lambda: FileSystemCache(
         join(ctx.cfg['caching.filesystem_cache_path']),
         threshold=500,
         default_timeout=ctx.cfg['caching.timeout']),
-    'database':     lambda: DatabaseCache(ctx.cfg['caching.timeout'])
+    'database': lambda: DatabaseCache(ctx.cfg['caching.timeout'])
 }
 
 

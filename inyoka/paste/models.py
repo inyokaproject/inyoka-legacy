@@ -26,6 +26,7 @@ class Entry(db.Model):
     _language = db.Column('language', db.String(30))
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     pub_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    hidden = db.Column(db.Boolean, default=False)
 
     author = db.relation(User)
 
@@ -41,6 +42,7 @@ class Entry(db.Model):
         return href({
             'view': 'paste/view',
             'raw': 'paste/raw',
+            'edit': 'admin/paste/edit'
             }[action], id=self.id)
 
     def _rerender(self):

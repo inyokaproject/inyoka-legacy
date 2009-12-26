@@ -1,0 +1,9 @@
+{%- extends 'admin/base.html' %}
+
+{%- block admin_content %}
+<h1>Pastebin Admin</h1>
+
+{{ form() }}
+
+<p><a href="{{ href('paste/browse') }}">Browse all pastes</a></p>
+{%- endblock %}

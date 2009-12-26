@@ -189,7 +189,7 @@ view = IController.register_view
 service = IController.register_service
 
 
-def href(endpoint, **kwargs):
+def href(endpoint, **values):
     """Get the URL to an endpoint.  The keyword arguments provided are used
     as URL values.  Unknown URL values are used as keyword argument.
     Additionally there are some special keyword arguments:
@@ -201,13 +201,12 @@ def href(endpoint, **kwargs):
         If set to `True` the URL will be generated with the full server name
         and `http://` prefix.
     """
-    _anchor = args.pop('_anchor', None)
-    _external = args.pop('_external', False)
-
+    _external = values.pop('_external', False)
     if hasattr(endpoint, 'get_url_values'):
-        endpoint, values = endpoint.get_url_values(**kwargs)
+        endpoint, values = endpoint.get_url_values(**values)
+    _anchor = values.pop('_anchor', None)
     url = ctx.dispatcher.url_adapter.build(endpoint, values,
-                                              force_external=_external)
+                                           force_external=_external)
     if _anchor is not None:
         url += '#' + url_quote(_anchor)
     return url

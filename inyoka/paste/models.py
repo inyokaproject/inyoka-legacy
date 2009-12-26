@@ -38,12 +38,13 @@ class Entry(db.Model):
         self.language = language
         self.code = code
 
-    def get_absolute_url(self, action='view', external=False):
-        return href({
+    def get_url_values(self, action='view'):
+        values = {
             'view': 'paste/view',
-            'raw': 'paste/raw',
+            'raw':  'paste/raw',
             'edit': 'admin/paste/edit'
-            }[action], id=self.id)
+        }
+        return values[action], {'id': self.id}
 
     def _rerender(self):
         """

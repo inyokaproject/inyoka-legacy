@@ -181,23 +181,15 @@ class AuthSystemBase(object):
 
     def send_activation_mail(self, request, user):
         """Sends an activation mail."""
-#        if settings.REGISTRATION_REQUIRES_ACTIVATION:
         if True:
             db.session.commit()
             c = Confirm('activate_user', {'user': user.id}, 3)
             db.session.add(c)
             db.session.commit()
-#            send_email(_(u'Registration Confirmation'), user,
-#                       render_template('mails/activate_user.txt', user=user,
-#                                       confirmation_url=c.url))
-#            flash(_(u'An email was sent with a link to finish the '
-#                    u'registration.'))
-#            return redirect_to('portal/index')
             return Response('activation link: %s' % c.url)
         else:
             user.status = 'normal'
             db.session.commit()
-#            flash(_(u'You\'re registered.  You can login now.'))
             return redirect_to('portal/login')
 
     def before_login(self, request):
@@ -215,8 +207,7 @@ class AuthSystemBase(object):
         """Like `register` just for login."""
         form = self.get_login_form()
 
-        # some login systems require an external login URL.  For example
-        # the one we use as Plurk.
+        # some login systems require an external login URL.
         try:
             rv = self.before_login(request)
             if rv is not None:
@@ -250,7 +241,7 @@ class AuthSystemBase(object):
     @templated('portal/login.html')
     def render_login_template(self, request, form):
         """Renders the login template"""
-        return { 'login_form':form.as_widget() }
+        return {'login_form': form.as_widget()}
 
     def logout(self, request):
         """This has to logout the user again.  This method must not fail.
@@ -276,7 +267,6 @@ class AuthSystemBase(object):
         if user is None:
             request.session.pop('user_id', None)
         else:
-            #user.last_login = datetime.utcnow()
             request.session['user_id'] = user.id
 
 
@@ -285,9 +275,7 @@ def activate_user(data):
     try:
         u = User.query.get(data['user'])
     except NoResultFound:
-#        flash(_('User not found.'))
         return redirect_to('portal/index')
     u.status = 'normal'
     db.session.commit()
-    # flash(_('Registration confirmed. You may login now.'))
     return redirect_to('portal/login')

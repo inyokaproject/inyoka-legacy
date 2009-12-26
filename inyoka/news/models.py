@@ -62,10 +62,11 @@ class Category(db.Model):
     def __unicode__(self):
         return self.name
 
-    def get_absolute_url(self, action='show'):
-        return href({
+    def get_url_values(self, action='view'):
+        values = {
             'edit': 'admin/news/category_edit'
-        }[action], slug=self.slug)
+        }
+        return values[action], {'slug': self.slug}
 
 
 class Article(db.Model):

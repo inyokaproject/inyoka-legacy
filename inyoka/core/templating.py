@@ -70,13 +70,9 @@ def templated(template_name):
 
 
 def url_filter(model_instance, action=None):
-    """
-    Call `get_absolute_url` on a model instance.
-    """
-    kwargs = {
-        'action': action
-    } if action else {}
-    return model_instance.get_absolute_url(**kwargs)
+    """Call :func:`href` on a model instance."""
+    kwargs = {'action': action} if action else {}
+    return href(model_instance, **kwargs)
 
 
 class InyokaEnvironment(Environment):

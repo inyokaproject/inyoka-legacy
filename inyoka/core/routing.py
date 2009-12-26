@@ -9,6 +9,7 @@
 import re
 import types
 import sre_constants
+from inspect import getmembers, ismethod
 from datetime import datetime
 from functools import update_wrapper
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
@@ -91,13 +92,11 @@ class UrlMixin(object):
         """This method returns a dictionary with a mapping out of
         endpoint name -> bound method
         """
-        endpoint_map = {}
-        for name in dir(self):
-            method = getattr(self, name)
-            endpoint = getattr(method, 'endpoint', None)
-            if endpoint is not None and endpoint not in endpoint_map:
-                #TODO: raise a warning?
-                endpoint_map[endpoint] = method
+        def _predicate(value):
+            return ismethod(value) and getattr(value, 'endpoint', None) is not None
+
+        members = tuple(x[1] for x in getmembers(self, _predicate))
+        endpoint_map = dict((m.endpoint, m) for m in members)
         return endpoint_map
 
 

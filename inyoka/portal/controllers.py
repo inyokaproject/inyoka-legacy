@@ -28,8 +28,8 @@ class PortalController(IController):
     @view
     @templated('portal/index.html')
     def index(self, request):
-        return { 'called_url': request.build_absolute_url(),
-                 'link': href('portal/index') }
+        return {'called_url': request.build_absolute_url(),
+                 'link': href('portal/index')}
 
     @view
     @templated('portal/login.html')

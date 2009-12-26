@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import Interface
+from inyoka.core.api import Interface, href
 
 
 class IAdminProvider(Interface):
@@ -21,3 +21,10 @@ class IAdminProvider(Interface):
 
     #: The public url map
     url_map = None
+
+    #: This is a string points to the index endpoint
+    #: e.g: 'index'
+    index_endpoint = None
+
+    def get_index_uri(self):
+        return href('admin/%s/%s' % (self.name, self.index_endpoint))

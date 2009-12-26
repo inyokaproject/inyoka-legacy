@@ -36,6 +36,8 @@ class NewsAdminProvider(IAdminProvider):
     name = u'news'
     title = _(u'News')
 
+    index_endpoint = 'index'
+
     url_rules = [
         Rule('/', endpoint='index'),
         Rule('/<date:date>/<slug>/', endpoint='edit'),

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% trans %}Welcome on the Inyoka Admin Center!{% endtrans %}
+  <ul>
+  {% for provider in providers %}
+    <li><a href="{{ provider.get_index_uri() }}">{{ provider.title }}</a></li>
+  {% endfor %}
+  </ul>
+{% endblock %}

@@ -8,9 +8,11 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inspect import ismethod, getmembers
 from os.path import join
 from werkzeug import cached_property
-from inyoka.core.api import Interface, IController, ctx, view, Rule, Response
+from inyoka.core.api import ctx, view, Interface, IController, Rule, \
+    Response, templated
 from inyoka.core.routing import Submount, EndpointPrefix
 from inyoka.utils.decorators import abstract
 
@@ -25,6 +27,10 @@ class AdminController(IController):
     #: The internal application name.  Do never overwrite this!
     name = 'admin'
 
+    @property
+    def providers(self):
+        return ctx.get_implementations(IAdminProvider, instances=True)
+
     @cached_property
     def url_rules(self):
         rules = [Rule('/', endpoint='index')]
@@ -38,16 +44,21 @@ class AdminController(IController):
 
     def get_endpoint_map(self):
         """Register all view methods from remote admin providers"""
+        def _predicate(value):
+            return ismethod(value) and getattr(value, 'endpoint', None) is not None
+
         endpoint_map = super(AdminController, self).get_endpoint_map()
-        providers = ctx.get_implementations(IAdminProvider, instances=True)
-        for provider in providers:
-            for name in dir(provider):
-                obj = getattr(provider, name)
-                endpoint = getattr(obj, 'endpoint', None)
-                if endpoint is not None and endpoint not in endpoint_map:
-                    endpoint_map[join(provider.name, endpoint)] = obj
+
+        for provider in self.providers:
+            members = tuple(x[1] for x in getmembers(provider, _predicate))
+            endpoint_map.update(dict(
+                (join(provider.name, m.endpoint), m) for m in members
+            ))
         return endpoint_map
 
-    @view
+    @view('index')
+    @templated('admin/index.html')
     def index(self, request):
-        return Response('Admin!')
+        return {
+            'providers': self.providers
+        }

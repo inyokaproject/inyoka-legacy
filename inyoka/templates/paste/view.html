@@ -8,6 +8,6 @@
 {{ paste.rendered_code }}
 <p><span class="small">
   Created on {{ paste.pub_date|datetimeformat }}.
-  <a href={{ paste|url('raw') }}>Show raw text</a>
+  <a href={{ href(paste, action='raw') }}>Show raw text</a>
 </span></p>
 {%- endblock %}

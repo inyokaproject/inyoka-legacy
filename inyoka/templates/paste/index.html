@@ -11,7 +11,7 @@
   <h2>Recent Pastes</h2>
   <ul>
     {% for p in recent_pastes %}
-    <li><a href="{{ p|url }}">{{ p }}</a> <span class="small">by {{ p.author|e }} ({{ p.pub_date.strftime('%F %T') }})</span></li>
+    <li><a href="{{ href(p) }}">{{ p }}</a> <span class="small">by {{ p.author|e }} ({{ p.pub_date.strftime('%F %T') }})</span></li>
     {% endfor %}
   </ul>
 {% endif %}

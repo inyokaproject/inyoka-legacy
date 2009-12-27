@@ -68,12 +68,6 @@ def templated(template_name):
     return decorator
 
 
-def url_filter(model_instance, action=None):
-    """Call :func:`href` on a model instance."""
-    kwargs = {'action': action} if action else {}
-    return href(model_instance, **kwargs)
-
-
 class InyokaEnvironment(Environment):
     """
     Beefed up version of the jinja environment but without security features
@@ -119,7 +113,6 @@ class InyokaEnvironment(Environment):
         )
         self.filters.update(
             jsonencode=simplejson.dumps,
-            url=url_filter,
             datetimeformat=l10n.format_datetime,
             dateformat=l10n.format_date,
         )

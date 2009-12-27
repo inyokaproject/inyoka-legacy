@@ -4,7 +4,7 @@
   {{ _('All categories') }}
   <ul>
   {% for category in categories %}
-    <li><a href="{{ category|url('edit') }}">{{ category.name }}</a></li>
+    <li><a href="{{ href(category, action='edit') }}">{{ category.name }}</a></li>
   {% endfor %}
   </ul>
   {% trans link=href('admin/news/category_edit') %}

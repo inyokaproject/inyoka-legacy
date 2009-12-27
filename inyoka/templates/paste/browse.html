@@ -11,9 +11,9 @@
   {% for p in pastes %}
   {# TODO: ACL for hidden pastes and edit link! #}
   <li{% if p.hidden %} class="hidden"{% endif %}>
-    <a href="{{ p|url }}">{{ p }}</a>
+    <a href="{{ href(p) }}">{{ p }}</a>
     <span class="small">written by {{ p.author }} on {{ p.pub_date.strftime('%F %T') }}
-      (language: {{ p.language|default('plain text') }}) – <a href="{{ p|url('edit') }}">edit</a></span>
+      (language: {{ p.language|default('plain text') }}) – <a href="{{ href(p, action='edit') }}">edit</a></span>
   </li>
   {% endfor %}
 </ul>

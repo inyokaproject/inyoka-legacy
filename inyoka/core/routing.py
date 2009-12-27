@@ -6,11 +6,13 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import simplejson
 import re
 import sre_constants
 from os.path import join
 from inspect import getmembers, ismethod
 from datetime import datetime
+from functools import wraps
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
 from werkzeug import url_quote
@@ -18,6 +20,7 @@ from werkzeug.routing import Map as BaseMap
 from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.utils.decorators import make_decorator
+from inyoka.core.forms.utils import model_to_dict
 
 
 _date_formatter_split_re = re.compile('(%.)')
@@ -71,24 +74,38 @@ class UrlMixin(object):
 
             name = comp.name
             if name:
+                special = cls.special_prefix or ''
                 domain, mount = ctx.cfg['routing.urls.' + name].split(':', 1)
                 if comp.ignore_prefix:
                     rules = comp.url_rules
                 else:
-                    if cls.special_prefix:
-                        mount = join(special_prefix, mount)
-                    rules = [EndpointPrefix('%s/' % name, comp.url_rules)]
+                    prefix = ('%s%s' %
+                        (name, '/' + special if special else special))
+                    rules = [EndpointPrefix('%s/' % prefix, comp.url_rules)]
+
+                if cls.special_prefix is not None:
+                    mount = '/_%s/%s' % (special.rstrip('/'), mount.strip('/'))
                 val = Subdomain(domain, [Submount(mount, rules)])
                 urls.append(val)
             else:
                 val = comp.url_rules
                 urls.extend(val)
 
-            cls._endpoint_map.setdefault(name, {}).update(
-                comp.get_endpoint_map()
-            )
+            if cls.special_prefix:
+                name = name + '/' + cls.special_prefix
+            cls._endpoint_map.setdefault(name, {}).update(comp.get_endpoint_map())
 
         return urls
+
+    @classmethod
+    def get_callable_for_endpoint(cls, endpoint):
+        """Return the proper callable for `endpoint`"""
+        if '/' not in endpoint:
+            # we assume that we have url_sections that point
+            # to no name but to an empty string
+            endpoint = '/' + endpoint
+        parts = endpoint.split('/', 1)
+        return cls._endpoint_map[parts[0]][parts[1]]
 
     def get_endpoint_map(self):
         """This method returns a dictionary with a mapping out of
@@ -131,16 +148,6 @@ class IController(Interface, UrlMixin):
 
     """
 
-    @classmethod
-    def get_view(cls, endpoint):
-        """Return the proper view for :attr:`endpoint`"""
-        if '/' not in endpoint:
-            # we assume that we have url_sections that point
-            # to no name but to an empty string
-            endpoint = '/' + endpoint
-        parts = endpoint.split('/', 1)
-        return cls._endpoint_map[parts[0]][parts[1]]
-
     register_view = staticmethod(make_decorator('endpoint'))
 
 
@@ -167,19 +174,34 @@ class IServiceProvider(Interface, UrlMixin):
 
     """
 
-    special_prefix = '_api'
+    special_prefix = 'api'
+
+    @staticmethod
+    def register_service(name):
+        def decorator(func):
+            @wraps(func)
+            def service_wrapper(*args, **kwargs):
+                from inyoka.core.http import Response
+                ret = func(*args, **kwargs)
+                if isinstance(ret, Response):
+                    return ret
+                json = simplejson.dumps(ret)
+                return Response(json, content_type='text/plain')
+            service_wrapper.endpoint = name
+            return service_wrapper
+        decorator.endpoint = name
+        return decorator
 
     @classmethod
-    def get_service(cls, endpoint):
-        """Return the proper service for :attr:`endpoint`"""
+    def get_callable_for_endpoint(cls, endpoint):
+        """Return the proper callable for `endpoint`"""
         if '/' not in endpoint:
             # we assume that we have url_sections that point
             # to no name but to an empty string
             endpoint = '/' + endpoint
-        parts = endpoint.split('/', 1)
+        parts = endpoint.rsplit('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
 
-    register_service = staticmethod(make_decorator('endpoint'))
 
 view = IController.register_view
 service = IServiceProvider.register_service

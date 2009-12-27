@@ -19,7 +19,7 @@ from werkzeug import ClosingIterator, redirect, cached_property
 from werkzeug.exceptions import NotFound
 
 from inyoka.core.api import db, ctx, logger, IController, Request, \
-    Response, IMiddleware
+    Response, IMiddleware, IServiceProvider
 from inyoka.core.context import local, local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
@@ -37,7 +37,7 @@ class RequestDispatcher(object):
     @cached_property
     def url_map(self):
         map = []
-        for provider in (IController, IMiddleware):
+        for provider in (IController, IMiddleware, IServiceProvider):
             map.extend(provider.get_urlmap())
         return Map(map)
 
@@ -51,6 +51,14 @@ class RequestDispatcher(object):
         except AttributeError:
             adapter = self.url_map.bind(domain)
         return adapter
+
+    def _get_callable(self, endpoint):
+        for provider in (IController, IServiceProvider):
+            try:
+                return provider.get_callable_for_endpoint(endpoint)
+            except:
+                continue
+        raise
 
     def dispatch_request(self, request, environ):
         """Dispatch the request.
@@ -75,7 +83,7 @@ class RequestDispatcher(object):
         # dispatch the request if not already done by some middleware
         try:
             rule, args = urls.match(request.path, return_rule=True)
-            response = IController.get_view(rule.endpoint)(request, **args)
+            response = self._get_callable(rule.endpoint)(request, **args)
         except HTTPException, err:
             response = err.get_response(request)
         except db.NoResultFound:

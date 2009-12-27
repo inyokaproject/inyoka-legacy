@@ -12,7 +12,8 @@ from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.core.http import Request, Response, redirect_to
-from inyoka.core.routing import IController, view, service, Rule, href
+from inyoka.core.routing import IController, IServiceProvider
+from inyoka.core.routing import view, service, Rule, href
 from inyoka.core.templating import templated, render_template
 from inyoka.core.middlewares import IMiddleware
 from inyoka.core.exceptions import *

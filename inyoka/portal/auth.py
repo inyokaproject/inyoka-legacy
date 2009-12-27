@@ -64,7 +64,7 @@ class HttpBasicAuth(AuthSystemBase):
     def login(self, request):
         # Try to get an already logged in user
         if request.session.get('user_id', None):
-            return User.query.get(request.session['user_id'])
+            return redirect_to('portal/index')
 
         if request.authorization:
             auth = request.authorization
@@ -73,7 +73,7 @@ class HttpBasicAuth(AuthSystemBase):
                 if user.check_password(request.authorization.password):
                     self.set_user(request, user)
                     request.flash(_(u'You are now logged in.'))
-                    return user
+                    return redirect_to('portal/index')
             except db.NoResultFound:
                 pass
 

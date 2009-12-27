@@ -8,7 +8,11 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from functools import wraps
+import types
+from functools import wraps, update_wrapper
+
+
+_function_types = (types.FunctionType, types.MethodType)
 
 
 def abstract(func):
@@ -44,3 +48,32 @@ def abstract(func):
                                   func.__name__)
 
     return wrapper
+
+
+def make_decorator(attr):
+    """Return a method usable as a multifunctional decorator
+    to make methods available under some alias.
+
+    :param attr: A string determining what attribute will be set
+                 to the alias value.
+    """
+    def _wrapper(func=None, alias=None):
+        """Decorator to register `alias` to `func`."""
+        def _proxy(func):
+            if alias is None:
+                setattr(func, attr, func.__name__)
+            else:
+                setattr(func, attr, alias)
+            return func
+
+        if isinstance(func, _function_types):
+            # @register_view
+            return update_wrapper(_proxy, func)(func)
+        elif func is None:
+            # @register_view()
+            return update_wrapper(_proxy, func)
+        elif isinstance(func, basestring):
+            # @register_view('alias')
+            alias = func
+            return _proxy
+    return _wrapper

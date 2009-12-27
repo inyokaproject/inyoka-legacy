@@ -7,17 +7,17 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-import types
 import sre_constants
+from os.path import join
 from inspect import getmembers, ismethod
 from datetime import datetime
-from functools import update_wrapper
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
 from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
 from inyoka import Interface
 from inyoka.core.context import ctx
+from inyoka.utils.decorators import make_decorator
 
 
 _date_formatter_split_re = re.compile('(%.)')
@@ -32,8 +32,6 @@ _date_formatter_mapping = {
     'Y': r'\d{4}',
     '%': r'%',
 }
-
-_function_types = (types.FunctionType, types.MethodType)
 
 
 class UrlMixin(object):
@@ -53,6 +51,8 @@ class UrlMixin(object):
 
     # if `True` we don't set a `EndpointPrefix`
     ignore_prefix = False
+
+    special_prefix = None
 
     @classmethod
     def get_urlmap(cls):
@@ -75,6 +75,8 @@ class UrlMixin(object):
                 if comp.ignore_prefix:
                     rules = comp.url_rules
                 else:
+                    if cls.special_prefix:
+                        mount = join(special_prefix, mount)
                     rules = [EndpointPrefix('%s/' % name, comp.url_rules)]
                 val = Subdomain(domain, [Submount(mount, rules)])
                 urls.append(val)
@@ -130,20 +132,6 @@ class IController(Interface, UrlMixin):
     """
 
     @classmethod
-    def get_servicemap(cls):
-        if hasattr(cls, '_services'):
-            return cls._services
-
-        cls._services = {}
-        for comp in ctx.get_implementations(cls, instances=True):
-            for method in dir(comp):
-                method = getattr(comp, method)
-                if getattr(method, 'service_name', None) is not None:
-                    name = '%s.%s' % (comp.name, method.service_name)
-                    cls._services[name] = method
-        return cls._services
-
-    @classmethod
     def get_view(cls, endpoint):
         """Return the proper view for :attr:`endpoint`"""
         if '/' not in endpoint:
@@ -153,40 +141,48 @@ class IController(Interface, UrlMixin):
         parts = endpoint.split('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
 
-    def _wrapped(attr):
-        """Return a method usable as a multifunctional decorator
-        to make methods available under some alias.
+    register_view = staticmethod(make_decorator('endpoint'))
 
-        :param attr: A string determining what attribute will be set
-                     to the alias value.
-        """
-        def _wrapper(func=None, alias=None):
-            """Decorator to register `alias` to `func`."""
-            def _proxy(func):
-                if alias is None:
-                    setattr(func, attr, func.__name__)
-                else:
-                    setattr(func, attr, alias)
-                return func
 
-            if isinstance(func, _function_types):
-                # @register_view
-                return update_wrapper(_proxy, func)(func)
-            elif func is None:
-                # @register_view()
-                return update_wrapper(_proxy, func)
-            elif isinstance(func, basestring):
-                # @register_view('alias')
-                alias = func
-                return _proxy
-        return _wrapper
+class IServiceProvider(Interface, UrlMixin):
+    """Interface for services.
 
-    register_view = staticmethod(_wrapped('endpoint'))
-    register_service = staticmethod(_wrapped('service_name'))
+    A controller is some kind of wrapper around differend
+    methods handling various routing endpoints.
 
+    Example controller implementation::
+
+        class DummyService(IServiceProvider):
+
+            url_rules = [
+                Rule('/', endpoint='get_dummy'),
+                Rule('/<int:id>', endpoint='get_dummy'),
+            ]
+
+            @service('get_dummy')
+            def get_dummy(self, id=None):
+                # ...
+
+    All “handlers” are registered with :func:`service` as endpoint handlers.
+
+    """
+
+    special_prefix = '_api'
+
+    @classmethod
+    def get_service(cls, endpoint):
+        """Return the proper service for :attr:`endpoint`"""
+        if '/' not in endpoint:
+            # we assume that we have url_sections that point
+            # to no name but to an empty string
+            endpoint = '/' + endpoint
+        parts = endpoint.split('/', 1)
+        return cls._endpoint_map[parts[0]][parts[1]]
+
+    register_service = staticmethod(make_decorator('endpoint'))
 
 view = IController.register_view
-service = IController.register_service
+service = IServiceProvider.register_service
 
 
 def href(endpoint, **values):

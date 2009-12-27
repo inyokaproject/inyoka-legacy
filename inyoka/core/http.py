@@ -92,7 +92,7 @@ class Response(BaseResponse):
         """Prevent downstream Proxies to cache this page"""
         self.headers['Cache-Control'] = 'no-cache, must-revalidate'
         self.headers['Pragma'] = 'no-cache'
-        self.headers['Expires'] '-1'
+        self.headers['Expires'] = '-1'
 
 
 def redirect_to(*args, **kwargs):

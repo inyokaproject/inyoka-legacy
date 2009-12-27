@@ -34,7 +34,7 @@ class RequestDispatcher(object):
         self.cleanup_callbacks = (db.session.close, local_manager.cleanup,
                                   self.ctx.bind)
 
-    @property
+    @cached_property
     def url_map(self):
         map = []
         for provider in (IController, IMiddleware):

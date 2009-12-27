@@ -20,7 +20,7 @@ from werkzeug.exceptions import NotFound
 
 from inyoka.core.api import db, ctx, logger, IController, Request, \
     Response, IMiddleware
-from inyoka.core.context import local, local_manager, request as current_request
+from inyoka.core.context import local, local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 
@@ -46,9 +46,9 @@ class RequestDispatcher(object):
         domain = self.ctx.cfg['base_domain_name']
         try:
             adapter = self.url_map.bind_to_environ(
-                current_request.environ,
+                ctx.current_request.environ,
                 server_name=domain)
-        except RuntimeError:
+        except AttributeError:
             adapter = self.url_map.bind(domain)
         return adapter
 

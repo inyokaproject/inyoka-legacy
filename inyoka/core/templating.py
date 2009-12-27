@@ -16,7 +16,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     MemcachedBytecodeCache
 from inyoka import INYOKA_REVISION
 from inyoka import l10n, i18n
-from inyoka.core.context import request as current_request, ctx
+from inyoka.core.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 
@@ -27,11 +27,10 @@ TEMPLATE_CONTEXT = {}
 def populate_context_defaults(context):
     """Fill in context defaults."""
     try:
-        context.update(
-            CURRENT_URL=current_request.build_absolute_url(),
-            REQUEST=current_request
-        )
-    except RuntimeError:
+        context.update({
+            'request': ctx.current_request
+        })
+    except AttributeError:
         # Don't raise an error if we don't have a request as it's
         # used get render_template which can get called by the message
         # broker to deliver notifications etc…

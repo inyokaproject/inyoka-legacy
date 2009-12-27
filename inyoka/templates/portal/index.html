@@ -3,5 +3,5 @@
 {% block content %}
     this is the portal index page. called URL is: {{ called_url|e }},
     link is {{ link|e }}.
-    CURRENT_URL is {{ CURRENT_URL|e }}
+    current url is {{ request.current_url|e }}
 {% endblock %}

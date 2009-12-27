@@ -43,7 +43,7 @@ class Form(FormBase):
     def _get_request_url(self):
         """The absolute url of the current request"""
         request = self._lookup_request_info()
-        return request.build_absolute_url() if request is not None else ''
+        return request.current_url if request is not None else ''
 
     def _redirect_to_url(self, url):
         return redirect(url)

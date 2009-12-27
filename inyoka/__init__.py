@@ -14,6 +14,7 @@ import os
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from werkzeug import import_string, find_modules, cached_property
+from inyoka.core.context import LocalProperty
 
 
 INYOKA_REVISION = 'unknown'
@@ -128,6 +129,9 @@ class ApplicationContext(object):
     def dispatcher(self):
         from inyoka.dispatcher import make_dispatcher
         return make_dispatcher(self)
+
+    #: The current request in the thread-local
+    current_request = LocalProperty('request')
 
     def load_component(self, component):
         """Load a component.

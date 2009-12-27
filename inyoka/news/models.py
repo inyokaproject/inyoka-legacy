@@ -12,8 +12,7 @@ from hashlib import md5
 from datetime import datetime, date
 from werkzeug import cached_property
 from inyoka.l10n import to_datetime, rebase_to_timezone
-from inyoka.core.api import ctx, _, db, auth, logger, markup, href, cache, \
-    current_request
+from inyoka.core.api import ctx, _, db, auth, logger, markup, href, cache
 from inyoka.utils.text import gen_ascii_slug
 
 
@@ -89,7 +88,7 @@ class Article(db.Model):
 
     def _render(self, text, key):
         """Render a text that belongs to this Article to HTML"""
-        context = markup.RenderContext(current_request)
+        context = markup.RenderContext(ctx.current_request)
         instructions = cache.get(key)
         if instructions is None:
             instructions = markup.parse(text).compile('html')

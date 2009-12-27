@@ -34,3 +34,13 @@ local_manager = LocalManager(local)
 
 ctx = local('ctx')
 request = local('request')
+
+
+class LocalProperty(object):
+    """Class/Instance property that returns something from the local."""
+
+    def __init__(self, name):
+        self.__name__ = name
+
+    def __get__(self, obj, type=None):
+        return getattr(local, self.__name__)

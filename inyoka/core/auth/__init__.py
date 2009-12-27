@@ -26,6 +26,7 @@ from inyoka.core.models import Confirm
 from inyoka.core.templating import templated
 from inyoka.utils.confirm import register_confirm
 
+
 _auth_system = None
 _auth_system_lock = Lock()
 
@@ -104,8 +105,8 @@ class AuthSystemBase(object):
     of your class to disable registration activation in the configuration.
 
     `after_register` should *not* be called if the registration process
-    should happen transparently for the user.  eg, the user has already
-    registered somewhere else and the Solace account is created based on the
+    should happen transparently for the user.  Eg, the user has already
+    registered somewhere else and the Inyoka account is created based on the
     already existing account on first login.
     """
 
@@ -144,7 +145,7 @@ class AuthSystemBase(object):
         """Invoked before the standard register form processing.  This is
         intended to be used to redirect to an external register URL if
         if the syncronization is only one-directional.  If this function
-        returns a response object, Solace will abort standard registration
+        returns a response object, Inyoka will abort standard registration
         handling.
         """
 

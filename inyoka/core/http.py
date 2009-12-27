@@ -43,7 +43,8 @@ class Request(BaseRequest):
 
     """
 
-    def build_absolute_url(self):
+    @cached_property
+    def current_url(self):
         """Get the current absolute URL from the WSGI environ"""
         return get_current_url(self.environ)
 

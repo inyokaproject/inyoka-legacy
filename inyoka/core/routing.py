@@ -20,7 +20,6 @@ from werkzeug.routing import Map as BaseMap
 from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.utils.decorators import make_decorator
-from inyoka.core.forms.utils import model_to_dict
 
 
 _date_formatter_split_re = re.compile('(%.)')

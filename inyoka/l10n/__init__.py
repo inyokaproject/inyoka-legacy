@@ -86,14 +86,24 @@ def to_datetime(obj):
 # For detailed documentation see Babel online docs:
 # http://babel.edgewall.org/wiki/ApiDocs/0.9/babel.dates
 
+_timezone_aware = ('format_datetime', 'format_time')
+
 def get_dummy(func):
     @wraps(func)
     def _inner(*args, **kwargs):
         if not 'locale' in kwargs or kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()
         # yet only a few methods can work with timezone information properly
-        if func.func_name in ('format_datetime', 'format_time'):
-            kwargs['tzinfo'] = get_timezone(kwargs.get('tzinfo', None))
+        # we also check if the applied value is a basestring.  If it is
+        # we convert it to a proper pytz timezone value.  If it's not we
+        # assume to get a proper timezone value.
+        tzinfo = kwargs.get('tzinfo', None)
+        if isinstance(tzinfo, basestring):
+            tzinfo = get_timezone(tzinfo)
+        if func.func_name in _timezone_aware and tzinfo is None:
+            tzinfo = get_timezone()
+        kwargs['tzinfo'] = tzinfo
+
         return func(*args, **kwargs)
     return _inner
 

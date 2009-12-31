@@ -98,11 +98,10 @@ def get_dummy(func):
         # we convert it to a proper pytz timezone value.  If it's not we
         # assume to get a proper timezone value.
         tzinfo = kwargs.get('tzinfo', None)
-        if isinstance(tzinfo, basestring):
+        if isinstance(tzinfo, basestring) or tzinfo is None:
             tzinfo = get_timezone(tzinfo)
-        if func.func_name in _timezone_aware and tzinfo is None:
-            tzinfo = get_timezone()
-        kwargs['tzinfo'] = tzinfo
+        if func.func_name in _timezone_aware:
+            kwargs['tzinfo'] = tzinfo
 
         return func(*args, **kwargs)
     return _inner

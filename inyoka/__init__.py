@@ -265,7 +265,6 @@ def _bootstrap():
 
     # TODO: make it configurable
     ctx.load_packages([
-        'inyoka.testing.*',
         'inyoka.core.*',
         'inyoka.admin.*',
         'inyoka.portal.*',

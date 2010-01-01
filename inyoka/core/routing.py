@@ -6,10 +6,8 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import simplejson
 import re
 import sre_constants
-from os.path import join
 from inspect import getmembers, ismethod
 from datetime import datetime
 from functools import update_wrapper
@@ -181,7 +179,6 @@ class IServiceProvider(Interface, UrlMixin):
     def register_service(name, methods=('GET',), serializer='json'):
         def decorator(func):
             def service_wrapper(self, request, *args, **kwargs):
-                from inyoka.core.http import Response
                 if request.method not in methods:
                     raise MethodNotAllowed(methods)
                 ret = func(self, request, *args, **kwargs)

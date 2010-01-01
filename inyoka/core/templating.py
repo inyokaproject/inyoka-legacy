@@ -12,13 +12,13 @@ import os
 import simplejson
 import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
-    ChoiceLoader, BytecodeCache, FileSystemBytecodeCache, \
-    MemcachedBytecodeCache
+    ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
 from inyoka import INYOKA_REVISION
 from inyoka import l10n, i18n
 from inyoka.core.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
+from inyoka.core.cache import cache as inyoka_cache
 
 
 TEMPLATE_CONTEXT = {}

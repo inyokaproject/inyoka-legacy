@@ -75,7 +75,6 @@
 """
 from __future__ import with_statement
 import sys
-import os
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
@@ -154,7 +153,7 @@ def atomic_add(obj, column, delta, expire=False):
     sess = orm.object_session(obj) or session
     obj_mapper = orm.object_mapper(obj)
     primary_key = obj_mapper.primary_key_from_instance(obj)
-    assert len(primary_keyk) == 1, 'atomic_add not supported for '\
+    assert len(primary_key) == 1, 'atomic_add not supported for '\
         'classes with more than one primary key'
 
     val = orm.attributes.get_attribute(obj, column)

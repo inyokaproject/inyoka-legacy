@@ -17,11 +17,11 @@ import inspect
 import simplejson
 from xml.sax.saxutils import quoteattr
 from datetime import datetime
-from functools import update_wrapper
-from babel import Locale, UnknownLocaleError
-from werkzeug.exceptions import MethodNotAllowed, BadRequest
-from werkzeug import Response, escape
+from babel import Locale
+from inyoka.i18n import _
 from inyoka.core.context import ctx
+from inyoka.core.exceptions import BadRequest
+from inyoka.utils.html import escape
 
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
@@ -156,7 +156,8 @@ def get_serializer(request_or_format):
 
 def send_service_response(request_or_format, result):
     """Sends the API response."""
-    ro =primitive(result)
+    from inyoka.core.http import Response
+    ro = primitive(result)
     serializer, mimetype = get_serializer(request_or_format)
     return Response(serializer(ro), mimetype=mimetype)
 

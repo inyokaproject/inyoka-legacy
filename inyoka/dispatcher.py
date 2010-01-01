@@ -52,7 +52,7 @@ class RequestDispatcher(object):
             adapter = self.url_map.bind(domain)
         return adapter
 
-    def _get_callable(self, endpoint):
+    def get_view(self, endpoint):
         for provider in (IController, IServiceProvider):
             try:
                 return provider.get_callable_for_endpoint(endpoint)
@@ -83,7 +83,8 @@ class RequestDispatcher(object):
         # dispatch the request if not already done by some middleware
         try:
             rule, args = urls.match(request.path, return_rule=True)
-            response = self._get_callable(rule.endpoint)(request, **args)
+            request.endpoint = rule.endpoint
+            response = self.get_view(rule.endpoint)(request, **args)
         except HTTPException, err:
             response = err.get_response(request)
         except db.NoResultFound:

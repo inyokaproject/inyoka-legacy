@@ -11,6 +11,7 @@
 import random
 
 from inyoka.core.database import db
+from inyoka.core.serializer import SerializableObject
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
@@ -30,11 +31,15 @@ class UserQuery(db.Query):
         return super(UserQuery, self).get(pk)
 
 
-class User(db.Model):
+class User(db.Model, SerializableObject):
     __tablename__ = 'core_user'
     __extendable__ = True
 
     query = db.session.query_property(UserQuery)
+
+    # serializer properties
+    object_type = 'inyoka.user'
+    public_fields = ('id', 'username', 'pw_hash', 'status', 'real_name')
 
     # the internal ID of the user.  Even if an external Auth system is
     # used, we're storing the users a second time internal so that we

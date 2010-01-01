@@ -12,13 +12,15 @@ import sre_constants
 from os.path import join
 from inspect import getmembers, ismethod
 from datetime import datetime
-from functools import wraps
+from functools import update_wrapper
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
 from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
 from inyoka import Interface
 from inyoka.core.context import ctx
+from inyoka.core.exceptions import MethodNotAllowed
+from inyoka.core.serializer import send_service_response
 from inyoka.utils.decorators import make_decorator
 
 
@@ -176,19 +178,18 @@ class IServiceProvider(Interface, UrlMixin):
     special_prefix = 'api'
 
     @staticmethod
-    def register_service(name):
+    def register_service(name, methods=('GET',), serializer='json'):
         def decorator(func):
-            @wraps(func)
-            def service_wrapper(*args, **kwargs):
+            def service_wrapper(self, request, *args, **kwargs):
                 from inyoka.core.http import Response
-                ret = func(*args, **kwargs)
-                if isinstance(ret, Response):
-                    return ret
-                json = simplejson.dumps(ret)
-                return Response(json, content_type='text/plain')
+                if request.method not in methods:
+                    raise MethodNotAllowed(methods)
+                ret = func(self, request, *args, **kwargs)
+                return send_service_response(request, ret)
             service_wrapper.endpoint = name
-            return service_wrapper
-        decorator.endpoint = name
+            service_wrapper.is_service = True
+            service_wrapper.valid_methods = methods
+            return update_wrapper(service_wrapper, func)
         return decorator
 
     @classmethod

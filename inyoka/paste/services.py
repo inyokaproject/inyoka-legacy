@@ -26,7 +26,6 @@ class PasteServices(IServiceProvider):
 
     @service('get_pastes')
     def get_pastes(self, request, id=None, limit=10):
-        md = partial(model_to_dict, fields=('code', 'language', 'author_id', 'id'))
         if id is not None:
-            return md(Entry.query.get(id))
-        return [md(e) for e in Entry.query.limit(limit).all()]
+            return Entry.query.get(id)
+        return Entry.query.limit(limit).all()

@@ -13,11 +13,17 @@ from operator import attrgetter
 from sqlalchemy.orm import synonym
 from inyoka.core.api import db, href
 from inyoka.core.auth.models import User
+from inyoka.core.serializer import SerializableObject
 from inyoka.utils.highlight import highlight_code
 
 
-class Entry(db.Model):
+class Entry(db.Model, SerializableObject):
     __tablename__ = 'paste_entry'
+
+    # serializer properties
+    object_type = 'paste.entry'
+    public_fields = ('id', 'code', 'title', 'author', 'pub_date',
+                     'hidden')
 
     id = db.Column(db.Integer, primary_key=True)
     _code = db.Column('code', db.Text, nullable=False)

@@ -17,6 +17,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
+import time
 from functools import wraps
 from datetime import date, datetime
 import pytz
@@ -89,7 +90,7 @@ def to_datetime(obj):
 _timezone_aware = ('format_datetime', 'format_time')
 
 def get_dummy(func):
-    @wraps(func)
+    @wraps(func, ('__module__', '__name__'))
     def _inner(*args, **kwargs):
         if not 'locale' in kwargs or kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()

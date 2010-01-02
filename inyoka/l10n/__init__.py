@@ -16,12 +16,9 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os
-import time
 from functools import wraps
 from datetime import date, datetime
 import pytz
-from babel import Locale, UnknownLocaleError
 from babel import dates
 from inyoka.i18n import get_locale
 from inyoka.core.context import ctx

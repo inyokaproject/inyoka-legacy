@@ -16,7 +16,6 @@ import warnings
 import functools
 
 import nose
-import nose.tools
 from nose.plugins import cover, base, errorclass
 
 from werkzeug import Client

@@ -97,7 +97,7 @@ class DatabaseCache(BaseCache):
 
         # Update database if key already present
         if key in self:
-            if override:
+            if overwrite:
                 db.session.query(Cache).filter_by(key=key).update({
                     'value': value,
                     'expires': expires,
@@ -132,11 +132,11 @@ class DatabaseCache(BaseCache):
         # remove any items over the maximum allowed number in the cache
         if len(self) >= self.max_entries:
             # upper limit for key query
-            ul = maxcull * 2
+            ul = self.maxcull * 2
             # get list of keys
             keys = db.session.query(Cache.key).filter_by(limit=ul).all()
             # get some keys at random
-            delkeys = list(random.choice(keys) for i in xrange(maxcull))
+            delkeys = list(random.choice(keys) for i in xrange(self.maxcull))
             # delete keys
             db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete()
 

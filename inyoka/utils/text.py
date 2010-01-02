@@ -11,7 +11,6 @@
 import re
 from datetime import datetime
 from itertools import starmap
-from inyoka.l10n import rebase_to_timezone
 
 
 _punctuation_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')

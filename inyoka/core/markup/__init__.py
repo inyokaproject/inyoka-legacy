@@ -11,7 +11,6 @@ from inyoka.core.context import ctx
 from inyoka.core.markup.lexer import Lexer
 from inyoka.core.markup.machine import Renderer, RenderContext
 from inyoka.core.markup.transformers import ITransformer
-from inyoka.core.markup.constants import HTML_COLORS
 from inyoka.core.markup import nodes
 from unicodedata import lookup
 

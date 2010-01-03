@@ -1,14 +1,14 @@
 # Translations template for PROJECT.
-# Copyright (C) 2009 The Inyoka Team
+# Copyright (C) 2010 The Inyoka Team
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2009-12-20 17:42+0100\n"
+"POT-Creation-Date: 2010-01-03 19:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,11 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.4\n"
 
-#: inyoka/core/auth/__init__.py:238 inyoka/portal/auth.py:27
+#: inyoka/core/serializer.py:131
+msgid ""
+"Could not detect format.  You have to specify the format as query argument "
+"or in the accept HTTP header."
+msgstr ""
+
+#: inyoka/core/serializer.py:149
+#, python-format
+msgid "Unknown format \"%s\""
+msgstr ""
+
+#: inyoka/core/auth/__init__.py:231 inyoka/portal/auth.py:33
+#: inyoka/portal/auth.py:75
 msgid "You are now logged in."
 msgstr ""
 
-#: inyoka/core/auth/__init__.py:266
+#: inyoka/core/auth/__init__.py:259
 msgid "You was successfully logged out"
 msgstr ""
 
@@ -109,105 +121,129 @@ msgid ""
 msgstr ""
 
 #: inyoka/core/config/defaults.py:60
+msgid "Imaging backend to use."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:62
+msgid "Portal avatar size."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:64
+msgid "Portal thumbnail size."
+msgstr ""
+
+#: inyoka/core/config/defaults.py:68
 msgid "Custom template path which is searched before the default path."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:63
+#: inyoka/core/config/defaults.py:71
 msgid "Auto reload template files if they changed their contents."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:66
+#: inyoka/core/config/defaults.py:74
 msgid "Use either memory, filesystem or memcached bytecode caches"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:69
+#: inyoka/core/config/defaults.py:77
 msgid "Use Memcached for bytecode caching"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:71
+#: inyoka/core/config/defaults.py:79
 msgid "Use filesystem for bytecode caching"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:75
+#: inyoka/core/config/defaults.py:83
 msgid "Choose one of null, simple, memcached or filesystem for the caching system."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:78
+#: inyoka/core/config/defaults.py:86
 msgid "The path for the filesystem caches"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:80
+#: inyoka/core/config/defaults.py:88
 msgid "The timeout for the caching system"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:82
+#: inyoka/core/config/defaults.py:90
 msgid "Comma seperated list of memcached servers"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:86
+#: inyoka/core/config/defaults.py:94
 msgid "The Authsystem which should get used"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:92
+#: inyoka/core/config/defaults.py:100
 msgid "Url mapping used for the portal application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:94
+#: inyoka/core/config/defaults.py:102
 msgid "Url mapping used for the calendar application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:96
+#: inyoka/core/config/defaults.py:104
 msgid "Url mapping used for the news application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:98
+#: inyoka/core/config/defaults.py:106
 msgid "Url mapping used for the forum application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:100
+#: inyoka/core/config/defaults.py:108
 msgid "Url mapping used for the wiki application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:102
+#: inyoka/core/config/defaults.py:110
 msgid "Url mapping used for the paste application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:104
+#: inyoka/core/config/defaults.py:112
 msgid "Url mapping used for the planet application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:106
-msgid "Url mapping used for the testing application"
+#: inyoka/core/config/defaults.py:114
+msgid "Url mapping used for the admin application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:110
+#: inyoka/core/config/defaults.py:118
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:112
+#: inyoka/core/config/defaults.py:120
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:114
+#: inyoka/core/config/defaults.py:122
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:118
+#: inyoka/core/config/defaults.py:126
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/markup/__init__.py:34
+#: inyoka/core/markup/__init__.py:33
 msgid "Internal parser error: "
 msgstr ""
 
-#: inyoka/core/markup/__init__.py:35
+#: inyoka/core/markup/__init__.py:34
 msgid ""
 "The parser could not process the text because it exceeded the maximum "
 "allowed depth for nested elements"
+msgstr ""
+
+#: inyoka/news/admin.py:23
+msgid "News"
+msgstr ""
+
+#: inyoka/news/forms.py:16
+msgid "Name"
+msgstr ""
+
+#: inyoka/paste/admin.py:20 inyoka/templates/paste/base.html:2
+msgid "Paste"
 msgstr ""
 
 #: inyoka/paste/forms.py:30
@@ -222,24 +258,54 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
-#: inyoka/portal/auth.py:22
-msgid "This username doesn't exist."
+#: inyoka/paste/forms.py:37
+msgid "Hide Paste"
 msgstr ""
 
-#: inyoka/portal/auth.py:30
+#: inyoka/portal/auth.py:28
+msgid "This username does not exist."
+msgstr ""
+
+#: inyoka/portal/auth.py:36
 msgid "The password is not correct."
 msgstr ""
 
-#: inyoka/portal/controllers.py:54
+#: inyoka/portal/auth.py:81
+msgid "Please log in."
+msgstr ""
+
+#: inyoka/portal/controllers.py:53
 msgid "Key not found. Maybe it has already been used?"
 msgstr ""
 
-#: inyoka/portal/controllers.py:56
+#: inyoka/portal/controllers.py:55
 msgid "The supplied key is not valid anymore."
 msgstr ""
 
-#: inyoka/templates/paste/base.html:2
-msgid "Paste"
+#: inyoka/templates/admin/base.html:4
+msgid "Welcome on the Inyoka Admin Center!"
+msgstr ""
+
+#: inyoka/templates/news/admin/categories.html:4
+msgid "All categories"
+msgstr ""
+
+#: inyoka/templates/news/admin/categories.html:10
+#, python-format
+msgid "…or <a href=\"%(link)s\">create a new category</a>"
+msgstr ""
+
+#: inyoka/templates/news/admin/category_edit.html:5
+#, python-format
+msgid "Edit “%(category)s”"
+msgstr ""
+
+#: inyoka/templates/news/admin/category_edit.html:7
+msgid "New Category"
+msgstr ""
+
+#: inyoka/templates/news/admin/index.html:5
+msgid "Categories"
 msgstr ""
 
 #: inyoka/utils/pagination.py:114

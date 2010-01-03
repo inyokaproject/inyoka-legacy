@@ -7,7 +7,7 @@
     <li><a href="{{ href(category, action='edit') }}">{{ category.name }}</a></li>
   {% endfor %}
   </ul>
-  {% trans link=href('admin/news/category_edit') %}
+  {%- trans link=href('admin/news/category_edit') -%}
   …or <a href="{{ link }}">create a new category</a>
-  {% endtrans %}
+  {%- endtrans -%}
 {% endblock %}

@@ -5,7 +5,7 @@
 
     The inyoka portal system.  The system is devided into multiple modules
     to which we refer as applications.  The name inyoka means "snake" in
-    zulu and was chosen because it's a Python application *cough*.
+    Zulu and was chosen because it's an application written in Python *cough*.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -17,11 +17,22 @@ from werkzeug import import_string, find_modules, cached_property
 from inyoka.core.context import LocalProperty
 
 
+#: Inyoka revision present in the current mercurial working copy
 INYOKA_REVISION = 'unknown'
 
 
 class InterfaceMeta(type):
-    """Metaclass that keeps track of all derived interface implementations."""
+    """Metaclass that keeps track of all derived interface implementations.
+
+    It touches interfaces and components.  If it registers a new interface it
+    will add a new key to :attr:`~inyoka.InterfaceMeta._registry`.
+
+    If an class is an :class:`Interface` it will set an :attr:`Interface._isinterface`
+    attribute to `True` if it's a component to `False`.
+
+    A component has an attribute called :attr:`_interfaces` with all interfaces
+    listed the component implements.
+    """
 
     _registry = {}
 
@@ -55,12 +66,13 @@ class InterfaceMeta(type):
 class Interface(object):
     """Base Interface class.
 
-    A interface is some kind of functionality provider that needs to
+    An interface is some kind of functionality provider that needs to
     be subclassed to implement the real features.
 
     That way a :class:`Interface` can keep track of all subclasses and
-    thanks to that knows all implemented “features” for that kind of Interface.
+    thanks to that knows all implemented “features” for that kind of interface.
 
+    :param ctx: The current :class:`ApplicationContext`.
     """
     __metaclass__ = InterfaceMeta
 
@@ -69,13 +81,14 @@ class Interface(object):
 
 
 def _is_interface(value):
+    """Determine if a class is an interface"""
     _registry = InterfaceMeta._registry
     return (isclass(value) and issubclass(value, Interface) and
             value is not Interface)
 
 
 def _import_modules(modules):
-    # Import the components to setup the metaclass magic.
+    """Import the components to setup the metaclass magic."""
     for module in modules:
         # No star at the end means a package/module/class but nothing below.
         if module[-1] != '*':
@@ -95,9 +108,10 @@ class ApplicationContext(object):
     It is used to keep track of all components, to load or unload them
     and to manage the thread-locals.
 
-    Next to that the :class:`ApplicationContext` is the real WSGI-Application
-    and only wraps :class:`~inyoka.dispatcher.RequestDispatcher` for
-    dispatching purposes.
+    Next to that the :class:`ApplicationContext` is used to represent the real
+    WSGI-Application interface.
+    It does not implement any proper dispatching or WSGI stack but wraps
+    :class:`~inyoka.dispatcher.RequestDispatcher` for that purpose.
     """
 
     def __init__(self):
@@ -215,6 +229,11 @@ class ApplicationContext(object):
         return self._instances[compcls]
 
     def __call__(self, environ, start_response):
+        """Wrap the WSGI stack.
+
+        This binds the :class:`ApplicationContext` afterwards to the
+        thread-locals again because we're cleaning up those after each request
+        """
         retval = self.application(environ, start_response)
         # rebind everything to the thread local
         self.bind()

@@ -3,7 +3,11 @@
     inyoka.i18n
     ~~~~~~~~~~~
 
-    The internationalisation system for Inyoka.
+    The internationalisation system for Inyoka.  This is used to
+    implement features like translating Inyoka and such things.
+
+    Use the :func:`_` and :func:`lazy_gettext` functions for easy
+    marking strings as translatable.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -54,6 +58,10 @@ def get_locale(locale=None):
 
 
 class Translations(TranslationsBase):
+    """Our translations implementation to hook in our
+    own catalog finding algorithm.  We do not use a
+    GNU Gettext compatible folder structure.
+    """
 
     @classmethod
     def load(cls, path, locale=None, domain='messages',
@@ -131,4 +139,6 @@ def has_language(language):
     """Check if a language exists."""
     return language in dict(list_languages())
 
+
+#: synonym for :func:`gettext`
 _ = gettext

@@ -51,4 +51,25 @@ Component Interfaces
    :members:
 
 .. autoclass:: ApplicationContext
-   :members:
+
+    .. attribute:: dispatcher
+
+       The WSGI dispatcher.  It's an instance of
+       :class:`~inyoka.dispatcher.RequestDispatcher`.
+
+    .. attribute:: current_request
+
+       A property pointing to the current active request
+       in the thread-local.
+
+    .. automethod:: load_component
+
+    .. automethod:: load_components
+
+    .. automethod:: unload_components
+
+    .. automethod:: load_packages
+
+    .. automethod:: get_implementations
+
+    .. automethod:: get_instance

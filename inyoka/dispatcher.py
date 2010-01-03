@@ -3,12 +3,12 @@
     inyoka.dispatcher
     ~~~~~~~~~~~~~~~~~
 
-    The main dispatching system.  This module handles various
-    subsystems souch as url routing and dispatching as well
-    as cleaning up various parts such as thread-locals after
-    a request was successfully returned to the user.
+    The main dispatching system.  This module handles various subsystems
+    such as url-routing and dispatching as well as cleaning up various
+    things like thread-locals after a request was successfully returned
+    to the user.
 
-    The dispatching system is wrapped by :class:`~inyoka.ApplicationContext`
+    The dispatching system is wrapped by :class:`~inyoka.ApplicationContext`.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -36,6 +36,14 @@ class RequestDispatcher(object):
 
     @cached_property
     def url_map(self):
+        """The url map collected from all url map providers.
+
+        Those are:
+
+            * `~inyoka.core.routing.IController`
+            * `~inyoka.core.middlewares.IMiddleware`
+            * `~inyoka.core.routing.IServiceProvider`
+        """
         map = []
         for provider in (IController, IMiddleware, IServiceProvider):
             map.extend(provider.get_urlmap())
@@ -43,6 +51,11 @@ class RequestDispatcher(object):
 
     @property
     def url_adapter(self):
+        """Get an url adapter.
+
+        The adapter is bound to the current url map
+        and, if present, the current request.
+        """
         domain = self.ctx.cfg['base_domain_name']
         try:
             adapter = self.url_map.bind_to_environ(
@@ -53,6 +66,16 @@ class RequestDispatcher(object):
         return adapter
 
     def get_view(self, endpoint):
+        """Return a proper view for `endpoint`
+
+        View providers must implement the `get_callable_for_endpoint`
+        method.
+
+        Those are:
+
+            * `~inyoka.core.routing.IController`
+            * `~inyoka.core.routing.IServiceProvider`
+        """
         for provider in (IController, IServiceProvider):
             try:
                 return provider.get_callable_for_endpoint(endpoint)
@@ -96,7 +119,7 @@ class RequestDispatcher(object):
 
         response = Response.force_type(response, environ)
 
-        # let middlewares process the response.  Note that we *only*
+        # Let middlewares process the response.  Note that we *only*
         # process the response object, if it's returned from some view.
         # If an request modifing middleware is in-place we never reach
         # this code block.
@@ -111,6 +134,12 @@ class RequestDispatcher(object):
         This method binds the request, application and config to the
         current thread local and dispatches the request.
         It handles cookies and etags.
+
+        If you want to wrap the Inyoka dispatching process in some middleware
+        but stay under the control of Inyoka you're best to wrap this method.
+
+        See :attr:`~inyoka.core.middlewares.IMiddleware.application` as an
+        example.
         """
         # Create a new request object, register it with the application
         # and all the other stuff on the current thread but initialize

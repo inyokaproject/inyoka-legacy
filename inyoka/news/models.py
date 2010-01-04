@@ -8,11 +8,9 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from hashlib import md5
-from datetime import datetime, date
+from datetime import datetime
 from werkzeug import cached_property
-from inyoka.l10n import to_datetime, rebase_to_timezone
-from inyoka.core.api import ctx, _, db, auth, logger, markup, href, cache
+from inyoka.core.api import ctx, db, auth, markup, cache
 from inyoka.utils.text import gen_ascii_slug
 
 

@@ -11,7 +11,7 @@
 from datetime import datetime
 from operator import attrgetter
 from sqlalchemy.orm import synonym
-from inyoka.core.api import db, href
+from inyoka.core.api import db
 from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.highlight import highlight_code

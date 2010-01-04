@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import _, service, db, Rule, IServiceProvider
+from inyoka.core.api import service, Rule, IServiceProvider
 from inyoka.paste.models import Entry
 
 

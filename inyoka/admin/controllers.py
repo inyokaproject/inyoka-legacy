@@ -11,10 +11,8 @@
 from inspect import ismethod, getmembers
 from os.path import join
 from werkzeug import cached_property
-from inyoka.core.api import ctx, view, Interface, IController, Rule, \
-    Response, templated
+from inyoka.core.api import ctx, view, IController, Rule, templated
 from inyoka.core.routing import Submount, EndpointPrefix
-from inyoka.utils.decorators import abstract
 
 from inyoka.admin.api import IAdminProvider
 

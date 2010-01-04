@@ -176,7 +176,16 @@ class IServiceProvider(Interface, UrlMixin):
     special_prefix = 'api'
 
     @staticmethod
-    def register_service(name, methods=('GET',), serializer='json'):
+    def register_service(name, methods=('GET',)):
+        """Register a method as a service.
+
+        Note that there is an alias of this method in :func:`~inyoka.core.routing.service`.
+
+        :param name:    The name of the service.  Despite of `register_view`
+                        this is required.
+        :param methods: The HTTP methods this function can act on.  Examples:
+                        GET, POST, HEAD, OPTIONS, PUT, DELETE
+        """
         def decorator(func):
             def service_wrapper(self, request, *args, **kwargs):
                 if request.method not in methods:

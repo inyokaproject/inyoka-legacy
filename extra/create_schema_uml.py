@@ -1,17 +1,17 @@
+# -*- coding: utf-8 -*-
 from sqlalchemy_schemadisplay import create_uml_graph
 from sqlalchemy.orm import class_mapper
-from inyoka.ikhaya import models as ikhaya_models
-from inyoka.pastebin import models as pastebin_models
-from inyoka.forum import models as forum_models
-from inyoka.wiki import models as wiki_models
-from inyoka.portal import user, models as portal_models
-from inyoka import ikhaya, pastebin, forum, wiki, portal
+from inyoka.core import models as core_models
+from inyoka.core.auth import models as auth_models
+from inyoka.news import models as news_models
+from inyoka.paste import models as paste_models
+from inyoka import news, paste, forum, wiki, portal
 
 
-models = [wiki_models, pastebin_models, ikhaya_models, forum_models]
+models = [paste_models, news_models, core_models, auth_models]
 
 # lets find all the mappers in our model
-mappers = [class_mapper(user.User), class_mapper(user.Group)]
+mappers = [class_mapper(auth_models.User)]
 for model in models:
     for cls in (getattr(model, attr) for attr in dir(model) if attr[0] != '_'):
         try:

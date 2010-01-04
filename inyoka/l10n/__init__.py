@@ -89,7 +89,7 @@ _timezone_aware = ('format_datetime', 'format_time')
 def get_dummy(func):
     @wraps(func, ('__module__', '__name__'))
     def _inner(*args, **kwargs):
-        if not 'locale' in kwargs or kwargs['locale'] is dates.LC_TIME:
+        if 'locale' not in kwargs or kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()
         # yet only a few methods can work with timezone information properly
         # we also check if the applied value is a basestring.  If it is

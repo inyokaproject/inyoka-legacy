@@ -34,7 +34,7 @@ def model_to_dict(instance, fields=None, exclude=None):
     data = {}
 
     for key in _get_attrs(instance):
-        if fields and not key in fields:
+        if fields and key not in fields:
             continue
         if exclude and key in exclude:
             continue
@@ -58,10 +58,10 @@ def update_model(instance, form, includes=None):
     attrs = _get_attrs(instance)
 
     for key, value in form.data.iteritems():
-        if not key in attrs:
+        if key not in attrs:
             #XXX: raise?
             continue
-        if includes and not key in includes:
+        if includes and key not in includes:
             continue
 
         setattr(instance, key, value)

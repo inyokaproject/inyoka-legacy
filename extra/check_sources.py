@@ -28,7 +28,7 @@ def checker(*suffixes, **kwds):
     return deco
 
 
-copyright_re = re.compile(r'^    :copyright: 200\d(-200\d)? by (\w| )+(, (\w| )+)*\.$')
+copyright_re = re.compile(r'^    :copyright: 20\d\d(-20\d\d)? by (\w| )+(, (\w| )+)*\.$')
 coding_re    = re.compile(r'coding[:=]\s*([-\w.]+)')
 not_ix_re    = re.compile(r'^[^"\']*\bnot\s+\S+?\s+i[sn]\s\S+')
 is_const_re  = re.compile(r'if.*?[=!]=\s+(None|False|True)\b')
@@ -127,7 +127,6 @@ def check_fileheader(fn, lines):
         '    :license: MIT, see LICENSE for more details.\n'
     )
     if (license and license[0] or []) not in licenses:
-        print license
         yield 0, "no correct license info"
 
     copyright = llist[-3:-2]

@@ -81,9 +81,9 @@ class SerializableObject(object):
 def debug_dump(obj):
     """Dumps the data into a HTML page for debugging."""
     from inyoka.core.templating import render_template
-    dump = _escaped_newline_re.sub('\n',
-        simplejson.dumps(obj, ensure_ascii=False, indent=2))
-    return render_template('_debug_dump.html', dict(dump=dump))
+    dump = simplejson.dumps(obj, ensure_ascii=False, indent=2)
+    escaped = _escaped_newline_re.sub('\n', dump)
+    return render_template('_debug_dump.html', dict(dump=escaped))
 
 
 def dump_xml(obj):
@@ -175,11 +175,17 @@ def list_api_methods():
         handler = view.__name__
         if 'api/' in handler:
             handler = handler[handler.index('api/')+4:]
+        args, varargs, varkw, defaults = inspect.getargspec(view)
+        if args and args[0] == 'request':
+            args = args[1:]
         result.append(dict(
             handler=handler,
             valid_methods=view.valid_methods,
             #TODO: support formatting the docs
             doc=(inspect.getdoc(view) or '').decode('utf-8'),
+            signature=inspect.formatargspec(
+                    args, varargs, varkw, defaults,
+                    formatvalue=lambda o: '=' + repr(o)),
             url=unicode(rule)
         ))
     result.sort(key=lambda x: (x['url'], x['handler']))

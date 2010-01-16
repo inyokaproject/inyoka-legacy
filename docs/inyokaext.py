@@ -8,17 +8,9 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import os
-import re
 import inspect
-import jinja2
-from itertools import islice
-from types import BuiltinFunctionType
 from docutils import nodes
 from docutils.statemachine import ViewList
-from sphinx.ext.autodoc import prepare_docstring
-from sphinx.application import TemplateBridge
-from jinja2 import Environment, FileSystemLoader
 from inyoka.core.serializer import list_api_methods
 
 

@@ -175,9 +175,9 @@ def list_api_methods():
         handler = view.__name__
         if 'api/' in handler:
             handler = handler[handler.index('api/')+4:]
-        args, varargs, varkw, defaults = inspect.getargspec(view)
-        if args and args[0] == 'request':
-            args = args[1:]
+        args, varargs, varkw, defaults = view.signature
+        if args and args[1] == 'request':
+            args = args[2:]
         result.append(dict(
             handler=handler,
             valid_methods=view.valid_methods,

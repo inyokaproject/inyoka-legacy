@@ -9,7 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import types
-from functools import wraps, update_wrapper
+from inspect import getargspec
+from functools import wraps, update_wrapper as _update_wrapper
 
 
 _function_types = (types.FunctionType, types.MethodType)
@@ -48,6 +49,12 @@ def abstract(func):
                                   func.__name__)
 
     return wrapper
+
+
+def update_wrapper(proxy, original):
+    func = _update_wrapper(proxy, original)
+    func.signature = getargspec(original)
+    return func
 
 
 def make_decorator(attr):

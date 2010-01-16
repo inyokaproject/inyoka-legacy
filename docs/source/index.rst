@@ -37,6 +37,7 @@ References
 
     components
     dispatcher
+    services
     internationalisation
 
 

@@ -164,7 +164,7 @@ def send_service_response(request_or_format, result):
 
 def list_api_methods():
     """List all API methods."""
-    result = []
+    result = {}
     rule_iter = ctx.dispatcher.url_map.iter_rules()
     for rule in rule_iter:
         if rule.build_only:
@@ -178,17 +178,22 @@ def list_api_methods():
         args, varargs, varkw, defaults = view.signature
         if args and args[1] == 'request':
             args = args[2:]
-        result.append(dict(
-            handler=handler,
-            valid_methods=view.valid_methods,
-            #TODO: support formatting the docs
-            doc=(inspect.getdoc(view) or '').decode('utf-8'),
-            signature=inspect.formatargspec(
-                    args, varargs, varkw, defaults,
-                    formatvalue=lambda o: '=' + repr(o)),
-            url=unicode(rule)
-        ))
-    result.sort(key=lambda x: (x['url'], x['handler']))
+        result.setdefault(handler, {})
+        result[handler].setdefault('valid_methods', set([])).update(
+             set(view.valid_methods))
+        result[handler]['doc'] = inspect.getdoc(view) or u''
+        result[handler]['signature'] = inspect.formatargspec(
+            args, varargs, varkw, defaults,
+            formatvalue=lambda o: '=' + repr(o))
+        # format the url rule
+        tmp = []
+        for is_dynamic, data in rule._trace:
+            if is_dynamic:
+                tmp.append('<%s>' % data)
+            else:
+                tmp.append(data)
+        rule_repr = u'%s' % u''.join(tmp).lstrip('|')
+        result[handler].setdefault('urls', set([])).add(rule_repr)
     return result
 
 

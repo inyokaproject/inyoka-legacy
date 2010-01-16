@@ -82,7 +82,7 @@ class UrlMixin(object):
                     rules = [EndpointPrefix('%s/' % prefix, comp.url_rules)]
 
                 if cls.special_prefix is not None:
-                    mount = '/_%s/%s' % (special.rstrip('/'), mount.strip('/'))
+                    mount = '/_%s/%s' % (special.rstrip('/'), mount.lstrip('/'))
                 val = Subdomain(domain, [Submount(mount, rules)])
                 urls.append(val)
             else:

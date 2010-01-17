@@ -35,7 +35,6 @@ def test_base():
     data = {'some': 'data'}
     c = Confirm('__test_store', data, 1)
     eq_(c.expires, date.today() + timedelta(days=1))
-    db.session.add(c)
     db.session.commit()
     call_confirm(c.key)
 
@@ -44,7 +43,6 @@ def test_base():
     assert_raises(KeyError, _second_run)
 
     c = Confirm('__test_store2', data, 1)
-    db.session.add(c)
     db.session.commit()
     call_confirm(c.key)
 
@@ -55,14 +53,12 @@ def test_expiry():
     c = Confirm('__test_store', {}, timedelta(days=3))
     eq_(c.expires, date.today() + timedelta(days=3))
     assert_false(c.is_expired)
-    db.session.add(c)
     db.session.commit()
 
     # potential validation in the model would be ok, so we must bypass this
     db.session.execute(update(Confirm.__table__, Confirm.id == 1,
                               {'expires': date(2009,1,1)}))
     c = Confirm.query.get(c.id)
-    db.session.add(c)
     db.session.commit()
     assert_true(c.is_expired)
     assert_raises(Expired, call_confirm, c.key)

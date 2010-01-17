@@ -14,7 +14,6 @@ from inyoka.core.auth.models import User, USER_STATUS_MAP
 
 def test_user_status():
     me = User('me', 'me@example.com', 's3cr3t')
-    db.session.add(me)
     db.session.commit()
     eq_(me._status, 0)
     eq_(me.status, USER_STATUS_MAP[0])

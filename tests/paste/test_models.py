@@ -26,7 +26,6 @@ def test_automatic_rendering():
     eq_(e.code, code2)
     eq_(e.rendered_code, rendered_code2)
 
-    db.session.add(e)
     db.session.commit()
 
     e2 = Entry.query.get(e.id)

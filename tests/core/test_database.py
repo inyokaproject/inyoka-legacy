@@ -26,13 +26,11 @@ def test_find_next_increment():
     eq_(db.find_next_increment(Category.slug, 'cat'), 'cat')
 
     c1 = Category(slug='cat')
-    db.session.add(c1)
     db.session.commit()
 
     eq_(db.find_next_increment(Category.slug, 'cat'), 'cat2')
 
     c2 = Category(slug='cat2')
-    db.session.add(c2)
     db.session.commit()
 
     eq_(db.find_next_increment(Category.slug, 'cat'), 'cat3')

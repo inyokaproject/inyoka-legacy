@@ -48,7 +48,6 @@ def store_confirm(action, data, expires):
     to the database and returns it.
     """
     c = Confirm(action, data, expires)
-    db.session.add(c)
     db.session.commit()
     return c
 

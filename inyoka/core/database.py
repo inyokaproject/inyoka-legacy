@@ -87,7 +87,7 @@ from sqlalchemy.util import to_list
 from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
-    DeclarativeMeta as SADeclarativeMeta
+    DeclarativeMeta as SADeclarativeMeta, _declarative_constructor
 from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.utils import flatten_iterator
@@ -403,9 +403,16 @@ class ModelBase(object):
         return self.__class__.__name__ + '(' + ', '.join(x[0] + '=' +
                                             repr(x[1]) for x in attrs) + ')'
 
+def _constructor(self, **kwargs):
+    """A constructor that adds the model automatically to a session"""
+    _declarative_constructor(self, **kwargs)
+    session.add(self)
+
+
 # configure the declarative base
 Model = declarative_base(name='Model', cls=ModelBase,
-    mapper=mapper, metadata=metadata, metaclass=DeclarativeMeta)
+    mapper=mapper, metadata=metadata, metaclass=DeclarativeMeta,
+    constructor=_constructor)
 ModelBase.query = session.query_property(Query)
 
 

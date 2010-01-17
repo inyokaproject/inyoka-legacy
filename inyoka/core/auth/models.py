@@ -65,6 +65,7 @@ class User(db.Model, SerializableObject):
         self.username = username
         self.email = email
         self.set_password(password)
+        db.session.add(self)
 
     def set_password(self, raw_password):
         """Set a new sha1 generated password hash"""

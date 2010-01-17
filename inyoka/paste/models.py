@@ -43,6 +43,7 @@ class Entry(db.Model, SerializableObject):
         # set language before code to avoid rendering twice
         self.language = language
         self.code = code
+        db.session.add(self)
 
     def get_url_values(self, action='view'):
         values = {

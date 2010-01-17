@@ -130,7 +130,6 @@ class TestSubscriptions(TestSuite):
     def test_subscribing(self, users):
         cat1 = Category(name='cat1')
         cat2 = Category(name='cat2')
-        db.session.add_all([cat1, cat2])
         db.session.commit()
 
 
@@ -141,7 +140,6 @@ class TestSubscriptions(TestSuite):
         NotifyTrackerMixin.tracker = []
         entries = [Entry(category=cat1), Entry(category=cat2), Entry(category=cat1),
                   Entry(category=cat1), Entry(category=cat1), Entry(category=cat1)]
-        db.session.add_all(entries)
 
         Subscription.new(entries[0], '__test_new_entry')
         Subscription.new(entries[1], '__test_new_entry')
@@ -191,7 +189,6 @@ class TestSubscriptions(TestSuite):
         NotifyTrackerMixin.tracker = []
         comments = [Comment(entry=e1), Comment(entry=e2), Comment(entry=e1),
                     Comment(entry=e1), Comment(entry=e1), Comment(entry=e2)]
-        db.session.add_all(comments)
         db.session.commit()
 
         Subscription.new(comments[0], '__test_new_comment') # e1

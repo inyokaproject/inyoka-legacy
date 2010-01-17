@@ -58,10 +58,6 @@ class NewsAdminProvider(IAdminProvider):
         form = EditCategoryForm(data)
         if request.method == 'POST' and form.validate(request.form):
             category = update_model(category, form, ('name'))
-            if new:
-                db.session.add(category)
-            else:
-                db.session.update(category)
             db.session.commit()
             return redirect_to(category)
         return {

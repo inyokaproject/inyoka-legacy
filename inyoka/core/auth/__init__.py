@@ -166,7 +166,6 @@ class AuthSystemBase(object):
         if request.method == 'POST' and form.validate(request.form):
             user = User(username=form['username'], email=form['email'],
                         password=form['password'])
-            db.session.add(user)
             r = self.after_register(request, user)
             db.session.commit()
             if isinstance(r, Response):
@@ -186,7 +185,6 @@ class AuthSystemBase(object):
         if True:
             db.session.commit()
             c = Confirm('activate_user', {'user': user.id}, 3)
-            db.session.add(c)
             db.session.commit()
             return Response('activation link: %s' % c.url)
         else:

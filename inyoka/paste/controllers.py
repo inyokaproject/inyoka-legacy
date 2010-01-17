@@ -35,7 +35,6 @@ class PasteController(IController):
                       language=form.data['language'] or None,
                       title=form.data['title'],
                       author=request.user)
-            db.session.add(e)
             db.session.commit()
             return redirect_to(e)
 

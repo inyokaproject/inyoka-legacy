@@ -1,9 +1,5 @@
-* {
-  padding: 0;
-  margin: 0;
-}
-
 body {
+  margin: 0;
   background-color: #FFFFFF;
   font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
 }
@@ -15,11 +11,11 @@ body {
   background-color: #90a818;
   background-image: url(../img/head.png);
   background-repeat: no-repeat;
-  -moz-border-radius: 0 0 5px 5px;
+  -moz-border-radius: 0 0 0.4em 0.4em;
 }
 
 #head h1 {
-  margin-left: 10px;
+  margin: 0 0 0 10px;
   padding: 90px 0 0 140px;
   height: 62px;
   color: #FFFFFF;
@@ -43,8 +39,8 @@ body {
 
 #page {
   background-color: #CCCCCC;
-  margin: 8px 0;
-  padding: 8px 0;
+  margin: 0.5em 0;
+  padding: 0.5em 0;
 }
 
 #page-inner {
@@ -53,9 +49,9 @@ body {
 }
 
 #page-inner > div {
-  padding: 10px;
-  -moz-border-radius: 5px;
-  margin-bottom: 8px;
+  padding: 1em;
+  -moz-border-radius: 0.4em;
+  margin-bottom: 0.5em;
 }
 
 #page-head {
@@ -83,3 +79,4 @@ body {
 .hidden {
   color: #ccc;
 }
+

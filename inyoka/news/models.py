@@ -61,7 +61,8 @@ class Category(db.Model):
 
     def get_url_values(self, action='view'):
         values = {
-            'edit': 'admin/news/category_edit'
+            'edit': 'admin/news/category_edit',
+            'delete': 'admin/news/category_delete',
         }
         return values[action], {'slug': self.slug}
 

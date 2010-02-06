@@ -1,0 +1,7 @@
+<form action="{{ href('admin/news/category_delete', slug=category.slug) }}" method="post">
+  <p>{{ _('Do you really want to delete that category?') }}</p>
+  <div class="actions">
+    <input type="submit" name="cancel" value="{{ _('No') }}">
+    <input type="submit" name="confirm" value="{{ _('Yes') }}">
+  </div>
+</form>

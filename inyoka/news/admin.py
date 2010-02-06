@@ -9,7 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
-from inyoka.core.api import view, templated, redirect_to, db, Rule
+from inyoka.core.api import view, templated, redirect, redirect_to, db, Rule, \
+    render_template
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
 from inyoka.news.forms import EditCategoryForm
@@ -29,7 +30,8 @@ class NewsAdminProvider(IAdminProvider):
         Rule('/categories/', endpoint='categories'),
         Rule('/categories/new/', defaults={'slug': None},
              endpoint='category_edit'),
-        Rule('/categories/<slug>/', endpoint='category_edit')
+        Rule('/categories/<slug>/', endpoint='category_edit'),
+        Rule('/categories/<slug>/delete', endpoint='category_delete'),
     ]
 
     @view('index')
@@ -56,11 +58,30 @@ class NewsAdminProvider(IAdminProvider):
             data = model_to_dict(category, exclude=('slug'))
 
         form = EditCategoryForm(data)
-        if request.method == 'POST' and form.validate(request.form):
+        if 'delete' in request.form:
+            return redirect_to('admin/news/category_delete', slug=category.slug)
+        elif request.method == 'POST' and form.validate(request.form):
             category = update_model(category, form, ('name'))
             db.session.commit()
-            return redirect_to(category)
+            request.flash(_(u'Updated category'), True)
         return {
             'form': form.as_widget(),
             'category': category,
         }
+
+    @view('category_delete')
+    def category_delete(self, request, slug):
+        category = Category.query.filter_by(slug=slug).one()
+        if 'cancel' in request.form:
+            flash(_(u'Action canceled'))
+        elif request.method == 'POST' and 'confirm' in request.form:
+            db.session.delete(category)
+            db.session.commit()
+            request.flash(_(u'The category %s was deleted successfully.'
+                          % category.name))
+            return redirect_to('admin/news/categories')
+        else:
+            request.flash(render_template('news/admin/category_delete.html', {
+                'category': category
+            }))
+        return redirect_to(category, action='edit')

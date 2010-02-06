@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-01-03 19:55+0100\n"
+"POT-Creation-Date: 2010-02-06 20:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,12 +28,12 @@ msgstr ""
 msgid "Unknown format \"%s\""
 msgstr ""
 
-#: inyoka/core/auth/__init__.py:231 inyoka/portal/auth.py:33
+#: inyoka/core/auth/__init__.py:229 inyoka/portal/auth.py:33
 #: inyoka/portal/auth.py:75
 msgid "You are now logged in."
 msgstr ""
 
-#: inyoka/core/auth/__init__.py:259
+#: inyoka/core/auth/__init__.py:257
 msgid "You was successfully logged out"
 msgstr ""
 
@@ -234,8 +234,21 @@ msgid ""
 "allowed depth for nested elements"
 msgstr ""
 
-#: inyoka/news/admin.py:23
+#: inyoka/news/admin.py:24
 msgid "News"
+msgstr ""
+
+#: inyoka/news/admin.py:66
+msgid "Updated category"
+msgstr ""
+
+#: inyoka/news/admin.py:76
+msgid "Action canceled"
+msgstr ""
+
+#: inyoka/news/admin.py:80
+#, python-format
+msgid "The category %s was deleted successfully."
 msgstr ""
 
 #: inyoka/news/forms.py:16
@@ -295,6 +308,18 @@ msgstr ""
 msgid "…or <a href=\"%(link)s\">create a new category</a>"
 msgstr ""
 
+#: inyoka/templates/news/admin/category_delete.html:2
+msgid "Do you really want to delete that category?"
+msgstr ""
+
+#: inyoka/templates/news/admin/category_delete.html:4
+msgid "No"
+msgstr ""
+
+#: inyoka/templates/news/admin/category_delete.html:5
+msgid "Yes"
+msgstr ""
+
 #: inyoka/templates/news/admin/category_edit.html:5
 #, python-format
 msgid "Edit “%(category)s”"
@@ -302,6 +327,14 @@ msgstr ""
 
 #: inyoka/templates/news/admin/category_edit.html:7
 msgid "New Category"
+msgstr ""
+
+#: inyoka/templates/news/admin/category_edit.html:14
+msgid "Submit"
+msgstr ""
+
+#: inyoka/templates/news/admin/category_edit.html:15
+msgid "Delete"
 msgstr ""
 
 #: inyoka/templates/news/admin/index.html:5

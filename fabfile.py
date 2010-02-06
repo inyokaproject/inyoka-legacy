@@ -21,6 +21,7 @@ _base_dir = _path.realpath(_path.join(_path.dirname(__file__)))
 sys.path.append(_base_dir)
 _python_path = os.environ.get('PYTHONPATH', '')
 os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
+_j = _partial(lambda *a: _path.join(_base_dir, *a))
 
 
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
@@ -116,9 +117,13 @@ def build_docs(clean='no', browse='no'):
 def build_test_venv(pyver=None):
     if pyver is None:
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
-    local('python extra/make-bootstrap.py -p %s > ../bootstrap.py' % pyver,
+    local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
+          pyver, _j('../bootstrap.py')), capture=False)
+#    local('python extra/make-bootstrap.py -p %s > ../bootstrap.py' % pyver,
+#          capture=False)
+    local('cd %s && python ./bootstrap.py inyoka-testsuite' % _j('..'),
           capture=False)
-    local('cd .. && python ./bootstrap.py inyoka-testsuite', capture=False)
+#    local('cd .. && python ./bootstrap.py inyoka-testsuite', capture=False)
 
 
 def clean_files():
@@ -131,9 +136,9 @@ def clean_files():
 
 
 def i18n():
-    local("python extra/extract-messages", capture=False)
-    local("python extra/update-translations", capture=False)
-    local("python extra/compile-translations", capture=False)
+    local("python %s" % _j("extra/extract-messages"), capture=False)
+    local("python %s" % _j("extra/update-translations"), capture=False)
+    local("python %s" % _j("extra/compile-translations"), capture=False)
 
 
 def test(clean='yes'):
@@ -156,11 +161,11 @@ def test(clean='yes'):
         with settings(hide('running')):
             _clean()
 
-    local('python extra/runtests.py', capture=False)
+    local('python %s' % _j('extra/runtests.py'), capture=False)
 
 
 def reindent():
-    local("extra/reindent.py -r -B .", capture=False)
+    local(_j('extra/reindent.py -r -B %s' % _base_dir), capture=False)
 
 
 def help(command=None):

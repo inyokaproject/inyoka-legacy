@@ -27,7 +27,6 @@ def run_suite(module='inyoka'):
     from os import path
 
     # initialize the app
-
     tests_path = path.join(os.environ['INYOKA_INSTANCE'], 'tests')
 
     # force the engine to be bound to the new database

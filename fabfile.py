@@ -21,6 +21,9 @@ _base_dir = _path.realpath(_path.join(_path.dirname(__file__)))
 sys.path.append(_base_dir)
 _python_path = os.environ.get('PYTHONPATH', '')
 os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
+#: partial function that is used for easy absolute path usage
+#: to make the fabfile more usefull if you're not in the root folder
+#: but need to do a `fab runserver` or something else.
 _j = _partial(lambda *a: _path.join(_base_dir, *a))
 
 
@@ -119,11 +122,8 @@ def build_test_venv(pyver=None):
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
           pyver, _j('../bootstrap.py')), capture=False)
-#    local('python extra/make-bootstrap.py -p %s > ../bootstrap.py' % pyver,
-#          capture=False)
     local('cd %s && python ./bootstrap.py inyoka-testsuite' % _j('..'),
           capture=False)
-#    local('cd .. && python ./bootstrap.py inyoka-testsuite', capture=False)
 
 
 def clean_files():

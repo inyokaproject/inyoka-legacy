@@ -44,7 +44,7 @@ def _setup_components():
 def test_component_is_activated():
     #TODO: components are for now alway activated if loaded.  We need to implement
     #      that feature again.
-    _activated = [Implementation1, Implementation2]
+    _activated = set([Implementation1, Implementation2])
 
     assert_true(component_is_activated(Implementation1, _activated))
     assert_false(component_is_activated(Implementation3, _activated))
@@ -56,7 +56,7 @@ def test_component_is_activated():
 
 @with_setup(teardown=_teardown_components)
 def test_load_components():
-    loaded = ctx.load_components([Implementation1, Implementation2])
+    loaded = ctx.load_components(set([Implementation1, Implementation2]))
     eq_(len(loaded), 2)
 
     assert_true(loaded[0] is Implementation1)
@@ -80,8 +80,8 @@ def test_components():
     assert_true(Interface1._isinterface)
     assert_false(hasattr(Interface1, '_interfaces'))
     assert_false(Implementation1._isinterface)
-    eq_(Implementation1._interfaces, [Interface1])
-    eq_(Implementation2._interfaces, [Interface1, Interface2])
+    eq_(Implementation1._interfaces, set([Interface1]))
+    eq_(Implementation2._interfaces, set([Interface1, Interface2]))
 
     # we return the component object unchanged so it does not
     # have any special attributes

@@ -53,13 +53,13 @@ class InterfaceMeta(type):
             InterfaceMeta._registry[uniquename] = True
         else:
             # A Interface
-            obj._interfaces = interfaces = []
+            obj._interfaces = interfaces = set()
             obj._isinterface = False
             for base in bases:
                 if '_isinterface' in base.__dict__:
-                    interfaces.append(base)
+                    interfaces.add(base)
                 elif '_interfaces' in base.__dict__:
-                    interfaces.extend(base._interfaces)
+                    interfaces.update(base._interfaces)
         return obj
 
 
@@ -155,7 +155,7 @@ class ApplicationContext(object):
         """
         try:
             for interface in component._interfaces:
-                self._components.setdefault(interface, []).append(component)
+                self._components.setdefault(interface, set()).add(component)
         except (AttributeError, TypeError):
             # fail silently if we try to register an interface but raise
             # if there's something completely wrong

@@ -31,7 +31,7 @@ class ArticleMapperExtension(db.MapperExtension):
         if not instance.updated or instance.updated < instance.pub_date:
             instance.updated = instance.pub_date
         instance.slug = db.find_next_increment(
-            Article.slug, gen_ascii_slug(instance.subject)
+            Article.slug, gen_ascii_slug(instance.title)
         )
 
     def after_update(self, mapper, connection, instance):
@@ -74,7 +74,7 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pub_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated = db.Column(db.DateTime, default=datetime.utcnow)
-    subject = db.Column(db.String(200))
+    title = db.Column(db.String(200))
     slug = db.Column(db.String(100), unique=True)
     intro = db.Column(db.String)
     text = db.Column(db.String)
@@ -115,7 +115,7 @@ class Article(db.Model):
     def __unicode__(self):
         return u'%s - %s' % (
             self.pub_date.strftime('%d.%m.%Y'),
-            self.subject
+            self.title
         )
 
 

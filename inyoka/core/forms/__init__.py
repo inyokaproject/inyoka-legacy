@@ -9,16 +9,17 @@
     The :module:`inyoka.core.forms` module is a complete wrapper around bureaucracy
     and implements some features special for Inyoka.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import redirect
 from bureaucracy.forms import *
 from bureaucracy import csrf, exceptions, recaptcha, redirects
 
-from inyoka.i18n import get_translations
+from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.http import redirect_to
 from inyoka.core.context import local
+from inyoka.utils.datastructures import _missing
 
 
 class Form(FormBase):
@@ -58,3 +59,54 @@ class Form(FormBase):
     def _autodiscover_data(self):
         request = self._lookup_request_info()
         return request.form
+
+
+class ModelField(Field):
+    """A field that queries for a model.
+
+    The first argument is the name of the model, the second the named
+    argument for `filter_by` (eg: `User` and ``'username'``).  If the
+    key is not given (None) the primary key is assumed.
+    """
+    messages = dict(not_found=lazy_gettext(u'“%(value)s” does not exist'))
+
+    def __init__(self, model, key=None, label=None, help_text=None,
+                 required=False, message=None, validators=None, widget=None,
+                 messages=None, on_not_found=None):
+        Field.__init__(self, label, help_text, validators, widget, messages)
+        self.model = model
+        self.key = key
+        self.required = required
+        self.message = message
+        self.on_not_found = on_not_found
+
+    def convert(self, value):
+        if isinstance(value, self.model):
+            return value
+        if not value:
+            if self.required:
+                raise exceptions.ValidationError(self.messages['required'])
+            return None
+
+        if self.key is None:
+            rv = self.model.query.get(value)
+        else:
+            rv = self.model.query.filter_by(**{self.key: value}).first()
+
+        if rv is None:
+            if self.on_not_found is not None:
+                self.on_not_found(value)
+            raise exceptions.ValidationError(self.messages['not_found'] %
+                                  {'value': value})
+        return rv
+
+    def to_primitive(self, value):
+        if value is None:
+            return u''
+        elif isinstance(value, self.model):
+            if self.key is None:
+                value = db.class_mapper(self.model) \
+                          .primary_key_from_instance(value)[0]
+            else:
+                value = getattr(value, self.key)
+        return unicode(value)

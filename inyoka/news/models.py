@@ -112,6 +112,13 @@ class Article(db.Model):
         """
         return not self.public or self.pub_date > datetime.utcnow()
 
+    def get_url_values(self, action='view'):
+        values = {
+            'edit': 'admin/news/article_edit',
+            'delete': 'admin/news/article_delete',
+        }
+        return values[action], {'slug': self.slug}
+
     def __unicode__(self):
         return u'%s - %s' % (
             self.pub_date.strftime('%d.%m.%Y'),

@@ -1,0 +1,19 @@
+{%- extends 'admin/base.html' %}
+
+{%- block admin_content %}
+{% if article.slug %}
+  <h3>{% trans article=article.title %}Edit “{{ article }}”{% endtrans %}</h3>
+{% else %}
+  <h3>{{ _('New Article') }}</h3>
+{% endif %}
+
+<form action="" method="post">
+{{ form.as_dl() }}
+{{ form.hidden_fields }}
+<div class="actions">
+  <input type="submit" value="{{ _('Submit') }}">
+  {% if article.slug %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
+</div>
+</form>
+
+{%- endblock %}

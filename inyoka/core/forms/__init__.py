@@ -88,10 +88,12 @@ class ModelField(Field):
                 raise exceptions.ValidationError(self.messages['required'])
             return None
 
+        q = self.model.query.autoflush(False)
+
         if self.key is None:
-            rv = self.model.query.get(value)
+            rv = q.get(value)
         else:
-            rv = self.model.query.filter_by(**{self.key: value}).first()
+            rv = q.filter_by(**{self.key: value}).first()
 
         if rv is None:
             if self.on_not_found is not None:

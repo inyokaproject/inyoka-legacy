@@ -13,8 +13,8 @@ from inyoka.core.api import view, templated, redirect, redirect_to, db, Rule, \
     render_template
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
-from inyoka.news.forms import EditCategoryForm
-from inyoka.news.models import Category
+from inyoka.news.forms import EditCategoryForm, EditArticleForm
+from inyoka.news.models import Category, Article
 
 
 class NewsAdminProvider(IAdminProvider):
@@ -32,6 +32,11 @@ class NewsAdminProvider(IAdminProvider):
              endpoint='category_edit'),
         Rule('/categories/<slug>/', endpoint='category_edit'),
         Rule('/categories/<slug>/delete', endpoint='category_delete'),
+        Rule('/articles/', endpoint='articles'),
+        Rule('/articles/new/', defaults={'slug': None},
+             endpoint='article_edit'),
+        Rule('/articles/<slug>/', endpoint='article_edit'),
+        Rule('/articles/<slug>/delete', endpoint='article_delete'),
     ]
 
     @view('index')
@@ -70,7 +75,7 @@ class NewsAdminProvider(IAdminProvider):
         }
 
     @view('category_delete')
-    def category_delete(self, request, slug):
+    def categories_delete(self, request, slug):
         category = Category.query.filter_by(slug=slug).one()
         if 'cancel' in request.form:
             flash(_(u'Action canceled'))
@@ -85,3 +90,52 @@ class NewsAdminProvider(IAdminProvider):
                 'category': category
             }))
         return redirect_to(category, action='edit')
+
+    @view('articles')
+    @templated('news/admin/articles.html')
+    def articles(self, request):
+        articles = Article.query.all()
+        return {
+            'articles': articles
+        }
+
+    @view('article_edit')
+    @templated('news/admin/article_edit.html')
+    def articles_edit(self, request, slug=None):
+        new = slug is None
+        if new:
+            article, data = Article(), {}
+        else:
+            article = Article.query.filter_by(slug=slug).one()
+            data = model_to_dict(article, exclude=('slug'))
+
+        form = EditArticleForm(data)
+        if 'delete' in request.form:
+            return redirect_to('admin/news/article_delete', slug=article.slug)
+        elif request.method == 'POST' and form.validate(request.form):
+            article = update_model(article, form, ('pub_date', 'updated',
+                'title', 'intro', 'text', 'public', 'category',
+                'author'))
+            db.session.commit()
+            request.flash(_(u'Updated article'), True)
+        return {
+            'form': form.as_widget(),
+            'article': article,
+        }
+
+    @view('article_delete')
+    def articles_delete(self, request, slug):
+        article = Article.query.filter_by(slug=slug).one()
+        if 'cancel' in request.form:
+            flash(_(u'Action canceled'))
+        elif request.method == 'POST' and 'confirm' in request.form:
+            db.session.delete(article)
+            db.session.commit()
+            request.flash(_(u'The article %s was deleted successfully.'
+                          % article.title))
+            return redirect_to('admin/news/articles')
+        else:
+            request.flash(render_template('news/admin/article_delete.html', {
+                'article': article
+            }))
+        return redirect_to(article, action='edit')

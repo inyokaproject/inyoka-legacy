@@ -119,7 +119,6 @@ class TestSubscriptions(TestSuite):
         eq_(s.unread_object_ids, unread_object_ids)
         eq_(s.count, count)
 
-    @future
     def test_subscriptiontype(self):
         eq_(SubscriptionType.by_name('__test_comments'), CommentsSubscriptionType)
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])

@@ -37,10 +37,14 @@ request = local('request')
 
 
 class LocalProperty(object):
-    """Class/Instance property that returns something from the local."""
+    """Class/Instance property that returns something from the local.
+
+    Note that if some value is not present in the current thread local
+    it does *not* raise an AttributeError but returns `None`.
+    """
 
     def __init__(self, name):
         self.__name__ = name
 
     def __get__(self, obj, type=None):
-        return getattr(local, self.__name__)
+        return getattr(local, self.__name__, None)

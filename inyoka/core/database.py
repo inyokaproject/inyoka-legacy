@@ -311,6 +311,7 @@ class Query(orm.Query):
         if data is None:
             data = self.all()
             cache.set(key, data, timeout=timeout)
+        self.merge_result(data, load=False)
         return data
 
     def lightweight(self, deferred=None, lazy=None):

@@ -3,6 +3,12 @@
 {%- block content %}
 <h1>{{ user }}</h1>
 
-{{ user.real_name }}
+<ul>
+{% for field in fields %}
+  {# {{ field }} is just for now… #}
+  <li>{{ field }}: {{ user[field] }}</li>
+{% endfor %}
+</ul>
+{% if user == request.user %}<a href="{{ href('portal/profile_edit') }}">{{ _('Edit Profile') }}</a>{% endif %}
 
 {%- endblock %}

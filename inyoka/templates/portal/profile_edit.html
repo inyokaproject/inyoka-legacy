@@ -1,0 +1,11 @@
+{%- extends 'portal/base.html' %}
+
+{%- block content %}
+<form action="" method="post">
+{{ form.as_dl() }}
+{{ form.hidden_fields }}
+<div class="actions">
+  <input type="submit" value="{{ _('Submit') }}">
+</div>
+</form>
+{%- endblock %}

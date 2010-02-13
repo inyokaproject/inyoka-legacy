@@ -12,7 +12,9 @@ from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User
+from inyoka.core.context import ctx
 from inyoka.utils.confirm import call_confirm, Expired
+from inyoka.portal import forms, IUserProfileExtender
 
 
 class PortalController(IController):
@@ -26,7 +28,17 @@ class PortalController(IController):
         Rule('/confirm/<key>/', endpoint='confirm'),
         Rule('/users/', endpoint='users'),
         Rule('/user/<username>/', endpoint='profile'),
+        Rule('/usercp/profile/', endpoint='profile_edit'),
     ]
+
+    @view
+    @templated('portal/profile_edit.html')
+    def profile_edit(self, request):
+        form = forms.ProfileForm(user=request.user)
+        if request.method == 'POST' and form.validate(request.form):
+            form.save()
+            request.flash(_(u'Profile saved'), True)
+        return {'form':form.as_widget()}
 
     @view
     @templated('portal/index.html')
@@ -42,7 +54,11 @@ class PortalController(IController):
     @view
     @templated('portal/profile.html')
     def profile(self, request, username):
-        return {'user': User.query.get(username)}
+        data = {
+            'user': User.query.get(username),
+            'fields': IUserProfileExtender.get_profile_names(),
+        }
+        return data
 
     @view
     @templated('portal/login.html')

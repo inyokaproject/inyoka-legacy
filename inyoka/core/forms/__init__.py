@@ -60,6 +60,10 @@ class Form(FormBase):
         request = self._lookup_request_info()
         return request.form
 
+    # until bureaucracy has a way to do this…
+    def add_field(self, key, field):
+        self.fields[key] = field._bind(self, {})
+
 
 class ModelField(Field):
     """A field that queries for a model.

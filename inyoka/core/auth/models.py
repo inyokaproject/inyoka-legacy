@@ -56,11 +56,9 @@ class User(db.Model, SerializableObject):
     # the password hash.  This might not be used by every auth system.
     # the OpenID auth for example does not use it at all.  But also
     # external auth systems might not store the password here.
-    pw_hash = db.Column(db.String(60), nullable=True)
+    pw_hash = db.Column(db.String(60))
     # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
-    # the realname of the user.  This is also optional.
-    real_name = db.Column(db.String(200), nullable=True)
 
 
     def __init__(self, username, email, password=''):
@@ -108,8 +106,6 @@ class User(db.Model, SerializableObject):
     def __unicode__(self):
         return self.display_name
 
-class IProfileController(IModelPropertyProvider, Interface):
-    pass
 
 class UserSchemaController(db.ISchemaController):
     models = [User]

@@ -4,6 +4,15 @@ body {
   font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
 }
 
+/* use a reset.css to reset all that stuff?! */
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style-type: none; 
+}
+
 #head {
   margin: 0 auto;
   padding: 20px 10px 10px 10px;
@@ -54,14 +63,22 @@ body {
   margin-bottom: 0.5em;
 }
 
+#page-sidebar {
+  background-color: #EEEEEE;
+  float: left;
+  width: 7em;
+}
+
 #page-head {
   background-color: #EEEEEE;
   color: #001800;
+  margin-left: 10em;
 }
 
 #content {
   background-color: #FFFFFF;
   color: #2b2422;
+  margin-left: 10em;
 }
 
 #content h1, #content h2, #content h3 {
@@ -79,4 +96,5 @@ body {
 .hidden {
   color: #ccc;
 }
+
 

@@ -11,6 +11,7 @@
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
+from inyoka.core.auth.models import User
 from inyoka.utils.confirm import call_confirm, Expired
 
 
@@ -19,10 +20,12 @@ class PortalController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/login', endpoint='login'),
-        Rule('/logout', endpoint='logout'),
-        Rule('/register', endpoint='register'),
+        Rule('/login/', endpoint='login'),
+        Rule('/logout/', endpoint='logout'),
+        Rule('/register/', endpoint='register'),
         Rule('/confirm/<key>/', endpoint='confirm'),
+        Rule('/users/', endpoint='users'),
+        Rule('/user/<username>/', endpoint='profile'),
     ]
 
     @view
@@ -30,6 +33,16 @@ class PortalController(IController):
     def index(self, request):
         return {'called_url': request.current_url,
                  'link': href('portal/index')}
+
+    @view
+    @templated('portal/users.html')
+    def users(self, request):
+        return {'users': User.query}
+
+    @view
+    @templated('portal/profile.html')
+    def profile(self, request, username):
+        return {'user': User.query.get(username)}
 
     @view
     @templated('portal/login.html')

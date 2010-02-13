@@ -7,7 +7,7 @@
 \.swp$
 \.py[co]$
 ^inyoka(_tests)?\.ini$
-^db\.log$
-^dev\.db$
+\.log$
+\.db$
 \.pida-metadata/
 ^\.coverage_html/

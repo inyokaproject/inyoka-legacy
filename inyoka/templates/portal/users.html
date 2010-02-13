@@ -1,0 +1,12 @@
+{%- extends 'portal/base.html' %}
+
+{%- block content %}
+<h1>{{ _('Userlist') }}</h1>
+
+<ul>
+{% for user in users %}
+  <li><a href="{{ href('portal/profile', username=user.username) }}">{{ user.username }}</a></li>
+{% endfor %}
+</ul>
+
+{%- endblock %}

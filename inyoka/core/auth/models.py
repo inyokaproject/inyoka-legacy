@@ -10,17 +10,19 @@
 """
 import random
 
-from inyoka.core.database import db
+from inyoka import Interface
+from inyoka.i18n import _
+from inyoka.core.database import db, IModelPropertyProvider
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
 
 USER_STATUS_MAP = BidiMap({
-    0: 'inactive', #not yet activated
-    1: 'normal',
-    2: 'banned',
-    3: 'deleted', #deleted itself
+    0: _('inactive'), #not yet activated
+    1: _('normal'),
+    2: _('banned'),
+    3: _('deleted'), #deleted itself
 })
 
 
@@ -106,6 +108,8 @@ class User(db.Model, SerializableObject):
     def __unicode__(self):
         return self.display_name
 
+class IProfileController(IModelPropertyProvider, Interface):
+    pass
 
 class UserSchemaController(db.ISchemaController):
     models = [User]

@@ -1,1 +1,9 @@
 {% extends "base.html" %}
+
+{% block sidebar %}
+  {{ super }}
+  <ul>
+    <li><a href="{{ href('portal/users') }}">{{ _('Users') }}</a></li>
+    <li>{{ _('Groups') }}</li>
+  </ul>
+{% endblock sidebar %}

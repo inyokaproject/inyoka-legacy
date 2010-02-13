@@ -59,8 +59,8 @@ def test_load_components():
     loaded = ctx.load_components(set([Implementation1, Implementation2]))
     eq_(len(loaded), 2)
 
-    assert_true(loaded[0] is Implementation1)
-    assert_true(loaded[1] is Implementation2)
+    assert_true(Implementation1 in loaded)
+    assert_true(Implementation2 in loaded)
     assert_false(Interface1 in loaded)
     assert_false(Interface2 in loaded)
 

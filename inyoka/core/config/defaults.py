@@ -35,6 +35,12 @@ DEFAULTS = {
         help_text=lazy_gettext(u'The current language locale')),
     'default_timezone':             TextField(default=u'Europe/Berlin',
         help_text=lazy_gettext(u'The default timezone for all users.')),
+    'recaptcha.public_key':         TextField(
+        default=u'6Lc1LwsAAAAAAPSQ4FcfLKJVcwzicnZl8v-RmeLj',
+        help_text=lazy_gettext(u'Recaptcha public key')),
+    'recaptcha.private_key':         TextField(
+        default=u'6Lc1LwsAAAAAAAKaGUBaEpTOfXKDWe6QjIlmMM9b',
+        help_text=lazy_gettext(u'Recaptcha private key')),
 
     # database specific values
     'database.url':                 TextField(default=u'sqlite:///dev.db',

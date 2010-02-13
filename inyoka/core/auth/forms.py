@@ -26,6 +26,8 @@ class StandardLoginForm(forms.Form):
 
 
 class RegistrationForm(forms.Form):
+    captcha_protected = True
+
     username = forms.TextField(lazy_gettext(u'Username'), required=True)
     email = forms.TextField(lazy_gettext(u'Email'), required=True)
     password = forms.TextField(lazy_gettext(u'Password'), required=True,

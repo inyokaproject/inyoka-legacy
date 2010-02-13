@@ -18,7 +18,7 @@ from bureaucracy import csrf, exceptions, recaptcha, redirects
 
 from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.http import redirect_to
-from inyoka.core.context import local
+from inyoka.core.context import local, ctx
 from inyoka.utils.datastructures import _missing
 
 
@@ -26,6 +26,9 @@ class Form(FormBase):
     """A somewhat extended base form to include our
     i18n mechanisms as well as other things like sessions and such stuff.
     """
+
+    recaptcha_public_key = ctx.cfg['recaptcha.public_key']
+    recaptcha_private_key = ctx.cfg['recaptcha.private_key']
 
     def _get_translations(self):
         """Return our translations"""

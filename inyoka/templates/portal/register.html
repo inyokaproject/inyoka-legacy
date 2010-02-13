@@ -1,5 +1,11 @@
 {% extends "portal/base.html" %}
 
 {% block content %}
-{{ form() }}
+{% call form() %}
+    {{ form.as_dl() }}
+    {{ form.captcha }}
+    <div class="buttons">
+      <input type="submit" value="{{ _('Register') }}">
+    </div>
+{% endcall %}
 {% endblock content %}

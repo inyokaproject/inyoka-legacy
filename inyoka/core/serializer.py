@@ -174,7 +174,7 @@ def list_api_methods():
             continue
         handler = view.__name__
         if 'api/' in handler:
-            handler = handler[handler.index('api/')+4:]
+            handler = handler[handler.index('api/') + 4:]
         args, varargs, varkw, defaults = view.signature
         if args and args[1] == 'request':
             args = args[2:]

@@ -9,5 +9,6 @@
 ^inyoka(_tests)?\.ini$
 \.log$
 \.db$
+\.mo$
 \.pida-metadata/
 ^\.coverage_html/

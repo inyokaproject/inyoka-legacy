@@ -38,9 +38,9 @@ def context_modifier(request, context):
 
     categories = Category.query.cached('news/categories')
     context.update(
-        months=get_month_names()),
+        months=get_month_names(),
         categories=categories,
-        **data
+        **data,
     )
 
 

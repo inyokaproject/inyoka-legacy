@@ -55,11 +55,16 @@ class InterfaceMeta(type):
             # A Interface
             obj._interfaces = interfaces = set()
             obj._isinterface = False
+            possible_interfaces = set()
+
             for base in bases:
-                if '_isinterface' in base.__dict__:
-                    interfaces.add(base)
-                elif '_interfaces' in base.__dict__:
-                    interfaces.update(base._interfaces)
+                possible_interfaces.update(base.mro())
+
+            for cls in possible_interfaces:
+                if '_isinterface' in cls.__dict__:
+                    interfaces.add(cls)
+                elif '_interfaces' in cls.__dict__:
+                    interfaces.update(cls._interfaces)
         return obj
 
 

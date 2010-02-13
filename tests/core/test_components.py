@@ -19,18 +19,25 @@ class Interface1(Interface):
 class Interface2(Interface):
     pass
 
+class Interface3(Interface2, Interface):
+    pass
+
 class Implementation1(Interface1):
     pass
 
 class Implementation2(Interface1, Interface2):
     pass
 
-class Implementation3(Interface2):
+class Implementation3(Interface2, Interface):
+    pass
+
+class Implementation4(Interface3):
     pass
 
 
-_test_components = [Interface1, Interface2, Implementation1, Implementation2,
-                    Implementation3]
+_test_components = [Interface1, Interface2, Interface3,
+                    Implementation1, Implementation2, Implementation3,
+                    Implementation4]
 
 def _teardown_components():
     ctx.load_components(_test_components)
@@ -56,16 +63,18 @@ def test_component_is_activated():
 
 @with_setup(teardown=_teardown_components)
 def test_load_components():
-    loaded = ctx.load_components(set([Implementation1, Implementation2]))
-    eq_(len(loaded), 2)
+    loaded = ctx.load_components(set([Implementation1, Implementation2, Implementation4]))
+    eq_(len(loaded), 3)
 
     assert_true(Implementation1 in loaded)
     assert_true(Implementation2 in loaded)
+    assert_true(Implementation4 in loaded)
     assert_false(Interface1 in loaded)
     assert_false(Interface2 in loaded)
+    assert_false(Interface3 in loaded)
 
     eq_(len(ctx.get_implementations(Interface1)), 2)
-    eq_(len(ctx.get_implementations(Interface2)), 1)
+    eq_(len(ctx.get_implementations(Interface2)), 2)
 
 
 @with_setup(_setup_components)

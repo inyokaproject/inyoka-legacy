@@ -13,12 +13,13 @@ import simplejson
 import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
-from inyoka import INYOKA_REVISION
-from inyoka import l10n, i18n
+from inyoka import INYOKA_REVISION, l10n, i18n
 from inyoka.core.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 from inyoka.core.cache import cache as inyoka_cache
+from inyoka.core.exceptions import NotFound
+from inyoka.core.database import db
 
 
 TEMPLATE_CONTEXT = {}
@@ -44,26 +45,49 @@ def render_template(template_name, context):
     return tmpl.render(context)
 
 
-def templated(template_name):
+def templated(template_name, modifier=None):
     """
-    Decorator for views. The decorated view must return a dictionary which is
-    default_mimetype = 'text/html'
-    then used as context for the given template. Returns a Response object.
+    This function can be used as a decorator to use a function's return value
+    as template context if it's not a valid Response object.
+    The first decorator argument must be the template to use::
+
+        @templated('mytemplate.html')
+        def index(request):
+            return {
+                'articles': Article.query.all()
+            }
+
+    :exc:`~inyoka.core.database.NoResultFound` exceptions are catched
+    and raised again as :exc:`~inyoka.core.exceptions.NotFound`.
+
+    :param template_name: The name of the template to render.
+    :param modifier: A callback to modify the template context on-the-fly.
     """
     def decorator(func):
         @functools.wraps(func)
-        def templated_wrapper(*args, **kwargs):
-            ret = func(*args, **kwargs)
-            if ret is None:
-                ret = {}
-            if isinstance(ret, dict):
-                data = render_template(template_name, ret)
-                response = Response(data)
-                if ctx.cfg['debug']:
-                    TEMPLATE_CONTEXT.clear()
-                    TEMPLATE_CONTEXT.update(ret)
-                return response
-            return Response.force_type(ret)
+        def templated_wrapper(request, *args, **kwargs):
+            try:
+                ret = func(request, *args, **kwargs)
+                if ret is None:
+                    ret = {}
+            except db.NoResultFound:
+                raise NotFound()
+
+            # if we got no dictionary as response type we try to force
+            # to return a proper Response object instead of any further process
+            if not isinstance(ret, dict):
+                return Response.force_type(ret)
+
+            # apply the context modifier
+            if modifier is not None:
+                modifier(request, ret)
+
+            data = render_template(template_name, ret)
+            response = Response(data)
+            if ctx.cfg['debug']:
+                TEMPLATE_CONTEXT.clear()
+                TEMPLATE_CONTEXT.update(ret)
+            return response
         return templated_wrapper
     return decorator
 

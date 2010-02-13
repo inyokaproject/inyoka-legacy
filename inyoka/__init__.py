@@ -274,14 +274,6 @@ def _bootstrap():
 
 
     # setup components
-    test_components = []
-    if ctx.cfg['debug']:
-        test_components = [
-            'tests.core.test_database.*',
-            'tests.core.test_subscriptions.*',
-            'tests.utils.*',
-        ]
-
     # TODO: make it configurable
     ctx.load_packages([
         'inyoka.core.*',
@@ -290,7 +282,7 @@ def _bootstrap():
         'inyoka.news.*',
         'inyoka.forum.*',
         'inyoka.paste.*',
-    ] + test_components)
+    ])
 
     # setup model property providers
     from inyoka.core.database import (IModelPropertyProvider, DeclarativeMeta,

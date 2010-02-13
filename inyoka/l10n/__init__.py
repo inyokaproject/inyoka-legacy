@@ -105,5 +105,7 @@ def get_dummy(func):
     return _inner
 
 dict_ = globals()
-for func in dates.__all__:
+_additional_all = ['get_month_names', 'get_day_names', 'get_era_names',
+    'get_period_names', 'get_quarter_names']
+for func in dates.__all__ + _additional_all:
     dict_[func] = get_dummy(getattr(dates, func))

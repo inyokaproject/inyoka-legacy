@@ -286,5 +286,5 @@ class DateConverter(BaseConverter):
 
 class Map(BaseMap):
     """Our own map implementation for hooking in some custom converters"""
-    import werkzeug.routing
-    werkzeug.routing.DEFAULT_CONVERTERS['date'] = DateConverter
+    default_converters = BaseMap.default_converters.copy()
+    default_converters['date'] = DateConverter

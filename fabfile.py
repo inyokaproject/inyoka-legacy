@@ -108,13 +108,11 @@ def build_docs(clean='no', browse='no'):
     """
     Generate the Sphinx documentation.
     """
-    c = ""
     if clean.lower() in ['yes', 'y']:
-        c = "clean "
-    b = ""
+        local("rm -r -f docs/_build/")
+    local('cd docs && sphinx-build -d _build/doctrees -c . ./ _build/html', capture=False)
     if browse.lower() in ['yes', 'y']:
-        b = " && open _build/html/index.html"
-    local('cd docs; make %shtml%s' % (c, b), capture=False)
+        local('open docs/_build/html/index.html')
 
 
 def build_test_venv(pyver=None):

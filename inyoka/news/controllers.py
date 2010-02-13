@@ -40,7 +40,7 @@ def context_modifier(request, context):
     context.update(
         months=get_month_names(),
         categories=categories,
-        **data,
+        **data
     )
 
 

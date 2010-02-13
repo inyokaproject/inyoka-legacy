@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-02 17:46+0100\n"
-"PO-Revision-Date: 2010-02-13 17:18+0100\n"
+"PO-Revision-Date: 2010-02-13 17:43+0100\n"
 "Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -60,6 +60,22 @@ msgstr "Password (wiederholt)"
 #: inyoka/core/auth/forms.py:38
 msgid "The two passwords must be the same"
 msgstr "Die zwei Passwörter müssen gleich sein"
+
+#: inyoka/core/auth/models.py:21
+msgid "inactive"
+msgstr "inaktiv"
+
+#: inyoka/core/auth/models.py:22
+msgid "normal"
+msgstr "normal"
+
+#: inyoka/core/auth/models.py:23
+msgid "banned"
+msgstr "gebannt"
+
+#: inyoka/core/auth/models.py:24
+msgid "deleted"
+msgstr "gelöscht"
 
 #: inyoka/core/config/defaults.py:23
 msgid "Enable debug mode"
@@ -325,11 +341,11 @@ msgstr "Das Passwort ist falsch."
 msgid "Please log in."
 msgstr "Bitte einloggen."
 
-#: inyoka/portal/controllers.py:59
+#: inyoka/portal/controllers.py:66
 msgid "Key not found. Maybe it has already been used?"
 msgstr "CSRF-Schlüssel nicht gefunden. Wurde er bereits verwendet?"
 
-#: inyoka/portal/controllers.py:61
+#: inyoka/portal/controllers.py:68
 msgid "The supplied key is not valid anymore."
 msgstr "Der übergebene CSRF-Schlüssel ist nicht mehr gültig."
 
@@ -436,6 +452,10 @@ msgstr "Benutzer"
 #: inyoka/templates/portal/base.html:7
 msgid "Groups"
 msgstr "Gruppen"
+
+#: inyoka/templates/portal/users.html:4
+msgid "Userlist"
+msgstr "Benutzerliste"
 
 #: inyoka/utils/pagination.py:114
 msgid "next »"

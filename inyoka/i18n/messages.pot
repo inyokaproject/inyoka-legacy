@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-02-13 17:18+0100\n"
+"POT-Creation-Date: 2010-02-13 17:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,6 +59,22 @@ msgstr ""
 
 #: inyoka/core/auth/forms.py:38
 msgid "The two passwords must be the same"
+msgstr ""
+
+#: inyoka/core/auth/models.py:21
+msgid "inactive"
+msgstr ""
+
+#: inyoka/core/auth/models.py:22
+msgid "normal"
+msgstr ""
+
+#: inyoka/core/auth/models.py:23
+msgid "banned"
+msgstr ""
+
+#: inyoka/core/auth/models.py:24
+msgid "deleted"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:23
@@ -325,11 +341,11 @@ msgstr ""
 msgid "Please log in."
 msgstr ""
 
-#: inyoka/portal/controllers.py:59
+#: inyoka/portal/controllers.py:66
 msgid "Key not found. Maybe it has already been used?"
 msgstr ""
 
-#: inyoka/portal/controllers.py:61
+#: inyoka/portal/controllers.py:68
 msgid "The supplied key is not valid anymore."
 msgstr ""
 
@@ -435,6 +451,10 @@ msgstr ""
 
 #: inyoka/templates/portal/base.html:7
 msgid "Groups"
+msgstr ""
+
+#: inyoka/templates/portal/users.html:4
+msgid "Userlist"
 msgstr ""
 
 #: inyoka/utils/pagination.py:114

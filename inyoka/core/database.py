@@ -304,6 +304,15 @@ class Query(orm.Query):
             result.add(date.timetuple()[:idx])
         return result
 
+    def cached(self, key, timeout=None):
+        """Return a query result from the cache or execute the query again"""
+        from inyoka.core.cache import cache
+        data = cache.get(key)
+        if data is None:
+            data = self.all()
+            cache.set(key, data, timeout=timeout)
+        return data
+
     def lightweight(self, deferred=None, lazy=None):
         """Send a lightweight query which deferes some more expensive
         things such as comment queries or even text and parser data.

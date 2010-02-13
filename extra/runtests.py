@@ -29,6 +29,10 @@ def run_suite(module='inyoka'):
     # initialize the app
     tests_path = path.join(os.environ['INYOKA_INSTANCE'], 'tests')
 
+    # We need debug set to True for our tests
+    from inyoka.core.context import ctx
+    ctx.cfg['debug'] = 1
+
     # force the engine to be bound to the new database
     refresh_engine()
 

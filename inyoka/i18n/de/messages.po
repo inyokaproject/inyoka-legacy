@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2009-11-02 17:46+0100\n"
-"PO-Revision-Date: 2010-02-06 20:18+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-02-13 17:18+0100\n"
+"Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
@@ -32,39 +31,39 @@ msgstr ""
 #: inyoka/core/auth/__init__.py:229 inyoka/portal/auth.py:33
 #: inyoka/portal/auth.py:75
 msgid "You are now logged in."
-msgstr ""
+msgstr "Du bist nun eingeloggt."
 
 #: inyoka/core/auth/__init__.py:257
 msgid "You was successfully logged out"
-msgstr ""
+msgstr "Du wurdest erfolgreich ausgeloggt"
 
 #: inyoka/core/auth/forms.py:16 inyoka/core/auth/forms.py:29
 msgid "Username"
-msgstr ""
+msgstr "Benutzername"
 
 #: inyoka/core/auth/forms.py:17 inyoka/core/auth/forms.py:31
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: inyoka/core/auth/forms.py:19
 msgid "Permanent Login"
-msgstr ""
+msgstr "Dauerhafter Login"
 
 #: inyoka/core/auth/forms.py:30
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: inyoka/core/auth/forms.py:33
 msgid "Password again"
-msgstr ""
+msgstr "Password (wiederholt)"
 
 #: inyoka/core/auth/forms.py:38
 msgid "The two passwords must be the same"
-msgstr ""
+msgstr "Die zwei Passwörter müssen gleich sein"
 
 #: inyoka/core/config/defaults.py:23
 msgid "Enable debug mode"
-msgstr ""
+msgstr "Debugmodus aktivieren"
 
 #: inyoka/core/config/defaults.py:25
 msgid "The path to the media folder"
@@ -225,6 +224,11 @@ msgid ""
 "directory where the inyoka package lies in."
 msgstr ""
 
+#: inyoka/core/forms/__init__.py:71
+#, python-format
+msgid "“%(value)s” does not exist"
+msgstr ""
+
 #: inyoka/core/markup/__init__.py:33
 msgid "Internal parser error: "
 msgstr ""
@@ -235,122 +239,213 @@ msgid ""
 "allowed depth for nested elements"
 msgstr ""
 
-#: inyoka/news/admin.py:24
+#: inyoka/news/admin.py:24 inyoka/templates/base.html:31
 msgid "News"
-msgstr ""
+msgstr "News"
 
-#: inyoka/news/admin.py:66
+#: inyoka/news/admin.py:71
 msgid "Updated category"
-msgstr ""
+msgstr "Kategorie wurde aktualisiert"
 
-#: inyoka/news/admin.py:76
+#: inyoka/news/admin.py:81 inyoka/news/admin.py:130
 msgid "Action canceled"
-msgstr ""
+msgstr "Aktion abgebrochen"
 
-#: inyoka/news/admin.py:80
+#: inyoka/news/admin.py:85
 #, python-format
 msgid "The category %s was deleted successfully."
-msgstr ""
+msgstr "Die Kategorie %s wurde erfolgreich gelöscht."
 
-#: inyoka/news/forms.py:16
+#: inyoka/news/admin.py:120
+msgid "Updated article"
+msgstr "Artikel wurde aktualisiert"
+
+#: inyoka/news/admin.py:134
+#, python-format
+msgid "The article %s was deleted successfully."
+msgstr "Der Artikel %s wurde erfolgreich gelöscht."
+
+#: inyoka/news/forms.py:17
 msgid "Name"
-msgstr ""
+msgstr "Name"
+
+#: inyoka/news/forms.py:22
+msgid "Title"
+msgstr "Titel"
+
+#: inyoka/news/forms.py:23
+msgid "Intro"
+msgstr "Einführung"
+
+#: inyoka/news/forms.py:24
+msgid "Text"
+msgstr "Text"
+
+#: inyoka/news/forms.py:25
+msgid "Published"
+msgstr "Veröffentlicht"
+
+#: inyoka/news/forms.py:26
+msgid "Category"
+msgstr "Kategorie"
+
+#: inyoka/news/forms.py:28
+msgid "Author"
+msgstr "Author"
 
 #: inyoka/paste/admin.py:20 inyoka/templates/paste/base.html:2
 msgid "Paste"
-msgstr ""
+msgstr "Paste"
 
 #: inyoka/paste/forms.py:30
 msgid "Title (optional)"
-msgstr ""
+msgstr "Titel (optional)"
 
 #: inyoka/paste/forms.py:31
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #: inyoka/paste/forms.py:32
 msgid "Language"
-msgstr ""
+msgstr "Sprache"
 
 #: inyoka/paste/forms.py:37
 msgid "Hide Paste"
-msgstr ""
+msgstr "Paste verstecken"
 
 #: inyoka/portal/auth.py:28
 msgid "This username does not exist."
-msgstr ""
+msgstr "Dieser Benutzername existiert nicht."
 
 #: inyoka/portal/auth.py:36
 msgid "The password is not correct."
-msgstr ""
+msgstr "Das Passwort ist falsch."
 
 #: inyoka/portal/auth.py:81
 msgid "Please log in."
-msgstr ""
+msgstr "Bitte einloggen."
 
-#: inyoka/portal/controllers.py:53
+#: inyoka/portal/controllers.py:59
 msgid "Key not found. Maybe it has already been used?"
-msgstr ""
+msgstr "CSRF-Schlüssel nicht gefunden. Wurde er bereits verwendet?"
 
-#: inyoka/portal/controllers.py:55
+#: inyoka/portal/controllers.py:61
 msgid "The supplied key is not valid anymore."
-msgstr ""
+msgstr "Der übergebene CSRF-Schlüssel ist nicht mehr gültig."
+
+#: inyoka/templates/base.html:25
+msgid "Login"
+msgstr "Login"
+
+#: inyoka/templates/base.html:27
+msgid "Logout"
+msgstr "Ausloggen"
+
+#: inyoka/templates/base.html:29
+msgid "Portal"
+msgstr "Portal"
+
+#: inyoka/templates/base.html:30
+msgid "Pastebin"
+msgstr "Pastebin"
+
+#: inyoka/templates/base.html:33
+msgid "Admin"
+msgstr "Administration"
 
 #: inyoka/templates/admin/base.html:4
 msgid "Welcome on the Inyoka Admin Center!"
-msgstr ""
+msgstr "Willkommen in der Inyoka-Administration!"
+
+#: inyoka/templates/news/admin/article_delete.html:2
+msgid "Do you really want to delete that article?"
+msgstr "Willst du diesen Artikel wirklich löschen?"
+
+#: inyoka/templates/news/admin/article_delete.html:4
+#: inyoka/templates/news/admin/category_delete.html:4
+msgid "No"
+msgstr "Nein"
+
+#: inyoka/templates/news/admin/article_delete.html:5
+#: inyoka/templates/news/admin/category_delete.html:5
+msgid "Yes"
+msgstr "Ja"
+
+#: inyoka/templates/news/admin/article_edit.html:5
+#, python-format
+msgid "Edit “%(article)s”"
+msgstr "Edit „%(article)s“"
+
+#: inyoka/templates/news/admin/article_edit.html:7
+msgid "New Article"
+msgstr "Neuer Artikel"
+
+#: inyoka/templates/news/admin/article_edit.html:14
+#: inyoka/templates/news/admin/category_edit.html:14
+msgid "Submit"
+msgstr "Abschicken"
+
+#: inyoka/templates/news/admin/article_edit.html:15
+#: inyoka/templates/news/admin/category_edit.html:15
+msgid "Delete"
+msgstr "Löschen"
+
+#: inyoka/templates/news/admin/articles.html:4
+msgid "All articles"
+msgstr "Alle Artikel"
+
+#: inyoka/templates/news/admin/articles.html:10
+#, python-format
+msgid "…or <a href=\"%(link)s\">create a new article</a>"
+msgstr "…oder <a href=\"%(links)s\">erstelle einen neuen Artikel</a>"
 
 #: inyoka/templates/news/admin/categories.html:4
 msgid "All categories"
-msgstr ""
+msgstr "Alle Kategorien"
 
 #: inyoka/templates/news/admin/categories.html:10
 #, python-format
 msgid "…or <a href=\"%(link)s\">create a new category</a>"
-msgstr ""
+msgstr "…oder <a href=\"%(links)s\">erstelle einen neue Kategorie</a>"
 
 #: inyoka/templates/news/admin/category_delete.html:2
 msgid "Do you really want to delete that category?"
-msgstr ""
-
-#: inyoka/templates/news/admin/category_delete.html:4
-msgid "No"
-msgstr ""
-
-#: inyoka/templates/news/admin/category_delete.html:5
-msgid "Yes"
-msgstr ""
+msgstr "Willst du diese Kategorie wirklich löschen?"
 
 #: inyoka/templates/news/admin/category_edit.html:5
 #, python-format
 msgid "Edit “%(category)s”"
-msgstr ""
+msgstr "„%(category)s“ bearbeiten"
 
 #: inyoka/templates/news/admin/category_edit.html:7
 msgid "New Category"
-msgstr ""
-
-#: inyoka/templates/news/admin/category_edit.html:14
-msgid "Submit"
-msgstr ""
-
-#: inyoka/templates/news/admin/category_edit.html:15
-msgid "Delete"
-msgstr ""
+msgstr "Neue Kategorie"
 
 #: inyoka/templates/news/admin/index.html:5
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
+
+#: inyoka/templates/news/admin/index.html:6
+msgid "Articles"
+msgstr "Artikel(was ist die Mehrzahl?)"
+
+#: inyoka/templates/portal/base.html:6
+msgid "Users"
+msgstr "Benutzer"
+
+#: inyoka/templates/portal/base.html:7
+msgid "Groups"
+msgstr "Gruppen"
 
 #: inyoka/utils/pagination.py:114
 msgid "next »"
-msgstr ""
+msgstr "nächste »"
 
 #: inyoka/utils/pagination.py:115
 msgid "« previous"
-msgstr ""
+msgstr "« vorherige "
 
 #: inyoka/utils/pagination.py:124
 msgid "…"
-msgstr ""
+msgstr "…"
 

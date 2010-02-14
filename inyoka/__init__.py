@@ -102,6 +102,9 @@ def _import_modules(modules):
             try:
                 for mod in find_modules(module[:-2], True, True):
                     yield import_string(mod)
+                # find_modules does import our package, but doesn't yield it
+                # hence we import it ourself.
+                yield import_string(module[:-2])
             except ValueError: # module is a module and not a package
                 yield import_string(module[:-2])
 
@@ -296,11 +299,17 @@ def _bootstrap():
     property_providers = ctx.get_implementations(IModelPropertyProvider)
     extendable_models = [m for m in DeclarativeMeta._models
                          if getattr(m, '__extendable__', False)]
-    for model in extendable_models:
-        for provider in property_providers:
-            if provider.model is not model:
-                continue
 
+    for provider in property_providers:
+        try:
+            model = provider.model
+            extendable_models.index(model)
+
+        except ValueError:
+            raise RuntimeError('%r tries to extend a not extendable model' 
+                                % provider)
+
+        else:
             for key, value in provider.properties.iteritems():
                 if key not in model.__dict__:
                     setattr(model, key, value)
@@ -309,6 +318,7 @@ def _bootstrap():
                         u'%r tried to overwrite already existing '
                         u'properties on %r, aborting'
                             % (provider, model))
+
 
 _bootstrap()
 del _bootstrap

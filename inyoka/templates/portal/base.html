@@ -1,3 +1,4 @@
+{% set introduction=true %}
 {% extends "base.html" %}
 
 {% block sidebar %}
@@ -8,7 +9,7 @@
   </ul>
 {% endblock sidebar %}
 
-{% block head %}
+{% block introduction %}
   {{ super }}
-  <p>Hier könnte eine Einleitung zum jeweiligen Content stehen :)</p>
-{% endblock head %}
+  Welcome to Inyoka :)
+{% endblock introduction %}

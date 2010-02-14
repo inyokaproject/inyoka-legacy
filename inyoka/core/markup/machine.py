@@ -140,13 +140,10 @@ class RenderContext(object):
     only that allows you to track circular page inclusions.
     """
 
-    def __init__(self, request=None, wiki_page=None, simplified=False,
-                 raw=False):
+    def __init__(self, request=None, simplified=False):
         self.request = request
-        self.wiki_page = wiki_page
         self.simplified = simplified
         self.included_pages = set()
-        self.app_type = None
 
 
 class Renderer(object):

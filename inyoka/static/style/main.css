@@ -66,19 +66,18 @@ li {
 #page-sidebar {
   background-color: #EEEEEE;
   float: left;
-  width: 7em;
+  width: 338px;
 }
 
 #page-head {
   background-color: #EEEEEE;
   color: #001800;
-  margin-left: 10em;
 }
 
 #content {
   background-color: #FFFFFF;
   color: #2b2422;
-  margin-left: 10em;
+  margin-left: 378px;
 }
 
 #content h1, #content h2, #content h3 {

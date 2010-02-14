@@ -35,11 +35,11 @@
     </div>
     <div id="page">
       <div id="page-inner">
+        <div id="page-head">
+          {% block head %}{% endblock head %}
+        </div>
         <div id="page-sidebar">
           {% block sidebar %}{% endblock sidebar %}
-        </div>
-        <div id="page-head">
-        Hier könnte eine Einleitung zum jeweiligen Content stehen :)
         </div>
         <div id="content">
           {% block content %}{% endblock content %}

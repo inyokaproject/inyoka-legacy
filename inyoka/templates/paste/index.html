@@ -5,13 +5,25 @@
 
 {{ form() }}
 
+{%- endblock %}
+
+{%- block sidebar %}
 {% if recent_pastes %}
-  <h2>Recent Pastes</h2>
-  <ul>
+  <table>
+    <thead>
+      <tr>
+        <th>Recent Pastes</th>
+      </tr>
+    </thead>
+    <tbody>
     {% for p in recent_pastes %}
-    <li><a href="{{ href(p) }}">{{ p }}</a> <span class="small">by {{ p.author|e }} ({{ p.pub_date.strftime('%F %T') }})</span></li>
+    {# TODO: ACL for hidden pastes and edit link! #}
+    <tr{% if p.hidden %} class="hidden"{% endif %}>
+      <td><a href="{{ href(p) }}">{{ p }}</a> <span class="small">by {{ p.author|e }} ({{ p.pub_date.strftime('%F %T') }})</span></td>
+    </tr>
     {% endfor %}
-  </ul>
+    </tbody>
+  </table>
 {% endif %}
 <p><a href="{{ href('paste/browse') }}">Browse all pastes</a></p>
 {%- endblock %}

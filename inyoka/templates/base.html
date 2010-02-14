@@ -1,5 +1,6 @@
-  {%- set styles = ['main.css'] + styles|default([]) %}
-  {%- set scripts = ['jQuery.js'] + scripts|default([]) %}
+{%- set sidebar = sidebar|default(True) %}
+{%- set styles = ['main.css'] + styles|default([]) %}
+{%- set scripts = ['jQuery.js'] + scripts|default([]) %}
 <html>
   <head>
     <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
@@ -35,9 +36,11 @@
     </div>
     <div id="page">
       <div id="page-inner">
+        {% if sidebar %}
         <div id="page-sidebar">
           {% block sidebar %}{% endblock sidebar %}
         </div>
+        {% endif %}
         <div id="page-head">
         Hier könnte eine Einleitung zum jeweiligen Content stehen :)
         </div>

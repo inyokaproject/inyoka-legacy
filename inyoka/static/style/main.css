@@ -4,15 +4,6 @@ body {
   font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
 }
 
-/* use a reset.css to reset all that stuff?! */
-ul {
-  margin: 0;
-  padding: 0;
-}
-li {
-  list-style-type: none; 
-}
-
 #head {
   margin: 0 auto;
   padding: 20px 10px 10px 10px;
@@ -85,6 +76,15 @@ li {
 
 #content h1, #content h2, #content h3 {
   color: #304800;
+}
+
+#content ol {
+	list-style: decimal;
+}
+
+#content ul li {
+	list-style: disc;
+	margin-left: 2em;
 }
 
 #content a {

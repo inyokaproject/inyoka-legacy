@@ -109,8 +109,9 @@ def build_docs(clean='no', browse='no'):
     Generate the Sphinx documentation.
     """
     if clean.lower() in ['yes', 'y']:
-        local("rm -r -f docs/_build/")
-    local('cd docs && sphinx-build -d _build/doctrees -c . ./ _build/html', capture=False)
+        local('rm -r -f docs/_build/')
+    with cd('docs'):
+        local('sphinx-build -d _build/doctrees -c . source _build/html', capture=False)
     if browse.lower() in ['yes', 'y']:
         local('open docs/_build/html/index.html')
 
@@ -120,8 +121,8 @@ def build_test_venv(pyver=None):
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
           pyver, _j('../bootstrap.py')), capture=False)
-    local('cd %s && python ./bootstrap.py inyoka-testsuite' % _j('..'),
-          capture=False)
+    with cd('..'):
+        local('python ./bootstrap.py inyoka-testsuite', capture=False)
 
 
 def clean_files():

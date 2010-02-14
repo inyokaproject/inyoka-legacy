@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
 from inyoka.utils.text import gen_ascii_slug
@@ -67,9 +67,39 @@ class Category(db.Model):
         return values[action], {'slug': self.slug}
 
 
+class ArticleQuery(db.Query):
+
+    def published(self):
+        """
+        This method returns a query that shows only
+        published articles.
+
+        A article is either published if :attr:`Article.public` is `True`
+        or :attr:`Article.pub_date` is same and :attr:`Article.pub_time` is
+        less then or the same as the current utc date/time.
+        """
+        q = self.filter(db.and_(
+            Article.public == True,
+            Article.pub_date < datetime.utcnow(),
+        ))
+        return q
+
+    def by_date(self, year, month):
+        if month == 12:
+            next_date = date(year + 1, 1, 1)
+        else:
+            next_date = date(year, month + 1, 1)
+
+        return self.filter(db.and_(
+            Article.pub_date >= date(year, month, 1),
+            Article.pub_date < next_date
+        ))
+
+
 class Article(db.Model):
     __tablename__ = 'news_article'
     __mapper_args__ = {'extension': ArticleMapperExtension()}
+    query = db.session.query_property(ArticleQuery)
 
     id = db.Column(db.Integer, primary_key=True)
     pub_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -81,7 +111,8 @@ class Article(db.Model):
     public = db.Column(db.Boolean)
 
     category_id = db.Column(db.ForeignKey(Category.id), nullable=False)
-    category = db.relation(Category)
+    category = db.relation(Category,
+        backref=db.backref('articles', lazy='dynamic'))
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
     author = db.relation(auth.User)
 

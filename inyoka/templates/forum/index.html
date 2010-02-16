@@ -1,0 +1,26 @@
+{%- extends 'forum/base.html' %}
+
+{%- block content %}
+<h1>Forum</h1>
+
+<p>Welcome to the forum app!</p>
+
+<table>
+{% for category in categories %}
+<tr>
+    <td>{{ category.name|e }}</td>
+</tr>
+<tr>
+    <td>{{ category.description|e }}</td>
+</tr>
+{% if category.subforums %}
+{% for forum in category.subforums %}
+<tr>
+    <td>{{ forum.name|e }}</td>
+</tr>
+{% endfor %}
+{% endif %}
+{% endfor %}
+</table>
+
+{%- endblock %}

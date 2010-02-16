@@ -1,0 +1,24 @@
+{%- extends 'forum/base.html' %}
+
+{%- block content %}
+{% if tags %}
+<h1>Tagged Questions</h1>
+{% else %}
+<h1>All Questions</h1>
+{% endif %}
+
+{% for question in questions %}
+<h2><a href="{{ href(question) }}">{{ question.title|e }}</a></h2>
+<p>{{ question.summary|e }}</p>
+<p>
+{% for tag in question.tags %}
+<a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+{% endfor %}
+</p>
+<p>asked {{ question.date_asked|e }}<br />
+<a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
+</p>
+{% endfor %}
+</table>
+
+{%- endblock %}

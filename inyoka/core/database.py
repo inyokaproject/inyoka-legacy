@@ -79,7 +79,7 @@ from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
 import sqlalchemy
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import MetaData, create_engine, Table
 from sqlalchemy import orm, sql, exc
 from sqlalchemy.orm.session import Session as SASession
 from sqlalchemy.engine.url import make_url, URL
@@ -430,7 +430,11 @@ def init_db(**kwargs):
     tables = []
 
     for comp in ctx.get_implementations(ISchemaController, instances=True):
-        tables.extend([i.__table__ for i in comp.models])
+        for model in comp.models:
+            if isinstance(model, Table):
+                tables.append(model)
+            else:
+                tables.append(model.__table__)
 
     kwargs['tables'] = tables
 

@@ -1,0 +1,37 @@
+{%- extends 'forum/base.html' %}
+
+{%- block content %}
+<h1><a href="{{ href(question) }}">{{ question.title|e }}</a></h1>
+
+<p>{{ question.text|e }}</p>
+
+<p>
+{% for tag in question.tags %}
+<a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+{% endfor %}
+</p>
+
+<p>asked {{ question.date_asked|e }}<br />
+<a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
+</p>
+
+{% trans count=question.answers|length %}
+<h2>{{ count }} Answer</h2>
+{% pluralize %}
+<h2>{{ count }} Answers</h2>
+{% endtrans %}
+
+{% for answer in question.answers %}
+    <p>{{ answer.text|e }}</p>
+
+    <p>answered {{ answer.date_answered|e }}<br />
+        <a href="{{ href('portal/profile', username=question.author.username) }}">{{ answer.author }}</a>
+    </p>
+{% else %}
+    <p>There aren't any answers yet.</p>
+{% endfor %}
+
+<h2>Your Answer</h2>
+{{ form() }}
+
+{%- endblock %}

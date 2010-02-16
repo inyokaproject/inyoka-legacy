@@ -114,6 +114,9 @@ class RequestDispatcher(object):
                 raise NotFound()
         except HTTPException, err:
             response = err.get_response(request.environ)
+        except db.SQLAlchemyError, err:
+            db.session.rollback()
+            raise
 
         if not isinstance(response, Response):
             response = Response.force_type(response, environ)

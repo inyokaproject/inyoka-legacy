@@ -41,7 +41,10 @@ class ForumController(IController):
     @templated('forum/questions.html')
     def forum(self, request, slug):
         forum = Forum.query.filter_by(slug=slug).first()
-        questions = Question.query.order_by(Question.date_asked.desc())
+        questions = Question.query.filter(db.and_(
+                Question.id == question_tag.c.question_id,
+                question_tag.c.tag_id.in_(t.id for t in forum.tags))) \
+                .order_by(Question.date_asked.desc())
         return {
            'forum': forum,
            'questions': questions

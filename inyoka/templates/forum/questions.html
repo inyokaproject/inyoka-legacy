@@ -23,6 +23,11 @@
 {% else %}
   {% if tags %}
     <h1>Tagged Questions</h1>
+    <p>
+    {% for tag in tags %}
+        <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+    {% endfor %}
+    </p>
   {% else %}
     <h1>All Questions</h1>
   {% endif %}

@@ -22,6 +22,7 @@ class ForumController(IController):
     url_rules = [
         Rule('/', endpoint='index'),
         Rule('/forum/<string:slug>/', endpoint='forum'),
+        Rule('/forum/<string:forum>/ask/', endpoint='ask'),
         Rule('/questions/', endpoint='questions'),
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/questions/tagged/<string:tags>/', endpoint='questions'),
@@ -93,8 +94,11 @@ class ForumController(IController):
 
     @view('ask')
     @templated('forum/ask.html')
-    def ask(self, request):
+    def ask(self, request, forum=None):
         form = AskQuestionForm()
+        if forum:
+            forum = Forum.query.filter_by(slug=forum).one()
+            form.data['tags'] = ' '.join(t.name for t in forum.tags)
         if request.method == 'POST' and form.validate(request.form):
             tags = []
             for tagname in form.data['tags']:

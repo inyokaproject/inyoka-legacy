@@ -6,6 +6,15 @@
 <h1>Forum "{{ forum.name|e }}"</h1>
 
 <p>{{ forum.description|e }}</p>
+
+{% if forum.subforums %}
+<p><strong>Subforums:</strong>
+{% for subforum in forum.subforums %}
+    <a href="{{ href(subforum) }}">{{ subforum.name }}</a>
+{% endfor %}
+</p>
+{% endif %}
+
 <p>
 {% for tag in forum.tags %}
     <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>

@@ -78,6 +78,16 @@ def to_datetime(obj):
     return rebase_to_timezone(dt)
 
 
+def timedeltaformat(datetime_or_timedelta, granularity='second'):
+    """Format the elapsed time from the given date to now of the given
+    timedelta.
+    """
+    if isinstance(datetime_or_timedelta, datetime):
+        datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
+    return '%s ago' % dates.format_timedelta(datetime_or_timedelta,
+        granularity, locale=get_locale())
+
+
 # Wrap all api functions from Babel <http://babel.edgewall.org> with
 # support for our i18n hacked in for easier usage.
 #

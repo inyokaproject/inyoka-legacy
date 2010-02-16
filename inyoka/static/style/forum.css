@@ -23,12 +23,18 @@ div.question {
     font-size: 1.4em;
 }
 
+#content h2 {
+    clear: right;
+    margin-top: .5em;
+}
+
 div.author {
     background: #dedede;
     padding: .4em;
     font-size: .9em;
     margin-bottom: .5em;
     float: right;
+    width: 14em;
 }
 
 #content div.tabs {

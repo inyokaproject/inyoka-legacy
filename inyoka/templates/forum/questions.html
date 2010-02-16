@@ -46,7 +46,7 @@
 <p>{{ question.summary|e }}</p>
 
 <div class="author">
-asked {{ question.date_asked|e }}<br />
+asked <strong>{{ question.date_asked|timedelta }}</strong><br />
 <a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
 </div>
 

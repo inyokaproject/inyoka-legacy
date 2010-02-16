@@ -1,0 +1,11 @@
+{% extends 'admin/base.html' %}
+
+{% block admin_content %}
+<ul>
+    {% for forum in forums %}
+    <li>{{ forum.name|e }}</li>
+    {% endfor %}
+</ul>
+<a href="{{ href('admin/forum/forum') }}">Create new Forum</a>
+
+{% endblock %}

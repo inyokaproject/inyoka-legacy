@@ -5,15 +5,17 @@
 
 <p>{{ question.text|e }}</p>
 
+<div class="author">asked {{ question.date_asked|e }}<br />
+<a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
+</div>
+
 <p>
 {% for tag in question.tags %}
 <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
 {% endfor %}
 </p>
 
-<p>asked {{ question.date_asked|e }}<br />
-<a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
-</p>
+<br style="clear: both" />
 
 {% trans count=question.answers|length %}
 <h2>{{ count }} Answer</h2>

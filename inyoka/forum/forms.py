@@ -30,4 +30,6 @@ class AnswerQuestionForm(forms.Form):
 class EditForumForm(forms.Form):
 
     name = forms.TextField(_(u'Name'), max_length=160)
+    slug = forms.TextField(_(u'Slug'), max_length=160)
     description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea)
+    tags = forms.CommaSeparated(forms.TextField(), label=_(u'Tags'), sep=' ')

@@ -53,7 +53,7 @@ class Tag(db.Model):
         self.name = name
     
     def get_url_values(self):
-       return 'forum/index', {'tags': self.name} 
+       return 'forum/questions', {'tags': self.name} 
 
        
 class Forum(db.Model):
@@ -71,6 +71,9 @@ class Forum(db.Model):
     parent = db.relation('Forum', backref=db.backref('subforums',
             remote_side='Forum.id'))
     tags = db.relation('Tag', secondary=forum_tag, backref='forums')
+
+    def get_url_values(self):
+       return 'forum/forum', {'slug': self.slug} 
 
 
 class Question(db.Model):
@@ -114,4 +117,4 @@ class Answer(db.Model):
 
 
 class ForumSchemaController(db.ISchemaController):
-    models = [Question, Answer, Tag, question_tag, forum_tag]
+    models = [Forum, Question, Answer, Tag, question_tag, forum_tag]

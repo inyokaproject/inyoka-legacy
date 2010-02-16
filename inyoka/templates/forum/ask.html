@@ -1,5 +1,7 @@
 {%- extends 'forum/base.html' %}
 
+{%- set scripts = ['jquery.tokeninput.js'] + scripts|default([]) %}
+
 {%- block content %}
 <h1>Ask a Question</h1>
 

@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 {% set title_trace = title_trace|default([]) + [_('Forum')] %}
+{% set styles = ['forum.css'] + styles|default([]) %}
 
-{% block sidebar %}
-<ul>
-    <li><a href="{{ href('forum/ask') }}">Ask Question</a></li>
-</ul>
-{% endblock %}
+{% set sidebar = False %}

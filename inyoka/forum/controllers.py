@@ -8,9 +8,9 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.forum.models import Question, Answer, Tag, question_tag
+from inyoka.forum.models import Forum, Question, Answer, Tag, question_tag, forum_tag
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
-from inyoka.core.api import IController, Rule, view, templated, db, \
+from inyoka.core.api import IController, Rule, view, service, templated, db, \
          redirect, href
 from inyoka.core.http import Response
 from datetime import datetime
@@ -21,21 +21,34 @@ class ForumController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
+        Rule('/forum/<string:slug>/', endpoint='forum'),
+        Rule('/questions/', endpoint='questions'),
         Rule('/question/<string:slug>/', endpoint='question'),
-        Rule('/tagged/<string:tags>/', endpoint='index'),
+        Rule('/questions/tagged/<string:tags>/', endpoint='questions'),
         Rule('/ask/', endpoint='ask'),
+        Rule('/get_tags/', endpoint='get_tags'),
     ]
 
-    @view('index2')
+    @view('index')
     @templated('forum/index.html')
     def index(self, request):
-        categories = Forum.query.filter_by(parent=None).all()
+        forums = Forum.query.filter_by(parent=None).all()
         return {
-           'categories': categories
+           'forums': forums
+        }
+
+    @view('forum')
+    @templated('forum/questions.html')
+    def forum(self, request, slug):
+        forum = Forum.query.filter_by(slug=slug).first()
+        questions = Question.query.order_by(Question.date_asked.desc())
+        return {
+           'forum': forum,
+           'questions': questions
         }
 
 
-    @view('index')
+    @view('questions')
     @templated('forum/questions.html')
     def questions(self, request, tags=None, sort='newest'):
         if not tags:
@@ -102,4 +115,14 @@ class ForumController(IController):
         return {
             'form': form.as_widget()
         }
+
+
+    @service('get_tags')
+    def get_tags(self, request):
+        q = request.args.get('q')
+        if not q:
+            tags = Tag.query.all()[:10]
+        else:
+            tags = Tag.query.filter(Tag.name.startswith(q))[:10]
+        return list({'id': t.name, 'name': t.name} for t in tags)
 

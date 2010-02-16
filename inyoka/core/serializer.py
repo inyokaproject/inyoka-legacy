@@ -159,6 +159,7 @@ def send_service_response(request_or_format, result):
     from inyoka.core.http import Response
     ro = primitive(result)
     serializer, mimetype = get_serializer(request_or_format)
+    print 'primitive', ro
     return Response(serializer(ro), mimetype=mimetype)
 
 

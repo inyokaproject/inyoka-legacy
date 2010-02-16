@@ -1,0 +1,53 @@
+#content a.tag {
+    background: #d0efa0;
+    color: #304800;
+    padding: .2em .5em;
+    font-size: .9em;
+    text-decoration: none;
+}
+
+#content a.tag:hover {
+    background: #304800;
+    color: #d0efa0;
+}
+
+#content p {
+    margin: .5em 0;
+}
+
+div.question {
+    border-bottom: 1px dashed #aaa;
+}
+
+#content h1 {
+    font-size: 1.4em;
+}
+
+div.author {
+    background: #dedede;
+    padding: .4em;
+    font-size: .9em;
+    margin-bottom: .5em;
+    float: right;
+}
+
+#content div.tabs {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: .5em;
+}
+
+
+#content div.tabs ul {
+    float: right;
+    list-style: none;
+    margin: 0;
+    margin-right: .5em;
+}
+
+#content div.tabs ul li {
+    float: left;
+    margin: 0 .2em;
+    border: 1px solid #aaa;
+    border-bottom: none;
+    padding: .1em .2em;
+}

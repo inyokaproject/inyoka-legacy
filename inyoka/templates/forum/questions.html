@@ -1,24 +1,58 @@
 {%- extends 'forum/base.html' %}
 
 {%- block content %}
-{% if tags %}
-<h1>Tagged Questions</h1>
+
+{% if forum is defined %}
+<h1>Forum "{{ forum.name|e }}"</h1>
+
+<p>{{ forum.description|e }}</p>
+<p>
+{% for tag in forum.tags %}
+    <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+{% endfor %}
+</p>
+
+<div class="tabs">
+<ul>
+    <li><a href="{{ href(forum) }}">Newest</a></li>
+    <li><a href="{{ href('forum/ask') }}">Ask Question</a></li>
+</ul>
+<br style="clear: right;" />
+</div>
+
 {% else %}
-<h1>All Questions</h1>
+  {% if tags %}
+    <h1>Tagged Questions</h1>
+  {% else %}
+    <h1>All Questions</h1>
+  {% endif %}
+<div class="tabs">
+<ul>
+    <li><a href="{{ href('forum/questions') }}">Newest</a></li>
+    <li><a href="{{ href('forum/ask') }}">Ask Question</a></li>
+</ul>
+<br style="clear: right;" />
+</div>
 {% endif %}
 
 {% for question in questions %}
+<div class="question">
 <h2><a href="{{ href(question) }}">{{ question.title|e }}</a></h2>
 <p>{{ question.summary|e }}</p>
+
+<div class="author">
+asked {{ question.date_asked|e }}<br />
+<a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
+</div>
+
 <p>
 {% for tag in question.tags %}
 <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
 {% endfor %}
 </p>
-<p>asked {{ question.date_asked|e }}<br />
-<a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
-</p>
+
+<br style="clear: both;" />
+</div>
 {% endfor %}
-</table>
 
 {%- endblock %}

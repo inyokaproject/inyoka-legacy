@@ -11,7 +11,7 @@
 from inyoka.forum.models import Forum, Question, Answer, Tag, question_tag, forum_tag
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
 from inyoka.core.api import IController, Rule, view, service, templated, db, \
-         redirect, href
+         redirect, redirect_to, href
 from inyoka.core.http import Response
 from datetime import datetime
 
@@ -100,24 +100,16 @@ class ForumController(IController):
             forum = Forum.query.filter_by(slug=forum).one()
             form.data['tags'] = ' '.join(t.name for t in forum.tags)
         if request.method == 'POST' and form.validate(request.form):
-            tags = []
-            for tagname in form.data['tags']:
-                tag = Tag.query.filter_by(name=tagname).first()
-                if not tag:
-                    # XXX: Disable automatic tag creation
-                    tag = Tag(tagname)
-                    db.session.add(tag)
-                tags.append(tag)
             question = Question(
                 title=form.data['title'],
                 author=request.user,
                 date_asked=datetime.utcnow(),
                 text=form.data['text'],
-                tags=tags
+                tags=form.data['tags']
             )
             db.session.add(question)
             db.session.commit()
-            return redirect(href('forum/index'))
+            return redirect_to(question)
 
         return {
             'form': form.as_widget()

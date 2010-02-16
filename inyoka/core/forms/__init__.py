@@ -104,8 +104,9 @@ class ModelField(Field):
 
         if rv is None:
             if self.on_not_found is not None:
-                self.on_not_found(value)
-            raise exceptions.ValidationError(self.messages['not_found'] %
+                return self.on_not_found(value)
+            else:
+                raise exceptions.ValidationError(self.messages['not_found'] %
                                   {'value': value})
         return rv
 

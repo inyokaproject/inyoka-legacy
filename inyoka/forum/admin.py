@@ -23,7 +23,8 @@ class ForumAdminProvider(IAdminProvider):
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/forum/add/', endpoint='forum')
+        Rule('/forum/add/', endpoint='forum'),
+        Rule('/forum/edit/<int:id>/', endpoint='forum')
     ]
 
     @view
@@ -37,31 +38,28 @@ class ForumAdminProvider(IAdminProvider):
     @view
     @templated('forum/admin/forum.html')
     def forum(self, request, id=None):
-        #entry = Entry.query.get(id)
-        form = EditForumForm()
+        if id:
+            forum = Forum.query.get(id)
+            form = EditForumForm(model_to_dict(forum))
+        else:
+            forum = None
+            form = EditForumForm()
         
-       # model_to_dict(entry,    exclude=('rendered_code', 'id', 'author_id')))
         if request.method == 'POST' and form.validate(request.form):
-            #entry = update_model(entry, form,
-            #    ('code', 'language', 'title', 'author', 'hidden'))
-            tags = []
-            for tagname in form.data['tags']:
-                tag = Tag.query.filter_by(name=tagname).first()
-                if not tag:
-                    # XXX: Disable automatic tag creation
-                    tag = Tag(tagname)
-                    db.session.add(tag)
-                tags.append(tag)
-            forum = Forum(
-                name=form.data['name'],
-                slug=form.data['slug'],
-                parent=form.data['parent'],
-                description=form.data['description'],
-                tags=tags
-            )
-            db.session.add(forum)
+            if forum:
+                forum = update_model(forum, form, ('name', 'slug',
+                            'parent', 'description', 'tags'))
+            else:
+                forum = Forum(
+                    name=form.data['name'],
+                    slug=form.data['slug'],
+                    parent=form.data['parent'],
+                    description=form.data['description'],
+                    tags=form.data['tags']
+                )
+                db.session.add(forum)
             db.session.commit()
-            return redirect_to('admin/forum/forum')
+            return redirect_to('admin/forum/index')
 
         return {
             'form': form.as_widget(),

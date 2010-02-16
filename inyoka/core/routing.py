@@ -73,7 +73,7 @@ class UrlMixin(object):
             name = comp.name
             if name:
                 special = cls.special_prefix or ''
-                domain, mount = ctx.cfg['routing.urls.' + name].split(':', 1)
+                subdomain, mount = ctx.cfg['routing.urls.' + name].split(':', 1)
                 if comp.ignore_prefix:
                     rules = comp.url_rules
                 else:
@@ -83,7 +83,10 @@ class UrlMixin(object):
 
                 if cls.special_prefix is not None:
                     mount = '/_%s/%s' % (special.rstrip('/'), mount.lstrip('/'))
-                val = Subdomain(domain, [Submount(mount, rules)])
+                
+                val = Submount(mount, rules)
+                if subdomain != '':
+                    val = Subdomain(subdomain, [val])
                 urls.append(val)
             else:
                 val = comp.url_rules

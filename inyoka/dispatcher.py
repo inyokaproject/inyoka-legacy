@@ -104,20 +104,19 @@ class RequestDispatcher(object):
                 return response
 
         # dispatch the request if not already done by some middleware
+
         try:
             rule, args = urls.match(request.path, return_rule=True)
             request.endpoint = rule.endpoint
-            response = self.get_view(rule.endpoint)(request, **args)
+            try:
+                response = self.get_view(rule.endpoint)(request, **args)
+            except db.NoResultFound:
+                raise NotFound()
         except HTTPException, err:
-            response = err.get_response(request)
-        except db.NoResultFound:
-            response = NotFound().get_response(request)
-        except db.SQLAlchemyError, err:
-            db.session.rollback()
-            logger.error(err)
-            raise
+            response = err.get_response(request.environ)
 
-        response = Response.force_type(response, environ)
+        if not isinstance(response, Response):
+            response = Response.force_type(response, environ)
 
         # Let middlewares process the response.  Note that we *only*
         # process the response object, if it's returned from some view.

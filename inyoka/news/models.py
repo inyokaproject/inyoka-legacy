@@ -59,7 +59,7 @@ class Category(db.Model):
     def __unicode__(self):
         return self.name
 
-    def get_url_values(self, action='view'):
+    def get_url_values(self, action='edit'):
         values = {
             'edit': 'admin/news/category_edit',
             'delete': 'admin/news/category_delete',
@@ -143,7 +143,7 @@ class Article(db.Model):
         """
         return not self.public or self.pub_date > datetime.utcnow()
 
-    def get_url_values(self, action='view'):
+    def get_url_values(self, action='edit'):
         values = {
             'edit': 'admin/news/article_edit',
             'delete': 'admin/news/article_delete',

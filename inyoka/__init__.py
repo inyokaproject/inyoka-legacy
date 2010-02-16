@@ -306,7 +306,7 @@ def _bootstrap():
             extendable_models.index(model)
 
         except ValueError:
-            raise RuntimeError('%r tries to extend a not extendable model' 
+            raise RuntimeError('%r tries to extend a not extendable model'
                                 % provider)
 
         else:

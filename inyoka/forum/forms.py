@@ -35,7 +35,7 @@ class EditForumForm(forms.Form):
                                 widget=forms.widgets.SelectBox)
     description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea,
             required=True)
-    tags = forms.CommaSeparated(forms.TextField(), label=_(u'Tags'), sep=' ')
+    tags = forms.CommaSeparated(forms.TextField(), label=_(u'Tags'), sep=' ', min_size=1)
 
     def __init__(self, *args, **kwargs):
         forms.Form.__init__(self, *args, **kwargs)

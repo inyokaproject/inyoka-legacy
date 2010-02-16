@@ -68,7 +68,7 @@ class Forum(db.Model):
     position = db.Column(db.Integer, nullable=False, default=0,
             index=True)
 
-    parent = db.relation('Forum', backref=db.backref('subforums',
+    subforums = db.relation('Forum', backref=db.backref('parent',
             remote_side='Forum.id'))
     tags = db.relation('Tag', secondary=forum_tag, backref='forums')
 

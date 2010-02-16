@@ -55,6 +55,7 @@ class ForumAdminProvider(IAdminProvider):
             forum = Forum(
                 name=form.data['name'],
                 slug=form.data['slug'],
+                parent=form.data['parent'],
                 description=form.data['description'],
                 tags=tags
             )

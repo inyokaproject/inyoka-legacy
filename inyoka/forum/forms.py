@@ -29,7 +29,16 @@ class AnswerQuestionForm(forms.Form):
 
 class EditForumForm(forms.Form):
 
-    name = forms.TextField(_(u'Name'), max_length=160)
-    slug = forms.TextField(_(u'Slug'), max_length=160)
-    description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea)
+    name = forms.TextField(_(u'Name'), max_length=160, required=True)
+    slug = forms.TextField(_(u'Slug'), max_length=160, required=True)
+    parent = forms.ModelField(Forum, 'id', _(u'Parent'),
+                                widget=forms.widgets.SelectBox)
+    description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea,
+            required=True)
     tags = forms.CommaSeparated(forms.TextField(), label=_(u'Tags'), sep=' ')
+
+    def __init__(self, *args, **kwargs):
+        forms.Form.__init__(self, *args, **kwargs)
+        # setup the possible choices for the parent forum
+        self.parent.choices = ['']
+        self.parent.choices.extend([(f.id, f.name) for f in Forum.query.all()])

@@ -83,6 +83,8 @@ class UrlMixin(object):
 
                 if cls.special_prefix is not None:
                     mount = '/_%s/%s' % (special.rstrip('/'), mount.lstrip('/'))
+
+                print subdomain, mount
                 
                 val = Submount(mount, rules)
                 if subdomain != '':

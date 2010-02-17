@@ -3,11 +3,11 @@ Inyoka is maintained by various contributors.
 Current Maintainers and Developers
 ----------------------------------
 
-- Armin Ronacher <armin.ronacher@active-4.com>
 - Christopher Grebs <cg@webshox.org>
-- Florian Apolloner
-- Marian Sigler
+- Florian Apolloner <florian@apolloner.eu>
 - Christoph Hack <christoph@tux21b.org>
+- Armin Ronacher <armin.ronacher@active-4.com>
+- Marian Sigler
 
 Some parts and ideas are taken from existing projects:
 

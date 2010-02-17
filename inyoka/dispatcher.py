@@ -114,9 +114,6 @@ class RequestDispatcher(object):
                 raise NotFound()
         except HTTPException, err:
             response = err.get_response(request.environ)
-        except db.SQLAlchemyError, err:
-            db.session.rollback()
-            raise
 
         if not isinstance(response, Response):
             response = Response.force_type(response, environ)
@@ -173,9 +170,16 @@ class RequestDispatcher(object):
         return response(environ, start_response)
 
     def __call__(self, environ, start_response):
-        """The main dispatching interface of the Inyoka WSGI application."""
-        return ClosingIterator(self.dispatch_wsgi(environ, start_response),
-                               self.cleanup_callbacks)
+        """The main dispatching interface of the Inyoka WSGI application.
+        
+        You shall not (never ever) access stuff like the db-session and locals
+        in outer WSGI middlewares.
+        """
+        try:
+            return self.dispatch_wsgi(environ, start_response)
+        finally:
+            for callback in self.cleanup_callbacks:
+                callback()
 
 
 def make_dispatcher(ctx):

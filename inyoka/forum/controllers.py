@@ -112,6 +112,7 @@ class ForumController(IController):
             return redirect_to(question)
 
         return {
+            'forum': forum,
             'form': form.as_widget()
         }
 

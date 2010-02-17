@@ -24,11 +24,12 @@
 {% endtrans %}
 
 {% for answer in question.answers %}
-
+<div class="answer">
     <div class="author">answered <strong>{{ answer.date_answered|timedelta }}</strong><br />
         <a href="{{ href('portal/profile', username=question.author.username) }}">{{ answer.author }}</a>
     </div>
     <p>{{ answer.text|e }}</p>
+    </div>
 {% else %}
     <p>There aren't any answers yet.</p>
 {% endfor %}

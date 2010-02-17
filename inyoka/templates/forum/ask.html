@@ -3,7 +3,34 @@
 {%- set scripts = ['jquery.tokeninput.js'] + scripts|default([]) %}
 
 {%- block content %}
-<h1>Ask a Question</h1>
+
+{% if forum is defined and forum %}
+<h1>Forum "{{ forum.name|e }}"</h1>
+
+<p>{{ forum.description|e }}</p>
+
+{% if forum.subforums %}
+<p><strong>Subforums:</strong>
+{% for subforum in forum.subforums %}
+<a href="{{ href(subforum) }}">{{ subforum.name }}</a>
+{% endfor %}
+</p>
+{% endif %}
+
+<p>
+{% for tag in forum.tags %}
+<a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+{% endfor %}
+</p>
+
+<ul class="tabs">
+<li><a href="{{ href(forum, sort='newest') }}">Newest</a></li>
+<li><a href="{{ href(forum, sort='active') }}">Active</a></li>
+<li class="selected"><a href="{{ href('forum/ask', forum=forum.slug) }}">Ask Question</a></li>
+</ul>
+{% endif %}
+
+<h2>Ask a Question</h2>
 
 {{ form() }}
 

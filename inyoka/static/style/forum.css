@@ -16,7 +16,7 @@
 }
 
 div.question {
-    border-bottom: 1px dashed #aaa;
+    border-bottom: 1px dashed #666;
 }
 
 #content h1 {
@@ -37,23 +37,69 @@ div.author {
     width: 14em;
 }
 
-#content div.tabs {
-    border-bottom: 1px solid #aaa;
-    margin-bottom: .5em;
+div.question-body {
+    margin-left: 4.5em;
 }
 
-
-#content div.tabs ul {
-    float: right;
-    list-style: none;
-    margin: 0;
-    margin-right: .5em;
-}
-
-#content div.tabs ul li {
+div.question-left {
+    width: 5em;
+    background: #dedede;
     float: left;
-    margin: 0 .2em;
-    border: 1px solid #aaa;
+    font-size: .75em;
+    text-align: center;
+    padding: .4em 0;
+    margin-top: .2em;
+}
+
+div.question-left span.number {
+    display: block;
+    font-size: 1.4em;
+}
+
+div.answer {
+    clear: both;
+}
+
+
+#content ul.tabs {
+    text-align: right;
+    margin: -1em 0 1em 0;
+    font-weight: bold;
+    border-bottom: 1px solid #666;
+    list-style-type: none;
+    padding: 3px 10px 3px 10px;
+    line-height: normal;
+    font-size: .9em;
+}
+ 
+#content ul.tabs li {
+    display: inline;
+    margin: 0;
+}
+
+#content ul.tabs li.selected {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+#content ul.tabs li.selected a { 
+    background-color: #fff;
+    color: #000;
+    position: relative;
+    top: 1px;
+    padding-top: 4px;
+}
+ 
+#content ul.tabs li a {
+    padding: 3px 4px;
+    border: 1px solid #666;
+    background-color: #dedede;
+    color: #666;
+    margin-right: 0px;
+    text-decoration: none;
     border-bottom: none;
-    padding: .1em .2em;
+}
+ 
+#content ul.tabs a:hover {
+    background: #fff;
 }

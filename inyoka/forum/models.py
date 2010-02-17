@@ -72,8 +72,11 @@ class Forum(db.Model):
             remote_side='Forum.id'))
     tags = db.relation('Tag', secondary=forum_tag, backref='forums')
 
-    def get_url_values(self):
-       return 'forum/forum', {'slug': self.slug} 
+    def get_url_values(self, **kwargs):
+        kwargs.update({
+            'slug': self.slug
+        })
+        return 'forum/forum', kwargs
 
 
 class Question(db.Model):

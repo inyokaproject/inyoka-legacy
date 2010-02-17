@@ -31,12 +31,12 @@
       {% else %}
         Hallo {{ request.user.display_name }} ({{ request.user.status }}) <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
       {% endif %}
-      <a href="{{ href('portal/index') }}">{{ _('Portal') }}</a>
-      <a href="{{ href('paste/index') }}">{{ _('Pastebin') }}</a>
-      <a href="{{ href('news/index') }}">{{ _('News') }}</a>
-      <a href="{{ href('forum/index') }}">{{ _('Forum') }}</a>
+      <a href="{{ href('portal/index') }}" class="icon-portal">{{ _('Portal') }}</a>
+      <a href="{{ href('paste/index') }}" class="icon-pastebin">{{ _('Pastebin') }}</a>
+      <a href="{{ href('news/index') }}" class="icon-news">{{ _('News') }}</a>
+      <a href="{{ href('forum/index') }}" class="icon-forum">{{ _('Forum') }}</a>
       {# TODO: ACL #}
-      <a href="{{ href('admin/index') }}">{{ _('Admin') }}</a>
+      <a href="{{ href('admin/index') }}"class="icon-admin">{{ _('Admin') }}</a>
       </div>
     </div>
     <div id="page">

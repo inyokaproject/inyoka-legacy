@@ -35,6 +35,27 @@ body {
   font-weight: bold;
   text-decoration: none;
   margin-right: 1em;
+  padding-top: 54px;
+}
+
+#navi a.icon-portal {
+  background: url(../img/icon-portal.png) no-repeat top center;
+}
+
+#navi a.icon-pastebin {
+  background: url(../img/icon-pastebin.png) no-repeat top center;
+}
+
+#navi a.icon-news {
+  background: url(../img/icon-news.png) no-repeat top center;
+}
+
+#navi a.icon-forum {
+  background: url(../img/icon-forum.png) no-repeat top center;
+}
+
+#navi a.icon-admin {
+  background: url(../img/icon-admin.png) no-repeat top center;
 }
 
 #page {

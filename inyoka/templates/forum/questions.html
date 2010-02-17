@@ -2,8 +2,8 @@
 
 {%- block content %}
 
-{% if forum is defined %}
-<h1>Forum "{{ forum.name|e }}"</h1>
+{% if forum is defined and forum %}
+<h1>Forum “{{ forum.name|e }}”</h1>
 
 <p>{{ forum.description|e }}</p>
 
@@ -22,13 +22,19 @@
 </p>
 
 <ul class="tabs">
-<li class="selected"><a href="{{ href(forum) }}">Newest</a></li>
-<li><a href="{{ href(forum, sort='active') }}">Active</a></li>
-<li><a href="{{ href('forum/ask', forum=forum.slug) }}">Ask Question</a></li>
+    {% if tab is undefined %}
+        {% set tab = 'newest' %}
+    {% endif %}
+    <li{% if tab == 'newest' %} class="selected"{% endif %}>
+        <a href="{{ href(forum) }}">Newest</a></li>
+    <li{% if tab == 'active' %} class="selected"{% endif %}>
+        <a href="{{ href(forum, sort='active') }}">Active</a></li>
+    <li{% if tab == 'ask' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/ask', forum=forum.slug) }}">Ask Question</a></li>
 </ul>
 
 {% else %}
-  {% if tags %}
+  {% if tags is defined and tags %}
     <h1>Tagged Questions</h1>
     <p>
     {% for tag in tags %}
@@ -38,12 +44,21 @@
   {% else %}
     <h1>All Questions</h1>
   {% endif %}
-<ul class="tabs">
-    <li class="selected"><a href="{{ href('forum/questions') }}">Newest</a></li>
-    <li><a href="{{ href('forum/questions', sort='active') }}">Active</a></li>
-    <li><a href="{{ href('forum/ask') }}">Ask Question</a></li>
-</ul>
+
+  <ul class="tabs">
+    {% if tab is undefined %}
+        {% set tab = 'newest' %}
+    {% endif %}
+    <li{% if tab == 'newest' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions') }}">Newest</a></li>
+    <li{% if tab == 'active' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', sort='active') }}">Active</a></li>
+    <li{% if tab == 'ask' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/ask') }}">Ask Question</a></li>
+    </ul>
 {% endif %}
+
+{% block questions_body %}
 
 {% for question in questions %}
 <div class="question">
@@ -74,5 +89,6 @@ asked <strong>{{ question.date_asked|timedelta }}</strong><br />
 <br style="clear: both;" />
 </div>
 {% endfor %}
+{% endblock %}
 
 {%- endblock %}

@@ -54,26 +54,24 @@ class Subscription(db.Model):
             subject_id = getattr(subject, 'id', None)
 
             if t.mode == 'sequent':
-                for s in Subscription.query.filter_by(type_name=t.name,
-                                                      subject_id=subject_id,
-                                                      count=0):
-                    t.notify(s, object, subject)
-                    s.first_unread_object_id = object.id
-                    s.count = 1
-                db.session.commit()
-
+                #: increment unread count if there already are unread objects
                 q = db.update(Subscription.__table__,
                       (Subscription.type_name == t.name) &
                       (Subscription.subject_id == subject_id) &
                       (Subscription.count > 0),
                       {'count': Subscription.count + 1}
                      )
-#                print 'updated (%r %r %r):' % (t.name, object, action),\
-#                    db.session.execute(db.select([Subscription.__table__],
-#                      (Subscription.type_name == t.name) &
-#                      (Subscription.subject_id == subject_id) &
-#                      (Subscription.count > 0))).fetchall()
                 db.session.execute(q)
+                db.session.commit()
+
+                #: then set the first unread object and notify the user
+                #: if there were no new objects since the last visit
+                for s in Subscription.query.filter_by(type_name=t.name,
+                                                      subject_id=subject_id,
+                                                      count=0):
+                    t.notify(s, object, subject)
+                    s.first_unread_object_id = object.id
+                    s.count = 1
                 db.session.commit()
 
             if t.mode == 'multiple':

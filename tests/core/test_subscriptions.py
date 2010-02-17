@@ -87,18 +87,6 @@ class TestSubscriptions(TestSuite):
         'vier': fixture(User, username='vier', email='vier@example.com')
     }
 
-    def setUp(self):
-        ctx.load_components([
-            CategorySubscriptionType, BlogSubscriptionType,
-            CommentsSubscriptionType
-        ])
-
-    def tearDown(self):
-        ctx.unload_components([
-            CategorySubscriptionType, BlogSubscriptionType,
-            CommentsSubscriptionType
-        ])
-
     def _check_sequent_state(self, user, type_name, subject_id, first_unread, count):
         """
         Check if values of `first_unread_object_id` and `count` attributes of
@@ -122,9 +110,8 @@ class TestSubscriptions(TestSuite):
     def test_subscriptiontype(self):
         eq_(SubscriptionType.by_name('__test_comments'), CommentsSubscriptionType)
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
-        eq_(SubscriptionType.by_subject_type()[Category], [CategorySubscriptionType])
+        eq_(SubscriptionType.by_subject_type(Category), [CategorySubscriptionType])
 
-    @future
     @with_fixtures('eins', 'zwei', 'drei', 'vier')
     def test_subscribing(self, users):
         cat1 = Category(name='cat1')

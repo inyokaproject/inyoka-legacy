@@ -23,11 +23,13 @@ from inyoka.utils.datastructures import _missing
 class SubscriptionType(Interface):
     """
     Must be subclassed to represent a type of Subscription.
+    See the main docs for a more verbose description of the terms.
 
     **Values that must be defined by subclasses:**
 
     name
-        This is used to identify the type in the database and in the code, so it must *never ever* change.
+        This is used to identify the type in the database and in the code, so
+        it must *never ever* change.
     object_type
         A :class:`~inyoka.core.database.Model` class, specifying the type of
         the objects represented by the SubscriptionType.
@@ -38,6 +40,9 @@ class SubscriptionType(Interface):
         It may be ``None`` for types where there are no subjects but one can
         only subscribe to the type in general, for example the whole blog or
         reported topics.
+    actions
+        A list of actions on whom subscriptions of the SubscriptionType
+        shall be updated, i.e. which actions they shall “listen” to.
     mode
         Defines the character of this SubscriptionType:
             * **multiple**: The objects don't strongly relate to each other.
@@ -75,42 +80,37 @@ class SubscriptionType(Interface):
             return None
         raise NotImplementedError
 
-    #XXX: we should set the stuff below on setup (add an after_setup() method
-    #     for components or something)
 
     @classmethod
-    def _by_attr(cls, attrname, value=_missing):
-        if value is _missing:
-            map = {}
-            for c in ctx.get_implementations(cls):
-                map.setdefault(getattr(c, attrname, None), []).append(c)
-            return map
+    def by_name(cls, name):
+        """
+        Return the subscription type with the given name.
+        """
+        for c in ctx.get_implementations(cls):
+            if c.name == name:
+                return c
 
+    @classmethod
+    def by_object_type(cls, object_type):
+        """
+        Return all subscription types with the object type matching the given
+        ``object_type``.
+        """
         return [c for c in ctx.get_implementations(cls)
-                if getattr(c, attrname, None) is value]
+                if c.object_type is object_type]
 
     @classmethod
-    def by_name(cls, name=_missing):
-        if name is not _missing:
-            for c in ctx.get_implementations(cls):
-                if c.name == name:
-                    return c
-        return dict((c.name, c) for c in ctx.get_implementations(cls))
-
-    @classmethod
-    def by_object_type(cls, object_type=_missing):
-        return cls._by_attr('object_type', object_type)
-
-    @classmethod
-    def by_subject_type(cls, subject_type=_missing):
-        return cls._by_attr('subject_type', subject_type)
+    def by_subject_type(cls, subject_type):
+        """
+        Return all subscription types with the subject type matching the given
+        ``subject_type``.
+        """
+        return [c for c in ctx.get_implementations(cls)
+                if c.subject_type is subject_type]
 
     @classmethod
     def by_action(cls, action=None):
-        if action is None:
-            map = {}
-            for c in ctx.get_implementations(cls):
-                for action in c.actions:
-                    map.setdefault(action, []).append(c)
-            return map
+        """
+        Return all subscription types which implement the given action.
+        """
         return [c for c in ctx.get_implementations(cls) if action in c.actions]

@@ -54,7 +54,9 @@ class Request(BaseRequest):
         # that we have a bytecode string here
         secret = ctx.cfg['cookie_secret'].encode('utf-8')
         name = ctx.cfg['cookie_name']
-        return SecureCookie.load_cookie(self, name, secret_key=secret)
+        sc = SecureCookie.load_cookie(self, name, secret_key=secret)
+        sc.should_save = property(lambda x: x.modified)
+        return sc
 
     @property
     def flash_messages(self):

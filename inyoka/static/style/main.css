@@ -12,6 +12,7 @@ body {
   background-image: url(../img/head.png);
   background-repeat: no-repeat;
   -moz-border-radius: 0 0 0.4em 0.4em;
+  -webkit-border-radius: 0 0 0.4em 0.4em;
 }
 
 #head h1 {
@@ -77,6 +78,7 @@ body {
 #page-inner > div {
   padding: 1em;
   -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em;
   margin-bottom: 0.5em;
 }
 

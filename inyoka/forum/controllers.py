@@ -22,12 +22,20 @@ class ForumController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/forum/<string:slug>/', endpoint='forum'),
-        Rule('/forum/<string:forum>/ask/', endpoint='ask'),
+
         Rule('/questions/', endpoint='questions'),
+        Rule('/questions/<string:sort>/', endpoint='questions'),
+        Rule('/tagged/<string:tags>/', endpoint='questions'),
+        Rule('/tagged/<string:tags>/<string:sort>/', endpoint='questions'),
+        Rule('/forum/<string:forum>/', endpoint='questions'),
+        Rule('/forum/<string:forum>/<string:sort>/', endpoint='questions'),
+
         Rule('/question/<string:slug>/', endpoint='question'),
-        Rule('/questions/tagged/<string:tags>/', endpoint='questions'),
+        Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
+        
         Rule('/ask/', endpoint='ask'),
+        Rule('/forum/<string:forum>/ask/', endpoint='ask'),
+        
         Rule('/get_tags/', endpoint='get_tags'),
     ]
 
@@ -39,49 +47,42 @@ class ForumController(IController):
            'forums': forums
         }
 
-    @view('forum')
+    @view('questions')
     @templated('forum/questions.html')
-    def forum(self, request, slug, sort='newest', page=1):
-        forum = Forum.query.filter_by(slug=slug).first()
-        query = Question.query.filter(db.and_(
-                Question.id == question_tag.c.question_id,
-                question_tag.c.tag_id.in_(t.id for t in forum.tags)))
+    def questions(self, request, forum=None, tags=None, sort='newest', page=1):
+        query = Question.query
 
+        # Filter by Forum or Tag (optionally)
+        if forum:
+            forum = Forum.query.filter_by(slug=forum).first()
+            tags = forum.tags
+        elif tags:
+            tags = filter(bool, (Tag.query.filter_by(name=t).one() \
+                          for t in tags.split()))
+        if tags:
+            query = query.filter(db.and_(
+                        Question.id == question_tag.c.question_id,
+                        question_tag.c.tag_id.in_(t.id for t in tags)))
+       
+        # Order by "newest", "active" or "votes"
         if sort == 'newest':
             query = query.order_by(Question.date_asked.desc())
         elif sort == 'active':
-            query = query.filter(Answer.question_id == Question.id) \
-                         .order_by(Answer.date_answered)
+            query = query.order_by(Question.date_active.desc())
+
+        # Paginate results
         pagination = URLPagination(query, page)
         return {
-           'forum': forum,
-           'questions': pagination.query,
-           'pagination': pagination.buttons()
-        }
-
-
-    @view('questions')
-    @templated('forum/questions.html')
-    def questions(self, request, tags=None, sort='newest'):
-        if not tags:
-            qry = Question.query
-        else:
-            tags = filter(bool, (Tag.query.filter_by(name=t).one() \
-                          for t in tags.split()))
-            qry = Question.query.filter(db.and_(
-                        Question.id == question_tag.c.question_id,
-                        question_tag.c.tag_id.in_(t.id for t in tags)))
-
-        if sort == 'newest':
-            questions = qry.order_by(Question.date_asked.desc())
-        return {
-            'tags': tags,
-            'questions': questions[:50]
+            'forum': forum,
+            'tags': tags or [],
+            'questions': pagination.query,
+            'sort': sort,
+            'pagination': pagination.buttons()
         }
 
     @view('question')
     @templated('forum/question.html')
-    def question(self, request, slug):
+    def question(self, request, slug, sort='votes'):
         question = Question.query.filter_by(slug=slug).one()
         form = AnswerQuestionForm()
         if request.method == 'POST' and form.validate(request.form):
@@ -96,6 +97,7 @@ class ForumController(IController):
             return redirect(href(question))
 
         return {
+            'sort': sort,
             'question': question,
             'form': form.as_widget()
         }

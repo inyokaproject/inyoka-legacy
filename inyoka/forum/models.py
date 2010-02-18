@@ -26,7 +26,15 @@ class QuestionMapperExtension(db.MapperExtension):
         instance.slug = db.find_next_increment(
             Question.slug, gen_ascii_slug(instance.title)
         )
+        if not instance.date_active:
+            instance.date_active = instance.date_asked
 
+
+class AnswerMapperExtension(db.MapperExtension):
+
+    def before_insert(self, mapper, connection, instance):
+        instance.question.date_active = max(instance.question.date_active,
+            instance.date_answered)
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -51,6 +59,9 @@ class Tag(db.Model):
         if not tag_re.match(name):
             raise ValueErro('Invalid tag name "%s"' % name)
         self.name = name
+
+    def __unicode__(self):
+        return self.name
     
     def get_url_values(self):
        return 'forum/questions', {'tags': self.name} 
@@ -74,9 +85,9 @@ class Forum(db.Model):
 
     def get_url_values(self, **kwargs):
         kwargs.update({
-            'slug': self.slug
+            'forum': self.slug
         })
-        return 'forum/forum', kwargs
+        return 'forum/questions', kwargs
 
 
 class Question(db.Model):
@@ -90,6 +101,7 @@ class Question(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     text = db.Column(db.Text, nullable=False)
     date_asked = db.Column(db.DateTime, nullable=False)
+    date_active = db.Column(db.DateTime, nullable=False)
     
     tags = db.relation('Tag', secondary=question_tag, backref='questions')
     author = db.relation('User', backref='questions')
@@ -100,12 +112,16 @@ class Question(db.Model):
         words.append(' ...')
         return u' '.join(words)
 
-    def get_url_values(self):
-       return 'forum/question', {'slug': self.slug} 
+    def get_url_values(self, **kwargs):
+        kwargs.update({
+            'slug': self.slug
+        })
+        return 'forum/question', kwargs
 
 
 class Answer(db.Model):
     __tablename__ = 'forum_answer'
+    __mapper_args__ = {'extension': AnswerMapperExtension()}
 
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id),

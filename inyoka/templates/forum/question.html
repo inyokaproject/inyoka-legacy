@@ -31,10 +31,14 @@
 {% pluralize %}
 <h2>{{ count }} Answers</h2>
 {% endtrans %}
+{% set tab = sort or 'votes' %}
 <ul class="tabs">
-    <li class="selected"><a href="#">Votes</a></li>
-    <li><a href="#">Newest</a></li>
-    <li><a href="#">Oldest</a></li>
+    <li{% if tab == 'votes' %} class="selected"{% endif %}>
+        <a href="{{ href(question) }}">Votes</a></li>
+    <li{% if tab == 'newest' %} class="selected"{% endif %}>
+        <a href="{{ href(question, sort='newest') }}">Newest</a></li>
+    <li{% if tab == 'oldest' %} class="selected"{% endif %}>
+        <a href="{{ href(question, sort='oldest') }}">Oldest</a></li>
 </ul>
 
 {% for answer in question.answers %}

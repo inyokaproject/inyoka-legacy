@@ -2,65 +2,57 @@
 
 {%- block content %}
 
-{% if forum is defined and forum %}
-<h1>Forum “{{ forum.name|e }}”</h1>
+{% if forum %}
+  <h1>Forum “{{ forum.name|e }}”</h1>
 
-<p>{{ forum.description|e }}</p>
+  <p>{{ forum.description|e }}</p>
 
-{% if forum.subforums %}
-<p><strong>Subforums:</strong>
-{% for subforum in forum.subforums %}
-<a href="{{ href(subforum) }}">{{ subforum.name }}</a>
-{% endfor %}
-</p>
+  {% if forum.subforums %}
+    <p><strong>Subforums:</strong>
+    {% for subforum in forum.subforums %}
+      <a href="{{ href(subforum) }}">{{ subforum.name }}</a>
+    {% endfor %}
+    </p>
+  {% endif %}
+
+  <p>
+  {% for tag in forum.tags %}
+    <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+  {% endfor %}
+  </p>
+
+  {% set url_values = {'forum': forum.slug} %}
+
+{% elif tags %}
+  <h1>Tagged Questions</h1>
+ 
+  <p>
+  {% for tag in tags %}
+    <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+  {% endfor %}
+  </p>
+
+  {% set url_values = {'tags': tags|join(' ')} %}
+
+{% else %}
+  <h1>All Questions</h1>
+
+  {% set url_values = {} %}
 {% endif %}
-
-<p>
-{% for tag in forum.tags %}
-<a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
-{% endfor %}
-</p>
 
 <ul class="tabs">
     {% if tab is undefined %}
-        {% set tab = 'newest' %}
+        {% set tab = sort or 'newest' %}
     {% endif %}
     <li{% if tab == 'newest' %} class="selected"{% endif %}>
-        <a href="{{ href(forum) }}">Newest</a></li>
+        <a href="{{ href('forum/questions', **url_values) }}">Newest</a></li>
     <li{% if tab == 'active' %} class="selected"{% endif %}>
-        <a href="{{ href(forum, sort='active') }}">Active</a></li>
+        <a href="{{ href('forum/questions', sort='active', **url_values) }}">Active</a></li>
     <li{% if tab == 'votes' %} class="selected"{% endif %}>
-        <a href="{{ href(forum, sort='votes') }}">Votes</a></li>
+        <a href="{{ href('forum/questions', sort='votes', **url_values) }}">Votes</a></li>
     <li{% if tab == 'ask' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/ask', forum=forum.slug) }}">Ask Question</a></li>
+        <a href="{{ href('forum/ask', **url_values) }}">Ask Question</a></li>
 </ul>
-
-{% else %}
-  {% if tags is defined and tags %}
-    <h1>Tagged Questions</h1>
-    <p>
-    {% for tag in tags %}
-        <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
-    {% endfor %}
-    </p>
-  {% else %}
-    <h1>All Questions</h1>
-  {% endif %}
-
-  <ul class="tabs">
-    {% if tab is undefined %}
-        {% set tab = 'newest' %}
-    {% endif %}
-    <li{% if tab == 'newest' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions') }}">Newest</a></li>
-    <li{% if tab == 'active' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='active') }}">Active</a></li>
-    <li{% if tab == 'votes' %} class="selected"{% endif %}>
-        <a href="{{ href(forum, sort='votes') }}">Votes</a></li>
-    <li{% if tab == 'ask' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/ask') }}">Ask Question</a></li>
-    </ul>
-{% endif %}
 
 {% block questions_body %}
 
@@ -103,6 +95,8 @@ asked <strong>{{ question.date_asked|timedelta }}</strong><br />
     <br style="clear: both;" />
   </div>
 </div>
+{% else %}
+<p>No questions found.</p>
 {% endfor %}
 {{ pagination }}
 

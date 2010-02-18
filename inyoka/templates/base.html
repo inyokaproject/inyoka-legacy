@@ -23,7 +23,7 @@
     {%- endfor %}
 
     <div id="head">
-      <h1>Inyoka</h1>
+      <h1><a href="{{ request.host_url }}">Inyoka</a></h1>
       <div id="navi">
       {% if request.user.is_anonymous %}
         <a href="{{ href('portal/login') }}">{{ _('Login') }}</a>

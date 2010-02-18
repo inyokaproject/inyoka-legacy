@@ -24,6 +24,11 @@ body {
   background-repeat: no-repeat;
 }
 
+#head h1 a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
 #navi {
   float: right;
   position: relative;

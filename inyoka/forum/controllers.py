@@ -12,6 +12,7 @@ from inyoka.forum.models import Forum, Question, Answer, Tag, question_tag, foru
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
 from inyoka.core.api import IController, Rule, view, service, templated, db, \
          redirect, redirect_to, href
+from inyoka.utils.pagination import URLPagination
 from inyoka.core.http import Response
 from datetime import datetime
 
@@ -40,15 +41,22 @@ class ForumController(IController):
 
     @view('forum')
     @templated('forum/questions.html')
-    def forum(self, request, slug):
+    def forum(self, request, slug, sort='newest', page=1):
         forum = Forum.query.filter_by(slug=slug).first()
-        questions = Question.query.filter(db.and_(
+        query = Question.query.filter(db.and_(
                 Question.id == question_tag.c.question_id,
-                question_tag.c.tag_id.in_(t.id for t in forum.tags))) \
-                .order_by(Question.date_asked.desc())
+                question_tag.c.tag_id.in_(t.id for t in forum.tags)))
+
+        if sort == 'newest':
+            query = query.order_by(Question.date_asked.desc())
+        elif sort == 'active':
+            query = query.filter(Answer.question_id == Question.id) \
+                         .order_by(Answer.date_answered)
+        pagination = URLPagination(query, page)
         return {
            'forum': forum,
-           'questions': questions
+           'questions': pagination.query,
+           'pagination': pagination.buttons()
         }
 
 

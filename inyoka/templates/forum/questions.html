@@ -29,6 +29,8 @@
         <a href="{{ href(forum) }}">Newest</a></li>
     <li{% if tab == 'active' %} class="selected"{% endif %}>
         <a href="{{ href(forum, sort='active') }}">Active</a></li>
+    <li{% if tab == 'votes' %} class="selected"{% endif %}>
+        <a href="{{ href(forum, sort='votes') }}">Votes</a></li>
     <li{% if tab == 'ask' %} class="selected"{% endif %}>
         <a href="{{ href('forum/ask', forum=forum.slug) }}">Ask Question</a></li>
 </ul>
@@ -53,6 +55,8 @@
         <a href="{{ href('forum/questions') }}">Newest</a></li>
     <li{% if tab == 'active' %} class="selected"{% endif %}>
         <a href="{{ href('forum/questions', sort='active') }}">Active</a></li>
+    <li{% if tab == 'votes' %} class="selected"{% endif %}>
+        <a href="{{ href(forum, sort='votes') }}">Votes</a></li>
     <li{% if tab == 'ask' %} class="selected"{% endif %}>
         <a href="{{ href('forum/ask') }}">Ask Question</a></li>
     </ul>
@@ -62,33 +66,46 @@
 
 {% for question in questions %}
 <div class="question">
-<div class="question-left">
-    {% trans count=question.answers|length %}
-    <span class="number">{{ count }}</span> answer
-    {% pluralize %}
-    <span class="number">{{ count }}</span> answers
-    {% endtrans %} 
-</div>
+  <div class="stats">
+    <div class="votes">
+      {% trans votes=0 %}
+      <strong>{{ votes }}</strong> vote
+      {% pluralize %}
+      <strong>{{ votes }}</strong> votes
+      {% endtrans %} 
+    </div>
 
-<div class="question-body">
-<h2><a href="{{ href(question) }}">{{ question.title|e }}</a></h2>
-<p>{{ question.summary|e }}</p>
+    <div class="status{% if not question.answers %} unanswered{% endif %}">
+      {% trans answers=question.answers|length %}
+      <strong>{{ answers }}</strong> answer
+      {% pluralize %}
+      <strong>{{ answers }}</strong> answers
+      {% endtrans %}
+    </div>
+  </div>
+
+  <div class="summary">
+    <h2><a href="{{ href(question) }}">{{ question.title|e }}</a></h2>
+
+    <p>{{ question.summary|e }}</p>
 
 <div class="author">
 asked <strong>{{ question.date_asked|timedelta }}</strong><br />
 <a href="{{ href('portal/profile', username=question.author.username) }}">{{ question.author }}</a>
 </div>
 
-<p>
-{% for tag in question.tags %}
-<a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
-{% endfor %}
-</p>
-</div>
+    <p>
+      {% for tag in question.tags %}
+      <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+      {% endfor %}
+    </p>
 
-<br style="clear: both;" />
+    <br style="clear: both;" />
+  </div>
 </div>
 {% endfor %}
+{{ pagination }}
+
 {% endblock %}
 
 {%- endblock %}

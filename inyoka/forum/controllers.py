@@ -105,10 +105,17 @@ class ForumController(IController):
     @view('ask')
     @templated('forum/ask.html')
     def ask(self, request, forum=None):
-        form = AskQuestionForm()
-        if forum:
+        tags = []
+        if request.args.get('tags'):
+            tags = filter(bool, (Tag.query.filter_by(name=t).one() \
+                          for t in request.args.get('tags').split()))
+        elif forum:
             forum = Forum.query.filter_by(slug=forum).one()
-            form.data['tags'] = ' '.join(t.name for t in forum.tags)
+            tags = forum.tags
+
+        form = AskQuestionForm()
+        form.data['tags'] = ' '.join(t.name for t in tags)
+        
         if request.method == 'POST' and form.validate(request.form):
             question = Question(
                 title=form.data['title'],
@@ -123,6 +130,7 @@ class ForumController(IController):
 
         return {
             'forum': forum,
+            'tags': tags,
             'form': form.as_widget()
         }
 

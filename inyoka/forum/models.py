@@ -30,13 +30,6 @@ class QuestionMapperExtension(db.MapperExtension):
             instance.date_active = instance.date_asked
 
 
-class AnswerMapperExtension(db.MapperExtension):
-
-    def before_insert(self, mapper, connection, instance):
-        instance.question.date_active = max(instance.question.date_active,
-            instance.date_answered)
-
-
 question_tag = db.Table('forum_question_tag', db.metadata,
     db.Column('question_id', db.Integer, db.ForeignKey('forum_question.id')),
     db.Column('tag_id', db.Integer, db.ForeignKey('forum_tag.id'))
@@ -121,7 +114,6 @@ class Question(db.Model):
 
 class Answer(db.Model):
     __tablename__ = 'forum_answer'
-    __mapper_args__ = {'extension': AnswerMapperExtension()}
 
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id),

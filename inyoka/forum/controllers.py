@@ -24,11 +24,11 @@ class ForumController(IController):
         Rule('/', endpoint='index'),
 
         Rule('/questions/', endpoint='questions'),
-        Rule('/questions/<string:sort>/', endpoint='questions'),
+        Rule('/questions/<any(newest, active, votes):sort>/', endpoint='questions'),
         Rule('/tagged/<string:tags>/', endpoint='questions'),
-        Rule('/tagged/<string:tags>/<string:sort>/', endpoint='questions'),
+        Rule('/tagged/<string:tags>/<any(newest, active, votes):sort>/', endpoint='questions'),
         Rule('/forum/<string:forum>/', endpoint='questions'),
-        Rule('/forum/<string:forum>/<string:sort>/', endpoint='questions'),
+        Rule('/forum/<string:forum>/<any(newest, active, votes):sort>/', endpoint='questions'),
 
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
@@ -82,8 +82,15 @@ class ForumController(IController):
 
     @view('question')
     @templated('forum/question.html')
-    def question(self, request, slug, sort='votes'):
+    def question(self, request, slug, sort='votes', page=1):
         question = Question.query.filter_by(slug=slug).one()
+        answer_query = Answer.query.filter_by(question=question)
+        if sort == 'newest':
+            answer_query = answer_query.order_by(Answer.date_answered.desc())
+        elif sort == 'oldest':
+            answer_query = answer_query.order_by(Answer.date_answered)
+        pagination = URLPagination(answer_query, page)
+
         form = AnswerQuestionForm()
         if request.method == 'POST' and form.validate(request.form):
             answer = Answer(
@@ -92,6 +99,8 @@ class ForumController(IController):
                 date_answered=datetime.utcnow(),
                 text=form.data['text']
             )
+            # XXX: Do this automatically (maybe with an session extension)
+            question.date_active = max(question.date_active, answer.date_answered)
             db.session.add(answer)
             db.session.commit()
             return redirect(href(question))
@@ -99,7 +108,9 @@ class ForumController(IController):
         return {
             'sort': sort,
             'question': question,
-            'form': form.as_widget()
+            'answers': pagination.query,
+            'form': form.as_widget(),
+            'pagination': pagination.buttons()
         }
 
     @view('ask')

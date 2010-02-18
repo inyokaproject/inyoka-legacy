@@ -15,7 +15,7 @@
     </p>
   {% endif %}
 
-  <p>
+  <p class="tags">
   {% for tag in forum.tags %}
     <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
   {% endfor %}
@@ -26,7 +26,7 @@
 {% elif tags %}
   <h1>Tagged Questions</h1>
  
-  <p>
+  <p class="tags">
   {% for tag in tags %}
     <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
   {% endfor %}

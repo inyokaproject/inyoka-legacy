@@ -41,7 +41,7 @@
         <a href="{{ href(question, sort='oldest') }}">Oldest</a></li>
 </ul>
 
-{% for answer in question.answers %}
+{% for answer in answers %}
 <div class="answer">
     <div class="vote">
     <a href="#"><img src="{{ href('static', file='img/vote-up.png') }}" alt="vote up" /></a>
@@ -59,6 +59,8 @@
 {% else %}
     <p>There aren't any answers yet.</p>
 {% endfor %}
+
+{{ pagination }}
 
 <h2>Your Answer</h2>
 {{ form() }}

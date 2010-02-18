@@ -4,9 +4,9 @@
 <div class="question-detail">
   <h1><a href="{{ href(question) }}">{{ question.title|e }}</a></h1>
   <div class="vote">
-    <a href="#"><img src="{{ href('static', file='img/vote-up.png') }}" alt="vote up" /></a>
-  <strong>0</strong>
-    <a href="#"><img src="{{ href('static', file='img/vote-down.png') }}" alt="vote down" /></a>
+    <a href="{{ href(question, action='vote-up') }}"><img src="{{ href('static', file='img/vote-up.png') }}" alt="vote up" /></a>
+  <strong>{{ question.score|e }}</strong>
+    <a href="{{ href(question, action='vote-down') }}"><img src="{{ href('static', file='img/vote-down.png') }}" alt="vote down" /></a>
   </div>  
   <div class="summary">
     

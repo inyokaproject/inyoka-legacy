@@ -83,6 +83,29 @@ class Forum(db.Model):
         return 'forum/questions', kwargs
 
 
+class Vote(db.Model):
+    __tablename__ = 'forum_vote'
+    __table_args__ = (
+            db.UniqueConstraint('question_id', 'answer_id', 'user_id'),
+            # XXX: figure out how to index those columns (same order)
+            {}
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('forum_question.id'),
+            nullable=False)
+    answer_id = db.Column(db.Integer, db.ForeignKey('forum_answer.id'),
+            nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id),
+            nullable=False)
+    score = db.Column(db.Integer, nullable=False, default=0)
+    favorite = db.Column(db.Boolean, nullable=False, default=False)
+
+    question = db.relation('Question')
+    answer = db.relation('Answer', backref='votes')
+    user = db.relation('User', backref='votes')
+
+
 class Question(db.Model):
     __tablename__ = 'forum_question'
     __mapper_args__ = {'extension': QuestionMapperExtension()}
@@ -98,12 +121,19 @@ class Question(db.Model):
     
     tags = db.relation('Tag', secondary=question_tag, backref='questions')
     author = db.relation('User', backref='questions')
+    votes = db.relation('Vote', primaryjoin=db.and_(
+            Vote.question_id == id,
+            Vote.answer_id == None))
 
     @cached_property
     def summary(self):
         words = self.text.split()[:20]
         words.append(' ...')
         return u' '.join(words)
+
+    @cached_property
+    def score(self):
+        return sum(v.score for v in self.votes)
 
     def get_url_values(self, **kwargs):
         kwargs.update({
@@ -126,6 +156,5 @@ class Answer(db.Model):
     author = db.relation('User', backref='answers')
 
 
-
 class ForumSchemaController(db.ISchemaController):
-    models = [Forum, Question, Answer, Tag, question_tag, forum_tag]
+    models = [Forum, Question, Answer, Tag, Vote, question_tag, forum_tag]

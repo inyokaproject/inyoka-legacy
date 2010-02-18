@@ -60,7 +60,7 @@
 <div class="question">
   <div class="stats">
     <div class="votes">
-      {% trans votes=0 %}
+      {% trans votes=question.score %}
       <strong>{{ votes }}</strong> vote
       {% pluralize %}
       <strong>{{ votes }}</strong> votes

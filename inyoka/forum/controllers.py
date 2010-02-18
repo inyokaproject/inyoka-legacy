@@ -8,7 +8,8 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.forum.models import Forum, Question, Answer, Tag, question_tag, forum_tag
+from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
+         question_tag, forum_tag
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
 from inyoka.core.api import IController, Rule, view, service, templated, db, \
          redirect, redirect_to, href
@@ -90,6 +91,16 @@ class ForumController(IController):
         elif sort == 'oldest':
             answer_query = answer_query.order_by(Answer.date_answered)
         pagination = URLPagination(answer_query, page)
+
+        action = request.args.get('action')
+        if action in ('vote-up', 'vote-down'):
+            vote = Vote.query.filter_by(question=question, answer=None,
+                    user=request.user).first()
+            if not vote:
+                vote = Vote(question=question, answer=None,
+                        user=request.user)
+            vote.score = (action == 'vote-up' and 1 or -1)
+            db.session.commit()
 
         form = AnswerQuestionForm()
         if request.method == 'POST' and form.validate(request.form):

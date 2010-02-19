@@ -19,14 +19,14 @@ class EditCategoryForm(forms.Form):
 
 class EditArticleForm(forms.Form):
 
-    title = forms.TextField(_(u'Title'), max_length=200)
-    intro = forms.TextField(_(u'Intro'), widget=forms.widgets.Textarea)
-    text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea)
+    title = forms.TextField(_(u'Title'), max_length=200, required=True)
+    intro = forms.TextField(_(u'Intro'), widget=forms.widgets.Textarea, required=True)
+    text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea, required=True)
     public = forms.BooleanField(_(u'Published'))
     category = forms.ModelField(Category, 'name', _(u'Category'),
-                                widget=forms.widgets.SelectBox)
+                                widget=forms.widgets.SelectBox, required=True)
     author = forms.ModelField(auth.User, 'username', _(u'Author'),
-                              widget=forms.widgets.SelectBox)
+                              widget=forms.widgets.SelectBox, required=True)
 
     def __init__(self, *args, **kwargs):
         forms.Form.__init__(self, *args, **kwargs)

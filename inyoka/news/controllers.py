@@ -5,13 +5,14 @@
 
     Controllers for the news app.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.l10n import get_month_names
-from inyoka.core.api import IController, Rule, cache, view
+from inyoka.core.api import IController, Rule, cache, view, templated, href
 from inyoka.core.http import Response
 from inyoka.news.models import Article, Category
+from inyoka.utils.pagination import URLPagination
 
 
 def context_modifier(request, context):
@@ -49,18 +50,43 @@ class NewsController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
-#        Rule('/<int:page>/', endpoint='index'),
-#        Rule('/<date:date>/', endpoint='index'),
-#        Rule('/<date:date>/<int:page>/', endpoint='index'),
-#        Rule('/category/<slug>/', endpoint='index'),
-#        Rule('/category/<slug>/<int:page>/', endpoint='index'),
+        Rule('/<int:page>/', endpoint='index'),
+        Rule('/<int:year>/<int:month>/', endpoint='index'),
+        Rule('/<int:year>/<int:month>/<int:page>/', endpoint='index'),
+        Rule('/category/<cslug>/', endpoint='index'),
+        Rule('/category/<cslug>/<int:page>/', endpoint='index'),
         Rule('/<date:date>/<slug>/', endpoint='detail'),
 #        Rule('/archive/', endpoint='archive'),
     ]
 
+    @templated('news/index.html', modifier=context_modifier)
     @view('index')
-    def index(self, request):
-        return Response('this is the news (aka ikhaya) index page')
+    def index(self, request, year=None, month=None, cslug=None, page=1):
+        category = None
+        if year and month:
+            articles = Article.query.by_date(year, month)
+            link = {'year': year, 'month': month}
+        elif cslug:
+            category = Category.query.filter_by(slug=cslug).one()
+            articles = category.articles
+            link = {'cslug': cslug}
+        else:
+            articles = Article.query
+            link = {}
+
+        #TODO: add ACL for public articles
+
+        link = href('news/index', **link)
+
+        articles = articles.order_by('-updated')
+
+        pagination = URLPagination(articles, page, link)
+
+        return {
+            'articles':      pagination.query,
+            'pagination':    pagination.buttons(),
+            'category':      category
+        }
 
     @view('detail')
     def detail(self, request, date, slug):

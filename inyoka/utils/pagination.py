@@ -31,7 +31,7 @@ class Pagination(object):
     left_threshold = 3
     right_threshold = 1
     normal = u'<a href="%(url)s">%(page)d</a>'
-    active = u'<strong>%(page)d</strong>'
+    active = u'<strong class="page">%(page)d</strong>'
     commata = u'<span class="commata">,</span>\n'
     ellipsis = u' <span class="ellipsis">…</span>\n'
     template = u'<input type="hidden" class="url-template" value="%s">'

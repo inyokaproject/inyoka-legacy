@@ -119,6 +119,25 @@ body {
   color: #304800;
 }
 
+div.pagination {
+    margin-top:  1.5em;
+    font-size: .85em;
+    margin-bottom: 1em;
+    clear: both;
+}
+
+div.pagination a,
+div.pagination strong {
+    border: 1px solid #666;
+    background: #dedede;
+    padding: .2em .5em;
+    margin-right: .5em;
+}
+
+div.pagination span.commata {
+    display: none;
+}
+
 .small {
   font-size: x-small;
 }

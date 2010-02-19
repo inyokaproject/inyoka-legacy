@@ -18,7 +18,7 @@ import os
 
 def after_install(options, home_dir):
     easy_install('Jinja2', home_dir)
-    easy_install('Werkzeug==dev', home_dir)
+    easy_install('Werkzeug', home_dir)
     easy_install('Pygments', home_dir)
     easy_install('SQLAlchemy==dev', home_dir)
     easy_install('simplejson', home_dir)

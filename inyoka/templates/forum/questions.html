@@ -60,19 +60,19 @@
 <div class="question">
   <div class="stats">
     <div class="votes">
-      {% trans votes=question.score %}
+      {% trans votes=question.score -%}
       <strong>{{ votes }}</strong> vote
-      {% pluralize %}
+      {%- pluralize -%}
       <strong>{{ votes }}</strong> votes
-      {% endtrans %} 
+      {%- endtrans %} 
     </div>
 
     <div class="status{% if not question.answers %} unanswered{% endif %}">
-      {% trans answers=question.answers|length %}
+      {% trans answers=question.answers|length -%}
       <strong>{{ answers }}</strong> answer
-      {% pluralize %}
+      {%- pluralize -%}
       <strong>{{ answers }}</strong> answers
-      {% endtrans %}
+      {%- endtrans %}
     </div>
   </div>
 

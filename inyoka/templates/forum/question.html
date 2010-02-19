@@ -26,11 +26,11 @@
 
 <br style="clear: both" />
 
-{% trans count=question.answers|length %}
+{% trans count=question.answers|length -%}
 <h2>{{ count }} Answer</h2>
-{% pluralize %}
+{%- pluralize -%}
 <h2>{{ count }} Answers</h2>
-{% endtrans %}
+{%- endtrans %}
 {% set tab = sort or 'votes' %}
 <ul class="tabs">
     <li{% if tab == 'votes' %} class="selected"{% endif %}>

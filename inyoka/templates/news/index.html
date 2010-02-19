@@ -9,10 +9,10 @@
       <div class="text">{{ article.rendered_intro }}</div>
       <p class="meta">
         {% trans author_url=href('portal/profile', username=article.author.username), author_name=article.author.username|e,
-                 article_published=article.pub_date|datetimeformat %}
+                 article_published=article.pub_date|datetimeformat -%}
         written by <a href="{{ author_url }}">{{ author_name }}</a>
         {{ article_published }}
-        {% endtrans %}
+        {%- endtrans %}
         {%- if article.updated > article.pub_date %}
         ({{ _('updated on') }} {{ article.updated|datetimeformat }})
         {%- endif %}

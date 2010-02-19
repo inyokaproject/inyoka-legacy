@@ -70,6 +70,9 @@ class ForumController(IController):
             query = query.order_by(Question.date_asked.desc())
         elif sort == 'active':
             query = query.order_by(Question.date_active.desc())
+        elif sort == 'votes':
+            query = query.order_by([Question.score.desc(),
+                    Question.date_active.desc()])
 
         # Paginate results
         pagination = URLPagination(query, page=page)
@@ -96,10 +99,13 @@ class ForumController(IController):
         if action in ('vote-up', 'vote-down'):
             vote = Vote.query.filter_by(question=question, answer=None,
                     user=request.user).first()
+            score = (action == 'vote-up' and 1 or -1)
             if not vote:
                 vote = Vote(question=question, answer=None,
-                        user=request.user)
-            vote.score = (action == 'vote-up' and 1 or -1)
+                        user=request.user, score=score)
+                db.session.add(vote)
+            else:
+                vote.score = score
             db.session.commit()
 
         form = AnswerQuestionForm()
@@ -110,8 +116,6 @@ class ForumController(IController):
                 date_answered=datetime.utcnow(),
                 text=form.data['text']
             )
-            # XXX: Do this automatically (maybe with an session extension)
-            #question.date_active = max(question.date_active, answer.date_answered)
             db.session.add(answer)
             db.session.commit()
             return redirect(href(question))

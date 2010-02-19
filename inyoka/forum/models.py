@@ -34,15 +34,21 @@ class QuestionAnswersExtension(db.AttributeExtension):
     
     def append(self, state, answer, initiator):
         question = state.obj()
-        print 'date_active updated'
         question.date_active = max(question.date_active, answer.date_answered)
         return answer
-    
-    def remove(self, state, value, initiator):
-        pass
 
-    def set(self, state, value, oldvalue, initiator):
-        return value
+
+class QuestionVotesExtension(db.AttributeExtension):
+    active_history = True
+    
+    def append(self, state, vote, initiator):
+        question = state.obj()
+        question.score = Question.score + vote.score
+        return vote
+    
+    def remove(self, state, vote, initiator):
+        question = state.obj()
+        question.score = Question.score - vote.score
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -113,12 +119,24 @@ class Vote(db.Model):
             nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id),
             nullable=False)
-    score = db.Column(db.Integer, nullable=False, default=0)
+    _score = db.Column(db.Integer, name='score', nullable=False, default=0)
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    question = db.relation('Question')
     answer = db.relation('Answer', backref='votes')
     user = db.relation('User', backref='votes')
+
+    def __init__(self, **kwargs):
+        self._score = kwargs.pop('score', 0)
+        db.Model.__init__(self, **kwargs)
+
+    def set_score(self, value):
+        if not self.question:
+            return
+        old = self._score or 0
+        self._score = value
+        self.question.score = Question.score + (self._score - old)
+    
+    score = property(lambda self: self._score, set_score)
 
 
 class Question(db.Model):
@@ -133,24 +151,22 @@ class Question(db.Model):
     text = db.Column(db.Text, nullable=False)
     date_asked = db.Column(db.DateTime, nullable=False)
     date_active = db.Column(db.DateTime, nullable=False)
+    score = db.Column(db.Integer, nullable=False, default=0)
     
     answers = db.relation('Answer', backref='question',
-            extension=QuestionAnswersExtension)
+            extension=QuestionAnswersExtension())
     tags = db.relation('Tag', secondary=question_tag, backref='questions')
     author = db.relation('User', backref='questions')
     votes = db.relation('Vote', primaryjoin=db.and_(
             Vote.question_id == id,
-            Vote.answer_id == None))
+            Vote.answer_id == None),
+            extension=QuestionVotesExtension(), backref='question')
 
     @cached_property
     def summary(self):
         words = self.text.split()[:20]
         words.append(' ...')
         return u' '.join(words)
-
-    @cached_property
-    def score(self):
-        return sum(v.score for v in self.votes)
 
     def get_url_values(self, **kwargs):
         kwargs.update({

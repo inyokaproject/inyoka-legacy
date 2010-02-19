@@ -162,14 +162,7 @@ class InyokaPlugin(cover.Coverage):
 
     def __init__(self):
         super(InyokaPlugin, self).__init__()
-        # TODO: use 'tests.*' to load all components
-        # (requires the component tests to be fixed as they asume the components
-        # aren't loaded yet)
-        ctx.load_packages([
-                'tests.core.test_database.*',
-                'tests.core.test_subscriptions.*',
-                'tests.utils.*',
-        ])
+        ctx.load_packages(['tests.*'])
 
     def options(self, parser, env):
         # Don't setup coverage options,

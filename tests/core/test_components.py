@@ -61,7 +61,7 @@ def test_component_is_activated():
     assert_true(component_is_activated(Implementation3, _activated))
 
 
-@with_setup(teardown=_teardown_components)
+@with_setup(_teardown_components, _teardown_components)
 def test_load_components():
     loaded = ctx.load_components(set([Implementation1, Implementation2, Implementation4]))
     eq_(len(loaded), 3)
@@ -77,8 +77,9 @@ def test_load_components():
     eq_(len(ctx.get_implementations(Interface2)), 2)
 
 
-@with_setup(_setup_components)
+@with_setup(_teardown_components, _teardown_components)
 def test_unload_components():
+    _setup_components()
     _comps = (Interface1, Interface2)
     ctx.unload_components(_comps)
     for comp in _comps:

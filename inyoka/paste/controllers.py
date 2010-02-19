@@ -62,8 +62,8 @@ class PasteController(IController):
     @templated('paste/browse.html')
     def browse_pastes(self, request, page):
         query = Entry.query
-        pagination = URLPagination(query, page)
+        pagination = URLPagination(query, page=page)
         return {
-            'pastes': pagination.query,
-            'pagination': pagination.buttons(),
+            'pastes': pagination.get_objects(),
+            'pagination': pagination,
         }

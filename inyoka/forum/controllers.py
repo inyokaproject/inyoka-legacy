@@ -72,13 +72,13 @@ class ForumController(IController):
             query = query.order_by(Question.date_active.desc())
 
         # Paginate results
-        pagination = URLPagination(query, page)
+        pagination = URLPagination(query, page=page)
         return {
             'forum': forum,
             'tags': tags or [],
-            'questions': pagination.query,
+            'questions': pagination.get_objects(),
             'sort': sort,
-            'pagination': pagination.buttons()
+            'pagination': pagination
         }
 
     @view('question')
@@ -90,7 +90,7 @@ class ForumController(IController):
             answer_query = answer_query.order_by(Answer.date_answered.desc())
         elif sort == 'oldest':
             answer_query = answer_query.order_by(Answer.date_answered)
-        pagination = URLPagination(answer_query, page)
+        pagination = URLPagination(answer_query, page=page)
 
         action = request.args.get('action')
         if action in ('vote-up', 'vote-down'):
@@ -119,9 +119,9 @@ class ForumController(IController):
         return {
             'sort': sort,
             'question': question,
-            'answers': pagination.query,
+            'answers': pagination.get_objects(),
             'form': form.as_widget(),
-            'pagination': pagination.buttons()
+            'pagination': pagination
         }
 
     @view('ask')

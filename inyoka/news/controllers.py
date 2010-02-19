@@ -65,26 +65,20 @@ class NewsController(IController):
         category = None
         if year and month:
             articles = Article.query.by_date(year, month)
-            link = {'year': year, 'month': month}
         elif cslug:
             category = Category.query.filter_by(slug=cslug).one()
             articles = category.articles
-            link = {'cslug': cslug}
         else:
             articles = Article.query
-            link = {}
 
         #TODO: add ACL for public articles
-
-        link = href('news/index', **link)
-
         articles = articles.order_by('-updated')
 
-        pagination = URLPagination(articles, page, link)
+        pagination = URLPagination(articles, page=page, per_page=10)
 
         return {
-            'articles':      pagination.query,
-            'pagination':    pagination.buttons(),
+            'articles':      pagination.get_objects(),
+            'pagination':    pagination,
             'category':      category
         }
 

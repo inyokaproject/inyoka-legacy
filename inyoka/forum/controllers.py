@@ -111,7 +111,7 @@ class ForumController(IController):
                 text=form.data['text']
             )
             # XXX: Do this automatically (maybe with an session extension)
-            question.date_active = max(question.date_active, answer.date_answered)
+            #question.date_active = max(question.date_active, answer.date_answered)
             db.session.add(answer)
             db.session.commit()
             return redirect(href(question))

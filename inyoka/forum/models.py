@@ -30,6 +30,21 @@ class QuestionMapperExtension(db.MapperExtension):
             instance.date_active = instance.date_asked
 
 
+class QuestionAnswersExtension(db.AttributeExtension):
+    
+    def append(self, state, answer, initiator):
+        question = state.obj()
+        print 'date_active updated'
+        question.date_active = max(question.date_active, answer.date_answered)
+        return answer
+    
+    def remove(self, state, value, initiator):
+        pass
+
+    def set(self, state, value, oldvalue, initiator):
+        return value
+
+
 question_tag = db.Table('forum_question_tag', db.metadata,
     db.Column('question_id', db.Integer, db.ForeignKey('forum_question.id')),
     db.Column('tag_id', db.Integer, db.ForeignKey('forum_tag.id'))
@@ -119,6 +134,8 @@ class Question(db.Model):
     date_asked = db.Column(db.DateTime, nullable=False)
     date_active = db.Column(db.DateTime, nullable=False)
     
+    answers = db.relation('Answer', backref='question',
+            extension=QuestionAnswersExtension)
     tags = db.relation('Tag', secondary=question_tag, backref='questions')
     author = db.relation('User', backref='questions')
     votes = db.relation('Vote', primaryjoin=db.and_(
@@ -152,7 +169,6 @@ class Answer(db.Model):
     date_answered = db.Column(db.DateTime, nullable=False)
     text = db.Column(db.Text, nullable=False)
 
-    question = db.relation('Question', backref='answers')
     author = db.relation('User', backref='answers')
 
 

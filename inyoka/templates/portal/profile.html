@@ -6,7 +6,7 @@
 <ul>
 {% for field in fields %}
   {# {{ field }} is just for now… #}
-  <li>{{ field }}: {{ user[field] }}</li>
+  <li>{{ field }}: {{ profile[field] }}</li>
 {% endfor %}
 </ul>
 {% if user == request.user %}<a href="{{ href('portal/profile_edit') }}">{{ _('Edit Profile') }}</a>{% endif %}

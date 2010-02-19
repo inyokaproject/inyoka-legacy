@@ -78,7 +78,7 @@ class Tag(db.Model):
         return self.name
     
     def get_url_values(self):
-       return 'forum/questions', {'tags': self.name} 
+       return 'forum/questions', {'tags': self.name}
 
        
 class Forum(db.Model):

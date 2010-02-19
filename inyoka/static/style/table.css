@@ -20,3 +20,7 @@ tr:nth-child(odd) {
 tr:nth-child(even) {
   background-color: #ffffff;
 }
+
+.highlightedtable td.linenos {
+  width: 0.5em;
+}

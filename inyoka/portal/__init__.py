@@ -10,12 +10,13 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Interface
-from inyoka.core import auth
 from inyoka.core.context import ctx
-from inyoka.core.database import IModelPropertyProvider
+from inyoka.core.database import IModelPropertyProvider, db
+from inyoka.portal.models import UserProfile
 
+# TODO: move interfaces into interfaces.py and implementations into api.py?
 class IUserProfileExtender(IModelPropertyProvider, Interface):
-    model = auth.User
+    model = UserProfile
 
     @classmethod
     def get_profile_names(cls, only_editable=False):
@@ -23,3 +24,9 @@ class IUserProfileExtender(IModelPropertyProvider, Interface):
         for imp in ctx.get_implementations(cls):
             fields += imp.properties.keys()
         return fields
+
+class BasicProfile(IUserProfileExtender):
+    properties = {
+        'real_name': db.Column(db.String(200), nullable=False, default=''),
+        'website': db.Column(db.String(200), nullable=False, default=''),
+    }

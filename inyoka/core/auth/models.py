@@ -35,7 +35,6 @@ class UserQuery(db.Query):
 
 class User(db.Model, SerializableObject):
     __tablename__ = 'core_user'
-    __extendable__ = True
 
     query = db.session.query_property(UserQuery)
 

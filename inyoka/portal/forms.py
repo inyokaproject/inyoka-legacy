@@ -13,19 +13,28 @@ from inyoka.core.database import db
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.i18n import _
 from inyoka.portal import IUserProfileExtender
+from inyoka.portal.models import UserProfile
 
-class ProfileForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.user = user = kwargs.pop('user')
-        self.profile_fields = fields = IUserProfileExtender.get_profile_names()
-        kwargs['initial'] = model_to_dict(user, fields=fields)
-        super(ProfileForm, self).__init__(*args, **kwargs)
-        for field in fields:
-            self.add_field(field, forms.TextField(field, max_length=255,
-                                                  required=True))
+# Eks ;)
+def get_profile_form():
+    class ProfileForm(forms.Form):
+        def __init__(self, *args, **kwargs):
+            self.profile = profile = kwargs.pop('profile')
+            if profile is not None:
+                profile_fields = IUserProfileExtender.get_profile_names()
+                kwargs['initial'] = model_to_dict(profile, fields=profile_fields)
+            super(ProfileForm, self).__init__(*args, **kwargs)
 
-    def save(self, commit=True):
-        user = update_model(self.user, self, self.profile_fields)
-        if commit:
-            db.session.commit()
-        return user
+        def save(self, commit=True):
+            profile = UserProfile() if self.profile is None else self.profile
+            profile_fields = IUserProfileExtender.get_profile_names()
+            profile = update_model(profile, self, profile_fields)
+            if commit:
+                db.session.commit()
+            return profile
+
+
+    for field in IUserProfileExtender.get_profile_names():
+        ProfileForm.fields[field] = forms.TextField(field, max_length=255, required=True)
+
+    return ProfileForm

@@ -13,8 +13,10 @@ from inyoka.core.api import IController, Rule, view, Response, \
 from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User
 from inyoka.core.context import ctx
+from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.portal import forms, IUserProfileExtender
+from inyoka.portal.models import UserProfile
 
 
 class PortalController(IController):
@@ -34,10 +36,14 @@ class PortalController(IController):
     @view
     @templated('portal/profile_edit.html')
     def profile_edit(self, request):
-        form = forms.ProfileForm(user=request.user)
+        profile = UserProfile.query.filter_by(user_id=request.user.id).first()
+        form = forms.get_profile_form()(profile=profile)
+
         if request.method == 'POST' and form.validate(request.form):
             form.save()
             request.flash(_(u'Profile saved'), True)
+
+        print form.as_widget().hidden_fields
         return {'form':form.as_widget()}
 
     @view
@@ -54,8 +60,11 @@ class PortalController(IController):
     @view
     @templated('portal/profile.html')
     def profile(self, request, username):
+        user, profile = db.session.query(User, UserProfile).outerjoin(UserProfile).\
+                            filter(User.username==username).one()
         data = {
-            'user': User.query.get(username),
+            'user': user,
+            'profile': profile,
             'fields': IUserProfileExtender.get_profile_names(),
         }
         return data

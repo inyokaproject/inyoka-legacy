@@ -12,12 +12,10 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import redirect
 from bureaucracy.forms import *
 from bureaucracy import csrf, exceptions, recaptcha, redirects
 
 from inyoka.i18n import get_translations, lazy_gettext
-from inyoka.core.http import redirect_to
 from inyoka.core.context import local, ctx
 from inyoka.utils.datastructures import _missing
 
@@ -26,6 +24,9 @@ class Form(FormBase):
     """A somewhat extended base form to include our
     i18n mechanisms as well as other things like sessions and such stuff.
     """
+
+    # Until I resolved that redirect_tracking in bureaucracy
+    redirect_tracking = False
 
     recaptcha_public_key = ctx.cfg['recaptcha.public_key']
     recaptcha_private_key = ctx.cfg['recaptcha.private_key']
@@ -50,10 +51,11 @@ class Form(FormBase):
         return request.current_url if request is not None else ''
 
     def _redirect_to_url(self, url):
-        return redirect(url)
+        return redirect_(url)
 
     def _resolve_url(self, args, kwargs):
-        return redirect_to(*args, **kwargs)
+        assert len(args) == 1 # TODO
+        return href(args[0], **kwargs)
 
     def _get_session(self):
         request = self._lookup_request_info()
@@ -62,10 +64,6 @@ class Form(FormBase):
     def _autodiscover_data(self):
         request = self._lookup_request_info()
         return request.form
-
-    # until bureaucracy has a way to do this…
-    def add_field(self, key, field):
-        self.fields[key] = field._bind(self, {})
 
 
 class ModelField(Field):

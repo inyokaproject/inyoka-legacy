@@ -10,7 +10,7 @@
 
     The dispatching system is wrapped by :class:`~inyoka.ApplicationContext`.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from time import time
@@ -23,6 +23,7 @@ from inyoka.core.api import db, ctx, logger, IController, Request, \
 from inyoka.core.context import local, local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
+from inyoka.utils.http import notfound_with_debug
 
 
 
@@ -106,12 +107,21 @@ class RequestDispatcher(object):
         # dispatch the request if not already done by some middleware
 
         try:
-            rule, args = urls.match(request.path, return_rule=True)
+            try:
+                rule, args = urls.match(request.path, return_rule=True)
+            except NotFound:
+                if ctx.cfg['debug']:
+                    raise notfound_with_debug(urls)
+                else:
+                    raise
+
             request.endpoint = rule.endpoint
+
             try:
                 response = self.get_view(rule.endpoint)(request, **args)
             except db.NoResultFound:
                 raise NotFound()
+
         except HTTPException, err:
             response = err.get_response(request.environ)
 

@@ -7,6 +7,9 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
 from inyoka.core.api import db
 
 
@@ -20,10 +23,10 @@ def create_test_users():
 
     # some crazy users
     users = {
-        'apollonier':       (u'apollonier@crazynickname.com', u'rocket!'),
-        'tux der große':    (u'tuxi@grossi.de', u'pinguin'),
-        'quaki':            (u'ente@teich.zo', u'fluss'),
-        'dummuser':         (u'dumm@user.co', u'dumm?')
+        u'apollonier':       (u'apollonier@crazynickname.com', u'rocket!'),
+        u'tux der große':    (u'tuxi@grossi.de', u'pinguin'),
+        u'quaki':            (u'ente@teich.zo', u'fluss'),
+        u'dummuser':         (u'dumm@user.co', u'dumm?')
     }
     for user in users:
         u = User(user, *users[user])

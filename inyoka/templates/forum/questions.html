@@ -75,24 +75,21 @@
       {%- endtrans %}
     </div>
   </div>
+  
+  <div class="author">
+    asked <strong>{{ question.date_asked|timedelta }}</strong>
+    by <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
+  </div>
 
   <div class="summary">
     <h2><a href="{{ href(question) }}">{{ question.title|e }}</a></h2>
 
-    <p>{{ question.summary|e }}</p>
-
-<div class="author">
-asked <strong>{{ question.date_asked|timedelta }}</strong><br />
-<a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
-</div>
-
-    <p>
+    <ul class="tags">
       {% for tag in question.tags %}
-      <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+      <li><a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a></li>
       {% endfor %}
-    </p>
+    </ul>
 
-    <br style="clear: both;" />
   </div>
 </div>
 {% else %}

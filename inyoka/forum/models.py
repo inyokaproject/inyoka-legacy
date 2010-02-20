@@ -15,7 +15,9 @@ from inyoka.core.auth.models import User
 from inyoka.utils.text import gen_ascii_slug
 import re
 
+
 tag_re = re.compile(r'[\w-]{2,20}')
+
 
 class QuestionMapperExtension(db.MapperExtension):
     """This MapperExtension ensures that questions are
@@ -51,6 +53,15 @@ class QuestionVotesExtension(db.AttributeExtension):
         question.score = Question.score - vote.score
 
 
+class ForumMapperExtension(db.MapperExtension):
+    """This MapperExtension ensures that forums are slugified properly."""
+
+    def before_insert(self, mapper, connection, instance):
+        instance.slug = db.find_next_increment(
+            Forum.slug, gen_ascii_slug(instance.name)
+        )
+
+
 question_tag = db.Table('forum_question_tag', db.metadata,
     db.Column('question_id', db.Integer, db.ForeignKey('forum_question.id')),
     db.Column('tag_id', db.Integer, db.ForeignKey('forum_tag.id'))
@@ -83,6 +94,7 @@ class Tag(db.Model):
 
 class Forum(db.Model):
     __tablename__ = 'forum_forum'
+    __mapper_args__ = {'extension': ForumMapperExtension()}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -149,8 +161,8 @@ class Question(db.Model):
     sticky = db.Column(db.Boolean, default=False, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     text = db.Column(db.Text, nullable=False)
-    date_asked = db.Column(db.DateTime, nullable=False)
-    date_active = db.Column(db.DateTime, nullable=False)
+    date_asked = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_active = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     score = db.Column(db.Integer, nullable=False, default=0)
 
     answers = db.relation('Answer', backref='question',
@@ -182,7 +194,7 @@ class Answer(db.Model):
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id),
             nullable=False, index=True)
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
-    date_answered = db.Column(db.DateTime, nullable=False)
+    date_answered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     text = db.Column(db.Text, nullable=False)
 
     author = db.relation('User', backref='answers')

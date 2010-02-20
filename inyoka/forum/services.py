@@ -26,5 +26,4 @@ class ForumServiceController(IServiceProvider):
             tags = Tag.query.all()[:10]
         else:
             tags = Tag.query.filter(Tag.name.startswith(q))[:10]
-        return list({'id': t.name, 'name': t.name} for t in tags)
-
+        return tags

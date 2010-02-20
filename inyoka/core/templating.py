@@ -147,5 +147,3 @@ class InyokaEnvironment(Environment):
 
 
 jinja_env = InyokaEnvironment()
-
-

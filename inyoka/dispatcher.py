@@ -171,7 +171,7 @@ class RequestDispatcher(object):
 
     def __call__(self, environ, start_response):
         """The main dispatching interface of the Inyoka WSGI application.
-        
+
         You shall not (never ever) access stuff like the db-session and locals
         in outer WSGI middlewares.
         """

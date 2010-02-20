@@ -48,14 +48,6 @@ class Category(db.Model):
     name = db.Column(db.String(100), nullable=False)
     slug = db.Column(db.String(100), nullable=False, unique=True)
 
-    def __repr__(self):
-        if self.id is None:
-            return '<Category [orphan] (%s)>' % self.slug
-        return '<Category #%d (%s)>' % (
-            self.id,
-            self.slug,
-        )
-
     def __unicode__(self):
         return self.name
 
@@ -65,6 +57,48 @@ class Category(db.Model):
             'delete': 'admin/news/category_delete',
         }
         return values[action], {'slug': self.slug}
+
+
+class CommentMapperExtension(db.MapperExtension):
+    def before_insert(self, mapper, connection, instance):
+        self.before_update(mapper, connection, instance)
+
+    def before_update(self, mapper, connection, instance):
+        context = markup.RenderContext(ctx.current_request)
+        node = markup.parse(instance.text)
+        instance.rendered_text = node.render(context, 'html')
+
+
+class CommentCounterExtension(db.AttributeExtension):
+
+    def append(self, state, value, initiator):
+        instance = state.obj()
+        instance.comment_count += 1
+        return value
+
+    def remove(self, state, value, initiator):
+        instance = state.obj()
+        instance._comment_count -= 1
+
+    def set(self, state, value, oldvalue, initiator):
+        return value
+
+
+class Comment(db.Model):
+    __tablename__ = 'news_comment'
+    __mapper_args__ = {'extension': CommentMapperExtension()}
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    deleted = db.Column(db.Boolean, nullable=False, default=False)
+    #TODO: do we really need the rendered text in the database?
+    rendered_text = db.Column(db.Text, nullable=False)
+
+    author_id = db.Column(db.Integer, db.ForeignKey(auth.User.id))
+    author = db.relation(auth.User, backref=db.backref('comments',
+        lazy='dynamic'))
+    article_id = db.Column(db.Integer, db.ForeignKey('news_article.id'))
 
 
 class ArticleQuery(db.Query):
@@ -109,12 +143,21 @@ class Article(db.Model):
     intro = db.Column(db.String)
     text = db.Column(db.String)
     public = db.Column(db.Boolean)
+    comment_count = db.Column(db.Integer, default=0)
+    comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
     category_id = db.Column(db.ForeignKey(Category.id), nullable=False)
     category = db.relation(Category,
         backref=db.backref('articles', lazy='dynamic'))
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
-    author = db.relation(auth.User)
+    author = db.relation(auth.User,
+        backref=db.backref('articles', lazy='dynamic'))
+    comments = db.relation(Comment, backref=db.backref('article', lazy=True),
+        primaryjoin=id==Comment.article_id,
+        order_by=[db.asc(Comment.pub_date)],
+        lazy='dynamic',
+        cascade='all, delete, delete-orphan',
+        extension=CommentCounterExtension())
 
     def _render(self, text, key):
         """Render a text that belongs to this Article to HTML"""
@@ -157,5 +200,6 @@ class Article(db.Model):
         )
 
 
+
 class NewsSchemaController(db.ISchemaController):
-    models = [Category, Article]
+    models = [Category, Article, Comment]

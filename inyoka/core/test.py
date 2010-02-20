@@ -285,7 +285,7 @@ def fixture(model, _callback=None, **kwargs):
     def onload():
         data = {}
         if _callback is not None:
-            data = _callback()
+            data = _callback if isinstance(_callback, dict) else _callback()
         kwargs.update(data)
         table = model.__table__
         names = [col for col in kwargs.keys()]

@@ -33,10 +33,10 @@ class ForumController(IController):
 
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
-        
+
         Rule('/ask/', endpoint='ask'),
         Rule('/forum/<string:forum>/ask/', endpoint='ask'),
-        
+
         Rule('/get_tags/', endpoint='get_tags'),
     ]
 
@@ -64,7 +64,7 @@ class ForumController(IController):
             query = query.filter(db.and_(
                         Question.id == question_tag.c.question_id,
                         question_tag.c.tag_id.in_(t.id for t in tags)))
-       
+
         # Order by "newest", "active" or "votes"
         if sort == 'newest':
             query = query.order_by(Question.date_asked.desc())
@@ -141,7 +141,7 @@ class ForumController(IController):
 
         form = AskQuestionForm()
         form.data['tags'] = ' '.join(t.name for t in tags)
-        
+
         if request.method == 'POST' and form.validate(request.form):
             question = Question(
                 title=form.data['title'],
@@ -169,4 +169,3 @@ class ForumController(IController):
         else:
             tags = Tag.query.filter(Tag.name.startswith(q))[:10]
         return list({'id': t.name, 'name': t.name} for t in tags)
-

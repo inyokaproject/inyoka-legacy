@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+eb# -*- coding: utf-8 -*-
 """
     inyoka.news.models
     ~~~~~~~~~~~~~~~~~~

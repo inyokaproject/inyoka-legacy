@@ -22,17 +22,50 @@ def create_test_users():
     users = {
         'apollonier':       (u'apollonier@crazynickname.com', u'rocket!'),
         'tux der große':    (u'tuxi@grossi.de', u'pinguin'),
-        'quaki':            (u'ente@teich.zo', u'fluss')
+        'quaki':            (u'ente@teich.zo', u'fluss'),
+        'dummuser':         (u'dumm@user.co', u'dumm?')
     }
     for user in users:
-        u = User(*users[user])
+        u = User(user, *users[user])
         p = UserProfile(user=u)
 
     db.session.commit()
 
 
+def create_forum_test_data():
+    from inyoka.forum.models import Tag, Forum, Question, Answer
+    from inyoka.core.auth.models import User
+    u1 = User.query.filter_by(username='dummuser').first()
+    u2 = User.query.filter_by(username='quaki').first()
+
+    # tags
+    media = Tag(name=u'Media')
+    hardware = Tag(name=u'Hardware & Zeugs')
+
+    # forums
+    support_forum = Forum(name=u'Support', description=u'Supportzeugs')
+    media_forum = Forum(name=u'Media', description=u'Mediazeugs')
+    hardware_forum = Forum(name=u'Hardware', description=u'Hardwarezeugs')
+    support_forum.subforums = [media_forum, hardware_forum]
+
+    db.session.commit()
+
+    # questions
+    q1 = Question(title=u'Mein Banshee geht nicht mehr!',
+        text=u'Tia, steht halt im Titel :-)',
+        author=u1, tags=[media])
+    q2 = Question(title=u'PC putt',
+        text=u'Wenn ihr noch Infos braucht, sagt welche',
+        author=u1, tags=[hardware])
+
+    a1 = Answer(question=q2, author=u2,
+        text=u'Schmeiß ihn weg, hillft definitiv!')
+    db.session.commit()
+
+
+
 def main():
-    funcs = (create_test_users,)
+    funcs = (create_test_users, create_forum_test_data)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

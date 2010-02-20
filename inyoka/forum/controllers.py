@@ -15,7 +15,6 @@ from inyoka.core.api import IController, Rule, view, service, templated, db, \
          redirect, redirect_to, href
 from inyoka.utils.pagination import URLPagination
 from inyoka.core.http import Response
-from datetime import datetime
 
 
 class ForumController(IController):
@@ -113,7 +112,6 @@ class ForumController(IController):
             answer = Answer(
                 author=request.user,
                 question=question,
-                date_answered=datetime.utcnow(),
                 text=form.data['text']
             )
             db.session.add(answer)
@@ -146,7 +144,6 @@ class ForumController(IController):
             question = Question(
                 title=form.data['title'],
                 author=request.user,
-                date_asked=datetime.utcnow(),
                 text=form.data['text'],
                 tags=form.data['tags']
             )

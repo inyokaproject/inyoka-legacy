@@ -27,18 +27,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="561.40731"
-     inkscape:cy="897.31643"
+     inkscape:cx="553.1867"
+     inkscape:cy="1214.8241"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1918"
-     inkscape:window-height="1125"
+     inkscape:window-width="1024"
+     inkscape:window-height="552"
      inkscape:window-x="0"
-     inkscape:window-y="26"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:snap-global="false"
-     showguides="false">
+     showguides="true"
+     inkscape:guide-bbox="true">
     <inkscape:grid
        type="xygrid"
        id="grid3218"
@@ -4009,15 +4010,15 @@
            y="641.18896" /></flowRegion><flowPara
          id="flowPara4208" /></flowRoot>    <path
        style="fill:#90a818;fill-opacity:1;stroke:none"
-       d="M 32.5,-213.63785 C 32.5,-213.63785 409.59654,-244.15819 523.5,-213.63785 C 637.89388,-182.9861 1014.5,-213.63785 1014.5,-213.63785 C 1017.27,-213.63785 1019.5,-211.40785 1019.5,-208.63785 L 1019.5,-136.63785 C 1019.5,-133.86785 1017.27,-131.63785 1014.5,-131.63785 L 32.5,-131.63785 C 29.73,-131.63785 27.5,-133.86785 27.5,-136.63785 L 27.5,-208.63785 C 27.5,-211.40785 29.73,-213.63785 32.5,-213.63785 z"
+       d="m 32.5,-218.63785 c 0,0 377.09654,-30.52034 491,0 114.39388,30.65175 491,0 491,0 2.77,0 5,2.23 5,5 l 0,77 c 0,2.77 -2.23,5 -5,5 l -982,0 c -2.77,0 -5,-2.23 -5,-5 l 0,-77 c 0,-2.77 2.23,-5 5,-5 z"
        id="rect5027"
        sodipodi:nodetypes="czcccccccc" />
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       d="M 27.5,-295.63932 L 27.5,-208.63932 C 27.5,-211.40931 29.73,-213.63932 32.5,-213.63932 C 32.5,-213.63931 409.59654,-244.15966 523.5,-213.63932 C 637.89388,-182.98756 1014.5,-213.63932 1014.5,-213.63932 C 1017.27,-213.63931 1019.5,-211.40932 1019.5,-208.63932 L 1019.5,-295.63932 L 27.5,-295.63932 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;opacity:1"
+       d="m 27.5,-295.63932 0,87 c 0,-2.76999 2.23,-5 5,-5 0,1e-5 195.52715,-14 352,-14 152.47587,0 115.5042,29.35779 312.18833,27.59489 196.68413,-1.7629 317.81167,-13.59489 317.81167,-13.59489 2.77,1e-5 5,2.23 5,5 l 0,-87 -992,0 z"
        id="path9051"
-       sodipodi:nodetypes="ccsscccc"
-       inkscape:export-filename="/home/markus/Dev/inyoka-sandbox/inyoka-sandbox/inyoka/static/img/head.png"
+       sodipodi:nodetypes="ccszzcccc"
+       inkscape:export-filename="/home/christoph/Development/inyokaproject.org/inyoka-sandbox/inyoka/static/img/head.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <g

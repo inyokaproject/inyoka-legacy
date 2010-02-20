@@ -11,6 +11,7 @@
     font-size: .8em;
     text-decoration: none;
     -moz-border-radius: 0.4em;
+    -webkit-border-radius: 0.4em;
 }
 
 #content a.tag:hover {
@@ -64,6 +65,7 @@ div.stats {
     font-size: .75em;
     text-align: center;
     -moz-border-radius: 0.4em;
+    -webkit-border-radius: 0.4em;
 }
 
 div.stats strong {
@@ -83,6 +85,7 @@ div.stats div.status {
     color: #FFFFFF;
     padding: .4em 0;
     -moz-border-radius: 0 0.4em 0.4em 0;
+    -webkit-border-radius: 0 0.4em 0.4em 0;
     float: left;
 }
 
@@ -158,7 +161,7 @@ color: #666;
 }
 
 #content div.question h2 {
-clear: none;
+    clear: none;
 }
 
 #content h2 {

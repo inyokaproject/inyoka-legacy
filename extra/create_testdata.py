@@ -44,12 +44,14 @@ def create_forum_test_data():
 
     # tags
     media = Tag(name=u'Media')
-    hardware = Tag(name=u'Hardware & Zeugs')
+    hardware = Tag(name=u'Hardware')
 
     # forums
     support_forum = Forum(name=u'Support', description=u'Supportzeugs')
-    media_forum = Forum(name=u'Media', description=u'Mediazeugs')
-    hardware_forum = Forum(name=u'Hardware', description=u'Hardwarezeugs')
+    media_forum = Forum(name=u'Media', description=u'Mediazeugs',
+        tags=[media])
+    hardware_forum = Forum(name=u'Hardware', description=u'Hardwarezeugs',
+        tags=[hardware])
     support_forum.subforums = [media_forum, hardware_forum]
 
     db.session.commit()

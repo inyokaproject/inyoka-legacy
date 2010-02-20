@@ -14,25 +14,11 @@ from inyoka.core.api import ctx, db, auth, markup, cache
 from inyoka.utils.text import gen_ascii_slug
 
 
-class CategoryMapperExtension(db.MapperExtension):
-    """This MapperExtension ensures that categories are
-    slugified properly.
-    """
-
-    def before_insert(self, mapper, connection, instance):
-        instance.slug = db.find_next_increment(
-            Category.slug, gen_ascii_slug(instance.name)
-        )
-
-
 class ArticleMapperExtension(db.MapperExtension):
 
     def before_insert(self, mapper, connection, instance):
         if not instance.updated or instance.updated < instance.pub_date:
             instance.updated = instance.pub_date
-        instance.slug = db.find_next_increment(
-            Article.slug, gen_ascii_slug(instance.title)
-        )
 
     def after_update(self, mapper, connection, instance):
         """Cleanup caches"""
@@ -42,7 +28,7 @@ class ArticleMapperExtension(db.MapperExtension):
 
 class Category(db.Model):
     __tablename__ = 'news_category'
-    __mapper_args__ = {'extension': CategoryMapperExtension()}
+    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -132,7 +118,10 @@ class ArticleQuery(db.Query):
 
 class Article(db.Model):
     __tablename__ = 'news_article'
-    __mapper_args__ = {'extension': ArticleMapperExtension()}
+    __mapper_args__ = {
+        'extension': (db.SlugGenerator('slug', 'title'),
+                      ArticleMapperExtension())
+    }
     query = db.session.query_property(ArticleQuery)
 
     id = db.Column(db.Integer, primary_key=True)

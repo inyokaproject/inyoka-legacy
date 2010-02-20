@@ -20,14 +20,8 @@ tag_re = re.compile(r'[\w-]{2,20}')
 
 
 class QuestionMapperExtension(db.MapperExtension):
-    """This MapperExtension ensures that questions are
-    slugified properly.
-    """
 
     def before_insert(self, mapper, connection, instance):
-        instance.slug = db.find_next_increment(
-            Question.slug, gen_ascii_slug(instance.title)
-        )
         if not instance.date_active:
             instance.date_active = instance.date_asked
 
@@ -51,15 +45,6 @@ class QuestionVotesExtension(db.AttributeExtension):
     def remove(self, state, vote, initiator):
         question = state.obj()
         question.score = Question.score - vote.score
-
-
-class ForumMapperExtension(db.MapperExtension):
-    """This MapperExtension ensures that forums are slugified properly."""
-
-    def before_insert(self, mapper, connection, instance):
-        instance.slug = db.find_next_increment(
-            Forum.slug, gen_ascii_slug(instance.name)
-        )
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -95,7 +80,7 @@ class Tag(db.Model):
 
 class Forum(db.Model):
     __tablename__ = 'forum_forum'
-    __mapper_args__ = {'extension': ForumMapperExtension()}
+    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -154,7 +139,10 @@ class Vote(db.Model):
 
 class Question(db.Model):
     __tablename__ = 'forum_question'
-    __mapper_args__ = {'extension': QuestionMapperExtension()}
+    __mapper_args__ = {
+        'extension': (db.SlugGenerator('slug', 'title'),
+                      QuestionMapperExtension())
+    }
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(160), nullable=False)

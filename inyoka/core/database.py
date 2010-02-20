@@ -85,13 +85,14 @@ from sqlalchemy.orm.session import Session as SASession
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
 from sqlalchemy.orm.interfaces import AttributeExtension
+from sqlalchemy.orm.attributes import get_attribute, set_attribute
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta, _declarative_constructor
 from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.utils import flatten_iterator
-from inyoka.utils.text import get_next_increment
+from inyoka.utils.text import get_next_increment, gen_ascii_slug
 
 
 _engine = None
@@ -426,6 +427,24 @@ Model = declarative_base(name='Model', cls=ModelBase,
 ModelBase.query = session.query_property(Query)
 
 
+class SlugGenerator(orm.MapperExtension):
+    """This MapperExtension can generate unique slugs automatically."""
+
+    def __init__(self, slugfield, generate_from, sep=u'/'):
+        if not isinstance(generate_from, (list, tuple)):
+            generate_from = (generate_from,)
+        self.slugfield = slugfield
+        self.generate_from = generate_from
+        self.separator = sep
+
+    def before_insert(self, mapper, connection, instance):
+        fields = [get_attribute(instance, f) for f in self.generate_from]
+        slug = self.separator.join(map(gen_ascii_slug, fields))
+        
+        set_attribute(instance, self.slugfield, find_next_increment(
+                getattr(instance.__class__, self.slugfield), slug))
+ 
+
 def init_db(**kwargs):
     tables = []
 
@@ -462,6 +481,7 @@ def _make_module():
     db.find_next_increment = find_next_increment
     db.Model = Model
     db.Query = Query
+    db.SlugGenerator = SlugGenerator
     db.AttributeExtension = AttributeExtension
     db.NoResultFound = orm.exc.NoResultFound
     db.SQLAlchemyError = exc.SQLAlchemyError

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.news.models
-    ~~~~~~~~~~~~~~~~~~
+    inyoka.forum.models
+    ~~~~~~~~~~~~~~~~~~~
 
-    Database models for the Inyoka Forum application-
+    Database models for the Inyoka Forum application.
 
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -31,7 +31,7 @@ class QuestionMapperExtension(db.MapperExtension):
 
 
 class QuestionAnswersExtension(db.AttributeExtension):
-    
+
     def append(self, state, answer, initiator):
         question = state.obj()
         question.date_active = max(question.date_active, answer.date_answered)
@@ -40,12 +40,12 @@ class QuestionAnswersExtension(db.AttributeExtension):
 
 class QuestionVotesExtension(db.AttributeExtension):
     active_history = True
-    
+
     def append(self, state, vote, initiator):
         question = state.obj()
         question.score = Question.score + vote.score
         return vote
-    
+
     def remove(self, state, vote, initiator):
         question = state.obj()
         question.score = Question.score - vote.score
@@ -76,11 +76,11 @@ class Tag(db.Model):
 
     def __unicode__(self):
         return self.name
-    
-    def get_url_values(self):
-       return 'forum/questions', {'tags': self.name}
 
-       
+    def get_url_values(self):
+        return 'forum/questions', {'tags': self.name}
+
+
 class Forum(db.Model):
     __tablename__ = 'forum_forum'
 
@@ -135,7 +135,7 @@ class Vote(db.Model):
         old = self._score or 0
         self._score = value
         self.question.score = Question.score + (self._score - old)
-    
+
     score = property(lambda self: self._score, set_score)
 
 
@@ -152,7 +152,7 @@ class Question(db.Model):
     date_asked = db.Column(db.DateTime, nullable=False)
     date_active = db.Column(db.DateTime, nullable=False)
     score = db.Column(db.Integer, nullable=False, default=0)
-    
+
     answers = db.relation('Answer', backref='question',
             extension=QuestionAnswersExtension())
     tags = db.relation('Tag', secondary=question_tag, backref='questions')

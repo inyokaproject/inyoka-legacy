@@ -57,7 +57,6 @@ class ForumAdminProvider(IAdminProvider):
                     description=form.data['description'],
                     tags=form.data['tags']
                 )
-                db.session.add(forum)
             db.session.commit()
             return redirect_to('admin/forum/index')
 

@@ -102,7 +102,6 @@ class ForumController(IController):
             if not vote:
                 vote = Vote(question=question, answer=None,
                         user=request.user, score=score)
-                db.session.add(vote)
             else:
                 vote.score = score
             db.session.commit()
@@ -114,7 +113,6 @@ class ForumController(IController):
                 question=question,
                 text=form.data['text']
             )
-            db.session.add(answer)
             db.session.commit()
             return redirect(href(question))
 
@@ -147,7 +145,6 @@ class ForumController(IController):
                 text=form.data['text'],
                 tags=form.data['tags']
             )
-            db.session.add(question)
             db.session.commit()
             return redirect_to(question)
 

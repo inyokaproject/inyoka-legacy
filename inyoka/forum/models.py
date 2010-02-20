@@ -84,6 +84,7 @@ class Tag(db.Model):
         if not tag_re.match(name):
             raise ValueErro('Invalid tag name "%s"' % name)
         self.name = name
+        db.session.add(self)
 
     def __unicode__(self):
         return self.name

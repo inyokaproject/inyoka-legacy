@@ -1,14 +1,21 @@
+#content ul.tags li {
+  display: inline;
+  line-height: 1.6em;
+  margin: 0;
+}
+
 #content a.tag {
-    background: #d0efa0;
+    background: #D5E19D;
     color: #304800;
     padding: .2em .5em;
-    font-size: .9em;
+    font-size: .8em;
     text-decoration: none;
+    -moz-border-radius: 0.4em;
 }
 
 #content a.tag:hover {
     background: #304800;
-    color: #d0efa0;
+    color: #D5E19D;
 }
 
 #content p {
@@ -16,7 +23,7 @@
 }
 
 div.question {
-    border-bottom: 1px dashed #666;
+  margin-bottom: 1em;
 }
 
 #content h1 {
@@ -26,29 +33,37 @@ div.question {
 
 #content h2 {
     clear: left;
-    margin: .5em 0 .5em;
     font-size: 1.15em;
+    color: #90A818;
+}
+
+#content h2 a {
+    color: #90A818;
+    text-decoration: none;
+}
+
+#content h2 a:hover {
+    text-decoration: underline;
 }
 
 div.author {
     background: #dedede;
-    padding: .4em;
-    font-size: .9em;
-    margin-bottom: .5em;
+    padding: 0.25em 0.4em;
+    font-size: .8em;
     float: right;
-    width: 14em;
+    -moz-border-radius: 0.4em;
 }
 
 div.summary {
-    margin-left: 4.5em;
+    margin-left: 8.5em;
 }
 
 div.stats {
-    width: 5em;
     background: #dedede;
     float: left;
     font-size: .75em;
     text-align: center;
+    -moz-border-radius: 0.4em;
 }
 
 div.stats strong {
@@ -57,15 +72,18 @@ div.stats strong {
 }
 
 div.stats div.votes {
-    font-size: 1.05em;
     padding: .2em 0;
+    width: 5em;
+    float: left;
 }
 
 div.stats div.status {
-    background: #75845c;
-    margin: .4em;
-    font-size: .9em;
+    width: 5em;
+    background: #999999;
+    color: #FFFFFF;
     padding: .4em 0;
+    -moz-border-radius: 0 0.4em 0.4em 0;
+    float: left;
 }
 
 div.stats div.status.unanswered {

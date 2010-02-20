@@ -9,7 +9,7 @@
       <h3 class="title"><a href="{{ href(article) }}">{{ article.title|e }}</a></h3>
       <div class="text">{{ article.rendered_intro }}</div>
       <p class="meta">
-        {% trans author_url=href('portal/profile', username=article.author.username), author_name=article.author.username|e,
+        {% trans author_url=href(article.author.profile), author_name=article.author.username|e,
                  article_published=article.pub_date|datetimeformat -%}
         written by <a href="{{ author_url }}">{{ author_name }}</a>
         {{ article_published }}

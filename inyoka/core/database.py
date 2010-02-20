@@ -442,9 +442,12 @@ def init_db(**kwargs):
         metadata.create_all(**kwargs)
         # TODO: YES ugly, but for now…
         from inyoka.core.auth import models as amodels
+        from inyoka.portal.models import UserProfile
         anon = amodels.User(u'anonymous', u'', u'')
+        anon_profile = UserProfile(user=anon)
         admin = amodels.User(u'admin', u'root@localhost', u'default')
-        session.add_all((anon, admin))
+        admin_profile = UserProfile(user=admin)
+        session.add_all((anon, admin, anon_profile, admin_profile))
         session.commit()
 
 

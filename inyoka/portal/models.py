@@ -11,12 +11,22 @@
 from inyoka.core import auth
 from inyoka.core.database import db
 
+
 class UserProfile(db.Model):
     __tablename__ = 'portal_userprofile'
     __extendable__ = True
 
     user_id = db.Column(db.ForeignKey(auth.User.id), primary_key=True)
-    user = db.relation(auth.User, backref='profile')
+    user = db.relation(auth.User, backref=db.backref(
+        'profile', uselist=False))
+
+    def get_url_values(self, action='view'):
+        values = {
+            'view':     ('portal/profile', {'username': self.user.username}),
+            'edit':     ('portal/profile_edit', {}),
+        }
+
+        return values[action][0], values[action][1]
 
 
 class ProfileSchemaController(db.ISchemaController):

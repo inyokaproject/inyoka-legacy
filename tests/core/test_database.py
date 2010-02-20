@@ -21,8 +21,18 @@ class Category(db.Model):
     slug = db.Column(db.String(100), unique=True, nullable=False)
 
 
+class SlugGeneratorTestModel(db.Model):
+    __tablename__ = '_test_database_slug_generator'
+    __mapper_args__ = {'extension': db.SlugGenerator('slug', ('name', 'title'))}
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    title = db.Column(db.String(100), nullable=True)
+    slug = db.Column(db.String(100), nullable=False, unique=True)
+
+
 class DatabaseTestSchemaController(db.ISchemaController):
-    models = [Category]
+    models = [Category, SlugGeneratorTestModel]
 
 
 def test_find_next_increment():
@@ -37,6 +47,19 @@ def test_find_next_increment():
     db.session.commit()
 
     eq_(db.find_next_increment(Category.slug, 'cat'), 'cat3')
+
+
+def test_slug_generator():
+    c1 = SlugGeneratorTestModel(name=u'cat')
+    db.session.commit()
+    eq_(c1.slug, u'cat')
+    c2 = SlugGeneratorTestModel(name=u'cat')
+    db.session.commit()
+    eq_(c2.slug, u'cat2')
+    c3 = SlugGeneratorTestModel(name=u'cat', title=u'drei')
+    db.session.commit()
+    # multiple fields are joined with `sep`
+    eq_(c3.slug, u'cat/drei')
 
 
 def test_cached_query():

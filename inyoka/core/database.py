@@ -428,7 +428,15 @@ ModelBase.query = session.query_property(Query)
 
 
 class SlugGenerator(orm.MapperExtension):
-    """This MapperExtension can generate unique slugs automatically."""
+    """This MapperExtension can generate unique slugs automatically.
+
+    :param slugfield: The field the slug gets saved to.
+    :param generate_from: Either a string or a list of fields to generate
+                          the slug from.  If a list is applied they are
+                          joined with ``sep``
+    :param sep: The string to join multiple fields.  If only one field applied
+                the seperator is not used.
+    """
 
     def __init__(self, slugfield, generate_from, sep=u'/'):
         if not isinstance(generate_from, (list, tuple)):
@@ -439,11 +447,14 @@ class SlugGenerator(orm.MapperExtension):
 
     def before_insert(self, mapper, connection, instance):
         fields = [get_attribute(instance, f) for f in self.generate_from]
+        # filter out fields with no value as we cannot join them they are
+        # not relevant for slug generation.
+        fields = filter(None, fields)
         slug = self.separator.join(map(gen_ascii_slug, fields))
-        
+
         set_attribute(instance, self.slugfield, find_next_increment(
                 getattr(instance.__class__, self.slugfield), slug))
- 
+
 
 def init_db(**kwargs):
     tables = []
@@ -465,6 +476,7 @@ def init_db(**kwargs):
         anon = User(u'anonymous', u'', u'')
         anon_profile = UserProfile(user=anon)
         db.session.commit()
+
 
 def _make_module():
     db = ModuleType('db')

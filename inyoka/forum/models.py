@@ -11,11 +11,14 @@
 from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
+from inyoka.core.serializer import SerializableObject
 from inyoka.core.auth.models import User
 from inyoka.utils.text import gen_ascii_slug
 import re
 
+
 tag_re = re.compile(r'[\w-]{2,20}')
+
 
 class QuestionMapperExtension(db.MapperExtension):
     """This MapperExtension ensures that questions are
@@ -31,7 +34,7 @@ class QuestionMapperExtension(db.MapperExtension):
 
 
 class QuestionAnswersExtension(db.AttributeExtension):
-    
+
     def append(self, state, answer, initiator):
         question = state.obj()
         question.date_active = max(question.date_active, answer.date_answered)
@@ -40,12 +43,12 @@ class QuestionAnswersExtension(db.AttributeExtension):
 
 class QuestionVotesExtension(db.AttributeExtension):
     active_history = True
-    
+
     def append(self, state, vote, initiator):
         question = state.obj()
         question.score = Question.score + vote.score
         return vote
-    
+
     def remove(self, state, vote, initiator):
         question = state.obj()
         question.score = Question.score - vote.score
@@ -63,24 +66,28 @@ forum_tag = db.Table('forum_forum_tag', db.metadata,
 )
 
 
-class Tag(db.Model):
+class Tag(db.Model, SerializableObject):
     __tablename__ = 'forum_tag'
+
+    # serializer properties
+    object_type = 'forum.tag'
+    public_fields = ('id', 'name')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, index=True, unique=True)
 
     def __init__(self, name):
         if not tag_re.match(name):
-            raise ValueErro('Invalid tag name "%s"' % name)
+            raise ValueError('Invalid tag name "%s"' % name)
         self.name = name
 
     def __unicode__(self):
         return self.name
-    
-    def get_url_values(self):
-       return 'forum/questions', {'tags': self.name} 
 
-       
+    def get_url_values(self):
+        return 'forum/questions', {'tags': self.name}
+
+
 class Forum(db.Model):
     __tablename__ = 'forum_forum'
 
@@ -135,7 +142,7 @@ class Vote(db.Model):
         old = self._score or 0
         self._score = value
         self.question.score = Question.score + (self._score - old)
-    
+
     score = property(lambda self: self._score, set_score)
 
 
@@ -152,7 +159,7 @@ class Question(db.Model):
     date_asked = db.Column(db.DateTime, nullable=False)
     date_active = db.Column(db.DateTime, nullable=False)
     score = db.Column(db.Integer, nullable=False, default=0)
-    
+
     answers = db.relation('Answer', backref='question',
             extension=QuestionAnswersExtension())
     tags = db.relation('Tag', secondary=question_tag, backref='questions')

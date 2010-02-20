@@ -47,4 +47,3 @@ class EditForumForm(forms.Form):
         # setup the possible choices for the parent forum
         self.parent.choices = ['']
         self.parent.choices.extend([(f.id, f.name) for f in Forum.query.all()])
-

@@ -48,14 +48,6 @@ class Category(db.Model):
     name = db.Column(db.String(100), nullable=False)
     slug = db.Column(db.String(100), nullable=False, unique=True)
 
-    def __repr__(self):
-        if self.id is None:
-            return '<Category [orphan] (%s)>' % self.slug
-        return '<Category #%d (%s)>' % (
-            self.id,
-            self.slug,
-        )
-
     def __unicode__(self):
         return self.name
 

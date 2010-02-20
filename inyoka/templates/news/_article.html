@@ -1,0 +1,20 @@
+{% macro render_article(article) -%}
+  <div class="article {{ article.hidden and ' hidden' or '' }}">
+    <h3 class="title"><a href="{{ href(article)|e }}">{{ article.title|e }}</a></h3>
+    <p class="meta">
+      {%- trans author='<a href="%s">%s</a>' %
+        (href(article.author.profile), article.author.display_name|e),
+        pub_date=article.pub_date|datetimeformat|e,
+        edit_link=href(article, action='edit') -%}
+          written by {{ author }}, on {{ pub_date }}.
+          <a href="{{ edit_link }}" class="adminlink">Edit</a>
+      {%- endtrans %}
+    </p>
+    <div class="text">
+      {{ article.intro or article.text }}
+      {% if article.intro -%}
+        <p><a href="{{ href(article)|e }}#extended">{{ _("Read on") }}...</a></p>
+      {%- endif %}
+    </div>
+  </div>
+{%- endmacro %}

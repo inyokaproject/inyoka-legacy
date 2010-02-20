@@ -111,10 +111,13 @@ class Article(db.Model):
     public = db.Column(db.Boolean)
 
     category_id = db.Column(db.ForeignKey(Category.id), nullable=False)
-    category = db.relation(Category,
-        backref=db.backref('articles', lazy='dynamic'))
+    category = db.relation(
+        Category, backref=db.backref('articles', lazy='dynamic')
+    )
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
-    author = db.relation(auth.User)
+    author = db.relation(
+        auth.User, backref=db.backref('articles', lazy='dynamic')
+    )
 
     def _render(self, text, key):
         """Render a text that belongs to this Article to HTML"""

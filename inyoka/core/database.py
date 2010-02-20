@@ -440,16 +440,12 @@ def init_db(**kwargs):
 
     if tables:
         metadata.create_all(**kwargs)
-        # TODO: YES ugly, but for now…
-        from inyoka.core.auth import models as amodels
+        # some essential database things
+        from inyoka.core.auth.models import User
         from inyoka.portal.models import UserProfile
-        anon = amodels.User(u'anonymous', u'', u'')
+        anon = User(u'anonymous', u'', u'')
         anon_profile = UserProfile(user=anon)
-        admin = amodels.User(u'admin', u'root@localhost', u'default')
-        admin_profile = UserProfile(user=admin)
-        session.add_all((anon, admin, anon_profile, admin_profile))
-        session.commit()
-
+        db.session.commit()
 
 def _make_module():
     db = ModuleType('db')
@@ -470,6 +466,7 @@ def _make_module():
     db.NoResultFound = orm.exc.NoResultFound
     db.SQLAlchemyError = exc.SQLAlchemyError
     db.ISchemaController = ISchemaController
+    db.IModelPropertyProvider = IModelPropertyProvider
     return db
 
 sys.modules['inyoka.core.database.db'] = db = _make_module()

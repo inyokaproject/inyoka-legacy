@@ -15,8 +15,7 @@ from inyoka.core.auth.models import User
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
-from inyoka.portal import forms, IUserProfileExtender
-from inyoka.portal.models import UserProfile
+from inyoka.portal.models import UserProfile, IUserProfileExtender
 
 
 class PortalController(IController):

@@ -316,8 +316,8 @@ def _bootstrap():
                 else:
                     raise ModelPropertyProviderGoesWild(
                         u'%r tried to overwrite already existing '
-                        u'properties on %r, aborting'
-                            % (provider, model))
+                        u'properties (%s) on %r, aborting'
+                            % (provider, key, model))
 
 
 _bootstrap()

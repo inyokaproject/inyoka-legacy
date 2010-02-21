@@ -20,8 +20,10 @@ class EditCategoryForm(forms.Form):
 class EditArticleForm(forms.Form):
 
     title = forms.TextField(_(u'Title'), max_length=200, required=True)
-    intro = forms.TextField(_(u'Intro'), widget=forms.widgets.Textarea, required=True)
-    text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea, required=True)
+    intro = forms.TextField(_(u'Intro'), widget=forms.widgets.Textarea,
+                            required=True)
+    text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
+                           required=True)
     public = forms.BooleanField(_(u'Published'))
     category = forms.ModelField(Category, 'name', _(u'Category'),
                                 widget=forms.widgets.SelectBox, required=True)
@@ -31,5 +33,7 @@ class EditArticleForm(forms.Form):
     def __init__(self, *args, **kwargs):
         forms.Form.__init__(self, *args, **kwargs)
         # setup the possible choices for authors and categories
-        self.author.choices = [u.username for u in auth.User.query.autoflush(False).all()]
-        self.category.choices = [c.name for c in Category.query.autoflush(False).all()]
+        authors = [u.username for u in auth.User.query.autoflush(False).all()]
+        categories = [c.name for c in Category.query.autoflush(False).all()]
+        self.author.choices = authors
+        self.category.choices = categories

@@ -314,7 +314,8 @@ class FuturePlugin(errorclass.ErrorClassPlugin):
     name = "future"
 
     future = errorclass.ErrorClass(ExpectedFailure, label='FUTURE', isfailure=False)
-    unexpected = errorclass.ErrorClass(UnexpectedSuccess, label='UNEXPECTED', isfailure=True)
+    unexpected = errorclass.ErrorClass(UnexpectedSuccess, label='UNEXPECTED',
+                                       isfailure=True)
 
 
 #TODO: write unittests

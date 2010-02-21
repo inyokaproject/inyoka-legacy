@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     inyoka.portal.forms
-    ~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~
 
     Formulars for the portal.
 

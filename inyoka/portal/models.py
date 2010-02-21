@@ -16,7 +16,7 @@ class UserProfile(db.Model):
     """The profile for an user.
 
     The user profile contains various information about the user
-    e.g the real name, his website and various contact informations.
+    e.g the real name, his website and various contact information.
 
     This model provides basic fields but is extendable to provide much
     more information if required.

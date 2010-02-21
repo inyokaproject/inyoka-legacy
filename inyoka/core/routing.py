@@ -181,7 +181,8 @@ class IServiceProvider(Interface, UrlMixin):
     def register_service(name, methods=('GET',)):
         """Register a method as a service.
 
-        Note that there is an alias of this method in :func:`~inyoka.core.routing.service`.
+        Note that there is an alias of this method in
+        :func:`~inyoka.core.routing.service`.
 
         :param name:    The name of the service.  Despite of `register_view`
                         this is required.

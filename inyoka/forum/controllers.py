@@ -24,11 +24,14 @@ class ForumController(IController):
         Rule('/', endpoint='index'),
 
         Rule('/questions/', endpoint='questions'),
-        Rule('/questions/<any(newest, active, votes):sort>/', endpoint='questions'),
+        Rule('/questions/<any(newest, active, votes):sort>/',
+             endpoint='questions'),
         Rule('/tagged/<string:tags>/', endpoint='questions'),
-        Rule('/tagged/<string:tags>/<any(newest, active, votes):sort>/', endpoint='questions'),
+        Rule('/tagged/<string:tags>/<any(newest, active, votes):sort>/',
+             endpoint='questions'),
         Rule('/forum/<string:forum>/', endpoint='questions'),
-        Rule('/forum/<string:forum>/<any(newest, active, votes):sort>/', endpoint='questions'),
+        Rule('/forum/<string:forum>/<any(newest, active, votes):sort>/',
+             endpoint='questions'),
 
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),

@@ -6,8 +6,8 @@ Services… Services these days represent an API for other applications beyond
 our own or implement interfaces for our JavaScript code to implement AJAX
 services and such stuff.
 
-Inyoka supports these kind of services in an easy way.  Defining an service or
-API is nearly the same work as define an view controller or an admin provider.
+Inyoka supports these kind of services in an easy way.  To define a service or
+API is nearly the same work as to define a view controller or an admin provider.
 
 Let's assume we have the following model::
 
@@ -16,13 +16,13 @@ Let's assume we have the following model::
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(20), nullable=False, index=True, unique=True)
 
-Now we want to implement an API to return all known tags.  We need define an
+Now we want to implement an API to return all known tags.  We need define a
 :class:`~inyoka.core.routing.IServiceProvider` to do so.  It's API is quite
-the same as you know from an :class:`~inyoka.core.routing.IController` as it's
-nearly the same thing.  Both implement APIs for human beings on the one hand
+the same as you know from :class:`~inyoka.core.routing.IController` as it's
+nearly the same thing.  Both implement APIs, for human beings on the one hand
 and for machines and applications on the other hand.
 
-Before we define such an service provider we preprare our model to be
+Before we define such an service provider we prepare our model to be
 serializable::
 
     class Tag(db.Model, SerializableObject):
@@ -35,11 +35,11 @@ serializable::
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(20), nullable=False, index=True, unique=True)
 
-As you see we just mixed in a new class –
+As you see we just mixed in a new class:
 :class:`~inyoka.core.serializer.SerializableObject`.  This class tells our
-internal serializer what id the model has and what columns to serialize.  This
-is required to have an interface for various serializers.  For now inyoka
-supports some kind of debug serializer that returns HTML, it supports JSON and
+internal serializer what ID the model has and what columns to serialize.  This
+is required to have an interface for various serializers.  For now Inyoka
+supports some kind of debug serializer that returns HTML but it supports JSON and
 XML too.
 
 Now that we made our model serializable we can define the service provider::

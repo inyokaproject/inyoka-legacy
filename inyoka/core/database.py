@@ -285,7 +285,7 @@ class Query(orm.Query):
             raise orm.exc.NoResultFound()
         return result
 
-    def dates(self, key, kind):
+    def dates(self, key, kind, limit=None):
         """Return all dates for which an entry exists in `column`.
 
         For example, dates(Article.pub_date, 'month') returns all months where an
@@ -302,6 +302,8 @@ class Query(orm.Query):
         query = self.session.query(column)
         result = set()
         for date in (x[0] for x in query.all()):
+            if limit is not None and len(result) >= limit:
+                break
             result.add(date.timetuple()[:idx])
         return result
 

@@ -59,7 +59,7 @@ class NewsController(IController):
         Rule('/archive/<int(fixed_digits=4):year>/', endpoint='archive'),
         Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/',
              endpoint='archive'),
-        Rule('/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/'
+        Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/'
              '<int(fixed_digits=2):day>/', endpoint='archive')
     ]
 

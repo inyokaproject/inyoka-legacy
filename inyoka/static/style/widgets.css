@@ -1,0 +1,32 @@
+input.TokenWidget {
+    padding-right: 22px;
+    width: 20em;
+}
+
+
+input.TokenWidget.search {
+    background: url(../img/ajax.gif) right no-repeat;
+}
+
+ul.TokenWidget-results {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #666;
+    list-style: none;
+    font-size: .8em;
+}
+
+#content ul.TokenWidget-results li {
+    list-style: none;
+    margin: 0;
+}
+
+#content ul.TokenWidget-results li.selected {
+    background: #90A818;
+}
+
+#content ul.TokenWidget-results li.meta {
+    font-size: .9em;
+    font-style: italic;
+    color: #333;
+}

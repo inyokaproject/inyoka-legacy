@@ -67,7 +67,7 @@ class Tag(db.Model):
 
     def __init__(self, name):
         if not tag_re.match(name):
-            raise ValueErro('Invalid tag name "%s"' % name)
+            raise ValueError('Invalid tag name "%s"' % name)
         self.name = name
         db.session.add(self)
 

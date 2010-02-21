@@ -1,9 +1,15 @@
 {%- extends 'forum/questions.html' %}
 
-{%- set scripts = ['jquery.tokeninput.js'] + scripts|default([]) %}
+{%- set scripts = ['widgets.js'] + scripts|default([]) %}
+{%- set styles = ['widgets.css'] + styles|default([]) %}
 {% set tab='ask' %}
 
 {%- block questions_body %}
 <h2>Ask a Question</h2>
 {{ form() }}
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#f_tags").TokenWidget("{{ href('forum/get_tags', format='json') }}", {});
+   });
+</script>
 {%- endblock %}

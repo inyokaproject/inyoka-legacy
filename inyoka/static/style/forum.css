@@ -171,3 +171,62 @@ div.vote strong {
 #content p.tags {
     margin-bottom: 1.5em;
 }
+
+input[type="text"],
+textarea {
+    border: 1px solid #666;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #90A818;
+}
+
+#content ul.token-input-list {
+    border: 1px solid #666;
+    list-style: none;
+    margin: 0;
+    width: 400px;
+    padding: 2px;
+}
+
+#content ul.token-input-list li {
+    margin: 0;
+    list-style: none;
+}
+
+#content div.token-input-dropdown {
+    position: absolute;
+    background: #ffa;
+    border: 1px solid #ffa;
+    font-size: .85em;
+    width: 400px;
+    padding: 0 2px;
+}
+
+ul.token-input-list input {
+    border: none;
+    width: 6em;
+}
+
+#content ul.token-input-list li.token-input-token {
+    float: left;
+    background: #D5E19D;
+    color: #304800;
+    padding: .2em .5em;
+    margin-right: .5em;
+    font-size: .8em;
+    text-decoration: none;
+    -moz-border-radius: 0.4em;
+    -webkit-border-radius: 0.4em;
+}
+
+li.token-input-token p {
+    display: inline;
+}
+
+li.token-input-token span {
+    color: #666;
+    margin-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}

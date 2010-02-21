@@ -78,6 +78,7 @@ import sys
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
+from datetime import datetime
 import sqlalchemy
 from sqlalchemy import MetaData, create_engine, Table
 from sqlalchemy import orm, sql, exc
@@ -285,7 +286,7 @@ class Query(orm.Query):
             raise orm.exc.NoResultFound()
         return result
 
-    def dates(self, key, kind, limit=None):
+    def dates(self, key, kind, limit=None, dt_obj=False):
         """Return all dates for which an entry exists in `column`.
 
         For example, dates(Article.pub_date, 'month') returns all months where an
@@ -298,13 +299,14 @@ class Query(orm.Query):
         column = entity.columns[key]
 
         _kinds = ('year', 'month', 'day', 'hour', 'minute', 'second')
-        idx = _kinds.index(kind) + 1
+        idx = (_kinds.index('day') if dt_obj else _kinds.index(kind)) + 1
         query = self.session.query(column)
         result = set()
         for date in (x[0] for x in query.all()):
             if limit is not None and len(result) >= limit:
                 break
-            result.add(date.timetuple()[:idx])
+            value = date.timetuple()[:idx]
+            result.add(datetime(*value) if dt_obj else value)
         return result
 
     def cached(self, key, timeout=None):

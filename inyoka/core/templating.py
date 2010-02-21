@@ -139,7 +139,8 @@ class InyokaEnvironment(Environment):
             jsonencode=simplejson.dumps,
             datetimeformat=l10n.format_datetime,
             dateformat=l10n.format_date,
-            timedelta=l10n.timedeltaformat
+            timedelta=l10n.timedeltaformat,
+            monthformat=l10n.format_month
         )
         self.install_gettext_translations(
             i18n.get_translations()

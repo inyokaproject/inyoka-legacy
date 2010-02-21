@@ -1,5 +1,6 @@
 {%- extends 'base.html' %}
-{% set title_trace = title_trace|default([]) + ['Ikhaya'] %}
+{% set title_trace = title_trace|default([]) + [_('News')] %}
+{% set styles = ['news.css'] + styles|default([]) %}
 
 {% block sidebar %}
   <div class="container">
@@ -7,7 +8,7 @@
     <ul>
       <li><a href="{{ href('news/index') }}">{{ _('Latest Articles') }}</a></li>
       {%- for year, month in archive -%}
-      <li><a href="{{ href('news/index', year=year, month=month) }}">
+      <li><a href="{{ href('news/archive', year=year, month=month) }}">
         {{ months[month] }} {{ year }}
       </a></li>
       {%- endfor %}

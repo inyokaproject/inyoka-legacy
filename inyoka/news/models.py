@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from datetime import datetime, date
+from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
 from inyoka.utils.text import gen_ascii_slug
@@ -37,8 +37,9 @@ class Category(db.Model):
     def __unicode__(self):
         return self.name
 
-    def get_url_values(self, action='edit'):
+    def get_url_values(self, action='view'):
         values = {
+            'view': 'news/index',
             'edit': 'admin/news/category_edit',
             'delete': 'admin/news/category_delete',
         }
@@ -104,15 +105,24 @@ class ArticleQuery(db.Query):
         ))
         return q
 
-    def by_date(self, year, month):
-        if month == 12:
-            next_date = date(year + 1, 1, 1)
-        else:
-            next_date = date(year, month + 1, 1)
-
+    def by_date(self, year, month=None, day=None):
+        """Filter all the items that match the given date."""
+        if month is None:
+            return self.filter(db.and_(
+                Article.pub_date >= datetime(year, 1, 1),
+                Article.pub_date < datetime(year + 1, 1, 1)
+            ))
+        elif day is None:
+            return self.filter(db.and_(
+                Article.pub_date >= datetime(year, month, 1),
+                Article.pub_date < (month == 12 and
+                               datetime(year + 1, 1, 1) or
+                               datetime(year, month + 1, 1))
+            ))
         return self.filter(db.and_(
-            Article.pub_date >= date(year, month, 1),
-            Article.pub_date < next_date
+            Article.pub_date >= datetime(year, month, day),
+            Article.pub_date < datetime(year, month, day) +
+                             timedelta(days=1)
         ))
 
 

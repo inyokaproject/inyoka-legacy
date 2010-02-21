@@ -64,7 +64,7 @@ class CommentCounterExtension(db.AttributeExtension):
 
     def remove(self, state, value, initiator):
         instance = state.obj()
-        instance._comment_count -= 1
+        instance.comment_count -= 1
 
     def set(self, state, value, oldvalue, initiator):
         return value
@@ -132,7 +132,7 @@ class Article(db.Model):
     intro = db.Column(db.String)
     text = db.Column(db.String)
     public = db.Column(db.Boolean)
-    comment_count = db.Column(db.Integer, default=0)
+    comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
     category_id = db.Column(db.ForeignKey(Category.id), nullable=False)

@@ -69,9 +69,31 @@ def create_forum_test_data():
     db.session.commit()
 
 
+def create_news_test_data():
+    from inyoka.core.auth.models import User
+    from inyoka.news.models import Category, Comment, Article
+    u = User.query.filter_by(username=u'quaki').one()
+    u2 = User.query.filter_by(username=u'dummuser').one()
+    u3 = User.query.filter_by(username=u'tux der große').one()
+    cat1 = Category(name=u'Ubuntu')
+    cat2 = Category(name=u'Ubuntuusers')
+
+    a1 = Article(title=u'Mein Ubuntu rockt!',
+        intro=(u'Naja, mein Ubuntu rockt halt einfach und ich bin der'
+               u' Meinung, \ndas das so bleiben sollte!'),
+        text=(u'Und da ihr alle so cool seit und tschaka baam seit'
+              u' verwendet ihr auch alle Ubuntu!!!'),
+        public=True, category=cat1, author=u)
+
+    db.session.commit()
+
+    c1 = Comment(text=u'Find ich nicht so!', author=u2, article=a1)
+    c2 = Comment(text=u'Ach, du spinnst doch!', author=u3, article=a1)
+    db.session.commit()
+
 
 def main():
-    funcs = (create_test_users, create_forum_test_data)
+    funcs = (create_test_users, create_forum_test_data, create_news_test_data)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

@@ -13,7 +13,7 @@
     <div class="text">
       {{ article.intro or article.text }}
       {% if article.intro -%}
-        <p><a href="{{ href(article)|e }}#extended">{{ _("Read on") }}...</a></p>
+        <p class="readon"><a href="{{ href(article)|e }}#extended">{{ _("» Read on") }}...</a></p>
       {%- endif %}
     </div>
   </div>

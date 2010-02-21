@@ -97,18 +97,18 @@ div.answer {
     clear: both;
 }
 
-    div.vote {
-width: 2em;
-text-align: center;
-float: left;
-margin-top: .5em;
-margin-bottom: 1em;
+div.vote {
+  width: 2em;
+  text-align: center;
+  float: left;
+  margin-top: .5em;
+  margin-bottom: 1em;
 }
 
 div.vote strong {
-    display: block;
-    font-size: 1.2em;
-color: #666;
+  display: block;
+  font-size: 1.2em;
+  color: #666;
 }
 
 #content div.question-detail div.summary,

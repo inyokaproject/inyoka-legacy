@@ -51,6 +51,13 @@ def initdb():
     init_db(bind=get_engine())
 
 
+def reset():
+	"""Reset the database and create new test data"""
+	local("rm %s" % _j('database.db'))
+	initdb()
+	local("python %s" % _j('extra/create_testdata.py'))
+
+
 def _action(*args, **kwargs):
     def _inner(app_factory, hostname='localhost', port=5000,
                threaded=False, processes=1):

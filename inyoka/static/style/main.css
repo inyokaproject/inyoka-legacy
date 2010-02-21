@@ -131,11 +131,19 @@ div.pagination strong {
     border: 1px solid #666;
     background: #dedede;
     padding: .2em .5em;
-    margin-right: .5em;
 }
 
 div.pagination span.commata {
     display: none;
+}
+
+ul.errors {
+    list-style: none;
+    margin: 0.5em 0;
+    padding: 0.3em;
+    background-color: #FCF7FB;
+    border: 1px solid red;
+    color: red;
 }
 
 .small {

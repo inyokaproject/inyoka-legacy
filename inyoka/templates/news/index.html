@@ -4,11 +4,9 @@
 
 {% block news_content %}
   {%- if articles %}
-  <ul class="articles">
-    {%- for article in articles %}
-      {{ render_article(article) }}
-    {%- endfor %}
-  </ul>
+  {%- for article in articles %}
+    {{ render_article(article) }}
+  {%- endfor %}
   {%- else %}
   <p>{{ _('Keine Artikel vorhanden.') }}</p>
   {%- endif %}

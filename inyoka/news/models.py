@@ -185,8 +185,9 @@ class Article(db.Model):
         """
         return not self.public or self.pub_date > datetime.utcnow()
 
-    def get_url_values(self, action='edit'):
+    def get_url_values(self, action='view'):
         values = {
+            'view': 'news/detail',
             'edit': 'admin/news/article_edit',
             'delete': 'admin/news/article_delete',
         }

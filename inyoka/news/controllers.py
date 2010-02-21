@@ -85,8 +85,8 @@ class NewsController(IController):
         }
 
     @view('detail')
-    def detail(self, request, date, slug):
-        return Response('this is news entry %r from %s' % (slug, date.strftime('%F')))
+    def detail(self, request, slug):
+        return Response('this is news entry %r' % slug)
 
     @view('archive')
     @templated('news/archive.html', modifier=context_modifier)

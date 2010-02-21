@@ -1,7 +1,14 @@
 (function($) {
 
 
-/* TokenWidget */
+/* TokenWidget
+ *
+ * A widget with autocompletion and the ability to enter multiple values.
+ *
+ * :param url: The callback url which is used for the autocompletion
+ *             (must be a JSON service).
+ * :param options: A dictionary with some additional options.
+ * */
 
 $.fn.TokenWidget = function (url, options) {
     var settings = $.extend({
@@ -61,6 +68,7 @@ $.TokenWidgetImpl = function(input, settings) {
     var timer = null;
     var cache = [];
 
+    /* lookup tokens for the auto completion */
     function search() {
         var tokens = inputbox.val().split(settings.separator);
         var query = tokens[tokens.length-1];
@@ -79,6 +87,7 @@ $.TokenWidgetImpl = function(input, settings) {
         }
     }
 
+    /* display the retrieved data in a list box below the input field */
     function showResults(data, query) {
         results.html('');
         selected = null;
@@ -102,6 +111,7 @@ $.TokenWidgetImpl = function(input, settings) {
         inputbox.removeClass('search');
     }
 
+    /* add a selected item from the results popup to the input field */
     function addItem(value) {
         tokens = inputbox.val().split(settings.separator);
         tokens.splice(tokens.length-1, 1, value);
@@ -109,12 +119,9 @@ $.TokenWidgetImpl = function(input, settings) {
         results.html('').fadeOut();
     }
 
+    /* quote a regular expression */
     function re_quote(str) {
         return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1")
-    }
-
-    function html_escape(str) {
-        return $('<span />').text(str).html();
     }
 };
 

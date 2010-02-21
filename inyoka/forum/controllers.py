@@ -58,7 +58,7 @@ class ForumController(IController):
         # Filter by Forum or Tag (optionally)
         if forum:
             forum = Forum.query.filter_by(slug=forum).first()
-            tags = forum.tags
+            tags = forum.all_tags
         elif tags:
             tags = filter(bool, (Tag.query.filter_by(name=t).one() \
                           for t in tags.split()))

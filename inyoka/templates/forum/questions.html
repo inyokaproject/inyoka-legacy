@@ -11,12 +11,13 @@
     <p><strong>Subforums:</strong>
     {% for subforum in forum.subforums %}
       <a href="{{ href(subforum) }}">{{ subforum.name }}</a>
+      {%- if not loop.last %}, {% endif %}
     {% endfor %}
     </p>
   {% endif %}
 
   <p class="tags">
-  {% for tag in forum.tags %}
+  {% for tag in forum.all_tags %}
     <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
   {% endfor %}
   </p>

@@ -95,6 +95,14 @@ class Forum(db.Model):
             remote_side='Forum.id'))
     tags = db.relation('Tag', secondary=forum_tag, backref='forums')
 
+    @cached_property
+    def all_tags(self):
+        """Return all tags for this forum, including those of the subforums."""
+        tags = list(self.tags)
+        for subforum in self.subforums:
+            tags.extend(subforum.tags)
+        return tags
+
     def get_url_values(self, **kwargs):
         kwargs.update({
             'forum': self.slug

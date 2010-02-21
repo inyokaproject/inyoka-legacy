@@ -43,29 +43,57 @@ def create_forum_test_data():
     u2 = User.query.filter_by(username='quaki').first()
 
     # tags
-    media = Tag(name=u'Media')
-    hardware = Tag(name=u'Hardware')
+    gnome = Tag(u'GNOME')
+    gtk = Tag(u'GTK')
+    kde = Tag(u'KDE')
+    qt = Tag(u'QT')
+    window_manager = Tag(u'Window-Manager')
+    hardware = Tag(u'Hardware')
+    inyoka = Tag(u'Inyoka')
+    audio = Tag(u'Audio')
+    db.session.commit()
 
     # forums
-    support_forum = Forum(name=u'Support', description=u'Supportzeugs')
-    media_forum = Forum(name=u'Media', description=u'Mediazeugs',
-        tags=[media])
-    hardware_forum = Forum(name=u'Hardware', description=u'Hardwarezeugs',
+    inyoka_forum = Forum(
+        name=u'Inyoka Project',
+        description=u'Please tell us our opinion about the new Inyoka!',
+        tags=[inyoka])
+    gnome_forum = Forum(
+        name=u'The GNOME Desktop (Ubuntu)',
+        description=u'Here you can find all GNOME and GTK related questions.',
+        tags=[gnome, gtk])
+    kde_forum = Forum(
+        name=u'KDE Plasma (Kubuntu)',
+        description=u'Everything about KDE, the desktop environment of Kubuntu.',
+        tags=[kde, qt])
+    window_manager_forum = Forum(
+        name=u'Desktop Environments and Window Managers',
+        description=u'Aks everything about GNOME, KDE or any other exotic window manager here',
+        subforums=[gnome_forum, kde_forum],
+        tags=[window_manager])
+    hardware_forum = Forum(
+        name=u'Hardware Problems',
+        description=u'Describe your hardware problems here',
         tags=[hardware])
-    support_forum.subforums = [media_forum, hardware_forum]
-
     db.session.commit()
 
     # questions
-    q1 = Question(title=u'Mein Banshee geht nicht mehr!',
-        text=u'Tia, steht halt im Titel :-)',
-        author=u1, tags=[media])
-    q2 = Question(title=u'PC putt',
-        text=u'Wenn ihr noch Infos braucht, sagt welche',
-        author=u1, tags=[hardware])
-
-    a1 = Answer(question=q2, author=u2,
-        text=u'Schmeiß ihn weg, hillft definitiv!')
+    q1 = Question(
+        title=u'Which deskop environment should I choose?',
+        text=u'Is GNOME or KDE the better choice? What do you think?',
+        author=u1, tags=[gnome, kde])
+    q1a1 = Answer(
+        question=q1,
+        text=u'I use GNOME because I like it.',
+        author=u2)
+    q2 = Question(
+        title=u'Is there a good audio player like Amorok for GNOME?',
+        text=u'I hate the KDE design, so is there any good audio player for GNOME?',
+        author=u1, tags=[gnome, audio])
+    q3 = Question(
+        title=u'What do you like most about Inyoka?',
+        text=u'Please, be honest!',
+        author=u2, tags=[inyoka])
     db.session.commit()
 
 

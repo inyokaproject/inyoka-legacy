@@ -8,6 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import sys
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
@@ -48,8 +49,11 @@ class PortalController(IController):
     @view
     @templated('portal/index.html')
     def index(self, request):
-        return {'called_url': request.current_url,
-                 'link': href('portal/index')}
+        return {
+            'called_url':   request.current_url,
+            'link':         href('portal/index'),
+            'version':      '%d.%d.%d' % sys.version_info[:3],
+        }
 
     @view
     @templated('portal/users.html')

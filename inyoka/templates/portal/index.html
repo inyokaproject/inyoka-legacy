@@ -1,7 +1,16 @@
 {% extends "portal/base.html" %}
 
 {% block content %}
-    this is the portal index page. called URL is: {{ called_url|e }},
-    link is {{ link|e }}.
-    current url is {{ request.current_url|e }}
+<p>
+  This is the portal index page. 
+</p>
+<p>
+  called URL is: {{ called_url|e }},
+  link is {{ link|e }}.
+  current url is {{ request.current_url|e }}
+</p>
+<p>
+  python version: {{ version }}
+</p>
+
 {% endblock %}

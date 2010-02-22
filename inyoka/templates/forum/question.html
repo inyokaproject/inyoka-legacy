@@ -25,6 +25,17 @@
         <img src="{{ href('static', file='img/vote-down.png') }}" alt="vote down" />
       </a>
     {% endif %}
+    <p>
+    {% if vote and vote.favorite %}
+    <a href="{{ href('forum/vote', entry_id=question.id, action='nofavorite') }}">
+        <img src="{{ href('static', file='img/favorite.png') }}" alt="favorite" />
+      </a>
+    {% else %}
+      <a href="{{ href('forum/vote', entry_id=question.id, action='favorite') }}">
+        <img src="{{ href('static', file='img/nofavorite.png') }}" alt="no favorite" />
+      </a>
+    {% endif %}
+    </p>
   </div>
 
   <div class="summary">

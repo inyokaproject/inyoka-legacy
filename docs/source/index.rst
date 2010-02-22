@@ -41,6 +41,15 @@ References
     internationalisation
 
 
+Applications
+------------
+
+.. toctree::
+    :maxdepth: 2
+
+    forum
+
+
 Utilities
 ---------
 

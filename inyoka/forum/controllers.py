@@ -37,7 +37,7 @@ class ForumController(IController):
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
 
-        Rule('/vote/<int:entry_id>/<any(up, down, revoke):action>/',
+        Rule('/vote/<int:entry_id>/<string:action>/',
             endpoint='vote'),
 
         Rule('/ask/', endpoint='ask'),
@@ -143,16 +143,20 @@ class ForumController(IController):
     def vote(self, request, entry_id, action):
         entry = Entry.query.get(entry_id)
         v = Vote.query.filter_by(entry=entry, user=request.user).first()
-        new_score = {
-            'up': 1,
-            'down': -1,
-            'revoke': 0
-        }.get(action)
+        args = {
+            'up':           {'score': +1},
+            'down':         {'score': -1},
+            'revoke':       {'score':  0},
+            'favorite':     {'favorite': True},
+            'nofavorite':   {'favorite': False}
+        }[action]
         if not v:
-            v = Vote(user=request.user, score=new_score)
+            args['score'] = args.get('score', 0)
+            v = Vote(user=request.user, **args)
             v.entry = entry
         else:
-            v.score = new_score
+            for key, a in args.iteritems():
+                setattr(v, key, a)
         db.session.commit()
         return redirect_to(entry)
 

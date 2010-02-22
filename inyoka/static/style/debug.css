@@ -1,29 +1,41 @@
-#html_log {
-  background: #111;
+#htmllog {
+  background: #494949;
   color: #ddd;
   padding: 1em;
   font-size: .8em;
   bottom: 0;
 }
 
-#html_log h1 {
+#htmllog-inner {
+  margin: 0 auto;
+  width: 992px;
+}
+
+#htmllog h1 {
   color: #90A818;
   font-size: 1.6em;
 }
 
-#html_log h2 {
+#htmllog h2 {
   color: #90A818;
   margin: 1em 0 .2em;
 }
 
-#html_log p.message {
+#htmllog pre {
   margin: .2em 1em;
   background: #ddd;
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid #333;
+  color: #222;
+  padding: .2em;
+  white-space: normal;
 }
 
-#html_log a {
+#htmllog a {
   float: right;
   color: #90A818;
+  margin-right: 1em;
+}
+
+#page {
+  margin-bottom: 0;
 }

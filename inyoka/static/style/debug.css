@@ -1,0 +1,29 @@
+#html_log {
+  background: #111;
+  color: #ddd;
+  padding: 1em;
+  font-size: .8em;
+  bottom: 0;
+}
+
+#html_log h1 {
+  color: #90A818;
+  font-size: 1.6em;
+}
+
+#html_log h2 {
+  color: #90A818;
+  margin: 1em 0 .2em;
+}
+
+#html_log p.message {
+  margin: .2em 1em;
+  background: #ddd;
+  border: 1px solid #000;
+  color: #000;
+}
+
+#html_log a {
+  float: right;
+  color: #90A818;
+}

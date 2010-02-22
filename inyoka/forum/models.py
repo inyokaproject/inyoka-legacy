@@ -12,39 +12,10 @@ from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
 from inyoka.core.auth.models import User
-from inyoka.utils.text import gen_ascii_slug
 import re
 
 
 tag_re = re.compile(r'[\w-]{2,20}')
-
-
-class QuestionMapperExtension(db.MapperExtension):
-
-    def before_insert(self, mapper, connection, instance):
-        if not instance.date_active:
-            instance.date_active = instance.date_asked
-
-
-class QuestionAnswersExtension(db.AttributeExtension):
-
-    def append(self, state, answer, initiator):
-        question = state.obj()
-        question.date_active = max(question.date_active, answer.date_answered)
-        return answer
-
-
-class QuestionVotesExtension(db.AttributeExtension):
-    active_history = True
-
-    def append(self, state, vote, initiator):
-        question = state.obj()
-        question.score = Question.score + vote.score
-        return vote
-
-    def remove(self, state, vote, initiator):
-        question = state.obj()
-        question.score = Question.score - vote.score
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -91,9 +62,11 @@ class Forum(db.Model):
     position = db.Column(db.Integer, nullable=False, default=0,
             index=True)
 
-    subforums = db.relation('Forum', backref=db.backref('parent',
-            remote_side='Forum.id'))
-    tags = db.relation('Tag', secondary=forum_tag, backref='forums')
+    subforums = db.relation('Forum',
+            backref=db.backref('parent',remote_side=id),
+            lazy=False, join_depth=1)
+    tags = db.relation('Tag', secondary=forum_tag, backref='forums',
+            lazy=False)
 
     @cached_property
     def all_tags(self):
@@ -110,92 +83,173 @@ class Forum(db.Model):
         return 'forum/questions', kwargs
 
 
-class Vote(db.Model):
-    __tablename__ = 'forum_vote'
-    __table_args__ = (
-            db.UniqueConstraint('question_id', 'answer_id', 'user_id'),
-            # XXX: figure out how to index those columns (same order)
-            {}
-    )
+class EntryVotesExtension(db.AttributeExtension):
 
-    id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey('forum_question.id'),
-            nullable=False)
-    answer_id = db.Column(db.Integer, db.ForeignKey('forum_answer.id'),
-            nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id),
-            nullable=False)
-    _score = db.Column(db.Integer, name='score', nullable=False, default=0)
-    favorite = db.Column(db.Boolean, nullable=False, default=False)
+    def append(self, state, vote, initiator):
+        entry = state.obj()
+        assert vote.score is not None, "vote.score mustn't be null!"
+        entry.score = Entry.score + vote.score
+        return vote
 
-    answer = db.relation('Answer', backref='votes')
-    user = db.relation('User', backref='votes')
-
-    def __init__(self, **kwargs):
-        self._score = kwargs.pop('score', 0)
-        db.Model.__init__(self, **kwargs)
-
-    def set_score(self, value):
-        if not self.question:
-            return
-        old = self._score or 0
-        self._score = value
-        self.question.score = Question.score + (self._score - old)
-
-    score = property(lambda self: self._score, set_score)
+    def remove(self, state, vote, initiator):
+        entry = state.obj()
+        entry.score = Entry.score - vote.score
 
 
-class Question(db.Model):
-    __tablename__ = 'forum_question'
-    __mapper_args__ = {
-        'extension': (db.SlugGenerator('slug', 'title'),
-                      QuestionMapperExtension())
-    }
+class VoteScoreExtension(db.AttributeExtension):
+    active_history = True
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(160), nullable=False)
-    slug = db.Column(db.String(160), nullable=False, index=True)
-    sticky = db.Column(db.Boolean, default=False, nullable=False)
+    def set(self, state, value, oldvalue, initiator):
+        vote = state.obj()
+        if vote.entry is not None:
+            vote.entry.score += -oldvalue + value
+        return value
+
+
+class EntryQuery(db.Query):
+    """Entries can be sorted by their creation date, their last activity or the
+    number of votes they have received."""
+
+    @property
+    def newest(self):
+        """Sort the entries by their creation date."""
+        return self.order_by(Entry.date_created.desc())
+
+    @property
+    def oldest(self):
+        """Sort the entries by their creation date. The oldest entries are
+        returned first."""
+        return self.order_by(Entry.date_created)
+
+    @property
+    def active(self):
+        """Sort the entries by their last activity."""
+        return self.order_by(Entry.date_active.desc())
+
+    @property
+    def votes(self):
+        """Sort the entries by the score that they have received from votes."""
+        return self.order_by(Entry.score.desc(), Entry.date_active.desc())
+
+
+class Entry(db.Model):
+    """The base class of a `Question` or `Answer`, which contains some general
+    information about the author and the creation date, as well as the actual
+    text and the votings."""
+    __tablename__ = 'forum_entry'
+    query = db.session.query_property(EntryQuery)
+
+    entry_id = db.Column(db.Integer, primary_key=True)
+    discriminator = db.Column('type', db.String(12))
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
-    text = db.Column(db.Text, nullable=False)
-    date_asked = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_active = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     score = db.Column(db.Integer, nullable=False, default=0)
+    text = db.Column(db.Text, nullable=False)
 
-    answers = db.relation('Answer', backref='question',
-            extension=QuestionAnswersExtension())
-    tags = db.relation('Tag', secondary=question_tag, backref='questions')
-    author = db.relation('User', backref='questions')
-    votes = db.relation('Vote', primaryjoin=db.and_(
-            Vote.question_id == id,
-            Vote.answer_id == None),
-            extension=QuestionVotesExtension(), backref='question')
+    author = db.relation('User')
+    votes = db.relation('Vote', backref='entry',
+            extension=EntryVotesExtension())
 
-    @cached_property
-    def summary(self):
-        words = self.text.split()[:20]
-        words.append(' ...')
-        return u' '.join(words)
+    __mapper_args__ = {'polymorphic_on': discriminator}
+
+    def get_vote(self, user):
+        return Vote.query.filter_by(user=user, entry=self).first()
+
+
+class QuestionAnswersExtension(db.AttributeExtension):
+
+    def append(self, state, answer, initiator):
+        question = state.obj()
+        question.date_active = max(question.date_active, answer.date_created)
+        return answer
+
+
+class QuestionQuery(EntryQuery):
+    """Adds special filter methods to the `EntryQuery` which are unique to
+    questions."""
+
+    def tagged(self, tags):
+        """Filter questions by tags."""
+        tag_ids = set(t.id for t in tags)
+        return self.filter(db.and_(
+            Question.id == question_tag.c.question_id,
+            question_tag.c.tag_id.in_(tag_ids)))
+
+    def forum(self, forum):
+        """Filter questions by the tags of a forum."""
+        return self.tagged(forum.all_tags)
+
+
+class Question(Entry):
+    """A `Question` is an `Entry` with a title, a slug and several tags."""
+    __tablename__ = 'forum_question'
+    __mapper_args__ = {
+        'extension': db.SlugGenerator('slug', 'title'),
+        'polymorphic_identity': 'question'
+    }
+    query = db.session.query_property(QuestionQuery)
+
+    id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
+    title = db.Column(db.String(160), nullable=False)
+    slug = db.Column(db.String(160), nullable=False, index=True)
+
+    tags = db.relation('Tag', secondary=question_tag, backref='questions',
+            lazy=False)
 
     def get_url_values(self, **kwargs):
+        """Generates an URL for this question."""
+        action = kwargs.get('action')
+        if action == 'vote-up':
+            return 'forum/vote', {'entry_id': self.id, 'action': 'up'}
+        elif action == 'vote-down':
+            return 'forum/vote', {'entry_id': self.id, 'action': 'down'}
         kwargs.update({
             'slug': self.slug
         })
         return 'forum/question', kwargs
 
 
-class Answer(db.Model):
+class Answer(Entry):
     __tablename__ = 'forum_answer'
+    __mapper_args__ = {
+        'polymorphic_identity': 'answer'
+    }
+
+    id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
+
+    question = db.relation(Question,
+            backref=db.backref('answers', extension=QuestionAnswersExtension()),
+            primaryjoin=(question_id == Question.id))
+
+    def get_url_values(self, **kwargs):
+        """Generates an URL for this answer."""
+        kwargs.update({
+            'answer': self.id
+        })
+        return self.question.get_url_values(**kwargs)
+
+
+class Vote(db.Model):
+    """Users are able to vote for the entries in the forum they like.
+    Additionally to the score (-1 or +1) users are able to mark the
+    entry as one of their favorites."""
+    __tablename__ = 'forum_vote'
+    __table_args__ = (db.UniqueConstraint('entry_id', 'user_id'), {})
 
     id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey(Question.id),
-            nullable=False, index=True)
-    author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
-    date_answered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    text = db.Column(db.Text, nullable=False)
+    entry_id = db.Column(db.Integer, db.ForeignKey('forum_entry.entry_id'),
+            nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id),
+            nullable=False)
+    score = db.ColumnProperty(db.Column(db.Integer, nullable=False,
+            default=0), extension=VoteScoreExtension())
+    favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    author = db.relation('User', backref='answers')
+    user = db.relation('User', backref='votes')
 
 
 class ForumSchemaController(db.ISchemaController):
-    models = [Forum, Question, Answer, Tag, Vote, question_tag, forum_tag]
+    models = [Forum, Tag, Vote, question_tag, forum_tag,
+              Entry, Question, Answer]

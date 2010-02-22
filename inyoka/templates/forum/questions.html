@@ -26,7 +26,7 @@
 
 {% elif tags %}
   <h1>Tagged Questions</h1>
- 
+
   <p class="tags">
   {% for tag in tags %}
     <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
@@ -65,7 +65,7 @@
       <strong>{{ votes }}</strong> vote
       {%- pluralize -%}
       <strong>{{ votes }}</strong> votes
-      {%- endtrans %} 
+      {%- endtrans %}
     </div>
 
     <div class="status{% if not question.answers %} unanswered{% endif %}">
@@ -76,9 +76,9 @@
       {%- endtrans %}
     </div>
   </div>
-  
+
   <div class="author">
-    asked <strong>{{ question.date_asked|timedelta }}</strong>
+    asked <strong>{{ question.date_created|timedelta }}</strong>
     by <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
   </div>
 

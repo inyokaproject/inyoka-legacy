@@ -499,6 +499,7 @@ def _make_module():
     db.Query = Query
     db.SlugGenerator = SlugGenerator
     db.AttributeExtension = AttributeExtension
+    db.ColumnProperty = orm.ColumnProperty
     db.NoResultFound = orm.exc.NoResultFound
     db.SQLAlchemyError = exc.SQLAlchemyError
     db.ISchemaController = ISchemaController

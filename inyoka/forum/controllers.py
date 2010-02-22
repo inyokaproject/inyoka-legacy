@@ -9,12 +9,13 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
-         question_tag, forum_tag
+         question_tag, forum_tag, Entry
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
 from inyoka.core.api import IController, Rule, view, service, templated, db, \
          redirect, redirect_to, href
 from inyoka.utils.pagination import URLPagination
 from inyoka.core.http import Response
+from datetime import datetime
 
 
 class ForumController(IController):
@@ -35,6 +36,9 @@ class ForumController(IController):
 
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
+
+        Rule('/vote/<int:entry_id>/<any(up, down, revoke):action>/',
+            endpoint='vote'),
 
         Rule('/ask/', endpoint='ask'),
         Rule('/forum/<string:forum>/ask/', endpoint='ask'),
@@ -58,23 +62,15 @@ class ForumController(IController):
         # Filter by Forum or Tag (optionally)
         if forum:
             forum = Forum.query.filter_by(slug=forum).first()
+            query = query.forum(forum)
             tags = forum.all_tags
         elif tags:
             tags = filter(bool, (Tag.query.filter_by(name=t).one() \
                           for t in tags.split()))
-        if tags:
-            query = query.filter(db.and_(
-                        Question.id == question_tag.c.question_id,
-                        question_tag.c.tag_id.in_(t.id for t in tags)))
+            query = query.tagged(tags)
 
         # Order by "newest", "active" or "votes"
-        if sort == 'newest':
-            query = query.order_by(Question.date_asked.desc())
-        elif sort == 'active':
-            query = query.order_by(Question.date_active.desc())
-        elif sort == 'votes':
-            query = query.order_by([Question.score.desc(),
-                    Question.date_active.desc()])
+        query = getattr(query, sort)
 
         # Paginate results
         pagination = URLPagination(query, page=page)
@@ -91,30 +87,16 @@ class ForumController(IController):
     def question(self, request, slug, sort='votes', page=1):
         question = Question.query.filter_by(slug=slug).one()
         answer_query = Answer.query.filter_by(question=question)
-        if sort == 'newest':
-            answer_query = answer_query.order_by(Answer.date_answered.desc())
-        elif sort == 'oldest':
-            answer_query = answer_query.order_by(Answer.date_answered)
+        answer_query = getattr(answer_query, sort)
         pagination = URLPagination(answer_query, page=page)
-
-        action = request.args.get('action')
-        if action in ('vote-up', 'vote-down'):
-            vote = Vote.query.filter_by(question=question, answer=None,
-                    user=request.user).first()
-            score = (action == 'vote-up' and 1 or -1)
-            if not vote:
-                vote = Vote(question=question, answer=None,
-                        user=request.user, score=score)
-            else:
-                vote.score = score
-            db.session.commit()
 
         form = AnswerQuestionForm()
         if request.method == 'POST' and form.validate(request.form):
             answer = Answer(
                 author=request.user,
                 question=question,
-                text=form.data['text']
+                text=form.data['text'],
+                date_created=datetime.utcnow()
             )
             db.session.commit()
             return redirect(href(question))
@@ -156,6 +138,23 @@ class ForumController(IController):
             'tags': tags,
             'form': form.as_widget()
         }
+
+    @view
+    def vote(self, request, entry_id, action):
+        entry = Entry.query.get(entry_id)
+        v = Vote.query.filter_by(entry=entry, user=request.user).first()
+        new_score = {
+            'up': 1,
+            'down': -1,
+            'revoke': 0
+        }.get(action)
+        if not v:
+            v = Vote(user=request.user, score=new_score)
+            v.entry = entry
+        else:
+            v.score = new_score
+        db.session.commit()
+        return redirect_to(entry)
 
 
     @service('get_tags')

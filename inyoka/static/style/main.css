@@ -45,23 +45,27 @@ body {
 }
 
 #navi a.icon-portal {
-  background: url(../img/icon-portal.png) no-repeat top center;
+  background: url(../img/headericons/portal.png) no-repeat top center;
 }
 
 #navi a.icon-pastebin {
-  background: url(../img/icon-pastebin.png) no-repeat top center;
+  background: url(../img/headericons/pastebin.png) no-repeat top center;
 }
 
 #navi a.icon-news {
-  background: url(../img/icon-news.png) no-repeat top center;
+  background: url(../img/headericons/news.png) no-repeat top center;
 }
 
 #navi a.icon-forum {
-  background: url(../img/icon-forum.png) no-repeat top center;
+  background: url(../img/headericons/forum.png) no-repeat top center;
 }
 
 #navi a.icon-admin {
-  background: url(../img/icon-admin.png) no-repeat top center;
+  background: url(../img/headericons/admin.png) no-repeat top center;
+}
+
+#navi a.icon-wiki {
+  background: url(../img/headericons/wiki.png) no-repeat top center;
 }
 
 #page {
@@ -118,6 +122,52 @@ body {
 #content a {
   color: #304800;
 }
+
+
+#content ul.pagetabs {
+    text-align: right;
+    margin: -2em 0 1em 0;
+    font-weight: bold;
+    border-bottom: 1px solid #666;
+    list-style-type: none;
+    padding: 3px 10px 3px 10px;
+    line-height: normal;
+    font-size: .9em;
+}
+ 
+#content ul.pagetabs li {
+    display: inline;
+    margin: 0;
+}
+
+#content ul.pagetabs li.selected {
+    border-bottom: 1px solid #fff;
+    background-color: #fff;
+}
+
+#content ul.pagetabs li.selected a { 
+    background-color: #fff;
+    color: #000;
+    position: relative;
+    top: 1px;
+    padding-top: 4px;
+}
+
+#content ul.pagetabs li a {
+    padding: 3px 4px;
+    border: 1px solid #666;
+    background-color: #dedede;
+    color: #666;
+    margin-right: 0px;
+    text-decoration: none;
+    border-bottom: none;
+}
+ 
+#content ul.pagetabs a:hover {
+    background: #fff;
+}
+
+
 
 div.pagination {
     margin-top:  1.5em;

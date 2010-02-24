@@ -42,8 +42,8 @@ class HtmlLogHandler(logging.Handler):
                     toggleLog();
                 });
                 """, type='text/javascript'),
-            *records,
-            id_='htmllog-inner'), id_='htmllog'))
+            id_='htmllog-inner'), id_='htmllog'),
+            *records)
 
     def clear(self):
         self.records = []

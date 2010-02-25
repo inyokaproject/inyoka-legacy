@@ -90,7 +90,19 @@ body {
   background-color: #EEEEEE;
   float: left;
   width: 338px;
+  border-bottom: solid 1px #888;
+  margin-bottom: 0.4em;
+  color: #444;
+  padding: 0.5em 0.5em 0.5em 28px;
 }
+
+#page-sidebar h3 {
+  color: #444;
+  text-decoration: bold;
+  font-size: 1.1em;
+  padding-top: 1.1em;
+}
+
 
 #page-introduction {
   background-color: #EEEEEE;

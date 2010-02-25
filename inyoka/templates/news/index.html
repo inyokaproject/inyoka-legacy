@@ -2,7 +2,7 @@
 {%- set scripts = ['pagination.js'] %}
 {%- from "news/_article.html" import render_article %}
 
-{% block news_content %}
+{% block content %}
   {%- if category %}
     <h3>{% trans category=category %}Articles for “{{ category }}”{% endtrans %}</h3>
   {%- endif %}

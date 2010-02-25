@@ -1,7 +1,7 @@
 {% extends "news/base.html" %}
 {% block title %}{{ _("Archive") }}{% endblock %}
 {% from "news/_article.html" import render_article %}
-{% block news_content %}
+{% block content %}
   {%- if month_list %}
     <h2>{% trans %}Archive{% endtrans %}</h2>
     <ul>

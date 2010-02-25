@@ -37,3 +37,9 @@ class EditArticleForm(forms.Form):
         categories = [c.name for c in Category.query.autoflush(False).all()]
         self.author.choices = authors
         self.category.choices = categories
+
+
+class EditCommentForm(forms.Form):
+    text = forms.TextField(label=_(u'Text'), widget=forms.widgets.Textarea,
+        help_text=_(u'To quote another comment use <em>@comment_number</em>.'
+                    u'This is automatically used if you click “answer”.'))

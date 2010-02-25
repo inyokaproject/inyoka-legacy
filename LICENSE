@@ -1,8 +1,8 @@
 Inyoka - Next generation portal software
-Copyright (C) 2009 by the respective authors (see AUTHORS)
+Copyright (C) 2009-2010 by the respective authors (see AUTHORS)
 
 Inyoka is licensed under the terms of the GNU GPLv2, some parts are licensed under the terms of the BSD license.  See the appropriate file headers for more details.
 
-For more informations about the used license see either the file GPL or BSD.
+For more informations about the used license see the respective license documentations.
 
 The module `inyoka.core.config` is MIT licensed.

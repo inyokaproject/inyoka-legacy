@@ -185,6 +185,11 @@ class Article(db.Model):
         """
         return not self.public or self.pub_date > datetime.utcnow()
 
+    @property
+    def was_updated(self):
+        return self.updated.replace(microsecond=0) > \
+               self.pub_date.replace(microsecond=0)
+
     def get_url_values(self, action='view'):
         values = {
             'view': 'news/detail',

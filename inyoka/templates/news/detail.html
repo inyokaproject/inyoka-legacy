@@ -13,13 +13,13 @@
     </div>
     <p class="meta">
       {%- trans author_url=href(article.author.profile), author_name=article.author.username|e,
-                article_pubdate=article.pub_date|datetimeformat, category_url=href(article.category),
+                article_pubdate=article.pub_date|datetimeformat('short')|e, category_url=href(article.category),
                 category_name=article.category.name|e -%}
       written by <a href="{{ author_url }}">{{ author_name }}</a> {{ article_pubdate }}
       in <a href="{{ category_url }}">{{ category_name }}</a>
       {%- endtrans %}
-      {%- if article.updated > article.pub_date %}
-      – {{ _('updated on') }} {{ article.updated|datetimeformat }}
+      {%- if article.was_updated %}
+      – {{ _('updated on') }} {{ article.updated|datetimeformat('short') }}
       {%- endif %}
       {# TODO: ACL check #}
       – <a href="{{ href(article, action='edit') }}" class="adminlink">{{ _('edit') }}</a>

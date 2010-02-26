@@ -38,14 +38,20 @@ def populate_context_defaults(context):
         pass
 
 
-def render_template(template_name, context):
-    """Render a template."""
+def render_template(template_name, context, stream=False):
+    """Renders a template.  If `stream` is ``True`` the return value will be
+    a Jinja template stream and not an unicode object.
+    This is useful for pages with lazy generated content or huge output
+    where you don't want the users to wait until the calculation ended.
+    Use streaming only in those situations because it's usually slower than
+    bunch processing.
+    """
     tmpl = jinja_env.get_template(template_name)
     populate_context_defaults(context)
     return tmpl.render(context)
 
 
-def templated(template_name, modifier=None):
+def templated(template_name, modifier=None, stream=False):
     """
     This function can be used as a decorator to use a function's return value
     as template context if it's not a valid Response object.
@@ -62,6 +68,8 @@ def templated(template_name, modifier=None):
 
     :param template_name: The name of the template to render.
     :param modifier: A callback to modify the template context on-the-fly.
+    :param stream: Use Jinja template streaming, see :func:`render_template`
+                   for more details.
     """
     def decorator(func):
         @functools.wraps(func)
@@ -82,7 +90,7 @@ def templated(template_name, modifier=None):
             if modifier is not None:
                 modifier(request, ret)
 
-            data = render_template(template_name, ret)
+            data = render_template(template_name, ret, stream=stream)
             response = Response(data)
             if ctx.cfg['debug']:
                 TEMPLATE_CONTEXT.clear()

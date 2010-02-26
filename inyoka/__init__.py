@@ -280,7 +280,6 @@ def _bootstrap():
     ctx = ApplicationContext()
     ctx.bind()
 
-
     # setup components
     # TODO: make it configurable
     ctx.load_packages([

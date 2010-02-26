@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-02-19 09:31+0100\n"
+"POT-Creation-Date: 2010-02-26 14:09+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,7 +248,7 @@ msgid ""
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/forms/__init__.py:78
+#: inyoka/core/forms/__init__.py:76
 #, python-format
 msgid "“%(value)s” does not exist"
 msgstr ""
@@ -272,7 +272,8 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: inyoka/forum/forms.py:22 inyoka/forum/forms.py:30 inyoka/news/forms.py:24
+#: inyoka/forum/forms.py:22 inyoka/forum/forms.py:30 inyoka/news/forms.py:25
+#: inyoka/news/forms.py:43
 msgid "Text"
 msgstr ""
 
@@ -296,7 +297,13 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+#: inyoka/l10n/__init__.py:121
+#, python-format
+msgid "%(timedelta)s ago"
+msgstr ""
+
 #: inyoka/news/admin.py:24 inyoka/templates/base.html:35
+#: inyoka/templates/news/base.html:2
 msgid "News"
 msgstr ""
 
@@ -322,20 +329,46 @@ msgstr ""
 msgid "The article %s was deleted successfully."
 msgstr ""
 
+#: inyoka/news/controllers.py:109
+msgid "The comment was successfully edited"
+msgstr ""
+
+#: inyoka/news/controllers.py:114
+msgid "Your comment was created"
+msgstr ""
+
+#: inyoka/news/controllers.py:152
+msgid "The comment was hidden"
+msgstr ""
+
+#: inyoka/news/controllers.py:153
+msgid "The comment was restored"
+msgstr ""
+
+#: inyoka/news/controllers.py:162
+msgid "The comment was saved"
+msgstr ""
+
 #: inyoka/news/forms.py:23
 msgid "Intro"
 msgstr ""
 
-#: inyoka/news/forms.py:25
+#: inyoka/news/forms.py:27
 msgid "Published"
 msgstr ""
 
-#: inyoka/news/forms.py:26
+#: inyoka/news/forms.py:28
 msgid "Category"
 msgstr ""
 
-#: inyoka/news/forms.py:28
+#: inyoka/news/forms.py:30
 msgid "Author"
+msgstr ""
+
+#: inyoka/news/forms.py:44
+msgid ""
+"To quote another comment use <em>@comment_number</em>.This is automatically "
+"used if you click “answer”."
 msgstr ""
 
 #: inyoka/paste/admin.py:20 inyoka/templates/paste/base.html:2
@@ -370,15 +403,15 @@ msgstr ""
 msgid "Please log in."
 msgstr ""
 
-#: inyoka/portal/controllers.py:40
+#: inyoka/portal/controllers.py:43
 msgid "Profile saved"
 msgstr ""
 
-#: inyoka/portal/controllers.py:82
+#: inyoka/portal/controllers.py:90
 msgid "Key not found. Maybe it has already been used?"
 msgstr ""
 
-#: inyoka/portal/controllers.py:84
+#: inyoka/portal/controllers.py:92
 msgid "The supplied key is not valid anymore."
 msgstr ""
 
@@ -413,52 +446,117 @@ msgid_plural "<h2>%(count)s Answers</h2>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inyoka/templates/forum/questions.html:63
+#: inyoka/templates/forum/questions.html:64
 #, python-format
 msgid "<strong>%(votes)s</strong> vote"
 msgid_plural "<strong>%(votes)s</strong> votes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inyoka/templates/forum/questions.html:71
+#: inyoka/templates/forum/questions.html:72
 #, python-format
 msgid "<strong>%(answers)s</strong> answer"
 msgid_plural "<strong>%(answers)s</strong> answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inyoka/templates/news/base.html:6 inyoka/templates/news/base.html:15
+#: inyoka/templates/news/_article.html:5
+#, python-format
+msgid ""
+"written by %(author)s, on %(pub_date)s.\n"
+"          <a href=\"%(edit_link)s\" class=\"adminlink\">Edit</a>"
+msgstr ""
+
+#: inyoka/templates/news/_article.html:16
+msgid "» Read on"
+msgstr ""
+
+#: inyoka/templates/news/_article.html:16
+msgid "comments"
+msgstr ""
+
+#: inyoka/templates/news/archive.html:2 inyoka/templates/news/archive.html:6
+#: inyoka/templates/news/base.html:7 inyoka/templates/news/base.html:16
 msgid "Archive"
 msgstr ""
 
-#: inyoka/templates/news/base.html:8
+#: inyoka/templates/news/archive.html:13
+msgid "empty archive"
+msgstr ""
+
+#: inyoka/templates/news/archive.html:18
+#, python-format
+msgid "Archive for %(year)s"
+msgstr ""
+
+#: inyoka/templates/news/archive.html:20
+#, python-format
+msgid "Archive for %(month)s"
+msgstr ""
+
+#: inyoka/templates/news/archive.html:22
+#, python-format
+msgid "Archive for %(day)s"
+msgstr ""
+
+#: inyoka/templates/news/base.html:9
 msgid "Latest Articles"
 msgstr ""
 
-#: inyoka/templates/news/base.html:19 inyoka/templates/news/admin/index.html:5
+#: inyoka/templates/news/base.html:20 inyoka/templates/news/admin/index.html:5
 msgid "Categories"
 msgstr ""
 
-#: inyoka/templates/news/index.html:11
+#: inyoka/templates/news/detail.html:15
 #, python-format
 msgid ""
-"written by <a href=\"%(author_url)s\">%(author_name)s</a>\n"
-"        %(article_published)s"
+"written by <a href=\"%(author_url)s\">%(author_name)s</a> "
+"%(article_pubdate)s\n"
+"      in <a href=\"%(category_url)s\">%(category_name)s</a>"
 msgstr ""
 
-#: inyoka/templates/news/index.html:17
+#: inyoka/templates/news/detail.html:22
 msgid "updated on"
 msgstr ""
 
-#: inyoka/templates/news/index.html:20
-msgid "Categories: "
+#: inyoka/templates/news/detail.html:25 inyoka/templates/news/detail.html:56
+msgid "edit"
 msgstr ""
 
-#: inyoka/templates/news/index.html:22
-msgid "Edit"
+#: inyoka/templates/news/detail.html:35
+msgid "show comments"
 msgstr ""
 
-#: inyoka/templates/news/index.html:28
+#: inyoka/templates/news/detail.html:37
+msgid "write comment"
+msgstr ""
+
+#: inyoka/templates/news/detail.html:58
+msgid "restore"
+msgstr ""
+
+#: inyoka/templates/news/detail.html:60
+msgid "hide"
+msgstr ""
+
+#: inyoka/templates/news/detail.html:63
+msgid "answer"
+msgstr ""
+
+#: inyoka/templates/news/detail.html:65
+msgid "copy this link to link to this entry"
+msgstr ""
+
+#: inyoka/templates/news/detail.html:66
+msgid "Written: "
+msgstr ""
+
+#: inyoka/templates/news/index.html:7
+#, python-format
+msgid "Articles for “%(category)s”"
+msgstr ""
+
+#: inyoka/templates/news/index.html:14
 msgid "Keine Artikel vorhanden."
 msgstr ""
 
@@ -551,15 +649,11 @@ msgstr ""
 msgid "Userlist"
 msgstr ""
 
-#: inyoka/utils/pagination.py:114
-msgid "next »"
+#: inyoka/utils/pagination.py:118
+msgid "Next »"
 msgstr ""
 
-#: inyoka/utils/pagination.py:115
-msgid "« previous"
-msgstr ""
-
-#: inyoka/utils/pagination.py:124
-msgid "…"
+#: inyoka/utils/pagination.py:121
+msgid "« Previous"
 msgstr ""
 

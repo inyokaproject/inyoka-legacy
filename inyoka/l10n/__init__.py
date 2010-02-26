@@ -20,7 +20,7 @@ from functools import wraps
 from datetime import date, datetime
 import pytz
 from babel import dates
-from inyoka.i18n import get_locale
+from inyoka.i18n import get_locale, lazy_gettext
 from inyoka.core.context import ctx
 
 
@@ -118,7 +118,8 @@ def timedeltaformat(datetime_or_timedelta, granularity='second'):
     """
     if isinstance(datetime_or_timedelta, datetime):
         datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
-    return '%s ago' % format_timedelta(datetime_or_timedelta, granularity)
+    return lazy_gettext(u'%(timedelta)s ago') % {
+        'timedelta': format_timedelta(datetime_or_timedelta, granularity)}
 
 
 def format_month(date=None):

@@ -39,7 +39,7 @@ class EasyAuth(AuthSystemBase):
         if request.session.get('user_id'):
             return User.query.get(request.session.get('user_id'))
         else:
-            return User.query.get(u'anonymous')
+            return User.query.get_anonymous()
 
     def set_user(self, request, user):
         if user is None:
@@ -59,7 +59,7 @@ class HttpBasicAuth(AuthSystemBase):
         if request.session.get('user_id'):
             return User.query.get(request.session.get('user_id'))
         else:
-            return User.query.get(u'anonymous')
+            return User.query.get_anonymous()
 
     def login(self, request):
         # Try to get an already logged in user

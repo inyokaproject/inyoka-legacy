@@ -19,7 +19,7 @@ def test_automatic_rendering():
     rendered_code2_plain = highlight_code(code2)
 
     # assert the model does rendering the right way
-    e = Entry(code1, User.query.get('anonymous'), 'python')
+    e = Entry(code1, User.query.get_anonymous(), 'python')
     eq_(e.code, code1)
     eq_(e.rendered_code, rendered_code1)
     e.code = code2
@@ -48,7 +48,7 @@ def test_automatic_rendering():
 def get_data_callback(title=None):
     def callback():
         data = {
-            'author': User.query.get('anonymous'),
+            'author': User.query.get_anonymous(),
             'code': 'void'
         }
         if title is not None:

@@ -11,7 +11,7 @@ from inyoka.news.models import Article, Category, Comment
 
 
 def get_user_callback():
-    return User.query.get('anonymous')
+    return User.query.get_anonymous()
 
 
 class TestEntryModel(TestSuite):

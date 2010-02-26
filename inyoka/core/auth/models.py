@@ -32,6 +32,10 @@ class UserQuery(db.Query):
             return self.filter_by(username=pk).one()
         return super(UserQuery, self).get(pk)
 
+    def get_anonymous(self):
+        #TODO: make configurable
+        return User.query.get('anonymous')
+
 
 class User(db.Model, SerializableObject):
     __tablename__ = 'core_user'
@@ -95,7 +99,7 @@ class User(db.Model, SerializableObject):
 
     @property
     def is_anonymous(self):
-        # TODO: make configureable
+        # TODO: make configurable
         return True if self.username == 'anonymous' else False
 
     def __repr__(self):

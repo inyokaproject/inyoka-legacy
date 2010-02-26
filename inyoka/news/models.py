@@ -205,6 +205,5 @@ class Article(db.Model):
         )
 
 
-
 class NewsSchemaController(db.ISchemaController):
     models = [Category, Article, Comment]

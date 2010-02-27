@@ -8,11 +8,15 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from datetime import date
+from datetime import date, datetime
+from inyoka.i18n import _
 from inyoka.l10n import get_month_names
-from inyoka.core.api import IController, Rule, cache, view, templated, href
+from inyoka.core.api import IController, Rule, cache, view, templated, href, \
+    redirect_to, db
 from inyoka.core.http import Response
-from inyoka.news.models import Article, Category
+from inyoka.core.exceptions import Forbidden
+from inyoka.news.models import Article, Category, Comment
+from inyoka.news.forms import EditCommentForm
 from inyoka.utils.pagination import URLPagination
 
 
@@ -60,7 +64,9 @@ class NewsController(IController):
         Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/',
              endpoint='archive'),
         Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/'
-             '<int(fixed_digits=2):day>/', endpoint='archive')
+             '<int(fixed_digits=2):day>/', endpoint='archive'),
+        Rule('/comment/<int:id>/<any(hide, restore, edit):action>',
+             endpoint='edit_comment')
     ]
 
     @view('index')
@@ -85,8 +91,60 @@ class NewsController(IController):
         }
 
     @view('detail')
+    @templated('news/detail.html', modifier=context_modifier)
     def detail(self, request, slug):
-        return Response('this is news entry %r' % slug)
+        article = Article.query.filter_by(slug=slug).one()
+        if article.hidden or article.pub_date > datetime.utcnow():
+            #TODO: ACL-Check
+            return Forbidden()
+
+        if article.comments_enabled and request.method == 'POST':
+            form = EditCommentForm()
+            if form.validate(request.form):
+                if form.data.get('comment_id'):
+                    comment = Comment.query.get(data['comment_id'])
+                    comment.text = form.data['text']
+                    request.flash(_(u'The comment was successfully edited'), True)
+                else:
+                    comment = Comment(text=form.data['text'], article=article,
+                                      author=request.user)
+                    request.flash(_(u'Your comment was successfully created'), True)
+                db.session.commit()
+                return redirect_to(comment)
+        else:
+            form = EditCommentForm()
+
+        return {
+            'article':  article,
+            'comments': list(article.comments.options(db.eagerload('author'))),
+            'form': form.as_widget(),
+        }
+
+    @view('edit_comment')
+    @templated('news/edit_comment.html', modifier=context_modifier)
+    def change_comment(self, request, id, action):
+        comment = Comment.query.get(id)
+        if action in ('hide', 'restore'):
+            comment.deleted = ('restore', 'hide').index(action)
+            db.session.commit()
+            request.flash(_(u'The comment was hidden') if action == 'hide' \
+                else _(u'The comment was restored'))
+            return redirect_to(comment)
+
+        # action == 'edit'
+        if request.method == 'POST':
+            form = EditCommentForm()
+            if form.validate(request.form):
+                comment.text = form.data['text']
+                db.session.commit()
+                request.flash(_(u'The comment was saved'), True)
+                return redirect_to(comment)
+        else:
+            form = EditCommentForm(initial={'text': comment.text})
+        return {
+            'comment':  comment,
+            'form':     form.as_widget(),
+        }
 
     @view('archive')
     @templated('news/archive.html', modifier=context_modifier)

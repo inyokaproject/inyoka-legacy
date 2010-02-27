@@ -87,6 +87,16 @@ class Comment(db.Model):
         lazy='dynamic'))
     article_id = db.Column(db.Integer, db.ForeignKey('news_article.id'))
 
+    def get_url_values(self, action='view'):
+        if action in ('hide', 'restore', 'edit'):
+            return 'news/edit_comment', {
+                'id': self.id, 'action': action
+            }
+        return 'news/detail', {
+            'slug': self.article.slug,
+            '_anchor': 'comment_%s' % self.id
+        }
+
 
 class ArticleQuery(db.Query):
 

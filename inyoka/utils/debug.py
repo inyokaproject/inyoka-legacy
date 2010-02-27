@@ -10,7 +10,7 @@
 """
 import re
 import sys
-from werkzeug import escape
+from werkzeug import escape, html
 from inyoka.core.routing import href
 
 
@@ -56,9 +56,9 @@ def find_calling_context(skip=2):
 def render_query_table(queries):
     """Renders a nice table of all queries in the page."""
     total = 0
-    stylesheet = href('static', 'style', 'debug.css')
-    result = [u'<style type="text/css">@import url(%s)</style>' % stylesheet,
-              u'<div class="_database_debug_table"><ul>']
+    stylesheet = href('static', file='style/debug.css')
+    result = [u'<div id="database_debug_table">'
+        u'<div id="database_debug_table_inner"><ul>']
     for statement, parameters, start, end, calling_context in queries:
         total += (end - start)
         result.append(u'<li><pre>%s</pre><pre>Parameters: %s</pre>'
@@ -69,10 +69,22 @@ def render_query_table(queries):
             escape(calling_context),
             (end - start) * 1000
         ))
-    result.append(u'<li><strong>%d queries in %.2f ms</strong></ul></div>' % (
+    result.append(u'<li><strong>%d queries in %.2f ms</strong></ul></div></div>' % (
         len(queries),
         total * 1000
     ))
+
+    result.append(html.script("""
+        $(document).ready(function() {
+            function toggleLog() {
+                $('#database_debug_table_inner').toggle();
+            }
+            $('<a href="#database_debug_table">Show/Hide Log</a>').click(toggleLog)
+                .prependTo($('#database_debug_table'));
+            toggleLog();
+        });
+        """, type='text/javascript'))
+
     return u'\n'.join(result)
 
 
@@ -80,14 +92,14 @@ def inject_query_info(request, response):
     """Injects the collected queries into the response."""
     if not request.queries:
         return
-    debug_info = render_query_table(request.queries).encode(response._charset)
+    debug_info = render_query_table(request.queries).encode(response.charset)
 
-    body = response.content
+    body = response.data
     match = _body_end_re.search(body)
     if match is not None:
         pos = match.start()
-        response.content = body[:pos] + debug_info + body[pos:]
+        response.data = body[:pos] + debug_info + body[pos:]
     else:
-        response.content = body + debug_info
-    if 'Content-Length' in response:
-        response['Content-Length'] = len(response.content)
+        response.data = body + debug_info
+    if 'content-length' in response.headers:
+        response.headers['content-length'] = len(response.data)

@@ -43,6 +43,11 @@ class Request(BaseRequest):
 
     """
 
+    def __init__(self, *args, **kwargs):
+        BaseRequest.__init__(self, *args, **kwargs)
+        #: Logged database queries
+        self.queries = []
+
     @cached_property
     def current_url(self):
         """Get the current absolute URL from the WSGI environ"""

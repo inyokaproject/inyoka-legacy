@@ -75,6 +75,7 @@
 """
 from __future__ import with_statement
 import sys
+import time
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
@@ -82,6 +83,7 @@ from datetime import datetime
 import sqlalchemy
 from sqlalchemy import MetaData, create_engine, Table
 from sqlalchemy import orm, sql, exc
+from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.orm.session import Session as SASession
 from sqlalchemy.engine.url import make_url, URL
 from sqlalchemy.util import to_list
@@ -123,6 +125,11 @@ def get_engine():
                     'poolclass': QueuePool,
                     'pool_timeout': ctx.cfg['database.pool_timeout']
                 })
+
+            # if in debug mode hook in our connection debug proxy
+            if ctx.cfg['database.debug']:
+                options['proxy'] = ConnectionDebugProxy()
+
             url = SafeURL(info)
             _engine = create_engine(url, **options)
         return _engine
@@ -272,6 +279,23 @@ class InyokaSession(SASession):
 
 metadata = MetaData()
 session = orm.scoped_session(InyokaSession)
+
+
+class ConnectionDebugProxy(ConnectionProxy):
+    """Helps debugging the database."""
+
+    def cursor_execute(self, execute, cursor, statement, parameters,
+                       context, executemany):
+        start = time.time()
+        try:
+            return execute(cursor, statement, parameters, context)
+        finally:
+            from inyoka.core.context import ctx
+            from inyoka.utils.debug import find_calling_context
+            request = ctx.current_request
+            if request is not None:
+                request.queries.append((statement, parameters, start,
+                                        time.time(), find_calling_context()))
 
 
 class Query(orm.Query):

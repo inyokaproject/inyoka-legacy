@@ -9,6 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.context import ctx
+from werkzeug import import_string, url_encode, url_decode, url_quote, \
+     url_quote_plus, url_fix
 
 
 def make_full_domain(subdomain=''):

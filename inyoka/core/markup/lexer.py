@@ -86,47 +86,312 @@ class rule(object):
 
 class Lexer(object):
 
+    # what the lexer understands as url.  This list is far from complete
+    # but this is intention.  These are the most often used URLs and the
+    # smaller the list, the less the clashes with the interwiki names.
+    # and yes: this list includes nonstandard urls too because they are
+    # in use (like git or irc)
+    _url_pattern = (
+        # urls with netloc
+        r'(?:(?:https?|ftps?|file|ssh|mms|svn(?:\+ssh)?|git|dict|nntp|irc|'
+        r'rsync|smb|apt)://|'
+        # urls without netloc
+        r'(?:mailto|telnet|s?news|sips?|skype):)'
+    )
+
     rules = {
         'everything': ruleset(
+            include('block'),
             include('inline'),
+            include('links')
+        ),
+        'inline_with_links': ruleset(
+            include('inline'),
+            include('links')
+        ),
+        'block': ruleset(
+            rule('^##.*?(\n|$)(?m)', None),
+            rule('^#\s*(.*?)\s*:\s*(?m)', bygroups('metadata_key'),
+                 enter='metadata'),
+            rule(r'^={1,5}\s*(?m)', enter='headline'),
+            rule(r'^\s+(.*?)::\s+(?m)', bygroups('definition_term'),
+                 enter='definition'),
+            rule(r'^\|\|(?m)', enter='table_row'),
+            rule(r'^[ \t]+(?:[*-]|[01aAiI]\.)\s*(?m)', enter='list_item'),
+            rule(r'\{\{\|', enter='box'),
+            rule(r'\{\{\{', enter='pre'),
+            rule(r'^<{40}\s*$(?m)', enter='conflict'),
+            rule(r'^----+\s*(\n|$)(?m)', 'ruler')
         ),
         'inline': ruleset(
             rule('<!--.*?-->(?s)', None),
             rule("'''", enter='strong'),
             rule("''", enter='emphasized'),
+            rule('``', enter='escaped_code'),
+            rule('`', enter='code'),
             rule('__', enter='underline'),
+            rule(r'--\(', enter='stroke'),
+            rule('~-\(', enter='small'),
+            rule(r'~\+\(', enter='big'),
+            rule(r',,\(', enter='sub'),
+            rule(r'\^\^\(', enter='sup'),
+            rule(r'\(\(', enter='footnote'),
+            rule(r'\[color\s*=\s*(.*?)\s*\]', bygroups('color_value'),
+                 enter='color'),
+            rule(r'\[size\s*=\s*(.*?)\s*\]', bygroups('font_size'),
+                 enter='size'),
+            rule(r'\[font\s*=\s*(.*?)\s*\]', bygroups('font_face'),
+                 enter='font'),
+            rule(r'\[mod\s*=\s*(.*?)\s*\]', bygroups('username'),
+                 enter='mod'),
+            rule(r'\[edit\s*=\s*(.*?)\s*\]', bygroups('username'),
+                 enter='edit'),
+            rule(r'\[raw\](.*?)\[/raw\]', bygroups('raw')),
+            rule(r'\\\\[^\S\n]*(\n|$)(?m)', 'nl'),
+            include('highlightable')
+        ),
+        'links': ruleset(
+            rule(r'\[\s*(\d+)\s*\]', bygroups('sourcelink')),
+            rule(r'(\[\s*)((?:%s|\?|#)\S+)(\s*\])' % _url_pattern, bygroups(
+                 'external_link_begin', 'link_target', 'external_link_end')),
+            rule(r'\[((?:%s|\?|#).*?)\s+' % _url_pattern, bygroups('link_target'),
+                 enter='external_link'),
+            rule(r'\[\s*([^:\]]+?)?\s*:\s*((?:::|[^:])*)\s*:\s*',
+                 astuple('link_target'), enter='wiki_link'),
+            rule(_url_pattern + r'[^\s/]+(/[^\s.,:;?]*([.,:;?][^\s.,:;?]+)*)?[^\)\\\s]',
+                 'free_link')
+        ),
+        'highlightable': ruleset(
+            rule(r'\[mark\]', enter='highlighted')
+        ),
+        # highlighted code
+        'highlighted': ruleset(
+            rule(r'\[/mark\]', leave=1)
+        ),
+        # metadata defs
+        'metadata': ruleset(
+            rule(r'\s*(\n|$)(?m)', leave=1),
+            rule(r'\s*,\s*', 'func_argument_delimiter'),
+            rule(r"('([^'\\]*(?:\\.[^'\\]*)*)'|"
+                 r'"([^"\\]*(?:\\.[^"\\]*)*)")(?s)', 'func_string_arg'),
+        ),
+        # conflict blocks
+        'conflict': ruleset(
+            rule(r'^={40}\s*$(?m)', 'conflict_switch'),
+            rule(r'^>{40}\s*$(?m)', leave=1),
+            include('everything')
+        ),
+        # In difference to moin we allow arbitrary markup in headlines.
+        'headline': ruleset(
+            rule(r'\s*=+\s*$(?m)', leave=1),
+            include('inline_with_links')
+        ),
+        'definition': ruleset(
+            rule(r'(\n|$)(?m)', leave=1),
+            include('inline_with_links')
         ),
         'strong': ruleset(
             rule("'''", leave=1),
-            include('inline')
+            include('inline_with_links')
         ),
         'emphasized': ruleset(
             rule("''", leave=1),
-            include('inline')
+            include('inline_with_links')
+        ),
+        'escaped_code': ruleset(
+            rule('``', leave=1),
+            rule('`', enter='code')
+        ),
+        'code': ruleset(
+            rule('`', leave=1),
         ),
         'underline': ruleset(
             rule('__', leave=1),
+            include('inline_with_links')
+        ),
+        'stroke': ruleset(
+            rule('\)--', leave=1),
+            include('inline_with_links')
+        ),
+        'small': ruleset(
+            rule('\)-~', leave=1),
+            include('inline_with_links')
+        ),
+        'big': ruleset(
+            rule(r'\)\+~', leave=1),
+            include('inline_with_links')
+        ),
+        'sub': ruleset(
+            rule(r'\),,', leave=1),
+            include('inline_with_links')
+        ),
+        'sup': ruleset(
+            rule(r'\)\^\^', leave=1),
+            include('inline_with_links')
+        ),
+        'footnote': ruleset(
+            rule(r'\)\)', leave=1),
+            include('everything')
+        ),
+        'list_item': ruleset(
+            rule(r'(\n|$)(?m)', leave=1),
+            include('everything')
+        ),
+        'color': ruleset(
+            rule(r'\[/color\]', leave=1),
+            include('inline_with_links')
+        ),
+        'size': ruleset(
+            rule(r'\[/size\]', leave=1),
+            include('inline_with_links')
+        ),
+        'font': ruleset(
+            rule(r'\[/font\]', leave=1),
+            include('inline_with_links')
+        ),
+        'mod': ruleset(
+            rule(r'\[/mod\]', leave=1),
+            include('everything')
+        ),
+        'edit': ruleset(
+            rule(r'\[/edit\]', leave=1),
+            include('everything')
+        ),
+        # links
+        'wiki_link': ruleset(
+            rule(r'\s*\]', leave=1),
             include('inline')
         ),
+        'external_link': ruleset(
+            rule(r'\s*\]', leave=1),
+            include('inline')
+        ),
+        # a pre block, could have arguments and a parser
+        'pre': ruleset(
+            rule(r'\n?#!([\w_]+)', bygroups('parser_begin'),
+                 switch='parser_arguments'),
+            switch('pre_data')
+        ),
+        'parser_arguments': ruleset(
+            rule(r'(?=\n|$)(?m)', 'parser_end', switch='parser_data'),
+            rule(r'[^\S\n]+', None),
+            include('function_call')
+        ),
+        'parser_data': ruleset(
+            rule(r'\}\}\}', leave=1)
+        ),
+        'pre_data': ruleset(
+            include('parser_data'),
+            include('highlightable')
+        ),
+        # a table row. with spans and all that stuff
+        'table_row': ruleset(
+            rule(r'\s*<', 'table_def_begin', switch='table_def'),
+            switch('table_contents')
+        ),
+        'table_def': ruleset(
+            rule(r'>', 'table_def_end', switch='table_contents'),
+            include('function_call')
+        ),
+        'table_contents': ruleset(
+            rule(r'\|\|\s*?(\n|$)(?m)', leave=1),
+            rule(r'\|\|', 'table_col_switch', switch='table_row'),
+            include('everything')
+        ),
+        # a box, works like a single table cell but generates a div
+        'box': ruleset(
+            rule(r'\s*<', 'box_def_begin', switch='box_def'),
+            switch('box_contents')
+        ),
+        'box_def': ruleset(
+            rule(r'>', 'box_def_end', switch='box_contents'),
+            include('function_call')
+        ),
+        'box_contents': ruleset(
+            rule(r'\|\}\}(?m)', leave=1),
+            include('everything')
+        ),
+        # function calls (parse string arguments and implicit strings)
+        'function_call': ruleset(
+            rule(',', 'func_argument_delimiter'),
+            rule('\s+', None),
+            rule(r"('([^'\\]*(?:\\.[^'\\]*)*)'|"
+                 r'"([^"\\]*(?:\\.[^"\\]*)*)")(?s)', 'func_string_arg'),
+            rule(r'([\w_]+)\s*=', bygroups('func_kwarg'))
+        )
     }
+
+    _quote_re = re.compile(r'^(>+) ?(?m)')
+    _block_start_re = re.compile(r'(?<!\\)\{\{\{')
+    _block_end_re = re.compile(r'(?<!\\)\}\}\}')
 
     def tokenize(self, string):
         """
         Resolve quotes and parse quote for quote in an isolated environment.
         """
         buffer = []
+        stack = [0]
+        open_blocks = [False]
 
         def tokenize_buffer():
             for item in self.tokenize_block(u'\n'.join(buffer)):
                 yield item
             del buffer[:]
 
+        def changes_block_state(line, reverse):
+            primary = self._block_start_re.search
+            secondary = self._block_end_re.search
+            if reverse:
+                primary, secondary = secondary, primary
+            match = primary(line)
+            if match is None:
+                return False
+            while 1:
+                match = secondary(line, match.end())
+                if match is None:
+                    return True
+                match = primary(line, match.end())
+                if match is None:
+                    return False
+
         def tokenize_blocks():
             for line in string.splitlines():
+                block_open = open_blocks[-1]
+                if not block_open:
+                    m = self._quote_re.match(line)
+                    if m is None:
+                        level = 0
+                    else:
+                        level = len(m.group(1))
+                        line = line[m.end():]
+                    if level > stack[-1]:
+                        for item in tokenize_buffer():
+                            yield item
+                        for new_level in xrange(stack[-1] + 1, level + 1):
+                            stack.append(new_level)
+                            open_blocks.append(False)
+                            yield 'quote_begin', None
+                    elif level < stack[-1]:
+                        for item in tokenize_buffer():
+                            yield item
+                        for x in xrange(stack[-1] - level):
+                            stack.pop()
+                            open_blocks.pop()
+                            yield 'quote_end', None
+                else:
+                    line = re.sub('^' + '> ?' * (len(open_blocks) - 1), '', line)
+                if not block_open and changes_block_state(line, False):
+                    open_blocks[-1] = True
+                elif block_open and changes_block_state(line, True):
+                    open_blocks[-1] = False
                 buffer.append(line)
 
             for item in tokenize_buffer():
                 yield item
+            while stack:
+                if stack.pop():
+                    yield 'quote_end', None
+                open_blocks.pop()
 
         return TokenStream.from_tuple_iter(tokenize_blocks())
 

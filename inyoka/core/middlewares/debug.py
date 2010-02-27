@@ -14,7 +14,6 @@ import re
 re_htmlmime = re.compile(r'^text/x?html')
 
 
-
 class DebugMiddleware(IMiddleware):
 
     def __init__(self, ctx):

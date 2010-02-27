@@ -188,8 +188,8 @@ def main(argv):
         if '-i' in opts and abspath(root) in opts['-i']:
             del dirs[:]
             continue
-        # XXX: awkward: for the Makefile call: don't check non-package
-        #      files for file headers
+        # awkward: for the Makefile call: don't check non-package
+        # files for file headers
         in_inyoka_pkg = root.startswith('./inyoka')
         for fn in files:
 

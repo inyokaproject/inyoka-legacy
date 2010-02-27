@@ -33,6 +33,7 @@ def escape_html(text):
                 replace('>', '&gt;').  \
                 replace('"', '&quot;')
 
+
 def process_file(store, filename):
     try:
         f = open(filename, 'r')

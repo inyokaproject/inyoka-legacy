@@ -8,9 +8,10 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import _, view, templated, db, Rule, redirect_to, Response
+from inyoka.core.api import _, view, service, templated, db, Rule, \
+    redirect_to, Response
 from inyoka.core.forms.utils import model_to_dict, update_model
-from inyoka.admin.api import IAdminProvider
+from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
 from inyoka.forum.forms import EditForumForm
 from inyoka.forum.models import Forum, Tag
 
@@ -63,3 +64,22 @@ class ForumAdminProvider(IAdminProvider):
         return {
             'form': form.as_widget(),
         }
+
+
+# This is yet just a dummy to show that it works :)
+# just visit http://admin.inyoka.local:5000/_api/forum/get_tags/?format=xml
+class ForumAdminServiceProvider(IAdminServiceProvider):
+    name = 'forum'
+
+    url_rules = [
+        Rule('/get_tags/', endpoint='get_tags'),
+    ]
+
+    @service('get_tags')
+    def get_tags(self, request):
+        q = request.args.get('q')
+        if not q:
+            tags = Tag.query.all()[:10]
+        else:
+            tags = Tag.query.filter(Tag.name.startswith(q))[:10]
+        return tags

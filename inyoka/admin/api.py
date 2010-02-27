@@ -28,3 +28,9 @@ class IAdminProvider(Interface):
 
     def get_index_uri(self):
         return href('admin/%s/%s' % (self.name, self.index_endpoint))
+
+
+class IAdminServiceProvider(Interface):
+
+    #: The internal id for the admin interface
+    name = None

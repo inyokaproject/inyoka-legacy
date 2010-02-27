@@ -48,6 +48,8 @@ def render_template(template_name, context, stream=False):
     """
     tmpl = jinja_env.get_template(template_name)
     populate_context_defaults(context)
+    if stream:
+        return tmpl.stream(context)
     return tmpl.render(context)
 
 

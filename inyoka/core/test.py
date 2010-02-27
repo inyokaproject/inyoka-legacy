@@ -321,7 +321,6 @@ class FuturePlugin(errorclass.ErrorClassPlugin):
 #TODO: write unittests
 def future(func):
     """Mark a test as expected to unconditionally fail."""
-    fn_name = func.func_name
     @functools.wraps(func)
     def future_decorator(*args, **kw):
         try:

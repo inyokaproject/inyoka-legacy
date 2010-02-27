@@ -8,7 +8,7 @@
 """
 import re
 import sre_constants
-from inspect import getmembers, ismethod, getargspec
+from inspect import getmembers, ismethod
 from datetime import datetime
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError

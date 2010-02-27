@@ -242,7 +242,7 @@ class ApplicationContext(object):
         This binds the :class:`ApplicationContext` afterwards to the
         thread-locals again because we're cleaning up those after each request
         """
-        retval = self.application(environ, start_response)
+        retval = self.dispatcher(environ, start_response)
         # rebind everything to the thread local
         self.bind()
         return retval

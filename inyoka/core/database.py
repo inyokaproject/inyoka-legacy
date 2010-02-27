@@ -96,6 +96,7 @@ from inyoka import Interface
 from inyoka.core.context import ctx
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
+from inyoka.utils.debug import find_calling_context
 
 
 _engine = None
@@ -290,8 +291,6 @@ class ConnectionDebugProxy(ConnectionProxy):
         try:
             return execute(cursor, statement, parameters, context)
         finally:
-            from inyoka.core.context import ctx
-            from inyoka.utils.debug import find_calling_context
             request = ctx.current_request
             if request is not None:
                 request.queries.append((statement, parameters, start,

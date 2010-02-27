@@ -15,7 +15,7 @@
 """
 from time import time
 
-from werkzeug import ClosingIterator, redirect, cached_property
+from werkzeug import redirect, cached_property
 from werkzeug.exceptions import NotFound
 
 from inyoka.core.api import db, ctx, logger, IController, Request, \

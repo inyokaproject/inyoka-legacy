@@ -14,8 +14,6 @@ import os
 from os import path
 from threading import Lock
 
-#TODO: add support for multiple values?
-
 
 class ConfigField(object):
     """A field representing a configuration entry.

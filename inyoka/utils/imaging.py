@@ -10,11 +10,13 @@
 """
 from inyoka.core.context import ctx
 
+
 def string_to_xy(string):
     """
     Convert a string `100x50` to a tuple like `(100, 50)`.
 
-    Example Usage:
+    Example Usage::
+
         >>> string_to_xy(u'100x50')
         (100, 50)
 
@@ -29,9 +31,10 @@ class BaseImage(object):
     """
     Base class for all imaging related stuff, you never use this class directly.
 
-    Example Usage:
+    Example Usage::
+
         >>> thumbnail = Image('/tmp/avatar-big.png')
-        >>> thumbnail.resize(100,100)
+        >>> thumbnail.resize(100, 100)
         >>> thumbnail.save('/tmp/avatar-100-100.png')
 
     :param filename: Either a filelike object or a filename.
@@ -72,13 +75,14 @@ class BaseImage(object):
         """
         raise NotImplementedError
 
-    def save(self, filename):
+    def save(self, filename, format=None):
         """
         Saves this image object to a new file named `filename`.
 
         It is required to override this method on your own backends.
 
         :param filename: Either a filelike object or a filename.
+        :param format: The format to save the image if supported by the backend.
         """
         raise NotImplementedError
 
@@ -89,16 +93,39 @@ class PilImage(BaseImage):
     """
 
     def __init__(self, filename):
-        pass
+        from PIL import Image as PILImage
+        self.__antialias = PILImage.ANTIALIAS
+        self.image = PILImage.open(filename)
 
     def resize(self, x, y):
-        pass
+        """Returns a resized copy of an image."""
+        self.image = self.image.resize((x, y), self.__antialias)
+        return self.image
+
+    def thumbnail(self):
+        """
+        Resize image to thumbnail size, as definied in inyoka.ini.
+        """
+        self.image = self.image.thumbnail(string_to_xy(
+            ctx.cfg['imaging.thumbnailsize']), self.__antialias)
+        return self.image
+
+    def avatar(self):
+        """
+        Resize image to avatar size, as definied in inoka.ini.
+        """
+        self.image = self.image.thumbnail(string_to_xy(
+            ctx.cfg['imaging.avatarsize']), self.__antialias)
+        return self.image
 
     def size(self):
-        pass
+        return self.image.size
 
-    def save(self, filename):
-        pass
+    def save(self, filename, format=None):
+        if format:
+            self.image.save(filename, format)
+        else:
+            self.image.save(filename)
 
 
 class GdkImage(BaseImage):

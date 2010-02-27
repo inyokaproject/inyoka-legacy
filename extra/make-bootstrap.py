@@ -15,6 +15,30 @@ from virtualenv import create_bootstrap_script
 
 EXTRA_TEXT = """
 import os
+import tempfile, shutil
+
+pil_version = '1.1.7'
+
+
+def pil_install(home_dir):
+    folder = tempfile.mkdtemp(prefix='virtualenv')
+
+    call_subprocess(['wget', 'http://effbot.org/downloads/Imaging-%s.tar.gz' % pil_version], cwd=folder)
+    call_subprocess(['tar', '-xzf', 'Imaging-%s.tar.gz' % pil_version], cwd=folder)
+
+    img_folder = os.path.join(folder, 'Imaging-%s' % pil_version)
+
+    f1 = os.path.join(img_folder, 'setup_new.py')
+    f2 = os.path.join(img_folder, 'setup.py')
+
+    file(f1, 'w').write(file(f2).read().replace('import _tkinter', 'raise ImportError()'))
+
+    cmd = ['CFLAGS="-fPIC -DPIC" ', os.path.join(home_dir, 'bin', 'python')]
+    cmd.extend([os.path.join(os.getcwd(), f1), 'install'])
+    call_subprocess(cmd)
+
+    shutil.rmtree(folder)
+
 
 def after_install(options, home_dir):
     easy_install('Jinja2', home_dir)
@@ -33,6 +57,7 @@ def after_install(options, home_dir):
     easy_install('Fabric', home_dir)
     easy_install('http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz', home_dir)
     easy_install('http://dev.pocoo.org/hg/bureaucracy-main/archive/tip.tar.gz', home_dir)
+    pil_install(home_dir)
 
 
 def easy_install(package, home_dir, optional_args=None):

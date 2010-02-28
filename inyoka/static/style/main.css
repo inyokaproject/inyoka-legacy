@@ -1,8 +1,54 @@
+
+/* Basic tag styles*/
 body {
   margin: 0;
   background-color: #FFFFFF;
   font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
 }
+
+
+strong, th, thead td, h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+cite, em, dfn {
+  font-style: italic;
+}
+
+code, kbd, samp, pre, tt, var,
+input[type='text'], input[type='password'], textarea {
+  font-size: 0.8em;
+  font-family: monaco, "Lucida Console", courier, monospace;
+}
+
+del {
+  text-decoration: line-through;
+  color: #666;
+}
+
+ins, dfn {
+  border-bottom: 1px solid #ccc;
+}
+
+small, sup, sub {
+  font-size: 0.8em;
+}
+
+abbr, acronym {
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: .1em;
+}
+
+a abbr, a acronym {
+  border: none;
+}
+
+abbr[title], acronym[title], dfn[title] {
+  cursor: help;
+  border-bottom: 1px solid #ccc;
+}
+
 
 #head {
   margin: 0 auto;
@@ -103,7 +149,6 @@ body {
   padding-top: 1.1em;
 }
 
-
 #page-introduction {
   background-color: #EEEEEE;
   color: #001800;
@@ -134,7 +179,6 @@ body {
 #content a {
   color: #304800;
 }
-
 
 #content ul.pagetabs {
     text-align: right;
@@ -178,8 +222,6 @@ body {
 #content ul.pagetabs a:hover {
     background: #fff;
 }
-
-
 
 div.pagination {
     margin-top:  1.5em;

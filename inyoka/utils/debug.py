@@ -100,6 +100,6 @@ def inject_query_info(request, response):
         pos = match.start()
         response.data = body[:pos] + debug_info + body[pos:]
     else:
-        response.data = body + debug_info
+        response.data = body + '<hr>' + debug_info
     if 'content-length' in response.headers:
         response.headers['content-length'] = len(response.data)

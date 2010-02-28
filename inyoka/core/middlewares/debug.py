@@ -6,10 +6,10 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import re
 from inyoka.core.context import ctx
 from inyoka.core.middlewares import IMiddleware
 from inyoka.utils.debug import inject_query_info
-import re
 
 re_htmlmime = re.compile(r'^text/x?html')
 

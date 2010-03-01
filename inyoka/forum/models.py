@@ -10,7 +10,7 @@
 """
 from datetime import datetime
 from werkzeug import cached_property
-from inyoka.core.api import ctx, db, auth, markup, cache
+from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
 from inyoka.core.auth.models import User
 import re
 
@@ -30,8 +30,12 @@ forum_tag = db.Table('forum_forum_tag', db.metadata,
 )
 
 
-class Tag(db.Model):
+class Tag(db.Model, SerializableObject):
     __tablename__ = 'forum_tag'
+
+    #: serializer attributes
+    object_type = 'forum.tag'
+    public_fields = ('id', 'name')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, index=True, unique=True)
@@ -49,9 +53,14 @@ class Tag(db.Model):
         return 'forum/questions', {'tags': self.name}
 
 
-class Forum(db.Model):
+class Forum(db.Model, SerializableObject):
     __tablename__ = 'forum_forum'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
+
+    #: serializer attributes
+    object_type = 'forum.forum'
+    public_fields = ('id', 'name', 'slug', 'description', 'tags'
+                     'position', 'subforums')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -132,12 +141,18 @@ class EntryQuery(db.Query):
         return self.order_by(Entry.score.desc(), Entry.date_active.desc())
 
 
-class Entry(db.Model):
+class Entry(db.Model, SerializableObject):
     """The base class of a `Question` or `Answer`, which contains some general
     information about the author and the creation date, as well as the actual
     text and the votings."""
+
     __tablename__ = 'forum_entry'
     query = db.session.query_property(EntryQuery)
+
+    #: Serializer attributes
+    object_type = 'forum.entry'
+    public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
+                     'date_active', 'score', 'text', 'votes')
 
     entry_id = db.Column(db.Integer, primary_key=True)
     discriminator = db.Column('type', db.String(12))
@@ -190,6 +205,12 @@ class Question(Entry):
     }
     query = db.session.query_property(QuestionQuery)
 
+    #: Serializer attributes
+    object_type = 'forum.question'
+    public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
+                     'date_active', 'score', 'text', 'votes', 'tags',
+                     'id', 'title', 'slug')
+
     id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
     title = db.Column(db.String(160), nullable=False)
     slug = db.Column(db.String(160), nullable=False, index=True)
@@ -216,6 +237,11 @@ class Answer(Entry):
         'polymorphic_identity': 'answer'
     }
 
+    #: Serializer attributes
+    object_type = 'forum.answer'
+    public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
+                     'date_active', 'score', 'text', 'votes', 'question')
+
     id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
 
@@ -231,12 +257,16 @@ class Answer(Entry):
         return self.question.get_url_values(**kwargs)
 
 
-class Vote(db.Model):
+class Vote(db.Model, SerializableObject):
     """Users are able to vote for the entries in the forum they like.
     Additionally to the score (-1 or +1) users are able to mark the
     entry as one of their favorites."""
     __tablename__ = 'forum_vote'
     __table_args__ = (db.UniqueConstraint('entry_id', 'user_id'), {})
+
+    #: Serializer attributes
+    object_type = 'forum.vote'
+    public_fields = ('id', 'entry_id', 'user', 'score', 'favorite')
 
     id = db.Column(db.Integer, primary_key=True)
     entry_id = db.Column(db.Integer, db.ForeignKey('forum_entry.entry_id'),

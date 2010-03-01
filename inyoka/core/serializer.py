@@ -58,7 +58,7 @@ class SerializableObject(object):
     object_type = None
 
     #: subclasses have to provide this as a list
-    public_fields = None
+    public_fields = ()
 
     def serializable_export(self):
         """Exports the object into a data structure ready to be

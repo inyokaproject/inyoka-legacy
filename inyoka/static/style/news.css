@@ -27,6 +27,7 @@ a.show_comments {
   color: #444;
   border-top: 1px solid #ccc;
   font-weight: bold;
+  cursor: pointer;
 }
 
 a.show_comments:hover {

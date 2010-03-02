@@ -118,7 +118,6 @@ class TestSubscriptions(TestSuite):
         cat2 = Category(name='cat2')
         db.session.commit()
 
-
         # mode=multiple:
         Subscription.subscribe(users['eins'], '__test_category', cat1)
         Subscription.subscribe(users['zwei'], '__test_blog')

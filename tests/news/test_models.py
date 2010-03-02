@@ -8,6 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import datetime
 from inyoka.core.test import *
 from inyoka.core.auth.models import User
 from inyoka.news.models import Article, Category, Comment
@@ -27,7 +28,16 @@ def get_article_data():
     }
 
 
-class TestEntryModel(TestSuite):
+def get_comments():
+    art = Article.query.get(1)
+    c1 = Comment(text=u'Bah, cool article!', author=get_user_callback(),
+                 article=art)
+    c2 = Comment(text=u'This article suck!', author=get_user_callback(),
+                 article=art)
+    return [c1, c2]
+
+
+class TestNewsModels(TestSuite):
 
     fixtures = {
         'categories': [
@@ -35,12 +45,7 @@ class TestEntryModel(TestSuite):
             fixture(Category, {'name': 'Ubuntuusers'})
         ],
         'articles': [fixture(Article, get_article_data)],
-        'comments': [
-            fixture(Comment, {'text': u'Bah, cool article!',
-                'author_id': 2, 'article_id': 1}),
-            fixture(Comment, {'text': u'This article suck!',
-                'author_id': 1, 'article_id': 1})
-        ]
+        'comments': get_comments
     }
 
     @with_fixtures('categories')
@@ -52,3 +57,22 @@ class TestEntryModel(TestSuite):
     def test_article_attributes(self, fixtures):
         article = fixtures['articles'][0]
         eq_(article.slug, 'my-ubuntu-rocks')
+
+    @with_fixtures('categories', 'articles', 'comments')
+    def test_comment_counter(self, fixtures):
+        article = fixtures['articles'][0]
+        eq_(article.comment_count, 2)
+
+    @with_fixtures('categories')
+    def test_article_automatic_updated_pub_date(self, fixtures):
+        category = fixtures['categories'][0]
+        article = Article(title=u'foo', intro=u'bar', text=u'baz', public=True,
+                          category=category, author=get_user_callback())
+        db.session.commit()
+        eq_(article.was_updated, False)
+        article.updated = article.pub_date + datetime.timedelta(days=2)
+        db.session.commit()
+        eq_(article.was_updated, True)
+        # cleanup
+        db.session.delete(article)
+        db.session.commit()

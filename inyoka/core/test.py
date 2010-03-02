@@ -227,7 +227,9 @@ class InyokaPlugin(cover.Coverage):
                     db.session.add_all(instances)
                 else:
                     instances = loader()
-                    db.session.add(instances)
+                    to_load = instances if isinstance(instances, _iterables) \
+                                else [instances]
+                    db.session.add_all(to_load)
                 loaded[fixture] = instances
                 try:
                     db.session.commit()

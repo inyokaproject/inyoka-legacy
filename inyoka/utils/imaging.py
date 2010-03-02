@@ -33,9 +33,9 @@ class BaseImage(object):
 
     Example Usage::
 
-        >>> thumbnail = Image('/tmp/avatar-big.png')
-        >>> thumbnail.resize(100, 100)
-        >>> thumbnail.save('/tmp/avatar-100-100.png')
+        thumbnail = Image('/tmp/avatar-big.png')
+        thumbnail.resize(100, 100)
+        thumbnail.save('/tmp/avatar-100-100.png')
 
     :param filename: Either a filelike object or a filename.
     """

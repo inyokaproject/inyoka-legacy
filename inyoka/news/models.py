@@ -11,7 +11,6 @@
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
-from inyoka.utils.text import gen_ascii_slug
 
 
 class ArticleMapperExtension(db.MapperExtension):

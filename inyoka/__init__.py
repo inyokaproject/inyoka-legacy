@@ -3,8 +3,8 @@
     inyoka
     ~~~~~~
 
-    The inyoka portal system.  The system is devided into multiple modules
-    to which we refer as applications.  The name inyoka means "snake" in
+    The Inyoka portal system.  The system is devided into multiple modules
+    to which we refer as applications.  The name Inyoka means "snake" in
     Zulu and was chosen because it's an application written in Python *cough*.
 
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
@@ -249,11 +249,11 @@ class ApplicationContext(object):
 
 
 def _bootstrap():
-    """Get the inyoka version and store it."""
+    """Get the Inyoka version and store it."""
     global INYOKA_REVISION
     from subprocess import Popen, PIPE
 
-    # get inyoka revision
+    # get Inyoka revision
     hg = Popen(['hg', 'tip'], stdout=PIPE, stderr=PIPE, stdin=PIPE,
                cwd=os.path.dirname(__file__))
     hg.stdin.close()
@@ -270,10 +270,10 @@ def _bootstrap():
                 break
     INYOKA_REVISION = hg_node
 
-    # the path to the contents of the inyoka module
+    # the path to the contents of the Inyoka module
     os.environ.setdefault('INYOKA_MODULE', realpath(join(dirname(__file__))))
     conts = os.environ['INYOKA_MODULE']
-    # the path to the inyoka instance folder
+    # the path to the Inyoka instance folder
     os.environ.setdefault('INYOKA_INSTANCE', realpath(join(conts, pardir)))
 
     #: bind the context

@@ -1,12 +1,13 @@
 {%- extends 'paste/base.html' %}
 {% set sidebar=false %}
 {%- set title_trace = [paste.display_title] %}
-{%- set styles = ['highlighting.css'] %}
+{%- set styles = ['highlighting.css', 'paste.css'] %}
 
 {%- block content %}
 <h1>Paste {{ paste.display_title }} by {{ paste.author }}</h1>
-
-{{ paste.rendered_code }}
+<div class="pasted_code">
+  {{ paste.rendered_code }}
+</div>
 <p><span class="small">
   Created on {{ paste.pub_date|datetimeformat }}.
   <a href={{ href(paste, action='raw') }}>Show raw text</a>

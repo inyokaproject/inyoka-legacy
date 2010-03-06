@@ -11,46 +11,28 @@
 from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
+from inyoka.core.models import TaggedIdentity
 from inyoka.core.auth.models import User
 import re
 
 
-tag_re = re.compile(r'[\w-]{2,20}')
+class Tag(TaggedIdentity):
+    __mapper_args__ = {'polymorphic_identity': 'forum_tag'}
+
+    def get_url_values(self):
+        return 'forum/questions', {'tags': self.name}
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
     db.Column('question_id', db.Integer, db.ForeignKey('forum_question.id')),
-    db.Column('tag_id', db.Integer, db.ForeignKey('forum_tag.id'))
+    db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id))
 )
 
 forum_tag = db.Table('forum_forum_tag', db.metadata,
     db.Column('forum_id', db.Integer, db.ForeignKey('forum_forum.id')),
-    db.Column('tag_id', db.Integer, db.ForeignKey('forum_tag.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id)),
     db.Column('propose', db.Boolean)
 )
-
-
-class Tag(db.Model, SerializableObject):
-    __tablename__ = 'forum_tag'
-
-    #: serializer attributes
-    object_type = 'forum.tag'
-    public_fields = ('id', 'name')
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, index=True, unique=True)
-
-    def __init__(self, name):
-        if not tag_re.match(name):
-            raise ValueError('Invalid tag name "%s"' % name)
-        self.name = name
-        db.session.add(self)
-
-    def __unicode__(self):
-        return self.name
-
-    def get_url_values(self):
-        return 'forum/questions', {'tags': self.name}
 
 
 class Forum(db.Model, SerializableObject):
@@ -74,7 +56,7 @@ class Forum(db.Model, SerializableObject):
     subforums = db.relation('Forum',
             backref=db.backref('parent',remote_side=id),
             lazy=False, join_depth=1)
-    tags = db.relation('Tag', secondary=forum_tag, backref='forums',
+    tags = db.relation(Tag, secondary=forum_tag, backref='forums',
             lazy=False)
 
     @cached_property
@@ -215,7 +197,7 @@ class Question(Entry):
     title = db.Column(db.String(160), nullable=False)
     slug = db.Column(db.String(160), nullable=False, index=True)
 
-    tags = db.relation('Tag', secondary=question_tag, backref='questions',
+    tags = db.relation(Tag, secondary=question_tag, backref='questions',
             lazy=False)
 
     def get_url_values(self, **kwargs):
@@ -281,5 +263,5 @@ class Vote(db.Model, SerializableObject):
 
 
 class ForumSchemaController(db.ISchemaController):
-    models = [Forum, Tag, Vote, question_tag, forum_tag,
+    models = [Forum, Vote, question_tag, forum_tag,
               Entry, Question, Answer]

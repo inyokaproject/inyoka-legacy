@@ -56,7 +56,7 @@ def reset():
     from inyoka.core.api import db
     db.metadata.drop_all(bind=db.get_engine())
     initdb()
-    local("python %s" % _j('extra/create_testdata.py'))
+    local("python %s" % _j('extra/create_testdata.py'), capture=False)
 
 
 def _action(*args, **kwargs):

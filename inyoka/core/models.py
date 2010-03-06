@@ -8,6 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import re
 import random
 import string
 
@@ -16,9 +17,38 @@ from sqlalchemy.orm import MapperExtension
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from inyoka.core.database import db
 from inyoka.core.routing import href
+from inyoka.core.serializer import SerializableObject
 
 
 CONFIRM_ACTIONS = {}
+
+
+tag_re = re.compile(r'[\w-]{2,20}')
+
+
+class TaggedIdentity(db.Model, SerializableObject):
+    __tablename__ = 'core_tag'
+
+    #: serializer attributes
+    object_type = 'core.tag'
+    public_fields = ('id', 'name', 'slug')
+
+    id = db.Column(db.Integer, primary_key=True)
+    discriminator = db.Column('type', db.String(50))
+    name = db.Column(db.String(100), nullable=False, index=True, unique=True)
+    slug = db.Column(db.String(100), nullable=False, unique=True)
+
+    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name'),
+                       'polymorphic_on': discriminator}
+
+    def __init__(self, name):
+        if not tag_re.match(name):
+            raise ValueError('Invalid tag name "%s"' % name)
+        self.name = name
+        db.session.add(self)
+
+    def __unicode__(self):
+        return self.name
 
 
 class ConfirmMapperExtension(MapperExtension):
@@ -103,5 +133,5 @@ class Confirm(db.Model):
         return self.expires < date.today()
 
 
-class ConfirmSchemaController(db.ISchemaController):
-    models = [Confirm]
+class CoreSchemaController(db.ISchemaController):
+    models = [Confirm, TaggedIdentity]

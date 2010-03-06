@@ -11,6 +11,7 @@
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
+from inyoka.core.models import TaggedIdentity
 
 
 class ArticleMapperExtension(db.MapperExtension):
@@ -25,16 +26,8 @@ class ArticleMapperExtension(db.MapperExtension):
         cache.delete('news/article_intro/%s' % instance.id)
 
 
-class Category(db.Model):
-    __tablename__ = 'news_category'
-    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    slug = db.Column(db.String(100), nullable=False, unique=True)
-
-    def __unicode__(self):
-        return self.name
+class Category(TaggedIdentity):
+    __mapper_args__ = {'polymorphic_identity': 'news_tag'}
 
     def get_url_values(self, action='view'):
         values = {
@@ -215,4 +208,4 @@ class Article(db.Model):
 
 
 class NewsSchemaController(db.ISchemaController):
-    models = [Category, Article, Comment]
+    models = [Article, Comment]

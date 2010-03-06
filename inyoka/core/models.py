@@ -34,9 +34,11 @@ class TagQuery(db.Query):
         return self.cached('core/tags')
 
 
-class CoreTag(db.Model, SerializableObject):
+class Tag(db.Model, SerializableObject):
     __tablename__ = 'core_tag'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
+
+    query = db.session.query_property(TagQuery)
 
     #: serializer attributes
     object_type = 'core.tag'
@@ -147,4 +149,4 @@ class Confirm(db.Model):
 
 
 class CoreSchemaController(db.ISchemaController):
-    models = [Confirm, CoreTag]
+    models = [Confirm, Tag]

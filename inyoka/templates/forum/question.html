@@ -48,7 +48,7 @@
 
     <p>
         {% for tag in question.tags %}
-        <a class="tag" href="{{ href(tag) }}">{{ tag.name }}</a>
+        <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
         {% endfor %}
     </p>
   </div>

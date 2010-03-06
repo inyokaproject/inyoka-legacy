@@ -19,8 +19,8 @@
     {% if tags %}
       <h3 class="navi_tags">{{ _('Tags') }}</h3>
       <ul>
-      {%- for tag in tag -%}
-        <li><a href="{{ href(tag) }}">{{ tag.name|e }}</a></li>
+      {%- for tag in tags -%}
+        <li><a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name|e }}</a></li>
       {%- endfor %}
       </ul>
     {% endif %}

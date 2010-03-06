@@ -11,7 +11,7 @@
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
-from inyoka.core.models import CoreTag
+from inyoka.core.models import Tag
 
 
 class ArticleMapperExtension(db.MapperExtension):
@@ -24,15 +24,6 @@ class ArticleMapperExtension(db.MapperExtension):
         """Cleanup caches"""
         cache.delete('news/article_text/%s' % instance.id)
         cache.delete('news/article_intro/%s' % instance.id)
-
-
-class Tag(CoreTag):
-
-    def get_url_values(self, action='view'):
-        values = {
-            'view': 'news/index',
-        }
-        return values[action], {'slug': self.slug}
 
 
 class CommentMapperExtension(db.MapperExtension):

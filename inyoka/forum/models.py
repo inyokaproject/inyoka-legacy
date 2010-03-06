@@ -11,15 +11,9 @@
 from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
-from inyoka.core.models import CoreTag
+from inyoka.core.models import Tag
 from inyoka.core.auth.models import User
 import re
-
-
-class Tag(CoreTag):
-
-    def get_url_values(self):
-        return 'forum/questions', {'tags': self.name}
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,

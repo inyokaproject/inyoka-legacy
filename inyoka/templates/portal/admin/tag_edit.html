@@ -1,10 +1,10 @@
 {%- extends 'admin/base.html' %}
 
 {%- block admin_content %}
-{% if category.name %}
-  <h3>{% trans category=category.name %}Edit “{{ category }}”{% endtrans %}</h3>
+{% if tag.name %}
+  <h3>{% trans tag=tag.name %}Edit “{{ tag }}”{% endtrans %}</h3>
 {% else %}
-  <h3>{{ _('New Category') }}</h3>
+  <h3>{{ _('New Tag') }}</h3>
 {% endif %}
 
 <form action="" method="post">
@@ -12,7 +12,7 @@
 {{ form.hidden_fields }}
 <div class="actions">
   <input type="submit" value="{{ _('Submit') }}">
-  {% if category.name %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
+  {% if tag.name %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
 </div>
 </form>
 

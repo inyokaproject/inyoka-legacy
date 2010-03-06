@@ -31,8 +31,6 @@ class Category(TaggedIdentity):
     def get_url_values(self, action='view'):
         values = {
             'view': 'news/index',
-            'edit': 'admin/news/category_edit',
-            'delete': 'admin/news/category_delete',
         }
         return values[action], {'slug': self.slug}
 

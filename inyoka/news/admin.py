@@ -13,8 +13,8 @@ from inyoka.core.api import view, templated, redirect, redirect_to, db, Rule, \
     render_template
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
-from inyoka.news.forms import EditCategoryForm, EditArticleForm
-from inyoka.news.models import Category, Article
+from inyoka.news.forms import EditArticleForm
+from inyoka.news.models import Article
 
 
 class NewsAdminProvider(IAdminProvider):
@@ -27,11 +27,6 @@ class NewsAdminProvider(IAdminProvider):
 
     url_rules = [
         Rule('/', endpoint='index'),
-        Rule('/categories/', endpoint='categories'),
-        Rule('/categories/new/', defaults={'slug': None},
-             endpoint='category_edit'),
-        Rule('/categories/<slug>/', endpoint='category_edit'),
-        Rule('/categories/<slug>/delete', endpoint='category_delete'),
         Rule('/articles/', endpoint='articles'),
         Rule('/articles/new/', defaults={'slug': None},
              endpoint='article_edit'),
@@ -43,53 +38,6 @@ class NewsAdminProvider(IAdminProvider):
     @templated('news/admin/index.html')
     def index(self, request):
         return {}
-
-    @view('categories')
-    @templated('news/admin/categories.html')
-    def categories(self, request):
-        categories = Category.query.all()
-        return {
-            'categories': categories
-        }
-
-    @view('category_edit')
-    @templated('news/admin/category_edit.html')
-    def categories_edit(self, request, slug=None):
-        new = slug is None
-        if new:
-            category, data = Category(), {}
-        else:
-            category = Category.query.filter_by(slug=slug).one()
-            data = model_to_dict(category, exclude=('slug'))
-
-        form = EditCategoryForm(data)
-        if 'delete' in request.form:
-            return redirect_to('admin/news/category_delete', slug=category.slug)
-        elif request.method == 'POST' and form.validate(request.form):
-            category = update_model(category, form, ('name'))
-            db.session.commit()
-            request.flash(_(u'Updated category'), True)
-        return {
-            'form': form.as_widget(),
-            'category': category,
-        }
-
-    @view('category_delete')
-    def categories_delete(self, request, slug):
-        category = Category.query.filter_by(slug=slug).one()
-        if 'cancel' in request.form:
-            flash(_(u'Action canceled'))
-        elif request.method == 'POST' and 'confirm' in request.form:
-            db.session.delete(category)
-            db.session.commit()
-            request.flash(_(u'The category %s was deleted successfully.'
-                          % category.name))
-            return redirect_to('admin/news/categories')
-        else:
-            request.flash(render_template('news/admin/category_delete.html', {
-                'category': category
-            }))
-        return redirect_to(category, action='edit')
 
     @view('articles')
     @templated('news/admin/articles.html')

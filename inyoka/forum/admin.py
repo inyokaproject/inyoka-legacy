@@ -66,8 +66,6 @@ class ForumAdminProvider(IAdminProvider):
         }
 
 
-# This is yet just a dummy to show that it works :)
-# just visit http://admin.inyoka.local:5000/_api/forum/get_tags/?format=xml
 class ForumAdminServiceProvider(IAdminServiceProvider):
     name = 'forum'
 

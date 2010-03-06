@@ -28,26 +28,32 @@ tag_re = re.compile(r'[\w-]{2,20}')
 
 class TaggedIdentity(db.Model, SerializableObject):
     __tablename__ = 'core_tag'
+    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
 
     #: serializer attributes
     object_type = 'core.tag'
     public_fields = ('id', 'name', 'slug')
 
     id = db.Column(db.Integer, primary_key=True)
-    discriminator = db.Column('type', db.String(50))
     name = db.Column(db.String(20), nullable=False, index=True)
     slug = db.Column(db.String(20), nullable=False, unique=True)
 
-    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
-
-    def __init__(self, name):
-        if not tag_re.match(name):
-            raise ValueError('Invalid tag name "%s"' % name)
-        self.name = name
-        db.session.add(self)
-
     def __unicode__(self):
         return self.name
+
+    @db.validates('name')
+    def validate_tag(self, key, tag):
+        if not tag_re.match(tag):
+            raise ValueError(u'Invalid tag name %s' % tag)
+        return tag
+
+    def get_url_values(self, action='view'):
+        values = {
+            'view': 'portal/tags',
+            'edit': 'admin/portal/tag_edit',
+            'delete': 'admin/portal/tag_delete',
+        }
+        return values[action], {'slug': self.slug}
 
 
 class ConfirmMapperExtension(MapperExtension):

@@ -37,3 +37,7 @@ def get_profile_form():
         ProfileForm.fields[field] = forms.TextField(field, max_length=255, required=True)
 
     return ProfileForm
+
+
+class EditTagForm(forms.Form):
+    name = forms.TextField(_(u'Name'), max_length=20)

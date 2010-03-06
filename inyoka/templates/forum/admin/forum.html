@@ -1,6 +1,13 @@
 {% extends 'admin/base.html' %}
+{%- set scripts = ['widgets.js'] + scripts|default([]) %}
+{%- set styles = ['widgets.css'] + styles|default([]) %}
 
 {% block admin_content %}
 <h1>Create new Forum</h1>
 {{ form() }}
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#f_tags").TokenWidget("{{ href('admin/api/forum_get_tags', format='json') }}", {});
+   });
+</script>
 {% endblock %}

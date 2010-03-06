@@ -35,8 +35,8 @@ class TaggedIdentity(db.Model, SerializableObject):
 
     id = db.Column(db.Integer, primary_key=True)
     discriminator = db.Column('type', db.String(50))
-    name = db.Column(db.String(100), nullable=False, index=True, unique=True)
-    slug = db.Column(db.String(100), nullable=False, unique=True)
+    name = db.Column(db.String(20), nullable=False, index=True, unique=True)
+    slug = db.Column(db.String(20), nullable=False, unique=True)
 
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name'),
                        'polymorphic_on': discriminator}

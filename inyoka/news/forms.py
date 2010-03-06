@@ -10,11 +10,7 @@
 """
 from inyoka.core import forms, auth
 from inyoka.i18n import _
-from inyoka.news.models import Category
-
-
-class EditCategoryForm(forms.Form):
-    name = forms.TextField(_(u'Name'), max_length=100)
+from inyoka.news.models import Tag
 
 
 class EditArticleForm(forms.Form):
@@ -25,18 +21,18 @@ class EditArticleForm(forms.Form):
     text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
                            required=True)
     public = forms.BooleanField(_(u'Published'))
-    category = forms.ModelField(Category, 'name', _(u'Category'),
-                                widget=forms.widgets.SelectBox, required=True)
+    tag = forms.ModelField(Tag, 'name', _(u'Tag'),
+                           widget=forms.widgets.SelectBox, required=True)
     author = forms.ModelField(auth.User, 'username', _(u'Author'),
                               widget=forms.widgets.SelectBox, required=True)
 
     def __init__(self, *args, **kwargs):
         forms.Form.__init__(self, *args, **kwargs)
-        # setup the possible choices for authors and categories
+        # setup the possible choices for authors and tags
         authors = [u.username for u in auth.User.query.autoflush(False).all()]
-        categories = [c.name for c in Category.query.autoflush(False).all()]
+        tags = [c.name for c in Tag.query.autoflush(False).all()]
         self.author.choices = authors
-        self.category.choices = categories
+        self.tag.choices = tags
 
 
 class EditCommentForm(forms.Form):

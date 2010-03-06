@@ -16,11 +16,11 @@
       <li><a href="{{ href('news/archive') }}">{{ _('Archive') }}</a></li>
       {% endif -%}
     </ul>
-    {% if categories %}
-      <h3 class="navi_categories">{{ _('Categories') }}</h3>
+    {% if tags %}
+      <h3 class="navi_tags">{{ _('Tags') }}</h3>
       <ul>
-      {%- for category in categories -%}
-        <li><a href="{{ href(category) }}">{{ category.name|e }}</a></li>
+      {%- for tag in tag -%}
+        <li><a href="{{ href(tag) }}">{{ tag.name|e }}</a></li>
       {%- endfor %}
       </ul>
     {% endif %}

@@ -11,7 +11,7 @@
 import datetime
 from inyoka.core.test import *
 from inyoka.core.auth.models import User
-from inyoka.news.models import Article, Category, Comment
+from inyoka.news.models import Article, Tag, Comment
 
 
 def get_user_callback():
@@ -19,12 +19,12 @@ def get_user_callback():
 
 
 def get_article_data():
-    cat = Category.query.filter_by(slug=u'ubuntu').one()
+    cat = Tag.query.filter_by(slug=u'ubuntu').one()
     return {
         'title': u'My Ubuntu rocks!!',
         'intro': u'Well, it just rocks!!',
         'text': u'And because you\'re so tschaka baam, you\'re using Ubuntu!!',
-        'public': True, 'category': cat, 'author': get_user_callback()
+        'public': True, 'tag': cat, 'author': get_user_callback()
     }
 
 
@@ -40,34 +40,34 @@ def get_comments():
 class TestNewsModels(TestSuite):
 
     fixtures = {
-        'categories': [
-            fixture(Category, {'name': 'Ubuntu'}),
-            fixture(Category, {'name': 'Ubuntuusers'})
+        'tags': [
+            fixture(Tag, {'name': 'Ubuntu'}),
+            fixture(Tag, {'name': 'Ubuntuusers'})
         ],
         'articles': [fixture(Article, get_article_data)],
         'comments': get_comments
     }
 
-    @with_fixtures('categories')
-    def test_category_automatic_slug(self, fixtures):
-        category = fixtures['categories'][0]
-        eq_(category.slug, 'ubuntu')
+    @with_fixtures('tags')
+    def test_tag_automatic_slug(self, fixtures):
+        tag = fixtures['tags'][0]
+        eq_(tag.slug, 'ubuntu')
 
-    @with_fixtures('categories', 'articles')
+    @with_fixtures('tags', 'articles')
     def test_article_attributes(self, fixtures):
         article = fixtures['articles'][0]
         eq_(article.slug, 'my-ubuntu-rocks')
 
-    @with_fixtures('categories', 'articles', 'comments')
+    @with_fixtures('tags', 'articles', 'comments')
     def test_comment_counter(self, fixtures):
         article = fixtures['articles'][0]
         eq_(article.comment_count, 2)
 
-    @with_fixtures('categories')
+    @with_fixtures('tags')
     def test_article_automatic_updated_pub_date(self, fixtures):
-        category = fixtures['categories'][0]
+        tag = fixtures['tags'][0]
         article = Article(title=u'foo', intro=u'bar', text=u'baz', public=True,
-                          category=category, author=get_user_callback())
+                          tag=tag, author=get_user_callback())
         db.session.commit()
         eq_(article.was_updated, False)
         article.updated = article.pub_date + datetime.timedelta(days=2)

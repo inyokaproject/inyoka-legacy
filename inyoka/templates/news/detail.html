@@ -13,10 +13,10 @@
     </div>
     <p class="meta">
       {%- trans author_url=href(article.author.profile), author_name=article.author.username|e,
-                article_pubdate=article.pub_date|datetimeformat('short')|e, category_url=href(article.category),
-                category_name=article.category.name|e -%}
+                article_pubdate=article.pub_date|datetimeformat('short')|e, tag_url=href(article.tag),
+                tag_name=article.tag.name|e -%}
       written by <a href="{{ author_url }}">{{ author_name }}</a> {{ article_pubdate }}
-      in <a href="{{ category_url }}">{{ category_name }}</a>
+      in <a href="{{ tag_url }}">{{ tag_name }}</a>
       {%- endtrans %}
       {%- if article.was_updated %}
       – {{ _('updated on') }} {{ article.updated|datetimeformat('short') }}

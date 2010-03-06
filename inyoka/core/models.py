@@ -26,7 +26,15 @@ CONFIRM_ACTIONS = {}
 tag_re = re.compile(r'[\w-]{2,20}')
 
 
-class TaggedIdentity(db.Model, SerializableObject):
+class TagQuery(db.Query):
+
+    def get_cached(self):
+        """This method is a wrapper around common tag caching
+        to not write the cache key everywhere in the code"""
+        return self.cached('core/tags')
+
+
+class CoreTag(db.Model, SerializableObject):
     __tablename__ = 'core_tag'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
 
@@ -139,4 +147,4 @@ class Confirm(db.Model):
 
 
 class CoreSchemaController(db.ISchemaController):
-    models = [Confirm, TaggedIdentity]
+    models = [Confirm, CoreTag]

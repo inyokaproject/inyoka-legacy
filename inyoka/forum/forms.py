@@ -14,7 +14,7 @@ from inyoka.forum.models import Forum, Tag
 
 
 def create_tag(name):
-    return Tag(name)
+    return Tag(name=name)
 
 class AskQuestionForm(forms.Form):
 

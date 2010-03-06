@@ -62,7 +62,7 @@ class NewsAdminProvider(IAdminProvider):
             return redirect_to('admin/news/article_delete', slug=article.slug)
         elif request.method == 'POST' and form.validate(request.form):
             article = update_model(article, form, ('pub_date', 'updated',
-                'title', 'intro', 'text', 'public', 'category',
+                'title', 'intro', 'text', 'public', 'tag',
                 'author'))
             db.session.commit()
             request.flash(_(u'Updated article'), True)

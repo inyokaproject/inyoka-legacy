@@ -3,8 +3,8 @@
 {%- from "news/_article.html" import render_article %}
 
 {% block content %}
-  {%- if category %}
-    <h3>{% trans category=category %}Articles for “{{ category }}”{% endtrans %}</h3>
+  {%- if tag %}
+    <h3>{% trans tag=tag %}Articles for “{{ tag }}”{% endtrans %}</h3>
   {%- endif %}
   {%- if articles %}
   {%- for article in articles %}

@@ -11,7 +11,7 @@
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
-from inyoka.core.models import TaggedIdentity
+from inyoka.core.models import CoreTag
 
 
 class ArticleMapperExtension(db.MapperExtension):
@@ -26,7 +26,7 @@ class ArticleMapperExtension(db.MapperExtension):
         cache.delete('news/article_intro/%s' % instance.id)
 
 
-class Category(TaggedIdentity):
+class Tag(CoreTag):
 
     def get_url_values(self, action='view'):
         values = {
@@ -144,8 +144,8 @@ class Article(db.Model):
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
-    category_id = db.Column(db.ForeignKey(Category.id), nullable=False)
-    category = db.relation(Category,
+    tag_id = db.Column(db.ForeignKey(Tag.id), nullable=False)
+    tag = db.relation(Tag,
         backref=db.backref('articles', lazy='dynamic'))
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
     author = db.relation(auth.User,

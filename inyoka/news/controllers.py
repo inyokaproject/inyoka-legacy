@@ -15,7 +15,7 @@ from inyoka.core.api import IController, Rule, cache, view, templated, href, \
     redirect_to, db
 from inyoka.core.http import Response
 from inyoka.core.exceptions import Forbidden
-from inyoka.news.models import Article, Category, Comment
+from inyoka.news.models import Article, Tag, Comment
 from inyoka.news.forms import EditCommentForm
 from inyoka.utils.pagination import URLPagination
 
@@ -24,8 +24,8 @@ def context_modifier(request, context):
     """This function adds two things to the context of all pages:
     `archive`
         A list of the latest months with articles.
-    `categories`
-        A list of all categories.
+    `tags`
+        A list of all tags.
     """
     key = 'news/archive'
     data = cache.get(key)
@@ -42,10 +42,10 @@ def context_modifier(request, context):
         }
         cache.set(key, data)
 
-    categories = Category.query.cached('news/categories')
+    tags = Tag.query.get_cached()
     context.update(
         months=get_month_names(),
-        categories=categories,
+        tags=tags,
         **data
     )
 
@@ -56,8 +56,8 @@ class NewsController(IController):
     url_rules = [
         Rule('/', endpoint='index'),
         Rule('/<int:page>/', endpoint='index'),
-        Rule('/category/<slug>/', endpoint='index'),
-        Rule('/category/<slug>/<int:page>/', endpoint='index'),
+        Rule('/tag/<slug>/', endpoint='index'),
+        Rule('/tag/<slug>/<int:page>/', endpoint='index'),
         Rule('/<slug>/', endpoint='detail'),
         Rule('/archive/', endpoint='archive'),
         Rule('/archive/<int(fixed_digits=4):year>/', endpoint='archive'),
@@ -72,10 +72,10 @@ class NewsController(IController):
     @view('index')
     @templated('news/index.html', modifier=context_modifier)
     def index(self, request, slug=None, page=1):
-        category = None
+        tag = None
         if slug:
-            category = Category.query.filter_by(slug=slug).one()
-            articles = category.articles
+            tag = Tag.query.filter_by(slug=slug).one()
+            articles = tag.articles
         else:
             articles = Article.query
 
@@ -87,7 +87,7 @@ class NewsController(IController):
         return {
             'articles':      pagination.get_objects(),
             'pagination':    pagination,
-            'category':      category
+            'tag':           tag
         }
 
     @view('detail')

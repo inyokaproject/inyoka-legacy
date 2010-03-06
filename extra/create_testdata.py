@@ -43,14 +43,14 @@ def create_forum_test_data():
     u2 = User.query.filter_by(username='quaki').first()
 
     # tags
-    gnome = Tag(u'GNOME')
-    gtk = Tag(u'GTK')
-    kde = Tag(u'KDE')
-    qt = Tag(u'QT')
-    window_manager = Tag(u'Window-Manager')
-    hardware = Tag(u'Hardware')
-    inyoka = Tag(u'Inyoka')
-    audio = Tag(u'Audio')
+    gnome = Tag(name=u'GNOME')
+    gtk = Tag(name=u'GTK')
+    kde = Tag(name=u'KDE')
+    qt = Tag(name=u'QT')
+    window_manager = Tag(name=u'Window-Manager')
+    hardware = Tag(name=u'Hardware')
+    inyoka = Tag(name=u'Inyoka')
+    audio = Tag(name=u'Audio')
     db.session.commit()
 
     # forums
@@ -99,19 +99,19 @@ def create_forum_test_data():
 
 def create_news_test_data():
     from inyoka.core.auth.models import User
-    from inyoka.news.models import Category, Comment, Article
+    from inyoka.news.models import Tag, Comment, Article
     u = User.query.filter_by(username=u'quaki').one()
     u2 = User.query.filter_by(username=u'dummuser').one()
     u3 = User.query.filter_by(username=u'tux der große').one()
-    cat1 = Category(name=u'Ubuntu')
-    cat2 = Category(name=u'Ubuntuusers')
+    t1 = Tag(name=u'Ubuntu')
+    t2 = Tag(name=u'Ubuntuusers')
 
     a1 = Article(title=u'Mein Ubuntu rockt!',
         intro=(u'Naja, mein Ubuntu rockt halt einfach und ich bin der'
                u' Meinung, \ndas das so bleiben sollte!'),
         text=(u'Und da ihr alle so cool seit und tschaka baam seit'
               u' verwendet ihr auch alle Ubuntu!!!'),
-        public=True, category=cat1, author=u)
+        public=True, tag=t1, author=u)
 
     db.session.commit()
 

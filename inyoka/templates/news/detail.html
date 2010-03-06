@@ -13,7 +13,7 @@
     </div>
     <p class="meta">
       {%- trans author_url=href(article.author.profile), author_name=article.author.username|e,
-                article_pubdate=article.pub_date|datetimeformat('short')|e, tag_url=href(article.tag),
+                article_pubdate=article.pub_date|datetimeformat('short')|e, tag_url=href('news/index', slug=article.tag.slug),
                 tag_name=article.tag.name|e -%}
       written by <a href="{{ author_url }}">{{ author_name }}</a> {{ article_pubdate }}
       in <a href="{{ tag_url }}">{{ tag_name }}</a>

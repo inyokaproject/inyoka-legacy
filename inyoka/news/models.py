@@ -27,7 +27,6 @@ class ArticleMapperExtension(db.MapperExtension):
 
 
 class Category(TaggedIdentity):
-    __mapper_args__ = {'polymorphic_identity': 'news_tag'}
 
     def get_url_values(self, action='view'):
         values = {

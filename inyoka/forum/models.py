@@ -17,7 +17,6 @@ import re
 
 
 class Tag(TaggedIdentity):
-    __mapper_args__ = {'polymorphic_identity': 'forum_tag'}
 
     def get_url_values(self):
         return 'forum/questions', {'tags': self.name}

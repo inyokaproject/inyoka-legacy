@@ -38,8 +38,7 @@ class TaggedIdentity(db.Model, SerializableObject):
     name = db.Column(db.String(20), nullable=False, index=True)
     slug = db.Column(db.String(20), nullable=False, unique=True)
 
-    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name'),
-                       'polymorphic_on': discriminator}
+    __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
 
     def __init__(self, name):
         if not tag_re.match(name):

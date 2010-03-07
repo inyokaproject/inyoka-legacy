@@ -39,6 +39,7 @@ _test_components = [Interface1, Interface2, Interface3,
                     Implementation1, Implementation2, Implementation3,
                     Implementation4]
 
+
 def _teardown_components():
     ctx.load_components(_test_components)
 
@@ -97,3 +98,20 @@ def test_components():
     obj = Interface(ctx)
     assert_false(hasattr(obj, '_isinterface'))
     assert_false(hasattr(obj, '_interfaces'))
+
+
+@raises(RuntimeError)
+def test_double_interfaces_runtimeerror():
+    class SomeInterface(Interface):
+        pass
+
+    class SomeInterface(Interface):
+        pass
+
+
+@raises(RuntimeError)
+def test_unable_to_load_non_interface():
+    class SomeDummy(object):
+        pass
+
+    ctx.load_component(SomeDummy)

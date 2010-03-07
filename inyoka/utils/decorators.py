@@ -78,7 +78,7 @@ def make_decorator(attr):
             return update_wrapper(_proxy, func)(func)
         elif func is None:
             # @register_view()
-            return update_wrapper(_proxy, func)
+            return _proxy
         elif isinstance(func, basestring):
             # @register_view('alias')
             alias = func

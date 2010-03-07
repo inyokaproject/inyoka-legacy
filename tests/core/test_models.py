@@ -12,7 +12,7 @@ from inyoka.core.test import *
 from inyoka.core.auth.models import User, USER_STATUS_MAP
 
 
-def test_user_status():
+def test_user():
     me = User('me', 'me@example.com', 's3cr3t')
     db.session.commit()
     eq_(me._status, 0)
@@ -21,3 +21,9 @@ def test_user_status():
     me.status = 'normal'
     eq_(USER_STATUS_MAP[me._status], me.status)
     assert_true(me.is_active)
+    assert_true(me is User.query.get('me'))
+    assert_true(me is User.query.get(me.id))
+    assert_true(me.check_password('s3cr3t'))
+    assert_false(me.check_password('secret'))
+    # and test if check_password hashing does work with unicode strings
+    assert_true(me.check_password(u's3cr3t'))

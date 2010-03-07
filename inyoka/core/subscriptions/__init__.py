@@ -78,8 +78,7 @@ class SubscriptionType(Interface):
         """
         if cls.subject_type is None:
             return None
-        raise NotImplementedError
-
+        raise NotImplementedError()
 
     @classmethod
     def by_name(cls, name):

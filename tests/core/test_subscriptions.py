@@ -25,6 +25,11 @@ class Category(db.Model):
     name = db.Column(db.String(30))
 
 
+class Wrapper(db.Model):
+    __tablename__ = '_test_subscription_wrapper'
+    id = db.Column(db.Integer, primary_key=True)
+
+
 class Entry(db.Model):
     __tablename__ = '_test_subscription_entry'
     id = db.Column(db.Integer, primary_key=True)
@@ -40,8 +45,15 @@ class Comment(db.Model):
     entry = db.relation(Entry)
 
 
+class Other(db.Model):
+    __tablename__ = '_test_subscription_other'
+    id = db.Column(db.Integer, primary_key=True)
+    wrapper_id = db.Column(db.ForeignKey(Wrapper.id))
+    wrapper = db.relation(Wrapper)
+
+
 class SubscriptionTestSchemaController(db.ISchemaController):
-    models = [Category, Entry, Comment]
+    models = [Category, Entry, Comment, Wrapper, Other]
 
 
 class NotifyTrackerMixin(object):
@@ -67,6 +79,13 @@ class BlogSubscriptionType(SubscriptionType, NotifyTrackerMixin):
     object_type = Entry
     mode = 'multiple'
     actions = ['__test_new_entry']
+
+class BadImplementedType(SubscriptionType, NotifyTrackerMixin):
+    name = '__test_something'
+    subject_type = Wrapper
+    object_type = Other
+    mode = 'multiple'
+    actions = ['__test_new_other']
 
 class CommentsSubscriptionType(SubscriptionType, NotifyTrackerMixin):
     name = '__test_comments'
@@ -140,6 +159,12 @@ class TestSubscriptions(TestSuite):
         self._check_multiple_state(users['zwei'], '__test_blog', None,
                               set((entries[0].id, entries[1].id,
                                    entries[2].id, entries[3].id)), 4)
+
+        # check for not well implemented subscription types
+        w1 = Wrapper()
+        db.session.commit()
+        assert_raises(NotImplementedError,
+            lambda: Subscription.new(Other(wrapper=w1), '__test_new_other'))
 
         Subscription.accessed(users['zwei'], entries[2])
         Subscription.accessed(users['zwei'], entries[1])

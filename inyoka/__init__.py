@@ -34,7 +34,7 @@ class InterfaceMeta(type):
     listed the component implements.
     """
 
-    _registry = {}
+    _registry = list()
 
     def __new__(mcs, classname, bases, dict_):
         obj = type.__new__(mcs, classname, bases, dict_)
@@ -50,7 +50,7 @@ class InterfaceMeta(type):
             if uniquename in InterfaceMeta._registry:
                 raise RuntimeError(u'Interface type with name %r already '
                                    u'exists' % uniquename)
-            InterfaceMeta._registry[uniquename] = True
+            InterfaceMeta._registry.append(uniquename)
         else:
             # A Interface
             obj._interfaces = interfaces = set()
@@ -63,8 +63,6 @@ class InterfaceMeta(type):
             for cls in possible_interfaces:
                 if '_isinterface' in cls.__dict__:
                     interfaces.add(cls)
-                elif '_interfaces' in cls.__dict__:
-                    interfaces.update(cls._interfaces)
         return obj
 
 
@@ -87,7 +85,6 @@ class Interface(object):
 
 def _is_interface(value):
     """Determine if a class is an interface"""
-    _registry = InterfaceMeta._registry
     return (isclass(value) and issubclass(value, Interface) and
             value is not Interface)
 

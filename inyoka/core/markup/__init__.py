@@ -208,14 +208,6 @@ class Parser(object):
         #: node dispatchers
         self._handlers = {
             'text':                 self.parse_text,
-            'strong_begin':         self.parse_strong,
-            'underline_begin':      self.parse_underline,
-            'emphasized_begin':     self.parse_emphasized
-        }
-
-        #: node dispatchers
-        self._handlers = {
-            'text':                 self.parse_text,
             'raw':                  self.parse_raw,
             'nl':                   self.parse_nl,
             'highlighted_begin':    self.parse_highlighted,

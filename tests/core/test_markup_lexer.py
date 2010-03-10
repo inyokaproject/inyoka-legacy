@@ -28,20 +28,44 @@ def test_inline_markup():
         u'~-(foo)-~'
         u'~+(foo)+~'
         u'((foo))'
+        u'[mark]foo[/mark]'
+        u'[raw]foo[/raw]'
         u'[color=red]foo[/color]'
+        u'[size=10]foo[/size]'
+        u'[font=Monaco]foo[/font]'
+        u'[mod=foo]bar[/mod]'
+        u'[edit=foo]bar[/edit]'
     ).expect
 
     for element in ('emphasized', 'strong', 'underline', 'sub', 'sup',
                     'stroke', 'code', 'escaped_code', 'small', 'big',
-                    'footnote'):
+                    'footnote', 'highlighted'):
         expect(element + '_begin')
         expect('text', 'foo')
         expect(element + '_end')
+
+    expect('raw', 'foo')
 
     expect('color_begin')
     expect('color_value', 'red')
     expect('text', 'foo')
     expect('color_end')
+    expect('size_begin')
+    expect('font_size', '10')
+    expect('text', 'foo')
+    expect('size_end')
+    expect('font_begin')
+    expect('font_face', 'Monaco')
+    expect('text', 'foo')
+    expect('font_end')
+    expect('mod_begin')
+    expect('username', 'foo')
+    expect('text', 'bar')
+    expect('mod_end')
+    expect('edit_begin')
+    expect('username', 'foo')
+    expect('text')
+    expect('edit_end')
 
     expect('eof')
 

@@ -14,18 +14,19 @@ ul.TokenWidget-results {
     border: 1px solid #666;
     list-style: none;
     font-size: .8em;
+    margin: 0;
 }
 
-#content ul.TokenWidget-results li {
+ul.TokenWidget-results li {
     list-style: none;
     margin: 0;
 }
 
-#content ul.TokenWidget-results li.selected {
+ul.TokenWidget-results li.selected {
     background: #90A818;
 }
 
-#content ul.TokenWidget-results li.meta {
+ul.TokenWidget-results li.meta {
     font-size: .9em;
     font-style: italic;
     color: #333;

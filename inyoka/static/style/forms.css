@@ -1,8 +1,10 @@
 /* Styles for various form elements */
 
+/* TODO: Sort everything here... */
+
 input[type="submit"], a.button, button {
   display: inline-block;
-  margin: 0.5em;
+  margin: 0.5em 0;
   padding: 5px 10px 5px 10px;   /* Links */
   border: 1px solid #dedede;
   border-top: 1px solid #eee;
@@ -14,6 +16,8 @@ input[type="submit"], a.button, button {
   font-weight: bold;
   color: #565656;
   cursor: pointer;
+  -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em;
 }
 
 input[type="button"], button {
@@ -68,7 +72,7 @@ input[name="delete"] {
   font-weight: normal;
   background-image: url(../img/cancel.png);
   background-repeat: no-repeat;
-  background-position: left center;
+  background-position: 5px center;
 }
 
 input[name="delete"]:hover {
@@ -112,7 +116,7 @@ input[type='password']:hover, select:hover {
 textarea:focus, input[type='text']:focus,
 input[type='password']:focus, select:focus {
   border-color: #888;
-  outline: 2px solid #B8FFAA;
+  outline: 2px solid #EEF7C2;
 }
 
 input, select {
@@ -121,4 +125,13 @@ input, select {
 
 input[type='text'],input[type='password'] {
   cursor: text;
+}
+
+input[type="text"],
+textarea {
+    border: 1px solid #666;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #90A818;
 }

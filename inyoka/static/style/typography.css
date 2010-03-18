@@ -1,0 +1,190 @@
+/* Typography */
+
+body {
+  font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
+}
+
+h1, h2, h3 {
+  color: #304800;
+  margin-bottom: .5em;
+}
+
+h1 {
+    font-size: 1.4em;
+}
+
+h2 {
+    font-size: 1.15em;
+    color: #90A818;
+}
+
+h2 a {
+    color: #90A818;
+    text-decoration: none;
+}
+
+h2 a:hover {
+    text-decoration: underline;
+}
+
+p {
+    margin: .5em 0;
+}
+
+strong, th, thead td, h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+cite, em, dfn {
+  font-style: italic;
+}
+
+code, kbd, samp, pre, tt, var,
+input[type='text'], input[type='password'], textarea {
+  font-size: 0.8em;
+  font-family: monaco, "Lucida Console", courier, monospace;
+}
+
+del {
+  text-decoration: line-through;
+  color: #666;
+}
+
+ins, dfn {
+  border-bottom: 1px solid #ccc;
+}
+
+small, sup, sub {
+  font-size: 0.8em;
+}
+
+abbr, acronym {
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: .1em;
+}
+
+a abbr, a acronym {
+  border: none;
+}
+
+abbr[title], acronym[title], dfn[title] {
+  cursor: help;
+  border-bottom: 1px solid #ccc;
+}
+
+ol {
+	list-style: decimal;
+}
+
+ul {
+	list-style: disc;
+	margin-left: 2em;
+}
+
+a {
+  color: #304800;
+}
+
+ul.errors {
+    list-style: none;
+    margin: 0.5em 0;
+    padding: 0.3em;
+    background: #FBE3E4;
+    color: #8a1f11;
+    border: #FBC2C4 2px solid;
+}
+
+
+/* Various text style classes */
+.small {
+  font-size: .8em;
+  margin-bottom: 1.8em;
+  line-height: 1.8em;
+}
+
+.large {
+  font-size: 1.2em;
+  line-height: 2.5em;
+  margin-bottom: 1.25em;
+}
+
+.hide {
+  display: none;
+}
+
+.quiet {
+  color: #666;
+}
+
+.loud {
+  color: #000;
+}
+
+.highlight {
+  background: #ff0;
+}
+
+.top {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.bottom {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.thin {
+  font-weight: lighter;
+}
+
+.error, .notice, .success {
+  display: inline-block;
+  padding: .5em;
+  margin-bottom: 1.6em;
+  border: 2px solid #ddd;
+}
+
+.error {
+  background: #FBE3E4;
+  color: #8a1f11;
+  border-color: #FBC2C4;
+}
+
+.notice {
+  background: #FFF6BF;
+  color: #514721;
+  border-color: #FFD324;
+}
+
+.success {
+  background: #E6EFC2;
+  color: #264409;
+  border-color: #C6D880;
+}
+
+.error a {
+  color: #8a1f11;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notice a {
+  color: #514721;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+.success a {
+  color: #264409;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+
+.center {
+  text-align: center;
+}

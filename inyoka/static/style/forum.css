@@ -1,10 +1,14 @@
-#content ul.tags li {
+ul.tags {
+  margin: 0;
+}
+
+ul.tags li {
   display: inline;
   line-height: 1.6em;
   margin: 0;
 }
 
-#content a.tag {
+a.tag {
     background: #D5E19D;
     color: #304800;
     padding: .2em .5em;
@@ -14,45 +18,26 @@
     -webkit-border-radius: 0.4em;
 }
 
-#content a.tag:hover {
+a.tag:hover {
     background: #304800;
     color: #D5E19D;
 }
 
-#content p {
-    margin: .5em 0;
+h2 {
+  margin-bottom: 0;
 }
 
 div.question {
   margin-bottom: 1em;
 }
 
-#content h1 {
-    font-size: 1.4em;
-    margin-bottom: .5em;
-}
-
-#content h2 {
-    clear: left;
-    font-size: 1.15em;
-    color: #90A818;
-}
-
-#content h2 a {
-    color: #90A818;
-    text-decoration: none;
-}
-
-#content h2 a:hover {
-    text-decoration: underline;
-}
-
 div.author {
-    background: #dedede;
+    background: #eee;
     padding: 0.25em 0.4em;
     font-size: .8em;
     float: right;
     -moz-border-radius: 0.4em;
+    -webkit-border-radius: 0.4em;
 }
 
 div.summary {
@@ -111,33 +96,16 @@ div.vote strong {
   color: #666;
 }
 
-#content div.question-detail div.summary,
-#content div.answer div.summary {
+div.question-detail div.summary,
+div.answer div.summary {
     margin-left: 3em;
 }
 
-#content div.question h2 {
-    clear: none;
-}
-
-#content h2 {
-    clear: left;
-}
-
-#content p.tags {
+p.tags {
     margin-bottom: 1.5em;
 }
 
-input[type="text"],
-textarea {
-    border: 1px solid #666;
-}
-
-input[type="text"]:focus, textarea:focus {
-    border-color: #90A818;
-}
-
-#content ul.token-input-list {
+ul.token-input-list {
     border: 1px solid #666;
     list-style: none;
     margin: 0;
@@ -145,12 +113,12 @@ input[type="text"]:focus, textarea:focus {
     padding: 2px;
 }
 
-#content ul.token-input-list li {
+ul.token-input-list li {
     margin: 0;
     list-style: none;
 }
 
-#content div.token-input-dropdown {
+div.token-input-dropdown {
     position: absolute;
     background: #ffa;
     border: 1px solid #ffa;
@@ -164,7 +132,7 @@ ul.token-input-list input {
     width: 6em;
 }
 
-#content ul.token-input-list li.token-input-token {
+ul.token-input-list li.token-input-token {
     float: left;
     background: #D5E19D;
     color: #304800;

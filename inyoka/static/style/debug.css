@@ -5,7 +5,7 @@ div#database_debug_table {
     border: 1px solid #386b96;
     font-size: 11px;
     padding: 0 10px;
-    margin: 70px 0 0 0;
+    margin: 20px 0 0 0;
 }
 
 div#database_debug_table ul {
@@ -44,5 +44,13 @@ div#database_debug_table ul li pre {
 
 div#database_debug_table a {
   color: #90A818;
-  margin-left: 120em;
+  margin: -10px 0 0 120em;
+}
+
+div#database_debug_table strong {
+  display: inline-block;
+  margin: 0;
+  margin-top: -10px;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
 }

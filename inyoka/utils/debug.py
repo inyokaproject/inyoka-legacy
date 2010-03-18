@@ -57,11 +57,11 @@ def render_query_table(queries):
     """Renders a nice table of all queries in the page."""
     total = 0
     stylesheet = href('static', file='style/debug.css')
-    result = [u'<div id="database_debug_table">'
-        u'<div id="database_debug_table_inner"><ul>']
+
+    qresult = []
     for statement, parameters, start, end, calling_context in queries:
         total += (end - start)
-        result.append(u'<li><pre>%s</pre><pre>Parameters: %s</pre>'
+        qresult.append(u'<li><pre>%s</pre><pre>Parameters: %s</pre>'
                       u'<div class="detail"><em>%s</em> | '
                       u'<strong>took %.3f ms</strong></div></li>' % (
             statement,
@@ -69,10 +69,13 @@ def render_query_table(queries):
             escape(calling_context),
             (end - start) * 1000
         ))
-    result.append(u'<li><strong>%d queries in %.2f ms</strong></ul></div></div>' % (
-        len(queries),
-        total * 1000
-    ))
+    result = [u'<div id="database_debug_table">']
+    stat = (u'<strong>%d queries in %.2f ms</strong>'
+            % (len(queries), total * 1000))
+    result.append(stat)
+    result.append(u'<div id="database_debug_table_inner"><ul>')
+    result.extend(qresult)
+    result.append(u'<li>%s</li></ul></div></div>' % stat)
 
     result.append(html.script("""
         $(document).ready(function() {

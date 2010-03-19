@@ -47,8 +47,7 @@
   <div class="summary">
 
     <p>{{ question.text|e }}</p>
-
-    <p>
+    <p>{{ _('Tags: ') }}
         {% for tag in question.tags %}
         <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
         {% endfor %}

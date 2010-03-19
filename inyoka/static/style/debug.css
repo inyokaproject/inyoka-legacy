@@ -3,9 +3,11 @@ div#database_debug_table {
     background: #e7eeef;
     color: #333!important;
     border: 1px solid #386b96;
-    font-size: 11px;
+    font-size: 0.65em;
     padding: 0 10px;
     margin: 20px 0 0 0;
+    position: absolute;
+    bottom: 0;
 }
 
 div#database_debug_table ul {
@@ -38,17 +40,15 @@ div#database_debug_table ul li pre {
     margin: 0 -10px;
     padding: 2px 10px;
     font-family: 'Consolas', 'Deja Vu Mono', 'Bitstream Vera Sans Mono', monospace;
-    font-size: 11px;
+    font-size: 1em;
     word-wrap: break-word;
 }
 
 div#database_debug_table a {
   color: #90A818;
-  margin: -10px 0 0 120em;
 }
 
 div#database_debug_table strong {
-  display: inline-block;
   margin: 0;
   margin-top: -10px;
   padding: 0;

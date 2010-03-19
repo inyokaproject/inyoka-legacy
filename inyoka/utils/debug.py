@@ -70,7 +70,7 @@ def render_query_table(queries):
             (end - start) * 1000
         ))
     result = [u'<div id="database_debug_table">']
-    stat = (u'<strong>%d queries in %.2f ms</strong>'
+    stat = (u'<strong>(%d queries in %.2f ms)</strong>'
             % (len(queries), total * 1000))
     result.append(stat)
     result.append(u'<div id="database_debug_table_inner"><ul>')

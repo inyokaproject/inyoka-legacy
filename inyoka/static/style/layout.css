@@ -91,8 +91,16 @@ abbr[title], acronym[title], dfn[title] {
   padding-top: 54px;
 }
 
+#navi a:hover {
+  color: #444;
+}
+
+#navi a:active {
+  padding-top: 56px;
+}
+
 #navi a.active {
-  color: #ccc;
+  color: #D8FFBF;
   text-shadow: #000 1px 0px 1px;
 }
 

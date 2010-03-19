@@ -1,10 +1,8 @@
 {% macro render_article(article) -%}
   <div class="article {{ article.hidden and ' hidden' or '' }}">
     <h3 class="title"><a href="{{ href(article)|e }}">{{ article.title|e }}</a></h3>
-    <div class="text">
-      {{ article.intro or article.text }}
-      {% if article.intro -%}{{ _('…') }}{% endif %}
-      <p><a href="{{ href(article, _anchor='comments') }}">{{ article.comment_count }} {{ _('Comments') }}</a></p>
-    </div>
+    {{ article.intro or article.text }}
+    {% if article.intro -%}{{ _('…') }}{% endif %}
+    <p><a href="{{ href(article, _anchor='comments') }}">{{ article.comment_count }} {{ _('Comments') }}</a></p>
   </div>
 {%- endmacro %}

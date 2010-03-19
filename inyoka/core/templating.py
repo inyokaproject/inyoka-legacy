@@ -29,7 +29,8 @@ def populate_context_defaults(context):
     """Fill in context defaults."""
     try:
         context.update({
-            'request': ctx.current_request
+            'request': ctx.current_request,
+            'active': None
         })
     except AttributeError:
         # Don't raise an error if we don't have a request as it's
@@ -38,7 +39,7 @@ def populate_context_defaults(context):
         pass
 
 
-def render_template(template_name, context, stream=False):
+def render_template(template_name, context, modifier=None, request=None, stream=False):
     """Renders a template.  If `stream` is ``True`` the return value will be
     a Jinja template stream and not an unicode object.
     This is useful for pages with lazy generated content or huge output
@@ -48,6 +49,9 @@ def render_template(template_name, context, stream=False):
     """
     tmpl = jinja_env.get_template(template_name)
     populate_context_defaults(context)
+    # apply the context modifier
+    if modifier is not None:
+        modifier(request, context)
     if stream:
         return tmpl.stream(context)
     return tmpl.render(context)
@@ -88,11 +92,8 @@ def templated(template_name, modifier=None, stream=False):
             if not isinstance(ret, dict):
                 return Response.force_type(ret)
 
-            # apply the context modifier
-            if modifier is not None:
-                modifier(request, ret)
-
-            data = render_template(template_name, ret, stream=stream)
+            data = render_template(template_name, ret, modifier=modifier,
+                                   request=request, stream=stream)
             response = Response(data)
             if ctx.cfg['debug']:
                 TEMPLATE_CONTEXT.clear()

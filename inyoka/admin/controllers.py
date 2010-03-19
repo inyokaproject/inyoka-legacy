@@ -18,6 +18,11 @@ from inyoka.core.routing import Submount, EndpointPrefix
 from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
 
 
+def context_modifier(request, context):
+    context.update(
+        active='admin'
+    )
+
 
 def get_endpoint_map(map, providers):
     def _predicate(value):
@@ -66,7 +71,7 @@ class AdminController(IController):
         return endpoint_map
 
     @view('index')
-    @templated('admin/index.html')
+    @templated('admin/index.html', modifier=context_modifier)
     def index(self, request):
         return {
             'providers': self.providers

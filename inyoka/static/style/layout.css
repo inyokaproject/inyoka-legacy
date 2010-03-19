@@ -69,6 +69,7 @@ abbr[title], acronym[title], dfn[title] {
   font-size: 3em;
   background-image: url(../img/inyoka-logo.png);
   background-repeat: no-repeat;
+	text-shadow: #000 2px 0px 2px;
 }
 
 #head h1 a {
@@ -83,11 +84,16 @@ abbr[title], acronym[title], dfn[title] {
 }
 
 #navi a {
-  color: #FFFFFF;
+  color: #fff;
   font-weight: bold;
   text-decoration: none;
-  margin-right: 1em;
+  margin-right: 2em;
   padding-top: 54px;
+}
+
+#navi a.active {
+  color: #ccc;
+  text-shadow: #000 1px 0px 1px;
 }
 
 #navi a.icon-portal {

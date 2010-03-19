@@ -46,6 +46,7 @@ def context_modifier(request, context):
     context.update(
         months=get_month_names(),
         tags=tags,
+        active='news',
         **data
     )
 

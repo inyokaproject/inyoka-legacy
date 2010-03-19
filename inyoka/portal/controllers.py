@@ -19,6 +19,12 @@ from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.portal.models import UserProfile, IUserProfileExtender
 
 
+def context_modifier(request, context):
+    context.update(
+        active='portal'
+    )
+
+
 class PortalController(IController):
     name = 'portal'
 
@@ -34,7 +40,7 @@ class PortalController(IController):
     ]
 
     @view
-    @templated('portal/profile_edit.html')
+    @templated('portal/profile_edit.html', modifier=context_modifier)
     def profile_edit(self, request):
         profile = UserProfile.query.filter_by(user_id=request.user.id).first()
         form = forms.get_profile_form()(profile=profile)
@@ -46,7 +52,7 @@ class PortalController(IController):
         return {'form':form.as_widget()}
 
     @view
-    @templated('portal/index.html')
+    @templated('portal/index.html', modifier=context_modifier)
     def index(self, request):
         return {
             'called_url':   request.current_url,
@@ -56,12 +62,12 @@ class PortalController(IController):
         }
 
     @view
-    @templated('portal/users.html')
+    @templated('portal/users.html', modifier=context_modifier)
     def users(self, request):
         return {'users': User.query}
 
     @view
-    @templated('portal/profile.html')
+    @templated('portal/profile.html', modifier=context_modifier)
     def profile(self, request, username):
         user, profile = db.session.query(User, UserProfile).outerjoin(UserProfile).\
                             filter(User.username==username).one()
@@ -73,7 +79,7 @@ class PortalController(IController):
         return data
 
     @view
-    @templated('portal/login.html')
+    @templated('portal/login.html', modifier=context_modifier)
     def login(self, request):
         return get_auth_system().login(request)
 

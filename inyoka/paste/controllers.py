@@ -15,6 +15,12 @@ from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
 
 
+def context_modifier(request, context):
+    context.update(
+        active='paste'
+    )
+
+
 class PasteController(IController):
     name = 'paste'
 
@@ -27,7 +33,7 @@ class PasteController(IController):
     ]
 
     @view
-    @templated('paste/index.html')
+    @templated('paste/index.html', modifier=context_modifier)
     def index(self, request):
         form = AddPasteForm()
         if request.method == 'POST' and form.validate(request.form):
@@ -46,7 +52,7 @@ class PasteController(IController):
         }
 
     @view('view')
-    @templated('paste/view.html')
+    @templated('paste/view.html', modifier=context_modifier)
     def view_paste(self, request, id):
         e = Entry.query.get(id)
         return {
@@ -59,7 +65,7 @@ class PasteController(IController):
         return Response(e.code, mimetype='text/plain')
 
     @view('browse')
-    @templated('paste/browse.html')
+    @templated('paste/browse.html', modifier=context_modifier)
     def browse_pastes(self, request, page):
         query = Entry.query
         pagination = URLPagination(query, page=page)

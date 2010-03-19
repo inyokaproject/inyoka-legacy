@@ -18,6 +18,12 @@ from inyoka.core.http import Response
 from datetime import datetime
 
 
+def context_modifier(request, context):
+    context.update(
+        active='forum'
+    )
+
+
 class ForumController(IController):
     name = 'forum'
 
@@ -47,7 +53,7 @@ class ForumController(IController):
     ]
 
     @view('index')
-    @templated('forum/index.html')
+    @templated('forum/index.html', modifier=context_modifier)
     def index(self, request):
         forums = Forum.query.filter_by(parent=None).all()
         return {
@@ -55,7 +61,7 @@ class ForumController(IController):
         }
 
     @view('questions')
-    @templated('forum/questions.html')
+    @templated('forum/questions.html', modifier=context_modifier)
     def questions(self, request, forum=None, tags=None, sort='newest', page=1):
         query = Question.query
 
@@ -83,7 +89,7 @@ class ForumController(IController):
         }
 
     @view('question')
-    @templated('forum/question.html')
+    @templated('forum/question.html', modifier=context_modifier)
     def question(self, request, slug, sort='votes', page=1):
         question = Question.query.filter_by(slug=slug).one()
         answer_query = Answer.query.filter_by(question=question)
@@ -110,7 +116,7 @@ class ForumController(IController):
         }
 
     @view('ask')
-    @templated('forum/ask.html')
+    @templated('forum/ask.html', modifier=context_modifier)
     def ask(self, request, forum=None):
         tags = []
         if request.args.get('tags'):

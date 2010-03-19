@@ -149,9 +149,27 @@ abbr[title], acronym[title], dfn[title] {
   padding-top: 1.1em;
 }
 
-#page-introduction {
-  background-color: #EEEEEE;
+#page-navbar {
+  background-color: #fff;
   color: #001800;
+  font-size: 0.8em;
+}
+
+#page-navbar a {
+  word-spacing: 5em;
+}
+
+#page-navbar .user-status {
+  float: right;
+}
+
+#page-introduction {
+  background-color: #eee;
+  color: #2f4800;
+}
+
+#page-introduction h1, h2, h3, h4, h5 {
+  color: #304800;
 }
 
 #content {
@@ -249,7 +267,6 @@ ul.errors {
     border: 1px solid red;
     color: red;
 }
-
 
 /* Various text style classes */
 .small {

@@ -1,6 +1,6 @@
 {%- set sidebar = sidebar|default(True) %}
 {%- set introduction = introduction|default(False) %}
-{%- set styles = ['typography.css', 'main.css', 'debug.css'] + styles|default([]) %}
+{%- set styles = ['typography.css', 'layout.css', 'debug.css'] + styles|default([]) %}
 {%- set styles = ['reset.css', 'table.css', 'forms.css'] + styles|default([]) %}
 {%- set scripts = ['jQuery.js'] + scripts|default([]) %}
 <html>
@@ -26,11 +26,6 @@
     <div id="head">
       <h1><a href="{{ request.host_url }}">Inyoka</a></h1>
       <div id="navi">
-      {% if request.user.is_anonymous %}
-        <a href="{{ href('portal/login') }}">{{ _('Login') }}</a>
-      {% else %}
-        Hallo {{ request.user.display_name }} ({{ request.user.status }}) <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
-      {% endif %}
       <a href="{{ href('portal/index') }}" class="icon-portal">{{ _('Portal') }}</a>
       <a href="{{ href('paste/index') }}" class="icon-pastebin">{{ _('Pastebin') }}</a>
       <a href="{{ href('news/index') }}" class="icon-news">{{ _('News') }}</a>
@@ -41,6 +36,16 @@
     </div>
     <div id="page">
       <div id="page-inner">
+        <div id="page-navbar">
+          <span class="pathbar">Yet / A Dummy / Pathbar</span>
+          <span class="user-status">
+            {% if request.user.is_anonymous %}
+              <a href="{{ href('portal/login') }}">{{ _('Login') }}</a> <a href="{{ href('portal/register') }}">Register</a>
+            {% else %}
+            {{ _('Hello') }} {{ request.user.display_name }} ({{ request.user.status }}) <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
+            {% endif %}
+          </span>
+        </div>
         {% if introduction %}
         <div id="page-introduction">
           {% block introduction %}{% endblock introduction %}

@@ -43,7 +43,6 @@ class PortalController(IController):
             form.save()
             request.flash(_(u'Profile saved'), True)
 
-        print form.as_widget().hidden_fields
         return {'form':form.as_widget()}
 
     @view
@@ -53,6 +52,7 @@ class PortalController(IController):
             'called_url':   request.current_url,
             'link':         href('portal/index'),
             'version':      '%d.%d.%d' % sys.version_info[:3],
+            'introduction': True
         }
 
     @view

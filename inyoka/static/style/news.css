@@ -1,20 +1,22 @@
 /* News styles */
 
 div.article {
-    background-color: #FFFBD5;
-    border: 1px solid #ECE7AD;
+    background-color: #f3f3f3;
+    border: 1px solid #efefef;
     padding: 0.3em;
     margin-bottom: 20px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
+div.article .title a {
+  text-decoration: none;
 }
 
 p.meta {
     color: #888;
     font-size: 0.9em;
-    margin: -0.2em 0 1em 0;
-}
-
-div.text p.readon {
-  font-size: 0.9em;
+    margin: 0.5em 0 1em 0;
 }
 
 a.show_comments {

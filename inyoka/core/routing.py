@@ -229,9 +229,9 @@ def href(endpoint, **values):
         and `http://` prefix.
     """
     _external = values.pop('_external', False)
+    _anchor = values.pop('_anchor', None)
     if hasattr(endpoint, 'get_url_values'):
         endpoint, values = endpoint.get_url_values(**values)
-    _anchor = values.pop('_anchor', None)
     url = ctx.dispatcher.url_adapter.build(endpoint, values,
                                            force_external=_external)
     if _anchor is not None:

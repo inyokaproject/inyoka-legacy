@@ -1,13 +1,20 @@
 /* debug stylesheet */
 div#database_debug_table {
-    background: #e7eeef;
-    color: #333!important;
-    border: 1px solid #386b96;
-    font-size: 0.65em;
+    z-index: 10000;
+    background: #ccd9db;
+    font-size: 0.9em;
     padding: 0 10px;
     margin: 20px 0 0 0;
-    position: absolute;
-    bottom: 0;
+    clear: both;
+    border: 1px solid #809ca1;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    line-height: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #215871;
+    text-shadow: 1px 0 3px white;
+    opacity: 0.5;
 }
 
 div#database_debug_table ul {
@@ -42,6 +49,7 @@ div#database_debug_table ul li pre {
     font-family: 'Consolas', 'Deja Vu Mono', 'Bitstream Vera Sans Mono', monospace;
     font-size: 1em;
     word-wrap: break-word;
+    text-align: left;
 }
 
 div#database_debug_table a {

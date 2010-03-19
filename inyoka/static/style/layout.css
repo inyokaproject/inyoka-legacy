@@ -162,6 +162,7 @@ abbr[title], acronym[title], dfn[title] {
   text-decoration: bold;
   font-size: 1.1em;
   padding-top: 1.1em;
+  text-transform: uppercase;
 }
 
 #page-navbar {
@@ -254,6 +255,10 @@ abbr[title], acronym[title], dfn[title] {
  
 #content ul.pagetabs a:hover {
     background: #fff;
+}
+
+#footer {
+  clear: both;
 }
 
 div.pagination {

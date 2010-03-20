@@ -115,6 +115,10 @@ class NewsController(IController):
         else:
             form = EditCommentForm()
 
+        # if everything is valid, update the visit counter
+        db.atomic_add(article, 'visit_count', 1, expire=True)
+        db.session.commit()
+
         return {
             'article':  article,
             'comments': list(article.comments.options(db.eagerload('author'))),

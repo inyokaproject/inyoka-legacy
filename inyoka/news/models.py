@@ -132,6 +132,7 @@ class Article(db.Model):
     intro = db.Column(db.String)
     text = db.Column(db.String)
     public = db.Column(db.Boolean)
+    visit_count = db.Column(db.Integer, default=0, nullable=False)
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 

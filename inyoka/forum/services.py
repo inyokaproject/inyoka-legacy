@@ -13,12 +13,13 @@ from inyoka.core.api import IServiceProvider, Rule, service
 
 
 class ForumServiceController(IServiceProvider):
-    name = 'forum'
+    component = 'forum'
 
     url_rules = [
         Rule('/get_tags/', endpoint='get_tags'),
     ]
 
+    # TODO: Move to core
     @service('get_tags', config={'core.tag':['id', 'name']})
     def get_tags(self, request):
         q = request.args.get('q')

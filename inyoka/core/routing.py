@@ -53,7 +53,9 @@ class UrlMixin(object):
     # if `True` we don't set a `EndpointPrefix`
     ignore_prefix = False
 
-    special_prefix = None
+    @classmethod
+    def modify_urlrules(cls, comp):
+        return comp.url_rules
 
     @classmethod
     def get_urlmap(cls):
@@ -71,29 +73,21 @@ class UrlMixin(object):
                 comp.url_rules = new_map
 
             name = comp.name
+            # Give subclasses of UrlMixin a way to further modify the rules.
+            rules = cls.modify_urlrules(comp)
             if name:
-                special = cls.special_prefix or ''
                 subdomain, mount = ctx.cfg['routing.urls.' + name].split(':', 1)
-                if comp.ignore_prefix:
-                    rules = comp.url_rules
-                else:
-                    prefix = ('%s%s' %
-                        (name, '/' + special if special else special))
-                    rules = [EndpointPrefix('%s/' % prefix, comp.url_rules)]
-
-                if cls.special_prefix is not None:
-                    mount = '/_%s/%s' % (special.rstrip('/'), mount.lstrip('/'))
+                if not comp.ignore_prefix:
+                    prefix = name
+                    rules = [EndpointPrefix('%s/' % prefix, rules)]
 
                 val = Submount(mount, rules)
                 if subdomain != '':
                     val = Subdomain(subdomain, [val])
                 urls.append(val)
             else:
-                val = comp.url_rules
-                urls.extend(val)
+                urls.extend(rules)
 
-            if cls.special_prefix:
-                name = name + '/' + cls.special_prefix
             cls._endpoint_map.setdefault(name, {}).update(comp.get_endpoint_map())
 
         return urls
@@ -174,8 +168,12 @@ class IServiceProvider(Interface, UrlMixin):
     All “handlers” are registered with :func:`service` as endpoint handlers.
 
     """
-
-    special_prefix = 'api'
+    
+    name = 'api'
+    #: The version of this api provider
+    version = 'dev'
+    #: The component this api provider belongs to (eg core, forum)
+    component = 'core'
 
     @staticmethod
     def register_service(name, methods=('GET',), config=None):
@@ -202,14 +200,12 @@ class IServiceProvider(Interface, UrlMixin):
         return decorator
 
     @classmethod
-    def get_callable_for_endpoint(cls, endpoint):
-        """Return the proper callable for `endpoint`"""
-        if '/' not in endpoint:
-            # we assume that we have url_sections that point
-            # to no name but to an empty string
-            endpoint = '/' + endpoint
-        parts = endpoint.rsplit('/', 1)
-        return cls._endpoint_map[parts[0]][parts[1]]
+    def modify_urlrules(cls, comp):
+        # Prefix the urls with /version/component
+        rules = comp.url_rules
+        rules = [Submount('/%s/%s' % (comp.version, comp.component), rules)]
+        rules = [EndpointPrefix('%s/' % comp.component, rules)]
+        return rules
 
 
 view = IController.register_view

@@ -15,6 +15,7 @@
 import re
 import inspect
 import simplejson
+from functools import partial
 from xml.sax.saxutils import quoteattr
 from datetime import datetime
 from babel import Locale
@@ -35,19 +36,19 @@ def _recursive_getattr(obj, key):
     return obj
 
 
-def primitive(obj):
+def primitive(obj, config=None):
     """Convert a object to a primitive representation"""
     if isinstance(obj, SerializableObject):
-        return obj.serializable_export()
+        return obj.serializable_export(config)
     if isinstance(obj, datetime):
         return {'#type': 'inyoka.datetime',
                 'value': obj.strftime('%Y-%m-%dT%H:%M:%SZ')}
     if isinstance(obj, Locale):
         return unicode(str(obj))
     if isinstance(obj, dict):
-        return dict((key, primitive(value)) for key, value in obj.iteritems())
+        return dict((key, primitive(value, config)) for key, value in obj.iteritems())
     if hasattr(obj, '__iter__'):
-        return map(primitive, obj)
+        return map(partial(primitive, config=config), obj)
     return obj
 
 
@@ -60,13 +61,14 @@ class SerializableObject(object):
     #: subclasses have to provide this as a list
     public_fields = ()
 
-    def serializable_export(self):
+    def serializable_export(self, config=None):
         """Exports the object into a data structure ready to be
         serialized.  This is always a dict with string keys and
         the values are safe for pickeling.
         """
         result = {'#type': self.object_type}
-        for key in self.public_fields:
+        fields = (config or {}).get(self.object_type) or self.public_fields
+        for key in fields:
             if isinstance(key, tuple):
                 alias, key = key
             else:
@@ -74,7 +76,7 @@ class SerializableObject(object):
             value = _recursive_getattr(self, key)
             if callable(value):
                 value = value()
-            result[alias] = primitive(value)
+            result[alias] = primitive(value, config)
         return result
 
 
@@ -154,10 +156,10 @@ def get_serializer(request_or_format):
     return _serializer_map[request_or_format]
 
 
-def send_service_response(request_or_format, result):
+def send_service_response(request_or_format, result, config=None):
     """Sends the API response."""
     from inyoka.core.http import Response
-    ro = primitive(result)
+    ro = primitive(result, config)
     serializer, mimetype = get_serializer(request_or_format)
     return Response(serializer(ro), mimetype=mimetype)
 

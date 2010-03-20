@@ -178,7 +178,7 @@ class IServiceProvider(Interface, UrlMixin):
     special_prefix = 'api'
 
     @staticmethod
-    def register_service(name, methods=('GET',)):
+    def register_service(name, methods=('GET',), config=None):
         """Register a method as a service.
 
         Note that there is an alias of this method in
@@ -194,7 +194,7 @@ class IServiceProvider(Interface, UrlMixin):
                 if request.method not in methods:
                     raise MethodNotAllowed(methods)
                 ret = func(self, request, *args, **kwargs)
-                return send_service_response(request, ret)
+                return send_service_response(request, ret, config)
             service_wrapper.endpoint = name
             service_wrapper.is_service = True
             service_wrapper.valid_methods = methods

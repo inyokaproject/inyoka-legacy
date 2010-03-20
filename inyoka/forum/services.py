@@ -19,7 +19,7 @@ class ForumServiceController(IServiceProvider):
         Rule('/get_tags/', endpoint='get_tags'),
     ]
 
-    @service('get_tags')
+    @service('get_tags', config={'core.tag':['id', 'name']})
     def get_tags(self, request):
         q = request.args.get('q')
         if not q:

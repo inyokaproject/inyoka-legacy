@@ -36,11 +36,8 @@ class Sortable(object):
     """
 
     def __init__(self, query, default_col, request=None, columns=None):
-        if columns is None:
-            # get all available columns from the mapped model
-            attrs = query._mapper_zero().class_manager.attributes
-            columns = [a.key for a in attrs]
-
+        cols = query._mapper_zero().class_.__table__.columns
+        columns = dict((x.key, x) for x in cols if columns and x.key in columns)
         self.columns = columns
         self.query = query
         self.order_by = (request and request.args.get('order', default_col)
@@ -82,7 +79,7 @@ class Sortable(object):
 
     def get_sorted(self):
         ocol = self.order_by.lstrip('-')
-        if ocol not in self.columns:
+        if ocol not in self.columns.keys():
             # safes us from some bad usage that raises an exception
             ctx.current_request.flash(
                 _(u'The selected criterium “%s” is not available') % ocol
@@ -93,4 +90,4 @@ class Sortable(object):
         if self.order_by is None:
             return self.query
         order = (db.asc, db.desc)[self.order_by.startswith('-')]
-        return self.query.order_by(order(ocol))
+        return self.query.order_by(order(self.columns[ocol]))

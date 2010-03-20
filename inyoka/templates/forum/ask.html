@@ -1,7 +1,7 @@
 {%- extends 'forum/questions.html' %}
 
-{%- set scripts = ['widgets.js'] + scripts|default([]) %}
-{%- set styles = ['widgets.css'] + styles|default([]) %}
+{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
+{%- set styles = styles|default([]) + ['widgets.css'] %}
 {% set tab='ask' %}
 
 {%- block questions_body %}
@@ -9,7 +9,7 @@
 {{ form() }}
 <script type="text/javascript">
 $(document).ready(function() {
-    $("#f_tags").TokenWidget("{{ href('forum/get_tags', format='json') }}", {});
-   });
+  $("#f_tags").tokenInput("{{ href('api/core/get_tags', format='json') }}", {});
+});
 </script>
 {%- endblock %}

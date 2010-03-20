@@ -66,7 +66,7 @@ class SerializableObject(object):
         serialized.  This is always a dict with string keys and
         the values are safe for pickeling.
         """
-        result = {'#type': self.object_type}
+        result = {} if config.get('show_type', True) == False else {'#type': self.object_type}
         fields = (config or {}).get(self.object_type) or self.public_fields
         for key in fields:
             if isinstance(key, tuple):
@@ -161,7 +161,9 @@ def send_service_response(request_or_format, result, config=None):
     from inyoka.core.http import Response
     ro = primitive(result, config)
     serializer, mimetype = get_serializer(request_or_format)
-    return Response(serializer(ro), mimetype=mimetype)
+    # TODO Set the header according to our basedomain
+    return Response(serializer(ro), mimetype=mimetype,
+                        headers={'Access-Control-Allow-Origin': '*'})
 
 
 def list_api_methods():

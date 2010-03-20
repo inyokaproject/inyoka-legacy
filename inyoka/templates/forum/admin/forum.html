@@ -1,5 +1,5 @@
 {% extends 'admin/base.html' %}
-{%- set scripts = ['widgets.js'] + scripts|default([]) %}
+{%- set scripts = ['jquery.tokeninput.js'] + scripts|default([]) %}
 {%- set styles = ['widgets.css'] + styles|default([]) %}
 
 {% block admin_content %}
@@ -7,7 +7,7 @@
 {{ form() }}
 <script type="text/javascript">
 $(document).ready(function() {
-    $("#f_tags").TokenWidget("{{ href('admin/api/forum_get_tags', format='json') }}", {});
+    $("#f_tags").tokenInput("{{ href('api/core/get_tags', format='json') }}", {});
    });
 </script>
 {% endblock %}

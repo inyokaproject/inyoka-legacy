@@ -95,7 +95,7 @@ class EntryQuery(db.Query):
     number of votes they have received."""
 
     @property
-    def newest(self):
+    def latest(self):
         """Sort the entries by their creation date."""
         return self.order_by(Entry.date_created.desc())
 

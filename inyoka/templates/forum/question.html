@@ -67,8 +67,8 @@
 <ul class="tabs">
     <li{% if tab == 'votes' %} class="selected"{% endif %}>
         <a href="{{ href(question) }}">Votes</a></li>
-    <li{% if tab == 'newest' %} class="selected"{% endif %}>
-        <a href="{{ href(question, sort='newest') }}">Newest</a></li>
+    <li{% if tab == 'latest' %} class="selected"{% endif %}>
+        <a href="{{ href(question, sort='latest') }}">Latest</a></li>
     <li{% if tab == 'oldest' %} class="selected"{% endif %}>
         <a href="{{ href(question, sort='oldest') }}">Oldest</a></li>
 </ul>

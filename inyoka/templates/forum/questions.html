@@ -43,10 +43,10 @@
 
 <ul class="pagetabs">
     {% if tab is undefined %}
-        {% set tab = sort or 'newest' %}
+        {% set tab = sort or 'latest' %}
     {% endif %}
-    <li{% if tab == 'newest' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', **url_values) }}">Newest</a></li>
+    <li{% if tab == 'latest' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', **url_values) }}">Latest</a></li>
     <li{% if tab == 'active' %} class="selected"{% endif %}>
         <a href="{{ href('forum/questions', sort='active', **url_values) }}">Active</a></li>
     <li{% if tab == 'votes' %} class="selected"{% endif %}>

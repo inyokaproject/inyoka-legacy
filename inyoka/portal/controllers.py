@@ -16,6 +16,8 @@ from inyoka.core.auth.models import User
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
+from inyoka.utils.pagination import URLPagination
+from inyoka.utils.sortable import Sortable
 from inyoka.portal.models import UserProfile, IUserProfileExtender
 
 
@@ -63,8 +65,14 @@ class PortalController(IController):
 
     @view
     @templated('portal/users.html', modifier=context_modifier)
-    def users(self, request):
-        return {'users': User.query}
+    def users(self, request, page=1):
+        sortable = Sortable(User.query, 'id', request, columns=('id', 'username'))
+        pagination = URLPagination(sortable.get_sorted(), page=page)
+        return {
+            'users': pagination.get_objects(),
+            'pagination': pagination,
+            'table': sortable
+        }
 
     @view
     @templated('portal/profile.html', modifier=context_modifier)

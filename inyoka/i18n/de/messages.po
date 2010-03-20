@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-02-26 14:09+0100\n"
+"POT-Creation-Date: 2010-03-20 11:51+0100\n"
 "PO-Revision-Date: 2010-02-13 17:43+0100\n"
 "Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -253,35 +253,36 @@ msgstr ""
 msgid "“%(value)s” does not exist"
 msgstr "„%(value)s” existiert nicht"
 
-#: inyoka/core/markup/__init__.py:33
+#: inyoka/core/markup/__init__.py:50
 msgid "Internal parser error: "
 msgstr ""
 
-#: inyoka/core/markup/__init__.py:34
+#: inyoka/core/markup/__init__.py:51
 msgid ""
 "The parser could not process the text because it exceeded the maximum "
 "allowed depth for nested elements"
 msgstr ""
 
-#: inyoka/forum/admin.py:20 inyoka/templates/base.html:36
+#: inyoka/forum/admin.py:21 inyoka/templates/base.html:33
 #: inyoka/templates/forum/base.html:2
 msgid "Forum"
 msgstr ""
 
-#: inyoka/forum/forms.py:21 inyoka/news/forms.py:22
+#: inyoka/forum/forms.py:21 inyoka/news/forms.py:18
 msgid "Title"
 msgstr "Titel"
 
-#: inyoka/forum/forms.py:22 inyoka/forum/forms.py:30 inyoka/news/forms.py:25
-#: inyoka/news/forms.py:43
+#: inyoka/forum/forms.py:22 inyoka/forum/forms.py:30 inyoka/news/forms.py:21
+#: inyoka/news/forms.py:39
 msgid "Text"
 msgstr "Text"
 
 #: inyoka/forum/forms.py:25 inyoka/forum/forms.py:43
+#: inyoka/templates/news/base.html:20 inyoka/templates/portal/admin/index.html:5
 msgid "Tags"
 msgstr ""
 
-#: inyoka/forum/forms.py:36 inyoka/news/forms.py:17
+#: inyoka/forum/forms.py:36 inyoka/portal/forms.py:43
 msgid "Name"
 msgstr "Name"
 
@@ -302,70 +303,62 @@ msgstr ""
 msgid "%(timedelta)s ago"
 msgstr "%(timedelta)s her"
 
-#: inyoka/news/admin.py:24 inyoka/templates/base.html:35
+#: inyoka/news/admin.py:24 inyoka/templates/base.html:32
 #: inyoka/templates/news/base.html:2
 msgid "News"
 msgstr "News"
 
-#: inyoka/news/admin.py:71
-msgid "Updated category"
-msgstr "Kategorie wurde aktualisiert"
-
-#: inyoka/news/admin.py:81 inyoka/news/admin.py:130
-msgid "Action canceled"
-msgstr "Aktion abgebrochen"
-
-#: inyoka/news/admin.py:85
-#, python-format
-msgid "The category %s was deleted successfully."
-msgstr "Die Kategorie %s wurde erfolgreich gelöscht."
-
-#: inyoka/news/admin.py:120
+#: inyoka/news/admin.py:68
 msgid "Updated article"
 msgstr "Artikel wurde aktualisiert"
 
-#: inyoka/news/admin.py:134
+#: inyoka/news/admin.py:78 inyoka/portal/admin.py:74
+msgid "Action canceled"
+msgstr "Aktion abgebrochen"
+
+#: inyoka/news/admin.py:82
 #, python-format
 msgid "The article %s was deleted successfully."
 msgstr "Der Artikel %s wurde erfolgreich gelöscht."
 
-#: inyoka/news/controllers.py:109
+#: inyoka/news/controllers.py:108
 msgid "The comment was successfully edited"
 msgstr "Der Kommentar wurde erfolgreich bearbeitet"
 
-#: inyoka/news/controllers.py:114
-msgid "Your comment was created"
-msgstr "Dein Kommentar wurde erstellt"
+#: inyoka/news/controllers.py:112
+#, fuzzy
+msgid "Your comment was successfully created"
+msgstr "Der Kommentar wurde erfolgreich bearbeitet"
 
-#: inyoka/news/controllers.py:152
+#: inyoka/news/controllers.py:131
 msgid "The comment was hidden"
 msgstr "Der Kommentar wurde versteckt"
 
-#: inyoka/news/controllers.py:153
+#: inyoka/news/controllers.py:132
 msgid "The comment was restored"
 msgstr "Der Kommentar wurde wiederhergestellt"
 
-#: inyoka/news/controllers.py:162
+#: inyoka/news/controllers.py:141
 msgid "The comment was saved"
 msgstr "Der Kommentar wurde gespeichert"
 
-#: inyoka/news/forms.py:23
+#: inyoka/news/forms.py:19
 msgid "Intro"
 msgstr "Einführung"
 
-#: inyoka/news/forms.py:27
+#: inyoka/news/forms.py:23
 msgid "Published"
 msgstr "Veröffentlicht"
 
-#: inyoka/news/forms.py:28
-msgid "Category"
-msgstr "Kategorie"
+#: inyoka/news/forms.py:24
+msgid "Tag"
+msgstr ""
 
-#: inyoka/news/forms.py:30
+#: inyoka/news/forms.py:26
 msgid "Author"
 msgstr "Author"
 
-#: inyoka/news/forms.py:44
+#: inyoka/news/forms.py:40
 msgid ""
 "To quote another comment use <em>@comment_number</em>.This is automatically "
 "used if you click “answer”."
@@ -391,6 +384,20 @@ msgstr "Sprache"
 msgid "Hide Paste"
 msgstr "Paste verstecken"
 
+#: inyoka/portal/admin.py:22 inyoka/templates/base.html:30
+msgid "Portal"
+msgstr "Portal"
+
+#: inyoka/portal/admin.py:64
+#, fuzzy
+msgid "Updated tag"
+msgstr "aktualisiert am"
+
+#: inyoka/portal/admin.py:78
+#, fuzzy, python-format
+msgid "The tag %s was deleted successfully."
+msgstr "Die Kategorie %s wurde erfolgreich gelöscht."
+
 #: inyoka/portal/auth.py:28
 msgid "This username does not exist."
 msgstr "Dieser Benutzername existiert nicht."
@@ -403,43 +410,47 @@ msgstr "Das Passwort ist falsch."
 msgid "Please log in."
 msgstr "Bitte einloggen."
 
-#: inyoka/portal/controllers.py:43
+#: inyoka/portal/controllers.py:50
 msgid "Profile saved"
 msgstr "Profil gespeichert"
 
-#: inyoka/portal/controllers.py:90
+#: inyoka/portal/controllers.py:100
 msgid "Key not found. Maybe it has already been used?"
 msgstr "CSRF-Schlüssel nicht gefunden. Wurde er bereits verwendet?"
 
-#: inyoka/portal/controllers.py:92
+#: inyoka/portal/controllers.py:102
 msgid "The supplied key is not valid anymore."
 msgstr "Der übergebene CSRF-Schlüssel ist nicht mehr gültig."
 
-#: inyoka/templates/base.html:29
-msgid "Login"
-msgstr "Login"
-
 #: inyoka/templates/base.html:31
-msgid "Logout"
-msgstr "Ausloggen"
-
-#: inyoka/templates/base.html:33
-msgid "Portal"
-msgstr "Portal"
-
-#: inyoka/templates/base.html:34
 msgid "Pastebin"
 msgstr "Pastebin"
 
-#: inyoka/templates/base.html:38
+#: inyoka/templates/base.html:35
 msgid "Admin"
 msgstr "Administration"
+
+#: inyoka/templates/base.html:44
+msgid "Login"
+msgstr "Login"
+
+#: inyoka/templates/base.html:46
+msgid "Hello"
+msgstr ""
+
+#: inyoka/templates/base.html:46
+msgid "Logout"
+msgstr "Ausloggen"
 
 #: inyoka/templates/admin/base.html:4
 msgid "Welcome on the Inyoka Admin Center!"
 msgstr "Willkommen in der Inyoka-Administration!"
 
-#: inyoka/templates/forum/question.html:29
+#: inyoka/templates/forum/question.html:50
+msgid "Tags: "
+msgstr ""
+
+#: inyoka/templates/forum/question.html:60
 #, fuzzy, python-format
 msgid "<h2>%(count)s Answer</h2>"
 msgid_plural "<h2>%(count)s Answers</h2>"
@@ -461,18 +472,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inyoka/templates/news/_article.html:5
-#, python-format
-msgid ""
-"written by %(author)s, on %(pub_date)s.\n"
-"          <a href=\"%(edit_link)s\" class=\"adminlink\">Edit</a>"
+msgid "…"
 msgstr ""
 
-#: inyoka/templates/news/_article.html:16
-msgid "» Read on"
-msgstr ""
-
-#: inyoka/templates/news/_article.html:16
-msgid "comments"
+#: inyoka/templates/news/_article.html:6
+msgid "Comments"
 msgstr ""
 
 #: inyoka/templates/news/archive.html:2 inyoka/templates/news/archive.html:6
@@ -503,16 +507,12 @@ msgstr ""
 msgid "Latest Articles"
 msgstr "Aktuelle Artikel"
 
-#: inyoka/templates/news/base.html:20 inyoka/templates/news/admin/index.html:5
-msgid "Categories"
-msgstr "Kategorien"
-
 #: inyoka/templates/news/detail.html:15
 #, python-format
 msgid ""
 "written by <a href=\"%(author_url)s\">%(author_name)s</a> "
 "%(article_pubdate)s\n"
-"      in <a href=\"%(category_url)s\">%(category_name)s</a>"
+"      in <a href=\"%(tag_url)s\">%(tag_name)s</a>"
 msgstr ""
 
 #: inyoka/templates/news/detail.html:22
@@ -551,13 +551,22 @@ msgstr ""
 msgid "Written: "
 msgstr ""
 
+#: inyoka/templates/news/edit_comment.html:5
+msgid "Edit comment"
+msgstr ""
+
 #: inyoka/templates/news/index.html:7
-#, python-format
-msgid "Articles for “%(category)s”"
+#, fuzzy, python-format
+msgid "Articles for “%(tag)s”"
 msgstr "Artikel für „%(category)s“"
 
-#: inyoka/templates/news/index.html:14
-msgid "Keine Artikel vorhanden."
+#: inyoka/templates/news/index.html:9
+#, fuzzy
+msgid "Latest News"
+msgstr "Aktuelle Artikel"
+
+#: inyoka/templates/news/index.html:16
+msgid "No articles written yet."
 msgstr ""
 
 #: inyoka/templates/news/admin/article_delete.html:2
@@ -565,12 +574,12 @@ msgid "Do you really want to delete that article?"
 msgstr "Willst du diesen Artikel wirklich löschen?"
 
 #: inyoka/templates/news/admin/article_delete.html:4
-#: inyoka/templates/news/admin/category_delete.html:4
+#: inyoka/templates/portal/admin/tag_delete.html:4
 msgid "No"
 msgstr "Nein"
 
 #: inyoka/templates/news/admin/article_delete.html:5
-#: inyoka/templates/news/admin/category_delete.html:5
+#: inyoka/templates/portal/admin/tag_delete.html:5
 msgid "Yes"
 msgstr "Ja"
 
@@ -584,13 +593,13 @@ msgid "New Article"
 msgstr "Neuer Artikel"
 
 #: inyoka/templates/news/admin/article_edit.html:14
-#: inyoka/templates/news/admin/category_edit.html:14
 #: inyoka/templates/portal/profile_edit.html:8
+#: inyoka/templates/portal/admin/tag_edit.html:14
 msgid "Submit"
 msgstr "Abschicken"
 
 #: inyoka/templates/news/admin/article_edit.html:15
-#: inyoka/templates/news/admin/category_edit.html:15
+#: inyoka/templates/portal/admin/tag_edit.html:15
 msgid "Delete"
 msgstr "Löschen"
 
@@ -603,29 +612,7 @@ msgstr "Alle Artikel"
 msgid "…or <a href=\"%(link)s\">create a new article</a>"
 msgstr "…oder <a href=\"%(links)s\">erstelle einen neuen Artikel</a>"
 
-#: inyoka/templates/news/admin/categories.html:4
-msgid "All categories"
-msgstr "Alle Kategorien"
-
-#: inyoka/templates/news/admin/categories.html:10
-#, python-format
-msgid "…or <a href=\"%(link)s\">create a new category</a>"
-msgstr "…oder <a href=\"%(links)s\">erstelle einen neue Kategorie</a>"
-
-#: inyoka/templates/news/admin/category_delete.html:2
-msgid "Do you really want to delete that category?"
-msgstr "Willst du diese Kategorie wirklich löschen?"
-
-#: inyoka/templates/news/admin/category_edit.html:5
-#, python-format
-msgid "Edit “%(category)s”"
-msgstr "„%(category)s“ bearbeiten"
-
-#: inyoka/templates/news/admin/category_edit.html:7
-msgid "New Category"
-msgstr "Neue Kategorie"
-
-#: inyoka/templates/news/admin/index.html:6
+#: inyoka/templates/news/admin/index.html:5
 msgid "Articles"
 msgstr "Artikel(was ist die Mehrzahl?)"
 
@@ -648,6 +635,29 @@ msgstr ""
 #: inyoka/templates/portal/users.html:4
 msgid "Userlist"
 msgstr "Benutzerliste"
+
+#: inyoka/templates/portal/admin/tag_delete.html:2
+#, fuzzy
+msgid "Do you really want to delete that tag?"
+msgstr "Willst du diese Kategorie wirklich löschen?"
+
+#: inyoka/templates/portal/admin/tag_edit.html:5
+#, fuzzy, python-format
+msgid "Edit “%(tag)s”"
+msgstr "„%(category)s“ bearbeiten"
+
+#: inyoka/templates/portal/admin/tag_edit.html:7
+msgid "New Tag"
+msgstr ""
+
+#: inyoka/templates/portal/admin/tags.html:4
+msgid "All tags"
+msgstr ""
+
+#: inyoka/templates/portal/admin/tags.html:10
+#, fuzzy, python-format
+msgid "…or <a href=\"%(link)s\">create a new tag</a>"
+msgstr "…oder <a href=\"%(links)s\">erstelle einen neue Kategorie</a>"
 
 #: inyoka/utils/pagination.py:118
 msgid "Next »"

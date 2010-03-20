@@ -168,10 +168,12 @@ class IServiceProvider(Interface, UrlMixin):
     All “handlers” are registered with :func:`service` as endpoint handlers.
 
     """
-    
+
     name = 'api'
+
     #: The version of this api provider
     version = 'dev'
+
     #: The component this api provider belongs to (eg core, forum)
     component = 'core'
 

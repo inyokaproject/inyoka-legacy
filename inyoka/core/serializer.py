@@ -23,6 +23,7 @@ from inyoka.i18n import _
 from inyoka.core.context import ctx
 from inyoka.core.exceptions import BadRequest
 from inyoka.utils.html import escape
+from inyoka.utils.urls import make_full_domain
 
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
@@ -66,7 +67,8 @@ class SerializableObject(object):
         serialized.  This is always a dict with string keys and
         the values are safe for pickeling.
         """
-        result = {} if config.get('show_type', True) == False else {'#type': self.object_type}
+        result = {} if config.get('show_type', True) == False \
+                    else {'#type': self.object_type}
         fields = (config or {}).get(self.object_type) or self.public_fields
         for key in fields:
             if isinstance(key, tuple):
@@ -161,9 +163,15 @@ def send_service_response(request_or_format, result, config=None):
     from inyoka.core.http import Response
     ro = primitive(result, config)
     serializer, mimetype = get_serializer(request_or_format)
-    # TODO Set the header according to our basedomain
-    return Response(serializer(ro), mimetype=mimetype,
-                        headers={'Access-Control-Allow-Origin': '*'})
+    if not isinstance(request_or_format, basestring):
+        # we got a request object and need to verify the origin header
+        origin = request_or_format.headers.get('Origin', None)
+        if origin is None or not origin.endswith(ctx.cfg['base_domain_name']):
+            acao = ctx.cfg['base_domain_name']
+        else:
+            acao = origin
+    headers = {'Access-Control-Allow-Origin': acao}
+    return Response(serializer(ro), mimetype=mimetype, headers=headers)
 
 
 def list_api_methods():

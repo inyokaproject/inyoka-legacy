@@ -80,8 +80,11 @@ class AdminController(IController):
 
 class AdminServiceProvider(IServiceProvider):
 
-    #: The internal application name.  Do never overwrite this!
-    name = 'admin'
+    #: The version of this api provider
+    version = 'dev'
+
+    #: The component this api provider belongs to (eg core, forum)
+    component = 'admin'
 
     @property
     def providers(self):

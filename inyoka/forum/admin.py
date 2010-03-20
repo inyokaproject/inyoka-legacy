@@ -64,20 +64,3 @@ class ForumAdminProvider(IAdminProvider):
         return {
             'form': form.as_widget(),
         }
-
-
-class ForumAdminServiceProvider(IAdminServiceProvider):
-    name = 'forum'
-
-    url_rules = [
-        Rule('/get_tags/', endpoint='get_tags'),
-    ]
-
-    @service('get_tags')
-    def get_tags(self, request):
-        q = request.args.get('q')
-        if not q:
-            tags = Tag.query.all()[:10]
-        else:
-            tags = Tag.query.filter(Tag.name.startswith(q))[:10]
-        return tags

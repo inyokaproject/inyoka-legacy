@@ -1,12 +1,23 @@
 {%- extends 'portal/base.html' %}
 
+{% block introduction %}
+{%- trans -%}On this page you can see all registered users.{% endtrans %}
+{% endblock %}
+
 {%- block content %}
 <h1>{{ _('Userlist') }}</h1>
 
-<ul>
-{% for user in users %}
-  <li><a href="{{ href(user.profile) }}">{{ user.username }}</a></li>
-{% endfor %}
-</ul>
-
+<table>
+  <tr>
+    <th>{{ table.get_html('id', _('#')) }}</th>
+    <th>{{ table.get_html('username', _('Username')) }}</th>
+  </tr>
+  {%- for user in users %}
+  <tr>
+    <td>{{ user.id }}</td>
+    <td><a href="{{ href(user.profile) }}">{{ user.username|e }}</a></td>
+  </tr>
+  {%- endfor %}
+</table>
+{{ pagination }}
 {%- endblock %}

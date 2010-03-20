@@ -160,7 +160,6 @@ def atomic_add(obj, column, delta, expire=False):
     of added of the local value.  This is a good idea if the value should
     be used for reflection.
     """
-    sess = orm.object_session(obj) or session
     obj_mapper = orm.object_mapper(obj)
     primary_key = obj_mapper.primary_key_from_instance(obj)
     assert len(primary_key) == 1, 'atomic_add not supported for '\
@@ -177,7 +176,7 @@ def atomic_add(obj, column, delta, expire=False):
     stmt = sql.update(table, obj_mapper.primary_key[0] == primary_key[0], {
         column:     table.c[column] + delta
     })
-    sess.execute(stmt)
+    get_engine().execute(stmt)
 
 
 def find_next_increment(column, string):

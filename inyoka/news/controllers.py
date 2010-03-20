@@ -117,7 +117,6 @@ class NewsController(IController):
 
         # if everything is valid, update the visit counter
         db.atomic_add(article, 'visit_count', 1, expire=True)
-        db.session.commit()
 
         return {
             'article':  article,

@@ -115,8 +115,8 @@ class NewsController(IController):
         else:
             form = EditCommentForm()
 
-        # if everything is valid, update the visit counter
-        db.atomic_add(article, 'visit_count', 1, expire=True)
+        # increase counters
+        article.touch()
 
         return {
             'article':  article,

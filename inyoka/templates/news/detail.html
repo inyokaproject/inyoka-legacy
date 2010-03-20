@@ -21,7 +21,7 @@
       {%- if article.was_updated %}
       – {{ _('updated on') }} {{ article.updated|datetimeformat('short') }}
       {%- endif %}
-      – {% trans visited=article.visit_count %} visited {{ visited }} times {% endtrans %}
+      – {% trans count=article.view_count %}{{ count }} visit{% pluralize %}{{ count }} visits{% endtrans %}
       {# TODO: ACL check #}
       – <a href="{{ href(article, action='edit') }}" class="adminlink">{{ _('edit') }}</a>
     </p>

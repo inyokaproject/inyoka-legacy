@@ -107,6 +107,9 @@ class ForumController(IController):
             db.session.commit()
             return redirect(href(question))
 
+        # increase counters
+        question.touch()
+
         return {
             'sort': sort,
             'question': question,

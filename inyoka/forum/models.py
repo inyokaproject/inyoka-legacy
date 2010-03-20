@@ -136,12 +136,16 @@ class Entry(db.Model, SerializableObject):
     date_active = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     score = db.Column(db.Integer, nullable=False, default=0)
     text = db.Column(db.Text, nullable=False)
+    view_count = db.Column(db.Integer, default=0, nullable=False)
 
     author = db.relation('User')
     votes = db.relation('Vote', backref='entry',
             extension=EntryVotesExtension())
 
     __mapper_args__ = {'polymorphic_on': discriminator}
+
+    def touch(self):
+        db.atomic_add(self, 'view_count', 1)
 
     def get_vote(self, user):
         return Vote.query.filter_by(user=user, entry=self).first()

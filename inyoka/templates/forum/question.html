@@ -4,6 +4,7 @@
 
 <div class="author">asked <strong>{{ question.date_created|timedelta }}</strong><br />
     by <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
+    ({% trans count=question.view_count %}{{ count }} visit{% pluralize %}{{ count }} visits{% endtrans %})
 </div>
 
 <div class="question-detail">

@@ -132,7 +132,7 @@ class Article(db.Model):
     intro = db.Column(db.String)
     text = db.Column(db.String)
     public = db.Column(db.Boolean)
-    visit_count = db.Column(db.Integer, default=0, nullable=False)
+    view_count = db.Column(db.Integer, default=0, nullable=False)
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
@@ -180,6 +180,9 @@ class Article(db.Model):
     def was_updated(self):
         return self.updated.replace(microsecond=0) > \
                self.pub_date.replace(microsecond=0)
+
+    def touch(self):
+        db.atomic_add(self, 'view_count', 1)
 
     def get_url_values(self, action='view'):
         values = {

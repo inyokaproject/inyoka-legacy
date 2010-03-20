@@ -73,7 +73,6 @@ a abbr, a acronym {
 abbr[title], acronym[title], dfn[title] {
   cursor: help;
   border-bottom: 1px solid #ccc;
-  text-transform: uppercase;
 }
 
 ol {

@@ -11,11 +11,13 @@
   <tr>
     <th>{{ table.get_html('id', _('#')) }}</th>
     <th>{{ table.get_html('username', _('Username')) }}</th>
+    <th>{{ table.get_html('date_joined', _('Date joined')) }}</th>
   </tr>
   {%- for user in users %}
   <tr>
     <td>{{ user.id }}</td>
     <td><a href="{{ href(user.profile) }}">{{ user.username|e }}</a></td>
+    <td>{{ user.date_joined|datetimeformat('short') }}</td>
   </tr>
   {%- endfor %}
 </table>

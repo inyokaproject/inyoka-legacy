@@ -6,6 +6,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka.i18n import _
 from inyoka.core.database import db
 from inyoka.core.routing import href
 from inyoka.core.context import ctx
@@ -37,11 +38,12 @@ class Sortable(object):
 
     def __init__(self, query, default_col, request=None, columns=None):
         cols = query._mapper_zero().class_.__table__.columns
-        columns = dict((x.key, x) for x in cols if columns and x.key in columns)
+        columns = dict((x.key, x) for x in cols if columns and x.key in columns or True)
         self.columns = columns
         self.query = query
         self.order_by = (request and request.args.get('order', default_col)
                                  or default_col)
+        self.default_col = default_col
 
     def get_html(self, key, value):
         """
@@ -84,8 +86,7 @@ class Sortable(object):
             ctx.current_request.flash(
                 _(u'The selected criterium “%s” is not available') % ocol
             )
-            self.order_by = self.default
-            self.order = self.default
+            self.order_by = self.default_col
 
         if self.order_by is None:
             return self.query

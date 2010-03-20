@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import random
+from datetime import datetime
 
 from inyoka import Interface
 from inyoka.i18n import _
@@ -60,6 +61,8 @@ class User(db.Model, SerializableObject):
     # the OpenID auth for example does not use it at all.  But also
     # external auth systems might not store the password here.
     pw_hash = db.Column(db.String(60))
+    # The day the user registered itself
+    date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
 

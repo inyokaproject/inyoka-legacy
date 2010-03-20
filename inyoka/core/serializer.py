@@ -163,13 +163,15 @@ def send_service_response(request_or_format, result, config=None):
     from inyoka.core.http import Response
     ro = primitive(result, config)
     serializer, mimetype = get_serializer(request_or_format)
+
+    # acao disallows requests by default (-- only base domain).
+    acao = 'http://%s' % ctx.cfg['base_domain_name']
     if not isinstance(request_or_format, basestring):
-        # we got a request object and need to verify the origin header
         origin = request_or_format.headers.get('Origin', None)
-        if origin is None or not origin.endswith(ctx.cfg['base_domain_name']):
-            acao = ctx.cfg['base_domain_name']
-        else:
+        # If the origin is in our domainspace we accept.
+        if origin and origin.endswith(ctx.cfg['base_domain_name']):
             acao = origin
+
     headers = {'Access-Control-Allow-Origin': acao}
     return Response(serializer(ro), mimetype=mimetype, headers=headers)
 

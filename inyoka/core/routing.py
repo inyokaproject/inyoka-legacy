@@ -102,7 +102,7 @@ class UrlMixin(object):
         parts = endpoint.split('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
 
-    def get_endpoint_map(self):
+    def get_endpoint_map(self, prefix=''):
         """This method returns a dictionary with a mapping out of
         endpoint name -> bound method
         """
@@ -112,7 +112,7 @@ class UrlMixin(object):
                     getattr(value, 'endpoint', None) is not None)
 
         members = tuple(x[1] for x in getmembers(self, _predicate))
-        endpoint_map = dict((m.endpoint, m) for m in members)
+        endpoint_map = dict((prefix + m.endpoint, m) for m in members)
         return endpoint_map
 
 
@@ -206,6 +206,10 @@ class IServiceProvider(Interface, UrlMixin):
         rules = [Submount('/%s/%s' % (comp.version, comp.component), rules)]
         rules = [EndpointPrefix('%s/' % comp.component, rules)]
         return rules
+
+    def get_endpoint_map(self, prefix=''):
+        return super(IServiceProvider, self).get_endpoint_map('%s%s/' %
+                                                    (prefix, self.component))
 
 
 view = IController.register_view

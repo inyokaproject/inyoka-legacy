@@ -80,7 +80,7 @@ class RequestDispatcher(object):
         for provider in (IController, IServiceProvider):
             try:
                 return provider.get_callable_for_endpoint(endpoint)
-            except:
+            except KeyError:
                 continue
         raise
 

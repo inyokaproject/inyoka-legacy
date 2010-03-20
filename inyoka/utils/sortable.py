@@ -37,6 +37,8 @@ class Sortable(object):
     """
 
     def __init__(self, query, default_col, request=None, columns=None):
+        # We need to get the real column objects to give sqlalchemy a chance
+        # to resolve the order by column names on complex queries.
         cols = query._mapper_zero().class_.__table__.columns
         columns = dict((x.key, x) for x in cols if columns and x.key in columns or True)
         self.columns = columns

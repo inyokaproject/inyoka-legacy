@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.forum.services
-    ~~~~~~~~~~~~~~~~~~~~~
+    inyoka.core.services
+    ~~~~~~~~~~~~~~~~~~~~
 
-    Services for the forum app.
+    Services for the core app.
 
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.forum.models import Tag
+from inyoka.core.models import Tag
 from inyoka.core.api import IServiceProvider, Rule, service
 
 
-class ForumServiceController(IServiceProvider):
-    component = 'forum'
+class CoreServiceController(IServiceProvider):
+    component = 'core'
 
     url_rules = [
         Rule('/get_tags/', endpoint='get_tags'),
     ]
 
-    # TODO: Move to core
     @service('get_tags', config={'core.tag':['id', 'name']})
     def get_tags(self, request):
         q = request.args.get('q')

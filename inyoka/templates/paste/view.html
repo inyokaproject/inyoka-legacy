@@ -1,15 +1,21 @@
 {%- extends 'paste/base.html' %}
-{% set sidebar=false %}
 {%- set title_trace = [paste.display_title] %}
 {%- set styles = ['highlighting.css', 'paste.css'] %}
+{%- set tab = 'browse' %}
 
-{%- block content %}
-<h1>Paste {{ paste.display_title }} by {{ paste.author }}</h1>
+{%- block paste_header %}
+{%- trans title=paste.display_title|e, author=paste.author|e %}
+Paste {{ title }} by {{ author }}
+{%- endtrans %}
+{% endblock %}
+
+{% block pagetabs %}
+<li><a href="{{ href(paste, action='raw') }}">Raw</a></li>
+{% endblock %}
+
+{%- block paste_content %}
 <div class="pasted_code">
   {{ paste.rendered_code }}
 </div>
-<p><span class="small">
-  Created on {{ paste.pub_date|datetimeformat }}.
-  <a href={{ href(paste, action='raw') }}>Show raw text</a>
-</span></p>
+<p><span class="small">Created on {{ paste.pub_date|datetimeformat }}.</span></p>
 {%- endblock %}

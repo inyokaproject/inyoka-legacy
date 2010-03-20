@@ -1,10 +1,10 @@
 {%- extends 'paste/base.html' %}
-{% set sidebar=false %}
 {%- set scripts = ['pagination.js'] %}
 {%- set title_trace = ['Browse'] %}
+{%- set tab = 'browse' %}
 
-{%- block content %}
-<h1>Browse Pastebin</h1>
+{% block paste_header %}Browse Pastebin{% endblock %}
+{%- block paste_content %}
 <p><a href="{{ href('paste/index') }}">Create one yourself!</a></p>
 
 {{ pagination }}

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka
+o    inyoka
     ~~~~~~
 
     The Inyoka portal system.  The system is devided into multiple modules

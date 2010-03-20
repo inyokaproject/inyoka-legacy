@@ -83,7 +83,8 @@ class Request(BaseRequest):
 
     def clear_flash_buffer(self):
         """Clear the whole flash buffer."""
-        self.session.pop('flash_buffer', None)
+        if 'flash_buffer' in self.session:
+            self.session.pop('flash_buffer', None)
 
     def has_flashed_messages(self):
         return bool(self.session.get('flash_buffer', None))

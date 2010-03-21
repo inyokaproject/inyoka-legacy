@@ -17,6 +17,7 @@ from bureaucracy import csrf, exceptions, recaptcha, redirects
 
 from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.context import local, ctx
+from inyoka.core.database import db
 from inyoka.utils.datastructures import _missing
 
 
@@ -118,3 +119,7 @@ class ModelField(Field):
             else:
                 value = getattr(value, self.key)
         return unicode(value)
+
+class Autocomplete(CommaSeparated):
+    from widgets import TokenInput
+    widget = TokenInput

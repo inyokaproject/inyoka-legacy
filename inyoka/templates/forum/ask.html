@@ -7,9 +7,4 @@
 {%- block questions_body %}
 <h2>Ask a Question</h2>
 {{ form() }}
-<script type="text/javascript">
-$(document).ready(function() {
-  $("#f_tags").tokenInput("{{ href('api/core/get_tags', format='json') }}", {});
-});
-</script>
 {%- endblock %}

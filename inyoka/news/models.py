@@ -184,13 +184,15 @@ class Article(db.Model):
     def touch(self):
         db.atomic_add(self, 'view_count', 1)
 
-    def get_url_values(self, action='view'):
+    def get_url_values(self, **kwargs):
+        action = kwargs.pop('action', 'view')
         values = {
             'view': 'news/detail',
             'edit': 'admin/news/article_edit',
             'delete': 'admin/news/article_delete',
         }
-        return values[action], {'slug': self.slug}
+        kwargs.update({'slug': self.slug})
+        return values[action], kwargs
 
     def __unicode__(self):
         return u'%s - %s' % (

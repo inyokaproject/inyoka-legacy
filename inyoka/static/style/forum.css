@@ -105,3 +105,8 @@ div.answer div.summary {
 p.tags {
     margin-bottom: 1.5em;
 }
+
+hr.answer_seperator {
+  clear: both;
+  border: 0.5px dotted #ccc;
+}

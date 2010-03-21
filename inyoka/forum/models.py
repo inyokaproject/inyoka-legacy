@@ -138,7 +138,7 @@ class Entry(db.Model, SerializableObject):
     text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relationship('User')
+    author = db.relationship('User', lazy=False)
     votes = db.relationship('Vote', backref='entry',
             extension=EntryVotesExtension())
 
@@ -195,7 +195,7 @@ class Question(Entry):
     slug = db.Column(db.String(160), nullable=False, index=True)
 
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-            lazy=False)
+                           lazy=False)
 
     def get_url_values(self, **kwargs):
         """Generates an URL for this question."""
@@ -227,6 +227,7 @@ class Answer(Entry):
     question = db.relationship(Question,
             backref=db.backref('answers', extension=QuestionAnswersExtension()),
             primaryjoin=(question_id == Question.id))
+
 
     def get_url_values(self, **kwargs):
         """Generates an URL for this answer."""

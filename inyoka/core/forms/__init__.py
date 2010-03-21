@@ -69,29 +69,6 @@ class Form(FormBase):
         return request.form
 
 
-class InlineFormWidget(FormWidget):
-    """A form that renders it's fields more inline-like."""
-
-    def _attr_setdefault(self, attrs):
-        FormWidget._attr_setdefault(self, attrs)
-        if not 'class' in attrs:
-            attrs['class'] = 'inline'
-
-
-class InlineForm(Form):
-
-    def as_widget(self):
-        """Return the form as widget."""
-        # if there is submitted data, use that for the widget
-        if self.raw_data is not None:
-            data = self.raw_data
-        # otherwise go with the data from the source (eg: database)
-        else:
-            data = self.data
-
-        return InlineFormWidget(self._root_field, None, data, self.errors)
-
-
 class ModelField(Field):
     """A field that queries for a model.
 
@@ -148,3 +125,7 @@ class ModelField(Field):
 
 class Autocomplete(CommaSeparated):
     widget = TokenInput
+
+
+class BooleanField(BooleanField):
+    widget = widgets.FixedCheckbox

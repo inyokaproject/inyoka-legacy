@@ -28,6 +28,8 @@ input[type="button"], button {
 
 input[type] {
   padding: 4px 10px 4px 7px;
+  margin-bottom: 10px;
+  margin-right: 10px;
   line-height: 16px;
 }
 
@@ -100,6 +102,7 @@ legend {
 
 label {
   font-weight: bold;
+  margin-top: 5px;
 }
 
 textarea, input[type='text'], input[type='password'],
@@ -136,24 +139,11 @@ input[type="text"]:focus, textarea:focus {
     border-color: #90A818;
 }
 
-form.inline dl label {
-  clear: left;
-  display: block;
+input[type="checkbox"] {
   float: left;
-  text-align: right;
-  width: 150px;
-}
-
-form.inline dl input[type="text"], form.inline dl input[type="password"],
-form.inline dl input[type="checkbox"] {
-  clear: right;
-  float: left;
-  margin-left: 20px;
-  margin-bottom: 10px;
   width: 200px;
 }
 
-form.inline div.actions {
-  padding: 20px 0 0 20px;
+form div.actions {
   clear: both;
 }

@@ -12,7 +12,7 @@ from inyoka.core import forms
 from inyoka.i18n import lazy_gettext
 
 
-class StandardLoginForm(forms.InlineForm):
+class StandardLoginForm(forms.Form):
     """Used to log in users."""
     username = forms.TextField(lazy_gettext(u'Username'), required=True)
     password = forms.TextField(lazy_gettext(u'Password'), required=True,

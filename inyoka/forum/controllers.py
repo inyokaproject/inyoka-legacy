@@ -127,8 +127,7 @@ class ForumController(IController):
             forum = Forum.query.filter_by(slug=forum).one()
             tags = forum.tags
 
-        form = AskQuestionForm()
-        form.data['tags'] = ' '.join(t.name for t in tags)
+        form = AskQuestionForm(initial={'tags':tags})
 
         if request.method == 'POST' and form.validate(request.form):
             question = Question(

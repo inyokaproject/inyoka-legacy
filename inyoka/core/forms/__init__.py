@@ -17,8 +17,9 @@ from bureaucracy import csrf, exceptions, recaptcha, redirects
 from bureaucracy.utils import _make_widget
 
 from inyoka.i18n import get_translations, lazy_gettext
+from inyoka.core.database import db
 from inyoka.core.context import local, ctx
-from inyoka.core.forms import widgets
+from inyoka.core.forms.widgets import TokenInput, FormWidget
 from inyoka.utils.datastructures import _missing
 
 
@@ -68,11 +69,11 @@ class Form(FormBase):
         return request.form
 
 
-class InlineFormWidget(widgets.FormWidget):
+class InlineFormWidget(FormWidget):
     """A form that renders it's fields more inline-like."""
 
     def _attr_setdefault(self, attrs):
-        widgets.FormWidget._attr_setdefault(self, attrs)
+        FormWidget._attr_setdefault(self, attrs)
         if not 'class' in attrs:
             attrs['class'] = 'inline'
 
@@ -143,3 +144,7 @@ class ModelField(Field):
             else:
                 value = getattr(value, self.key)
         return unicode(value)
+
+
+class Autocomplete(CommaSeparated):
+    widget = TokenInput

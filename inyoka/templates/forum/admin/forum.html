@@ -5,9 +5,4 @@
 {% block admin_content %}
 <h1>Create new Forum</h1>
 {{ form() }}
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#f_tags").tokenInput("{{ href('api/core/get_tags', format='json') }}", {});
-   });
-</script>
 {% endblock %}

@@ -34,7 +34,7 @@ class Entry(db.Model, SerializableObject):
     pub_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     hidden = db.Column(db.Boolean, default=False)
 
-    author = db.relation(User)
+    author = db.relationship(User)
 
 
     def __init__(self, code, author, language=None, title=None):

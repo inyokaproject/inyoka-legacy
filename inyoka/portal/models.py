@@ -37,7 +37,7 @@ class UserProfile(db.Model):
     __extendable__ = True
 
     user_id = db.Column(db.ForeignKey(auth.User.id), primary_key=True)
-    user = db.relation(auth.User,
+    user = db.relationship(auth.User,
         backref=db.backref('profile', uselist=False), innerjoin=True,
                            lazy=True)
 

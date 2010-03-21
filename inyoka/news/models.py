@@ -63,7 +63,7 @@ class Comment(db.Model):
     rendered_text = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey(auth.User.id))
-    author = db.relation(auth.User, backref=db.backref('comments',
+    author = db.relationship(auth.User, backref=db.backref('comments',
         lazy='dynamic'))
     article_id = db.Column(db.Integer, db.ForeignKey('news_article.id'))
 
@@ -137,12 +137,12 @@ class Article(db.Model):
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
     tag_id = db.Column(db.ForeignKey(Tag.id), nullable=False)
-    tag = db.relation(Tag,
+    tag = db.relationship(Tag,
         backref=db.backref('articles', lazy='dynamic'))
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
-    author = db.relation(auth.User,
+    author = db.relationship(auth.User,
         backref=db.backref('articles', lazy='dynamic'))
-    comments = db.relation(Comment, backref=db.backref('article', lazy=True),
+    comments = db.relationship(Comment, backref=db.backref('article', lazy=True),
         primaryjoin=id==Comment.article_id,
         order_by=[db.asc(Comment.pub_date)],
         lazy='dynamic',

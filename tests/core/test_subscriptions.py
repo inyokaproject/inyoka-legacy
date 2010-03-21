@@ -34,7 +34,7 @@ class Entry(db.Model):
     __tablename__ = '_test_subscription_entry'
     id = db.Column(db.Integer, primary_key=True)
     category_id = db.Column(db.ForeignKey(Category.id))
-    category = db.relation(Category)
+    category = db.relationship(Category)
     title = db.Column(db.String(30))
 
 
@@ -42,14 +42,14 @@ class Comment(db.Model):
     __tablename__ = '_test_subscription_comment'
     id = db.Column(db.Integer, primary_key=True)
     entry_id = db.Column(db.ForeignKey(Entry.id), nullable=False)
-    entry = db.relation(Entry)
+    entry = db.relationship(Entry)
 
 
 class Other(db.Model):
     __tablename__ = '_test_subscription_other'
     id = db.Column(db.Integer, primary_key=True)
     wrapper_id = db.Column(db.ForeignKey(Wrapper.id))
-    wrapper = db.relation(Wrapper)
+    wrapper = db.relationship(Wrapper)
 
 
 class SubscriptionTestSchemaController(db.ISchemaController):

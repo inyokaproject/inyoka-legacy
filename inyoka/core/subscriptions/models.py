@@ -28,7 +28,7 @@ class Subscription(db.Model):
     subject_id = db.Column(db.Integer)
     first_unread_object_id = db.Column(db.Integer)
 
-    user = db.relation(User)
+    user = db.relationship(User)
 
     unread_object_ids = association_proxy('_unread_object_ids', 'object_id',
         creator=_create_subscriptionunreadobjects_by_object_id)
@@ -207,7 +207,7 @@ class SubscriptionUnreadObjects(db.Model):
     subscription_id = db.Column(db.ForeignKey(Subscription.id), nullable=False)
     object_id = db.Column(db.Integer, nullable=False)
 
-    subscription = db.relation(Subscription,
+    subscription = db.relationship(Subscription,
         backref=db.backref('_unread_object_ids', order_by=id,
                 collection_class=set, cascade='all, delete, delete-orphan'))
 

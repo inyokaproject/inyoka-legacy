@@ -46,10 +46,10 @@ class Forum(db.Model, SerializableObject):
     position = db.Column(db.Integer, nullable=False, default=0,
             index=True)
 
-    subforums = db.relation('Forum',
+    subforums = db.relationship('Forum',
             backref=db.backref('parent',remote_side=id),
             lazy=False, join_depth=1)
-    tags = db.relation(Tag, secondary=forum_tag, backref='forums',
+    tags = db.relationship(Tag, secondary=forum_tag, backref='forums',
             lazy=False)
 
     @cached_property
@@ -138,8 +138,8 @@ class Entry(db.Model, SerializableObject):
     text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relation('User')
-    votes = db.relation('Vote', backref='entry',
+    author = db.relationship('User')
+    votes = db.relationship('Vote', backref='entry',
             extension=EntryVotesExtension())
 
     __mapper_args__ = {'polymorphic_on': discriminator}
@@ -194,7 +194,7 @@ class Question(Entry):
     title = db.Column(db.String(160), nullable=False)
     slug = db.Column(db.String(160), nullable=False, index=True)
 
-    tags = db.relation(Tag, secondary=question_tag, backref='questions',
+    tags = db.relationship(Tag, secondary=question_tag, backref='questions',
             lazy=False)
 
     def get_url_values(self, **kwargs):
@@ -224,7 +224,7 @@ class Answer(Entry):
     id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
 
-    question = db.relation(Question,
+    question = db.relationship(Question,
             backref=db.backref('answers', extension=QuestionAnswersExtension()),
             primaryjoin=(question_id == Question.id))
 
@@ -256,7 +256,7 @@ class Vote(db.Model, SerializableObject):
             default=0), extension=VoteScoreExtension())
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    user = db.relation('User', backref='votes')
+    user = db.relationship('User', backref='votes')
 
 
 class ForumSchemaController(db.ISchemaController):

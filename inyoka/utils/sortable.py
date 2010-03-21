@@ -74,7 +74,8 @@ class Sortable(object):
         if key == ocol:
             new_order = '%s%s' % (('-', '')[self.order_by.startswith('-')], ocol)
             button = ('down', 'up')[self.order_by.startswith('-')]
-            img = build_html_tag('img', src=href('static', file='img/' + button + '.png'))
+            src = href('static', file='img/%s.png' % button)
+            img = build_html_tag('img', src=src)
         else:
             new_order = key
             img = ''

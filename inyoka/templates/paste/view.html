@@ -1,5 +1,5 @@
 {%- extends 'paste/base.html' %}
-{%- set title_trace = [paste.display_title] %}
+{%- set title_trace = [paste.display_title|e] %}
 {%- set styles = ['highlighting.css', 'paste.css'] %}
 {%- set tab = 'browse' %}
 

@@ -67,7 +67,7 @@ class SerializableObject(object):
         serialized.  This is always a dict with string keys and
         the values are safe for pickeling.
         """
-        result = {} if config.get('show_type', True) == False \
+        result = {} if config.get('show_type', True) is False \
                     else {'#type': self.object_type}
         fields = (config or {}).get(self.object_type) or self.public_fields
         for key in fields:

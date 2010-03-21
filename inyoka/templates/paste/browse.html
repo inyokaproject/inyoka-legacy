@@ -1,30 +1,30 @@
 {%- extends 'paste/base.html' %}
 {%- set scripts = ['pagination.js'] %}
-{%- set title_trace = ['Browse'] %}
+{%- set title_trace = [_('Browse')] %}
 {%- set tab = 'browse' %}
 
-{% block paste_header %}Browse Pastebin{% endblock %}
+{% block paste_header %}{{ _('Browse Pastebin') }}{% endblock %}
 {%- block paste_content %}
-<p><a href="{{ href('paste/index') }}">Create one yourself!</a></p>
+<p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
 
 {{ pagination }}
 
 <table>
   <thead>
     <tr>
-      <th>Title</th>
-      <th>Author</th>
-      <th>Date</th>
-      <th>Language</th>
+      <th>{{ _('Title') }}</th>
+      <th>{{ _('Author') }}</th>
+      <th>{{ _('Date') }}</th>
+      <th>{{ _('Language') }}</th>
     </tr>
   </thead>
   <tbody>
   {% for p in pastes %}
   {# TODO: ACL for hidden pastes and edit link! #}
   <tr{% if p.hidden %} class="hidden"{% endif %}>
-    <td><a href="{{ href(p) }}">{{ p }}</a> <span class="small"><a href="{{ href(p, action='edit') }}">edit</a></span></td>
-    <td>{{ p.author }}</td>
-    <td>{{ p.pub_date.strftime('%F %T') }}</td>
+    <td><a href="{{ href(p) }}">{{ p }}</a> <span class="small"><a href="{{ href(p, action='edit') }}">{{ _('edit') }}</a></span></td>
+    <td>{{ p.author.display_name|e }}</td>
+    <td>{{ p.pub_date|datetimeformat('short') }}</td>
     <td>{{ p.language|default('plain text') }}</td>
   </tr>
   {% endfor %}

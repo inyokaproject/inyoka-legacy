@@ -9,8 +9,8 @@
 
 <div class="question-detail">
   <h1><a href="{{ href(question) }}">{{ question.title|e }}</a></h1>
-  
-   
+
+
   <div class="vote">
     {% set vote = question.get_vote(request.user) %}
     {% if vote and vote.score > 0 %}

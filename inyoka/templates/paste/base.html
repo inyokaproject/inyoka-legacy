@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% set title_trace = title_trace|default([]) + [_('Paste')] %}
-{% set sidebar = false %}
 
 {% block content %}
 <h1>{% block paste_header %}Pastebin{% endblock %}</h1>
@@ -18,3 +17,23 @@
 {% block paste_content %}
 {% endblock %}
 {% endblock %}
+
+{%- block sidebar %}
+{% if recent_pastes %}
+  <table>
+    <thead>
+      <tr>
+        <th>Recent Pastes</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in recent_pastes %}
+    {# TODO: ACL for hidden pastes and edit link! #}
+    <tr{% if p.hidden %} class="hidden"{% endif %}>
+      <td><a href="{{ href(p) }}">{{ p }}</a> <span class="small">by {{ p.author|e }} ({{ p.pub_date|datetimeformat('short') }})</span></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+{%- endblock %}

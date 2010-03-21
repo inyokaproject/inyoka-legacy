@@ -231,7 +231,7 @@ class Answer(Entry):
     def get_url_values(self, **kwargs):
         """Generates an URL for this answer."""
         kwargs.update({
-            'answer': self.id
+            '_anchor': 'answer-%s' % self.id
         })
         return self.question.get_url_values(**kwargs)
 

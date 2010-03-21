@@ -58,11 +58,13 @@
 
 <br style="clear: both" />
 
-{% trans count=question.answers|length -%}
-<h2>{{ count }} Answer</h2>
+<h2>
+{%- trans count=question.answers|length -%}
+{{ count }} Answer
 {%- pluralize -%}
-<h2>{{ count }} Answers</h2>
-{%- endtrans %}
+{{ count }} Answers
+{%- endtrans -%}
+</h2>
 {% set tab = sort or 'votes' %}
 <ul class="pagetabs">
     <li{% if tab == 'votes' %} class="selected"{% endif %}>
@@ -74,7 +76,7 @@
 </ul>
 
 {% for answer in answers %}
-<div class="answer">
+<div class="answer" id="answer-{{ answer.id }}">
   <div class="vote">
     {% set vote = answer.get_vote(request.user) %}
     {% if vote and vote.score > 0 %}

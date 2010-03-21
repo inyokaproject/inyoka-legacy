@@ -95,12 +95,12 @@ class Response(BaseResponse):
     default_mimetype = 'text/html'
 
     def prevent_caching(self):
-        """Prevent downstream Proxies to cache this page"""
+        """Prevent downstream proxies from caching this page"""
         self.headers['Cache-Control'] = 'no-cache, must-revalidate'
         self.headers['Pragma'] = 'no-cache'
         self.headers['Expires'] = '-1'
 
 
-def redirect_to(*args, **kwargs):
+def redirect_to(endpoint, **kwargs):
     """Temporarily redirect to an URL rule."""
-    return redirect(href(*args, **kwargs))
+    return redirect(href(endpoint, **kwargs))

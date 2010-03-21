@@ -64,7 +64,7 @@
 <h2>{{ count }} Answers</h2>
 {%- endtrans %}
 {% set tab = sort or 'votes' %}
-<ul class="tabs">
+<ul class="pagetabs">
     <li{% if tab == 'votes' %} class="selected"{% endif %}>
         <a href="{{ href(question) }}">Votes</a></li>
     <li{% if tab == 'latest' %} class="selected"{% endif %}>
@@ -106,6 +106,7 @@
     <p>{{ answer.text|e }}</p>
   </div>
 </div>
+<br style="clear: both;" />
 {% else %}
 <p>There aren't any answers yet.</p>
 {% endfor %}

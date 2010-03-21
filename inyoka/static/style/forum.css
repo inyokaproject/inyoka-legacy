@@ -99,6 +99,7 @@ div.vote strong {
 div.question-detail div.summary,
 div.answer div.summary {
     margin-left: 3em;
+    display: block;
 }
 
 p.tags {

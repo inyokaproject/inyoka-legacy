@@ -11,12 +11,13 @@
 from inyoka.core import forms
 from inyoka.i18n import lazy_gettext
 
-class StandardLoginForm(forms.Form):
+
+class StandardLoginForm(forms.InlineForm):
     """Used to log in users."""
     username = forms.TextField(lazy_gettext(u'Username'), required=True)
     password = forms.TextField(lazy_gettext(u'Password'), required=True,
                                widget=forms.widgets.PasswordInput)
-    permanent = forms.BooleanField(lazy_gettext(u'Permanent Login'))
+    permanent = forms.BooleanField(lazy_gettext(u'Remember me for one month'))
 
     def __init__(self, auth_system, initial=None, action=None, request=None):
         forms.Form.__init__(self, initial, action, request)

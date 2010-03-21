@@ -14,9 +14,11 @@
 """
 from bureaucracy.forms import *
 from bureaucracy import csrf, exceptions, recaptcha, redirects
+from bureaucracy.utils import _make_widget
 
 from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.context import local, ctx
+from inyoka.core.forms import widgets
 from inyoka.utils.datastructures import _missing
 
 
@@ -64,6 +66,29 @@ class Form(FormBase):
     def _autodiscover_data(self):
         request = self._lookup_request_info()
         return request.form
+
+
+class InlineFormWidget(widgets.FormWidget):
+    """A form that renders it's fields more inline-like."""
+
+    def _attr_setdefault(self, attrs):
+        widgets.FormWidget._attr_setdefault(self, attrs)
+        if not 'class' in attrs:
+            attrs['class'] = 'inline'
+
+
+class InlineForm(Form):
+
+    def as_widget(self):
+        """Return the form as widget."""
+        # if there is submitted data, use that for the widget
+        if self.raw_data is not None:
+            data = self.raw_data
+        # otherwise go with the data from the source (eg: database)
+        else:
+            data = self.data
+
+        return InlineFormWidget(self._root_field, None, data, self.errors)
 
 
 class ModelField(Field):

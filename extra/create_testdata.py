@@ -10,6 +10,7 @@
 """
 import os
 import sys
+from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
 from inyoka.core.api import db
 
@@ -82,10 +83,6 @@ def create_forum_test_data():
         title=u'Which deskop environment should I choose?',
         text=u'Is GNOME or KDE the better choice? What do you think?',
         author=u1, tags=[gnome, kde])
-    q1a1 = Answer(
-        question=q1,
-        text=u'I use GNOME because I like it.',
-        author=u2)
     q2 = Question(
         title=u'Is there a good audio player like Amorok for GNOME?',
         text=u'I hate the KDE design, so is there any good audio player for GNOME?',
@@ -94,6 +91,14 @@ def create_forum_test_data():
         title=u'What do you like most about Inyoka?',
         text=u'Please, be honest!',
         author=u2, tags=[inyoka])
+    db.session.commit()
+
+    # answers
+    q1a1 = Answer(
+        question=q1,
+        text=u'I use GNOME because I like it.',
+        author=u2,
+        date_created=datetime.utcnow())
     db.session.commit()
 
 

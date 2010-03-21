@@ -15,7 +15,6 @@ from inyoka.core.api import IController, Rule, view, service, templated, db, \
          redirect, redirect_to, href
 from inyoka.utils.pagination import URLPagination
 from inyoka.core.http import Response
-from datetime import datetime
 
 
 def context_modifier(request, context):
@@ -100,7 +99,6 @@ class ForumController(IController):
                 author=request.user,
                 question=question,
                 text=form.data['text'],
-                date_created=datetime.utcnow()
             )
             db.session.commit()
             return redirect(href(question))

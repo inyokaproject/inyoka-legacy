@@ -150,7 +150,7 @@ def refresh_engine():
         _engine = None
 
 
-def atomic_add(obj, column, delta, expire=False):
+def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
     """Performs an atomic add (or subtract) of the given column on the
     object.  This updates the object in place for reflection but does
     the real add on the server to avoid race conditions.  This assumes
@@ -158,7 +158,8 @@ def atomic_add(obj, column, delta, expire=False):
 
     If `expire` is set to `True`, the value is expired and reloaded instead
     of added of the local value.  This is a good idea if the value should
-    be used for reflection.
+    be used for reflection. The `primary_key_field` should only get passed in,
+    if the mapped table is a join between two tables.
     """
     obj_mapper = orm.object_mapper(obj)
     primary_key = obj_mapper.primary_key_from_instance(obj)
@@ -172,8 +173,17 @@ def atomic_add(obj, column, delta, expire=False):
     else:
         orm.attributes.set_committed_value(obj, column, val + delta)
 
-    table = obj_mapper.tables[0]
-    stmt = sql.update(table, obj_mapper.primary_key[0] == primary_key[0], {
+    # FIXME: Does uglier work?
+    for table in obj_mapper.tables:
+        if column in table.c:
+            break
+        continue
+
+    if primary_key_field:
+        assert table.c[primary_key_field].primary_key == True, 'no primary key field'
+    primary_key_field = table.c[primary_key_field] if primary_key_field is not None \
+                         else obj_mapper.primary_key[0]
+    stmt = sql.update(table, primary_key_field == primary_key[0], {
         column:     table.c[column] + delta
     })
     get_engine().execute(stmt)

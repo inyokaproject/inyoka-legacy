@@ -129,6 +129,13 @@ class Entry(db.Model, SerializableObject):
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
                      'date_active', 'score', 'text', 'votes')
 
+    def __init__(self, **kwargs):
+        for c in ('date_created', 'date_active'):
+            if kwargs.get(c) is None:
+                kwargs[c] = datetime.utcnow()
+
+        super(Entry, self).__init__(**kwargs)
+
     entry_id = db.Column(db.Integer, primary_key=True)
     discriminator = db.Column('type', db.String(12))
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
@@ -156,7 +163,12 @@ class QuestionAnswersExtension(db.AttributeExtension):
     def append(self, state, answer, initiator):
         question = state.obj()
         question.date_active = max(question.date_active, answer.date_created)
+        db.atomic_add(question, 'answer_count', 1, primary_key_field='id')
         return answer
+
+    def remove(self, state, answer, initiator):
+        question = state.obj()
+        db.atomic_add(question, 'answer_count', -1, primary_key_field='id')
 
 
 class QuestionQuery(EntryQuery):
@@ -184,6 +196,12 @@ class Question(Entry):
     }
     query = db.session.query_property(QuestionQuery)
 
+    def __init__(self, **kwargs):
+        if kwargs.get('answer_count') is None:
+            kwargs['answer_count'] = 0
+
+        super(Question, self).__init__(**kwargs)
+
     #: Serializer attributes
     object_type = 'forum.question'
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
@@ -193,6 +211,7 @@ class Question(Entry):
     id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
     title = db.Column(db.String(160), nullable=False)
     slug = db.Column(db.String(160), nullable=False, index=True)
+    answer_count = db.Column(db.Integer, default=0)
 
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
             lazy=False)

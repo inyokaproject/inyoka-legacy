@@ -68,8 +68,8 @@
       {%- endtrans %}
     </div>
 
-    <div class="status{% if not question.answers %} unanswered{% endif %}">
-      {% trans answers=question.answers|length -%}
+    <div class="status{% if not question.answer_count %} unanswered{% endif %}">
+      {% trans answers=question.answer_count -%}
       <strong>{{ answers }}</strong> answer
       {%- pluralize -%}
       <strong>{{ answers }}</strong> answers

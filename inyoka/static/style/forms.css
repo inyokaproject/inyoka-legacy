@@ -141,7 +141,6 @@ input[type="text"]:focus, textarea:focus {
 
 input[type="checkbox"] {
   float: left;
-  width: 200px;
 }
 
 form div.actions {

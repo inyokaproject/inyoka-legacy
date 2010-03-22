@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-03-22 18:49+0100\n"
-"PO-Revision-Date: 2010-03-22 18:48+0100\n"
+"POT-Creation-Date: 2010-03-22 18:59+0100\n"
+"PO-Revision-Date: 2010-03-22 18:59+0100\n"
 "Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -622,7 +622,7 @@ msgstr "Alle Artikel"
 #: inyoka/templates/news/admin/articles.html:10
 #, python-format
 msgid "…or <a href=\"%(link)s\">create a new article</a>"
-msgstr "…oder <a href=\"%(links)s\">erstelle einen neuen Artikel</a>"
+msgstr "…oder <a href=\"%(link)s\">erstelle einen neuen Artikel</a>"
 
 #: inyoka/templates/news/admin/index.html:5
 msgid "Articles"

@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
-import simplejson
 import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
@@ -21,6 +20,10 @@ from inyoka.core.cache import cache as inyoka_cache
 from inyoka.core.exceptions import NotFound
 from inyoka.core.database import db
 
+try:
+    import simplejson
+except:
+    import json as simplejson
 
 TEMPLATE_CONTEXT = {}
 

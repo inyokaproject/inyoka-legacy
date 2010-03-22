@@ -14,7 +14,6 @@
 """
 import re
 import inspect
-import simplejson
 from functools import partial
 from xml.sax.saxutils import quoteattr
 from datetime import datetime
@@ -25,6 +24,10 @@ from inyoka.core.exceptions import BadRequest
 from inyoka.utils.html import escape
 from inyoka.utils.urls import make_full_domain
 
+try:
+    import simplejson
+except:
+    import json as simplejson
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
 

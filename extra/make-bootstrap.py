@@ -41,22 +41,23 @@ def pil_install(home_dir):
 
 
 def after_install(options, home_dir):
+    easy_install('setuptools', home_dir)
     easy_install('Jinja2', home_dir)
     easy_install('Werkzeug', home_dir)
     easy_install('Pygments', home_dir)
-    easy_install('SQLAlchemy==dev', home_dir)
     easy_install('simplejson', home_dir)
     easy_install('pytz', home_dir)
     easy_install('nose', home_dir)
     easy_install('Sphinx', home_dir)
     easy_install('html5lib', home_dir)
-    easy_install('lxml', home_dir)
     easy_install('Babel', home_dir)
     easy_install('coverage', home_dir)
     easy_install('minimock', home_dir)
     easy_install('Fabric', home_dir)
+    easy_install('http://hg.sqlalchemy.org/sqlalchemy/archive/tip.tar.gz', home_dir)
     easy_install('http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz', home_dir)
     easy_install('http://dev.pocoo.org/hg/bureaucracy-main/archive/tip.tar.gz', home_dir)
+    easy_install('lxml', home_dir)
     pil_install(home_dir)
 
 

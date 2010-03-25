@@ -44,8 +44,6 @@ class PasteController(IController):
             db.session.commit()
             return redirect_to(e)
 
-        recent_pastes = Entry.query.order_by(Entry.pub_date.desc())[:10]
-
         return {
             'recent_pastes': recent_pastes,
             'form': form.as_widget(),

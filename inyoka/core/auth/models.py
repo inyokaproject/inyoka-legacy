@@ -13,6 +13,7 @@ from datetime import datetime
 
 from inyoka import Interface
 from inyoka.i18n import _
+from inyoka.core.cache import cache
 from inyoka.core.database import db, IModelPropertyProvider
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.datastructures import BidiMap
@@ -35,7 +36,11 @@ class UserQuery(db.Query):
 
     def get_anonymous(self):
         #TODO: make configurable
-        return User.query.get('anonymous')
+        user = cache.get('core/anonymous')
+        if user is None:
+            user = User.query.get('anonymous')
+            cache.set('core/anonymous', user)
+        return user
 
 
 class User(db.Model, SerializableObject):

@@ -46,7 +46,7 @@ body {
   padding-top: 54px;
 }
 
-#navi a:hover {
+#navi a:hover, #navi a:focus {
   border-bottom: #DFE7B6 1px dashed;
 }
 
@@ -182,7 +182,7 @@ ul.pagetabs li a {
     -webkit-border-radius: 0.4em;
 }
  
-ul.pagetabs li a:hover {
+ul.pagetabs li a:hover, ul.pagetabs li a:focus {
     background: #fff;
 }
 

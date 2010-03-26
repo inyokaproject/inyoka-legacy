@@ -32,6 +32,6 @@ a.show_comments {
   cursor: pointer;
 }
 
-a.show_comments:hover {
+a.show_comments:hover, a.show_comments:focus {
   text-decoration: underline;
 }

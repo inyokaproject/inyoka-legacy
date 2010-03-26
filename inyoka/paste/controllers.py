@@ -45,7 +45,6 @@ class PasteController(IController):
             return redirect_to(e)
 
         return {
-            'recent_pastes': recent_pastes,
             'form': form.as_widget(),
         }
 

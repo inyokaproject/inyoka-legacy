@@ -90,7 +90,8 @@ class ForumController(IController):
     def question(self, request, slug, sort='votes', page=1):
         question = Question.query.options(db.eagerload('author')) \
                                  .filter_by(slug=slug).one()
-        answer_query = Answer.query.filter_by(question=question)
+        answer_query = Answer.query.options(db.eagerload('votes')) \
+                                   .filter_by(question=question)
         answer_query = getattr(answer_query, sort)
         pagination = URLPagination(answer_query, page=page)
 
@@ -107,12 +108,21 @@ class ForumController(IController):
         # increase counters
         question.touch()
 
+        # precalculate user votes
+        answers = pagination.get_objects()
+        user_votes = {question.id: question.get_vote(request.user)}
+        for answer in answers:
+            vote = [vote for vote in answer.votes
+                    if vote.user.id == request.user.id]
+            user_votes[answer.id] = vote and vote[0] or None
+
         return {
             'sort': sort,
             'question': question,
             'answers': pagination.get_objects(),
             'form': form.as_widget(),
-            'pagination': pagination
+            'pagination': pagination,
+            'user_votes': user_votes
         }
 
     @view('ask')
@@ -156,8 +166,11 @@ class ForumController(IController):
             'nofavorite':   {'favorite': False}
         }[action]
         if not v:
-            args['score'] = args.get('score', 0)
-            v = Vote(user=request.user, **args)
+            args.update({
+                'score': args.get('score', 0),
+                'user': request.user,
+            })
+            v = Vote(**args)
             v.entry = entry
         else:
             for key, a in args.iteritems():

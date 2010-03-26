@@ -19,6 +19,7 @@ from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
 from inyoka.portal.models import UserProfile, IUserProfileExtender
+from inyoka.portal.forms import get_profile_form
 
 
 def context_modifier(request, context):
@@ -45,7 +46,7 @@ class PortalController(IController):
     @templated('portal/profile_edit.html', modifier=context_modifier)
     def profile_edit(self, request):
         profile = UserProfile.query.filter_by(user_id=request.user.id).first()
-        form = forms.get_profile_form()(profile=profile)
+        form = get_profile_form()(profile=profile)
 
         if request.method == 'POST' and form.validate(request.form):
             form.save()

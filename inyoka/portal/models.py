@@ -9,7 +9,11 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Interface
-from inyoka.core.api import auth, db, ctx
+from inyoka.core import forms
+from inyoka.core.api import _, auth, db, ctx
+from inyoka.core.forms.validators import is_valid_url, is_valid_jabber
+from inyoka.core.forms import widgets
+from inyoka.utils.decorators import classproperty
 
 
 class UserProfile(db.Model):
@@ -52,12 +56,36 @@ class UserProfile(db.Model):
 
 class IUserProfileExtender(db.IModelPropertyProvider, Interface):
     model = UserProfile
+    profile_properties = {}
+
+    @classproperty
+    def properties(cls):
+        return dict((k, cls.profile_properties[k]['column'])
+                    for k in cls.profile_properties)
 
     @classmethod
-    def get_profile_names(cls, only_editable=False):
+    def get_all_properties(cls):
+        props = {}
+        for imp in ctx.get_implementations(cls):
+            props.update(dict(
+                (k, imp.profile_properties[k]['column']) for k in imp.profile_properties.keys()
+            ))
+        return props
+
+    @classmethod
+    def get_profile_names(cls):
         fields = []
         for imp in ctx.get_implementations(cls):
-            fields += imp.properties.keys()
+            fields += imp.profile_properties.keys()
+        return fields
+
+    @classmethod
+    def get_profile_forms(cls):
+        fields = {}
+        for imp in ctx.get_implementations(cls):
+            fields.update(dict(
+                (k, imp.profile_properties[k]['form']) for k in imp.profile_properties.keys()
+            ))
         return fields
 
 
@@ -65,10 +93,48 @@ class BasicProfile(IUserProfileExtender):
     """Profile extender to add basic profile properties
     to the user profile model.
     """
-    properties = {
-        'real_name': db.Column(db.String(200)),
-        'website': db.Column(db.String(200)),
-        'signature': db.Column(db.Text)
+    profile_properties = {
+        'real_name': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Realname'), max_length=200),
+        },
+        'website': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Website'), validators=[is_valid_url()])
+        },
+        'location': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Location'), max_length=200),
+        },
+        'interests': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Interests'), max_length=200),
+        },
+        'occupation': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Occupation'), max_length=200),
+        },
+        'signature': {
+            'column': db.Column(db.Text),
+            'form': forms.TextField(_(u'Signature'), widget=widgets.Textarea)
+        },
+        'jabber': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Jabber JID'), validators=[is_valid_jabber()]),
+        },
+        'skype': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'Skype'), max_length=25),
+        },
+        'qutecom': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'QuteCom (previously called WengoPhone)'),
+                                    max_length=200)
+        },
+        'sip': {
+            'column': db.Column(db.String(200)),
+            'form': forms.TextField(_(u'SIP'), max_length=25)
+        }
     }
 
 

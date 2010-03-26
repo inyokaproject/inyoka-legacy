@@ -8,13 +8,14 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka import Interface
 from inyoka.core import forms
 from inyoka.core.database import db
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.i18n import _
 from inyoka.portal.models import UserProfile, IUserProfileExtender
 
-# Eks ;)
+
 def get_profile_form():
     class ProfileForm(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -33,8 +34,8 @@ def get_profile_form():
             return profile
 
 
-    for field in IUserProfileExtender.get_profile_names():
-        ProfileForm.fields[field] = forms.TextField(field, max_length=255, required=True)
+    for name, field in IUserProfileExtender.get_profile_forms().iteritems():
+        ProfileForm.fields[name] = field
 
     return ProfileForm
 

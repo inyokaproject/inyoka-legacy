@@ -32,17 +32,3 @@ class PasteTester(ViewTestSuite):
         'pastes': [
             fixture(Entry, get_data)
     ]}
-
-    @with_fixtures('pastes')
-    def test_index(self, fixtures):
-        #TODO: for now this mostly just tests the fixture
-        #      feature, so add real tests!
-        context = self.get_context('/')
-        eq_(len(context['recent_pastes']), 1)
-        eq_(context['recent_pastes'][0].code, u"print 'hello world'")
-
-    def test_new_paste(self):
-        response = self.submit_form('/', data=get_data())
-        eq_(response.headers['Location'], href('paste/view', id=1))
-        context = self.get_context('/')
-        eq_(len(context['recent_pastes']), 1)

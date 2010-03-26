@@ -68,6 +68,8 @@ class User(db.Model, SerializableObject):
     pw_hash = db.Column(db.String(60))
     # The day the user registered itself
     date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    # The day the user recently joined the webpage
+    last_login = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
 

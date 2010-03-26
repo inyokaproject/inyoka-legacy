@@ -21,8 +21,8 @@ class AskQuestionForm(forms.Form):
     title = forms.TextField(_(u'Title'), max_length=160, required=True)
     text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
         required=True)
-    tags = forms.Autocomplete(forms.ModelField(Tag),#, 'name'),
-                                label=_(u'Tags'), sep=',', min_size=1)
+    tags = forms.Autocomplete(forms.ModelField(Tag),
+                              label=_(u'Tags'), sep=',', min_size=1)
 
 
 class AnswerQuestionForm(forms.Form):

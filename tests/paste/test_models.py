@@ -69,6 +69,6 @@ class TestEntryModel(TestSuite):
     def test_display_title(self, fixtures):
         e1, e2 = fixtures['pastes']
         eq_(e1.display_title, 'some paste')
-        eq_(e2.display_title, '#%d' % e2.id)
+        eq_(e2.display_title, 'Paste #%d' % e2.id)
         eq_(unicode(e1), 'some paste')
-        eq_(unicode(e2), '#%d' % e2.id)
+        eq_(unicode(e2), 'Paste #%d' % e2.id)

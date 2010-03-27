@@ -191,7 +191,7 @@ ul.pagetabs li a:hover, ul.pagetabs li a:focus {
 div.pagination {
     font-size: .9em;
     clear: both;
-    margin: 1em -1em -1em -1em;
+    margin: 0.5em;
     background: #eee;
     padding: 0.5em;
     text-align: center;

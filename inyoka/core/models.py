@@ -16,8 +16,10 @@ from datetime import date, datetime, timedelta
 from sqlalchemy.orm import MapperExtension
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from inyoka.core.database import db
+from inyoka.core.context import ctx
 from inyoka.core.routing import href
 from inyoka.core.serializer import SerializableObject
+from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 
 
 CONFIRM_ACTIONS = {}
@@ -146,6 +148,43 @@ class Confirm(db.Model):
     @property
     def is_expired(self):
         return self.expires < date.today()
+
+
+class RevisionedModelMixin(object):
+
+    @classmethod
+    def resolve_root(cls, identifier):
+        """Find the root for a tree."""
+        obj = cls.query.get(identifier)
+        if obj is None:
+            return
+        while obj.parent_id is not None:
+            obj = obj.parent
+        return obj
+
+    def fetch_replies(self):
+        """Get new replies for some model"""
+        cls = self.__class__
+        obj_list = cls.query.filter(db.and_(
+            cls.parent_id.in_([self.id]),
+        )).order_by(cls.id.desc()).all()
+
+        return obj_list
+
+    def compare_to(self, other, column, context_lines=4, template=False):
+        """Compare the paste with another revision."""
+        udiff = generate_udiff(
+            old=getattr(self, column, u''),
+            new=getattr(other, column, u''),
+            old_title=unicode(self),
+            new_title=unicode(other),
+            context_lines=context_lines
+        )
+
+        if template:
+            diff, info = prepare_udiff(udiff)
+            return diff and diff[0] or None
+        return udiff
 
 
 class CoreSchemaController(db.ISchemaController):

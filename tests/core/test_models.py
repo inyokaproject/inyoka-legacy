@@ -53,9 +53,9 @@ class TestRevisionedModelMixin(TestSuite):
 
     fixtures = {
         'models': [
-            fixture(FancyModel, id=1, user_id=1, code=u'some code'),
-            fixture(FancyModel, id=2, user_id=2, code=u'Some Code', parent_id=1),
-            fixture(FancyModel, id=3, user_id=2, code=u'some Code', parent_id=2)]
+            fixture(FancyModel, user_id=1, code=u'some code'),
+            fixture(FancyModel, user_id=2, code=u'Some Code', parent_id=1),
+            fixture(FancyModel, user_id=2, code=u'some Code', parent_id=2)]
     }
 
     @with_fixtures('models')

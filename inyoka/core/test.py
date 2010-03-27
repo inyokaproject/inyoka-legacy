@@ -222,17 +222,20 @@ class InyokaPlugin(cover.Coverage):
             loaded = {}
             for fixture in t.test._required_fixtures:
                 loader = test.context.fixtures[fixture]
-                if isinstance(loader, _iterables):
-                    instances = [func() for func in loader]
-                    db.session.add_all(instances)
-                else:
-                    instances = loader()
-                    to_load = instances if isinstance(instances, _iterables) \
-                                else [instances]
-                    db.session.add_all(to_load)
-                loaded[fixture] = instances
                 try:
-                    db.session.commit()
+                    if isinstance(loader, _iterables):
+                        instances = []
+                        for func in loader:
+                            value = func()
+                            db.session.add(value)
+                            db.session.commit()
+                            instances.append(value)
+                    else:
+                        instances = loader()
+                        to_load = instances if isinstance(instances, _iterables) \
+                                    else [instances]
+                        db.session.add_all(to_load)
+                    loaded[fixture] = instances
                 except db.SQLAlchemyError:
                     db.session.rollback()
                     raise

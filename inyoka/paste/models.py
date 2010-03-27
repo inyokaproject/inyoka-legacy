@@ -43,19 +43,23 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin):
         primaryjoin=parent_id == id,
         backref=db.backref('parent', remote_side=[id]))
 
-    def __init__(self, code, author, language=None, title=None):
+    def __init__(self, code, author, language=None, title=None, parent_id=None):
         self.author = author
         self.title = title
         # set language before code to avoid rendering twice
         self.language = language
         self.code = code
+        self.parent_id = parent_id
         db.session.add(self)
 
     def get_url_values(self, action='view'):
+        if action == 'reply':
+            return 'paste/index', {'reply_to': self.id}
         values = {
             'view': 'paste/view',
             'raw':  'paste/raw',
-            'edit': 'admin/paste/edit'
+            'show_tree': 'paste/show_tree',
+            'edit': 'admin/paste/edit',
         }
         return values[action], {'id': self.id}
 
@@ -88,7 +92,11 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin):
     def display_title(self):
         if self.title:
             return self.title
-        return '#%d' % self.id
+        return _('Paste #%d') % self.id
+
+    @property
+    def has_tree(self):
+        return bool(self.children) or bool(self.parent_id)
 
     def __unicode__(self):
         return self.display_title

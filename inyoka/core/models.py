@@ -223,7 +223,7 @@ class RevisionedModelMixin(object):
         )
 
         if template:
-            diff, info = prepare_udiff(udiff)
+            diff = prepare_udiff(udiff)
             return diff and diff[0] or None
         return udiff
 

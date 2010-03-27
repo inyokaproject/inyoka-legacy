@@ -1,0 +1,19 @@
+{% extends "paste/base.html" %}
+{% set title_trace = [_('Paste Tree')] %}
+{% block paste_content %}
+  <p>{% trans %}
+    Here you can see the requested tree of paste replies. The paste you're
+    coming from is highlighted.{% endtrans %}
+  </p>
+  <ul class="paste_tree">
+  {%- for paste in [paste] recursive %}
+    <li{% if paste.id == current %} class="highlighted"{% endif %}>
+      <a href="{{ href(paste)|e }}">{{ paste.display_title|e }}</a> &mdash;
+      {{ paste.pub_date|datetimeformat }}
+      {%- if paste.children -%}
+        <ul>{{ loop(paste.children) }}</ul>
+      {%- endif -%}
+    </li>
+  {%- endfor %}
+  </ul>
+{% endblock %}

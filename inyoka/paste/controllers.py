@@ -30,6 +30,10 @@ class PasteController(IController):
         Rule('/raw/<int:id>/', endpoint='raw'),
         Rule('/browse/', defaults={'page': 1}, endpoint='browse'),
         Rule('/browse/<int:page>/', endpoint='browse'),
+        Rule('/compare/', endpoint='compare_paste'),
+        Rule('/compare/<int:new_id>/<int:old_id>/', endpoint='compare_paste'),
+        Rule('/unidiff/<int:new_id>/<int:old_id>/', endpoint='unidiff_paste'),
+        Rule('/tree/<int:id>/', endpoint='show_tree'),
     ]
 
     @view
@@ -40,9 +44,20 @@ class PasteController(IController):
             e = Entry(code=form.data['code'],
                       language=form.data['language'] or None,
                       title=form.data['title'],
-                      author=request.user)
+                      author=request.user,
+                      parent_id=form.data['parent'])
             db.session.commit()
             return redirect_to(e)
+        else:
+            parent_id = request.args.get('reply_to', None)
+            if parent_id is not None:
+                parent = Entry.query.get(int(parent_id))
+                form = AddPasteForm({
+                    'title': parent.title,
+                    'language': parent.language,
+                    'code': parent.code,
+                    'parent': parent.id
+                })
 
         return {
             'form': form.as_widget(),
@@ -70,3 +85,41 @@ class PasteController(IController):
             'pastes': pagination.get_objects(),
             'pagination': pagination,
         }
+
+    @view('show_tree')
+    @templated('paste/paste_tree.html', modifier=context_modifier)
+    def show_tree(self, request, id):
+        """Display the tree of some related pastes."""
+        paste = Entry.resolve_root(id)
+        if paste is None:
+            raise NotFound()
+        return {
+            'paste': paste,
+            'current': id
+        }
+
+    @view('compare_paste')
+    @templated('paste/compare_paste.html', modifier=context_modifier)
+    def compare_paste(self, request, new_id=None, old_id=None):
+        """Render a diff view for two pastes."""
+        old = Entry.query.get(old_id)
+        new = Entry.query.get(new_id)
+        if old is None or new is None:
+            raise NotFound()
+
+        return {
+            'old': old,
+            'new': new,
+            'diff': old.compare_to(new, 'code', template=True)
+        }
+
+    @view('unidiff_paste')
+    def unidiff_paste(self, request, new_id=None, old_id=None):
+        """Render an udiff for the two pastes."""
+        old = Entry.query.get(old_id)
+        new = Entry.query.get(new_id)
+
+        if old is None or new is None:
+            raise NotFound()
+
+        return Response(old.compare_to(new, 'code'), mimetype='text/plain')

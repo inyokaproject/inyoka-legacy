@@ -1,0 +1,18 @@
+{% macro render_diff_part(diff) %}
+  <table class="diff">
+    {%- for chunk in diff.chunks -%}
+      {% if not loop.first -%}
+        <tr class="ellipsis">
+          <th colspan="3">…</th>
+        </tr>
+      {%- endif -%}
+      {% for line in chunk %}
+        <tr class="line {{ line.action }}">
+          <th class="old_rev">{{ line.old_lineno }}</th>
+          <th class="new_rev">{{ line.new_lineno }}</th>
+          <td class="code">{{ line.line }}</td>
+        </tr>
+      {%- endfor -%}
+    {% endfor %}
+  </table>
+{% endmacro %}

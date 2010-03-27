@@ -31,6 +31,7 @@ class AddPasteForm(forms.Form):
     code = forms.TextField(_(u'Code'), required=True, widget=forms.widgets.Textarea)
     language = forms.ChoiceField(_(u'Language'),
                                  choices=list(_get_pygments_lexers()))
+    parent = forms.TextField(widget=forms.widgets.HiddenInput)
 
 
 class EditPasteForm(AddPasteForm):

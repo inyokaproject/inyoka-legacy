@@ -10,12 +10,17 @@ Paste {{ title }} by {{ author }}
 {% endblock %}
 
 {% block pagetabs %}
-<li><a href="{{ href(paste, action='raw') }}">Raw</a></li>
+<li><a href="{{ href(paste, action='raw') }}">{{ _('Raw') }}</a></li>
+<li><a href="{{ href(paste, action='reply') }}">{{ _('Reply') }}</a></li>
+{% if paste.has_tree %}
+<li><a href="{{ href(paste, action='show_tree') }}">{{ _('Paste Tree') }}<a></li>
+{% endif %}
 {% endblock %}
 
 {%- block paste_content %}
 <div class="pasted_code">
   {{ paste.rendered_code }}
 </div>
-<p><span class="small">Created on {{ paste.pub_date|datetimeformat }}.</span></p>
+<p><span class="small">Created on {{ paste.pub_date|datetimeformat }}.
+{%- if paste.parent %} Answer to <a href="{{ href(paste.parent) }}">{{ paste.parent.title }}</a> or <a href="{{ href('paste/compare_paste', new_id=paste.id, old_id=paste.parent.id) }}">compare with parent</a>{% endif -%}</span></p>
 {%- endblock %}

@@ -1,0 +1,89 @@
+table.diff {
+    width: 100%;
+    border: 2px solid #ccc;
+    border-collapse: collapse;
+    empty-cells: show;
+    margin: 0;
+}
+
+table.diff th.old_rev,
+table.diff th.new_rev {
+    width: 3em;
+}
+
+table.diff tr.line th.old_rev,
+table.diff tr.line th.new_rev {
+    padding: 0.2em 0.5em 0.2em 0;
+    text-align: right;
+    font-weight: normal;
+    font-size: 0.8em;
+    background-color: #eee;
+    color: #444;
+    border: 1px solid #ccc;
+    vertical-align: top;
+}
+
+table.diff tr.ellipsis th {
+    border: 1px solid #ccc;
+    background-color: #dfdfdf;
+}
+
+table.diff tr.line td.code {
+    padding: 0.1em 0.4em 0.1em 0.4em;
+    font-family: monospace;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: pre-wrap;
+}
+
+table.diff tr.add td.code {
+    background-color: #dfd;
+}
+
+table.diff tr.del td.code {
+    background-color: #fcc;
+}
+
+table.diff tr.add td.code ins {
+    background-color: #9e9;
+    text-decoration: none;
+}
+
+table.diff tr.del td.code del {
+    background-color: #e99;
+    text-decoration: none;
+}
+
+ul.revision_tree {
+    margin: 0 0 0 20px;
+    padding: 0;
+}
+
+ul.revision_tree li {
+    padding: 0;
+}
+
+ul.revision_tree li.highlighted {
+    background-color: #eee;
+}
+
+ul.revision_tree li.highlighted ul {
+    background-color: white;
+}
+
+ul.revision_tree li.highlighted > a {
+    font-weight: bold;
+}
+
+ul.revision_tree ul {
+    padding: 0 0 0 24px;
+    margin: 0;
+}
+
+ul.revision_tree,
+ul.revision_tree ul {
+    list-style: circle;
+}

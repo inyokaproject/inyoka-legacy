@@ -28,7 +28,7 @@ _j = _partial(lambda *a: _path.join(_base_dir, *a))
 
 
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
-    os.environ['INYOKA_CONFIG'] = cfg
+    cfg = os.environ.setdefault('INYOKA_CONFIG', cfg)
     from inyoka.core.api import ctx
     from flickzeug import debug as debugger, leakfinder, profiling
     dispatcher = ctx.dispatcher

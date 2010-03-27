@@ -12,12 +12,13 @@ from datetime import datetime
 from operator import attrgetter
 from sqlalchemy.orm import synonym
 from inyoka.core.api import db
+from inyoka.core.models import RevisionedModelMixin
 from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.highlight import highlight_code
 
 
-class Entry(db.Model, SerializableObject):
+class Entry(db.Model, SerializableObject, RevisionedModelMixin):
     __tablename__ = 'paste_entry'
 
     # serializer properties
@@ -36,6 +37,11 @@ class Entry(db.Model, SerializableObject):
 
     author = db.relationship(User, lazy=False)
 
+    # revision model implementation
+    parent_id = db.Column(db.Integer, db.ForeignKey(id), nullable=True)
+    children = db.relationship('Entry', cascade='all',
+        primaryjoin=parent_id == id,
+        backref=db.backref('parent', remote_side=[id]))
 
     def __init__(self, code, author, language=None, title=None):
         self.author = author

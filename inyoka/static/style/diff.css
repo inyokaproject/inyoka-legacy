@@ -8,7 +8,7 @@ table.diff {
 
 table.diff th.old_rev,
 table.diff th.new_rev {
-    width: 3em;
+    width: 2em;
 }
 
 table.diff tr.line th.old_rev,
@@ -16,7 +16,7 @@ table.diff tr.line th.new_rev {
     padding: 0.2em 0.5em 0.2em 0;
     text-align: right;
     font-weight: normal;
-    font-size: 0.8em;
+    font-size: 0.9em;
     background-color: #eee;
     color: #444;
     border: 1px solid #ccc;
@@ -57,8 +57,12 @@ table.diff tr.del td.code del {
     text-decoration: none;
 }
 
-table.diff tr {
+table.diff tr.unmod {
   background-color: #fff;
+}
+
+table.diff th:target + td.code, table.diff th:target + th + td.code {
+  background: #ffffbe !important;
 }
 
 ul.revision_tree {

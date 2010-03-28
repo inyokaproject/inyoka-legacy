@@ -8,8 +8,8 @@
       {%- endif -%}
       {% for line in chunk %}
         <tr class="line {{ line.action }}">
-          <th class="old_rev">{{ line.old_lineno }}</th>
-          <th class="new_rev">{{ line.new_lineno }}</th>
+          <th class="old_rev" id="oldline{{ line.old_lineno }}"><pre><a href="#oldline{{ line.old_lineno }}">{{ line.old_lineno }}</a></pre></th>
+          <th class="new_rev" id="newline{{ line.new_lineno }}"><pre><a href="#newline{{ line.new_lineno }}">{{ line.new_lineno }}</a></pre></th>
           <td class="code">{{ line.line }}</td>
         </tr>
       {%- endfor -%}

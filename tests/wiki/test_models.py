@@ -56,6 +56,7 @@ def test_text_raw_and_rendered():
     r_.raw_text = text2
     assert_false(tracker.check('Called Text._rerender()'))
 
+@future
 def test_update_current_revision():
     u = User('somebody', 'some@body.invalid')
     p1 = Page('one')

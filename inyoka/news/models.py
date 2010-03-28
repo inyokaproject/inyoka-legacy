@@ -150,7 +150,12 @@ class Article(db.Model):
         extension=CommentCounterExtension())
 
     def _render(self, text, key):
-        """Render a text that belongs to this Article to HTML"""
+        """Render a text that belongs to this Article to HTML.
+
+        We do not use :cls:`~inyoka.core.mixins.TextRendererMixin` because
+        we use a more caching aware implementation and need to implement
+        two fields to render.
+        """
         context = markup.RenderContext(ctx.current_request)
         instructions = cache.get(key)
         if instructions is None:

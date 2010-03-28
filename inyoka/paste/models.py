@@ -10,15 +10,14 @@
 """
 from datetime import datetime
 from operator import attrgetter
-from sqlalchemy.orm import synonym
 from inyoka.core.api import _, db
-from inyoka.core.models import RevisionedModelMixin
+from inyoka.core.mixins import RevisionedModelMixin, TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.highlight import highlight_code
 
 
-class Entry(db.Model, SerializableObject, RevisionedModelMixin):
+class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixin):
     __tablename__ = 'paste_entry'
 
     # serializer properties
@@ -26,10 +25,18 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin):
     public_fields = ('id', 'code', 'title', 'author', 'pub_date',
                      'hidden')
 
+    #: The renderer that renders the code
+    text_renderer = lambda s, v: highlight_code(v, s._language)
+
+    #: Model columns
     id = db.Column(db.Integer, primary_key=True)
-    _code = db.Column('code', db.Text, nullable=False)
+    _text = db.Column('code', db.Text, nullable=False)
+    code = db.synonym('text')
+
     title =  db.Column(db.String(50), nullable=True)
-    rendered_code = db.Column(db.Text, nullable=False)
+    rendered_text = db.Column(db.Text, nullable=False)
+    rendered_code = db.synonym('rendered_text')
+
     _language = db.Column('language', db.String(30))
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     pub_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -43,15 +50,6 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin):
         primaryjoin=parent_id == id,
         backref=db.backref('parent', remote_side=[id]))
 
-    def __init__(self, code, author, language=None, title=None, parent_id=None):
-        self.author = author
-        self.title = title
-        # set language before code to avoid rendering twice
-        self.language = language
-        self.code = code
-        self.parent_id = parent_id
-        db.session.add(self)
-
     def get_url_values(self, action='view'):
         if action == 'reply':
             return 'paste/index', {'reply_to': self.id}
@@ -63,30 +61,14 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin):
         }
         return values[action], {'id': self.id}
 
-    def _rerender(self):
-        """
-        Re-render the entry's code and save it in rendered_code.
-
-        This method normally does not have to be called manually, changing
-        code or language does this automatically.
-        """
-        if self._code is not None:
-            self.rendered_code = highlight_code(self._code, self._language)
-
-    def _set_code(self, code):
-        changed = code != self._code
-        self._code = code
-        if changed:
-            self._rerender()
-    code = synonym('_code', descriptor=property(attrgetter('_code'), _set_code))
-
     def _set_language(self, language):
         changed = language != self._language
         self._language = language
-        if changed:
-            self._rerender()
-    language = synonym('_language', descriptor=property(
+        if changed and not self._rendered:
+            self._render()
+    language = db.synonym('_language', descriptor=property(
         attrgetter('_language'), _set_language))
+    code = db.synonym('text')
 
     @property
     def display_title(self):

@@ -19,7 +19,7 @@ def test_automatic_rendering():
     rendered_code2_plain = highlight_code(code2)
 
     # assert the model does rendering the right way
-    e = Entry(code1, User.query.get_anonymous(), 'python')
+    e = Entry(code=code1, author=User.query.get_anonymous(), language='python')
     eq_(e.code, code1)
     eq_(e.rendered_code, rendered_code1)
     e.code = code2
@@ -38,11 +38,11 @@ def test_automatic_rendering():
     # assert that we don't call the rerender method when not required
     e2.language = 'python'
     eq_(e2.rendered_code, rendered_code2)
-    mock('Entry._rerender', tracker=tracker)
+    mock('Entry._render', tracker=tracker)
     tracker.clear()
     e2.code = e2.code
     e2.language = e2.language
-    assert_false(tracker.check('Called Entry._rerender()'))
+    assert_false(tracker.check('Called Entry._render()'))
 
 
 def get_data_callback(title=None):

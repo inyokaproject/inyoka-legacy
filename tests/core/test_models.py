@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.test import *
-from inyoka.core.models import RevisionedModelMixin
+from inyoka.core.mixins import RevisionedModelMixin
 from inyoka.core.auth.models import User, USER_STATUS_MAP
 
 

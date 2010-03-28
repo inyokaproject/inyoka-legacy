@@ -57,6 +57,10 @@ table.diff tr.del td.code del {
     text-decoration: none;
 }
 
+table.diff tr {
+  background-color: #fff;
+}
+
 ul.revision_tree {
     margin: 0 0 0 20px;
     padding: 0;

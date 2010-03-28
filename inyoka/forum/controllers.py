@@ -30,13 +30,13 @@ class ForumController(IController):
         Rule('/', endpoint='index'),
 
         Rule('/questions/', endpoint='questions'),
-        Rule('/questions/<any(latest, active, votes):sort>/',
+        Rule('/questions/<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
         Rule('/tagged/<string:tags>/', endpoint='questions'),
-        Rule('/tagged/<string:tags>/<any(latest, active, votes):sort>/',
+        Rule('/tagged/<string:tags>/<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
         Rule('/forum/<string:forum>/', endpoint='questions'),
-        Rule('/forum/<string:forum>/<any(latest, active, votes):sort>/',
+        Rule('/forum/<string:forum>/<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
 
         Rule('/question/<string:slug>/', endpoint='question'),
@@ -72,7 +72,7 @@ class ForumController(IController):
                           for t in tags.split()))
             query = query.tagged(tags)
 
-        # Order by "latest", "active" or "votes"
+        # Order by "latest", "active", "unanswered" or "votes"
         query = getattr(query, sort)
 
         # Paginate results

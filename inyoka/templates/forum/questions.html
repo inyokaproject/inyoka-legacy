@@ -49,6 +49,8 @@
         <a href="{{ href('forum/questions', **url_values) }}">Latest</a></li>
     <li{% if tab == 'active' %} class="selected"{% endif %}>
         <a href="{{ href('forum/questions', sort='active', **url_values) }}">Active</a></li>
+    <li{% if tab == 'unanswered' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', sort='unanswered', **url_values) }}">Unanswered</a></li>
     <li{% if tab == 'votes' %} class="selected"{% endif %}>
         <a href="{{ href('forum/questions', sort='votes', **url_values) }}">Votes</a></li>
     <li{% if tab == 'ask' %} class="selected"{% endif %}>

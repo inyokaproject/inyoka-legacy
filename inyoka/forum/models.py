@@ -184,6 +184,10 @@ class QuestionQuery(EntryQuery):
             Question.id == question_tag.c.question_id,
             question_tag.c.tag_id.in_(tag_ids)))
 
+    @property
+    def unanswered(self):
+        return self.filter(Question.answer_count == 0)
+
     def forum(self, forum):
         """Filter questions by the tags of a forum."""
         return self.tagged(forum.all_tags)

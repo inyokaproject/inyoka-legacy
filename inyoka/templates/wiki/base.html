@@ -1,0 +1,22 @@
+{%- extends 'base.html' %}
+{%- set title_trace = title_trace|default([]) + [_('Wiki')] %}
+{%- set sidebar = false %}
+
+{%- macro show_tab(id, name, title=none) %}
+  <li{% if current_tab|default() == id %} class="selected"{% endif %}>
+    <a href="{{ href('wiki/'+id, page=page.name) }}"{% if title %} title="{{ title|e }}"{% endif %}>
+      {{ name|e }}
+    </a>
+  </li>
+{%- endmacro %}
+
+{%- block content %}
+<h1>{{ page.name|e }}</h1>
+<ul class="pagetabs">
+  {{ show_tab('show', _('Show')) }}
+  {{ show_tab('edit', _('Edit')) }}
+  {{ show_tab('history', _('History')) }}
+</ul>
+
+{% block wiki_content %}{% endblock wiki_content %}
+{%- endblock %}

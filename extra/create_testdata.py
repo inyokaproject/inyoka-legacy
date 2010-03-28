@@ -135,9 +135,29 @@ def create_pastebin_test_data():
     db.session.commit()
 
 
+def create_wiki_test_data():
+    from inyoka.core.api import ctx
+    from inyoka.core.auth.models import User
+    from inyoka.wiki.models import Page, Revision
+
+    u = User.query.first()
+    a = Revision(
+        page=Page(ctx.cfg['wiki.index.name']),
+        raw_text=u'This is the wiki index page!',
+        change_user=u, change_comment=u'hello world.',
+    )
+
+    b = Revision(
+        page=Page(u'Installation'),
+        raw_text=u'Type:\n ./configure\n make\n make install\nThat\'s it.',
+        change_user=u, change_comment=u'started installation page',
+    )
+    db.session.commit()
+
 def main():
     funcs = (create_test_users, create_forum_test_data, create_news_test_data,
-             create_pastebin_test_data)
+             create_pastebin_test_data,
+             create_wiki_test_data)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

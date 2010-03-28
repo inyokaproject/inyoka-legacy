@@ -1,0 +1,26 @@
+{%- extends 'wiki/base.html' %}
+{%- set title_trace = [_('history'), page.name] %}
+{%- set current_tab = 'history' %}
+
+{%- block wiki_content %}
+<h1>{{ page.name|e }}</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>{{ _('Created at') }}</th>
+      <th>{{ _('Creator') }}</th>
+      <th>{{ _('Edit comment') }}</th>
+    </tr>
+  </thead>
+  <tbody>
+{%- for rev in revisions %}
+    <tr>
+      <td>{{ rev.change_date|datetimeformat }}</td>
+      <td>{{ rev.change_user.username|e }}</td>
+      <td>{{ rev.change_comment|e }}</td>
+    </tr>
+{%- endfor %}
+  </tbody>
+</table>
+{%- endblock %}

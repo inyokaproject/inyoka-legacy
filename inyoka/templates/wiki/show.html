@@ -1,0 +1,7 @@
+{%- extends 'wiki/base.html' %}
+{%- set title_trace = [page.name] %}
+{%- set current_tab = 'show' %}
+
+{%- block wiki_content %}
+{{ page.current_revision.rendered_text|default(page.current_revision_id) }}
+{%- endblock %}

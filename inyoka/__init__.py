@@ -283,6 +283,7 @@ def _bootstrap():
         'inyoka.news.*',
         'inyoka.forum.*',
         'inyoka.paste.*',
+        'inyoka.wiki.*',
     ])
 
     # setup model property providers

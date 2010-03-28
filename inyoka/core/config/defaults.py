@@ -135,4 +135,7 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Path to the directory for shared static files, '
                                u'aka media. Relative to '
                                u'the directory where the inyoka package lies in.')),
+    'wiki.index.name':              TextField(default=u'Main Page',
+        help_text=lazy_gettext(u'Name of the wiki index page (the one a user '
+                               u"accessing the wiki's / is redirected to)")),
 }

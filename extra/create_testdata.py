@@ -125,8 +125,19 @@ def create_news_test_data():
     db.session.commit()
 
 
+def create_pastebin_test_data():
+    from inyoka.core.auth.models import User
+    from inyoka.paste.models import Entry
+    u = User.query.get('admin')
+    e1 = Entry(u'print "Hello World"', u, language='python')
+    db.session.commit()
+    e1.children.append(Entry(u'print "hello world"', u, language='python'))
+    db.session.commit()
+
+
 def main():
-    funcs = (create_test_users, create_forum_test_data, create_news_test_data)
+    funcs = (create_test_users, create_forum_test_data, create_news_test_data,
+             create_pastebin_test_data)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

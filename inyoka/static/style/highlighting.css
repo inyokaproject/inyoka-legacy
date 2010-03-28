@@ -58,3 +58,11 @@
 .highlighted .vg { color: #19177C } /* Name.Variable.Global */
 .highlighted .vi { color: #19177C } /* Name.Variable.Instance */
 .highlighted .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+.highlighted pre a:target + span {
+  display: inline-block;
+  background: #ffffbe !important;
+	height: 15px;
+	width: 100%;
+  margin: 0 auto;
+}

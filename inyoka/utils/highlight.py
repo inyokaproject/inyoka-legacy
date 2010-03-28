@@ -16,7 +16,8 @@ from pygments.util import ClassNotFound
 
 CLASSNAME = 'highlighted'
 
-_pygments_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table')
+_pygments_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table',
+                                    lineanchors='cl', anchorlinenos=True)
 
 
 def highlight_code(code, lang=None, filename=None, mimetype=None):

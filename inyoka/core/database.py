@@ -331,7 +331,7 @@ class Query(orm.Query):
         entity = self._mapper_zero()
         column = entity.columns[key]
 
-        _kinds = ('year', 'month', 'day', 'hour', 'minute', 'second')
+        _kinds = ['year', 'month', 'day', 'hour', 'minute', 'second']
         idx = (_kinds.index('day') if dt_obj else _kinds.index(kind)) + 1
         query = self.session.query(column)
         result = set()

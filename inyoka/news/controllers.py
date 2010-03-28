@@ -15,8 +15,11 @@ from inyoka.core.api import IController, Rule, cache, view, templated, href, \
     redirect_to, db
 from inyoka.core.http import Response
 from inyoka.core.exceptions import Forbidden
+from inyoka.core.subscriptions.models import Subscription
 from inyoka.news.models import Article, Tag, Comment
 from inyoka.news.forms import EditCommentForm
+from inyoka.news.subscriptions import ArticleSubscriptionType, \
+    CommentSubscriptionType
 from inyoka.utils.pagination import URLPagination
 
 
@@ -56,10 +59,14 @@ class NewsController(IController):
 
     url_rules = [
         Rule('/', endpoint='index'),
+        Rule('/+<any(subscribe, unsubscribe):action>',
+             endpoint='subscribe_articles'),
         Rule('/<int:page>/', endpoint='index'),
         Rule('/tag/<slug>/', endpoint='index'),
         Rule('/tag/<slug>/<int:page>/', endpoint='index'),
         Rule('/<slug>/', endpoint='detail'),
+        Rule('/<article>/+<any(subscribe, unsubscribe):action>',
+             endpoint='subscribe_comments'),
         Rule('/archive/', endpoint='archive'),
         Rule('/archive/<int(fixed_digits=4):year>/', endpoint='archive'),
         Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/',
@@ -168,3 +175,51 @@ class NewsController(IController):
             date=date(year, month or 1, day or 1), month_list=False,
             pagination=pagination, articles=pagination.get_objects())
         return ret
+
+    @view('subscribe_articles')
+    def subscribe_articles(self, request, action):
+        do = {
+            'subscribe': Article.subscribe,
+            'unsubscribe': Article.unsubscribe,
+        }[action]
+        existed = do(request.user, ArticleSubscriptionType)
+
+        msg = {
+            'subscribe': [(_(u'You were already subscribed before.'),),
+                          (_(u'You have successfully been subscribed to '
+                             u'new News articles.'), True)
+                         ],
+            'unsubscribe':[(_(u'You had not been subscribed before.'),),
+                           (_(u'You have successfully been unsubscribed from '
+                              u'new News articles.'), True)
+                          ],
+        }
+        request.flash(*msg[action][existed])
+
+
+        if existed:
+            if action == 'subscribe':
+                request.flash(_(u'You have successfully been subscribed to '
+                                u'new News articles.'), True)
+            else:
+                request.flash(_(u'You have successfully been unsubscribed from '
+                                u'new News articles.'), True)
+        else:
+            if action == 'subscribe':
+                request.flash(_(u'You were already subscribed before.'))
+            else:
+                request.flash(_(u'You had not been subscribed before.'))
+
+        return redirect_to('news/index')
+
+    @view('subscribe_comments')
+    def subscribe_comments(self, request, action, slug):
+        do = {
+            'subscribe': Article.subscribe,
+            'unsubscribe': Article.unsubscribe,
+        }[action]
+        article = Article.query.filter_by(slug=slug).one()
+        existed = do(request.user, CommentSubscriptionType, article)
+
+        request.flash('you have been %sd to comments on this article')
+        return redirect_to(article)

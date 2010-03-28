@@ -13,6 +13,7 @@ from operator import attrgetter
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import synonym
 from inyoka.core.api import db
+from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.utils.html import escape
 from inyoka.wiki.utils import deurlify_page_name, urlify_page_name
@@ -82,35 +83,19 @@ class Page(db.Model):
             ).scalar()
 
 
-class Text(db.Model):
+class Text(db.Model, TextRendererMixin):
     __tablename__ = 'wiki_text'
 
     id = db.Column(db.Integer, primary_key=True)
-    _raw_text = db.Column('raw_text', db.Text, nullable=False)
-    _rendered_text = db.Column('rendered_text', db.Text)
-
-    def __init__(self, raw_text):
-        super(Text, self).__init__(raw_text=raw_text)
-
-    def _rerender(self):
-        #TODO: add real rendering :)
-        self._rendered_text = escape(self.raw_text).replace('\n', '<br />\n')
-
-    def _set_raw_text(self, raw_text):
-        changed = self.raw_text != raw_text
-        self._raw_text = raw_text
-        if changed:
-            self._rerender()
-    raw_text = synonym('_raw_text',
-        descriptor=property(attrgetter('_raw_text'), _set_raw_text))
-
-    def _set_rendered_text(self, rendered_text):
-        raise ValueError('rendered_text cannot be set directly')
-    rendered_text = synonym('_rendered_text',
-        descriptor=property(attrgetter('_rendered_text'), _set_rendered_text))
+    _text = db.Column('text', db.Text, nullable=False)
+    rendered_text = db.Column('rendered_text', db.Text)
 
     def __repr__(self):
         return '<Text #%r>' % self.id
+
+
+def _create_text(value):
+    return Text(text=value)
 
 
 class Revision(db.Model):
@@ -129,7 +114,7 @@ class Revision(db.Model):
     text = db.relation(Text)
     change_user = db.relation(User)
 
-    raw_text = association_proxy('text', 'raw_text')
+    raw_text = association_proxy('text', 'text', creator=_create_text)
     rendered_text = association_proxy('text', 'rendered_text')
     #TODO: rendered_text should be readonly.
 

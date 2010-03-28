@@ -28,4 +28,3 @@ class WikiTester(ViewTestSuite):
         r = self.get('/', follow_redirects=False)
         eq_(r.status_code, 302)
         eq_(r.location, href(p))
-

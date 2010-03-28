@@ -13,6 +13,7 @@ from inyoka.core.auth.models import User
 from inyoka.core.test import *
 from inyoka.wiki.models import Page, Revision, Text
 
+
 def test_page_name_conversion_and_get_by_name():
     p = Page(u'some_name')
     eq_(p.name, u'some name')
@@ -29,16 +30,16 @@ def test_page_name_conversion_and_get_by_name():
     eq_(p, Page.query.get('some_name'))
     eq_(p, Page.query.get('some name'))
 
+
 def test_text_raw_and_rendered():
     text1 = 'This\nis my first wiki page.'
-    text1r = 'This<br />\nis my first wiki page.'
+    text1r = 'This\nis my first wiki page.'
     text2 = 'Now\nthere is something else.'
-    text2r = 'Now<br />\nthere is something else.'
+    text2r = 'Now\nthere is something else.'
     u = User.query.first()
 
     r = Revision(page=Page('foo'), change_user=u)
     r.raw_text = text1
-    assert_raises(ValueError, setattr, r, 'rendered_text', 'something')
     eq_(r.raw_text, text1)
     eq_(r.rendered_text, text1r)
     r.raw_text = text2
@@ -51,10 +52,11 @@ def test_text_raw_and_rendered():
     eq_(r_.rendered_text, text2r)
 
     # assert that we don't call the rerender method when not required
-    mock('Text._rerender', tracker=tracker)
+    mock('Text._render', tracker=tracker)
     tracker.clear()
     r_.raw_text = text2
-    assert_false(tracker.check('Called Text._rerender()'))
+    assert_false(tracker.check('Called Text._render()'))
+
 
 @future
 def test_update_current_revision():

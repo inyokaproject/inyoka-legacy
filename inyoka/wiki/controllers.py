@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.paste.controllers
-    ~~~~~~~~~~~~~~~~~~~~~~~~
+    inyoka.wiki.controllers
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
-    Controllers for the paste app.
+    Controllers for the wiki app.
 
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-
 from inyoka.core.api import IController, Rule, view, templated, redirect_to, \
     ctx, db, _
 from inyoka.core.exceptions import NotFound
 from inyoka.wiki.forms import EditPageForm
 from inyoka.wiki.models import Page, Revision, Text
 from inyoka.wiki.utils import deurlify_page_name
+
 
 class WikiController(IController):
     name = 'wiki'

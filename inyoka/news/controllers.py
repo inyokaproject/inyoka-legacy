@@ -125,7 +125,7 @@ class NewsController(IController):
 
         # increase counters
         article.touch()
-        
+
         comments = list(article.comments.options(db.eagerload('author')))
         Subscription.accessed(request.user, comments[-1])
 

@@ -60,4 +60,3 @@ class CommentSubscriptionType(SubscriptionType):
         print 'Notify %s about new comment by %s on %s' % \
                 (subscription.user.username, object.author.username,
                  subject.title)
-

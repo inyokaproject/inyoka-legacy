@@ -149,10 +149,11 @@ def create_wiki_test_data():
 
     b = Revision(
         page=Page(u'Installation'),
-        raw_text=u'Type:\n ./configure\n make\n make install\nThat\'s it.',
+        raw_text=u"Type:\n ./configure\n make\n '''make install'''\nThat\'s it.",
         change_user=u, change_comment=u'started installation page',
     )
     db.session.commit()
+
 
 def main():
     funcs = (create_test_users, create_forum_test_data, create_news_test_data,

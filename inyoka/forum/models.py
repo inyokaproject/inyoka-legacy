@@ -12,6 +12,7 @@ from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
 from inyoka.core.models import Tag
+from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 import re
 
@@ -116,7 +117,7 @@ class EntryQuery(db.Query):
         return self.order_by(Entry.score.desc(), Entry.date_active.desc())
 
 
-class Entry(db.Model, SerializableObject):
+class Entry(db.Model, SerializableObject, TextRendererMixin):
     """The base class of a `Question` or `Answer`, which contains some general
     information about the author and the creation date, as well as the actual
     text and the votings."""
@@ -142,7 +143,8 @@ class Entry(db.Model, SerializableObject):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_active = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     score = db.Column(db.Integer, nullable=False, default=0)
-    text = db.Column(db.Text, nullable=False)
+    _text = db.Column('text', db.Text, nullable=False)
+    rendered_text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
     author = db.relationship('User', lazy=False)

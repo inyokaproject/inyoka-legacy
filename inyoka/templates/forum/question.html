@@ -47,7 +47,7 @@
 
   <div class="summary">
 
-    <p>{{ question.text|e }}</p>
+    <p>{{ question.rendered_text }}</p>
     <p>{{ _('Tags: ') }}
         {% for tag in question.tags %}
         <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
@@ -105,7 +105,7 @@
       answered <strong>{{ answer.date_created|timedelta }}</strong><br />
       <a href="{{ href(question.author.profile) }}">{{ answer.author }}</a>
     </div>
-    <p>{{ answer.text|e }}</p>
+    <p>{{ answer.rendered_text }}</p>
   </div>
 </div>
 <hr class="answer_seperator" />

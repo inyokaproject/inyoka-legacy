@@ -19,7 +19,7 @@ class TextRendererMixin(object):
     """
 
     #: The function that is called to render the text
-    text_renderer = parse
+    text_renderer = lambda s, v: render(parse(v), format='html')
     #: If the text was rendered or not
     _rendered = False
 

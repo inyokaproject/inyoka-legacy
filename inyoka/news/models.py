@@ -191,6 +191,12 @@ class Article(db.Model):
 
     def get_url_values(self, **kwargs):
         action = kwargs.pop('action', 'view')
+        if action in ('subscribe', 'unsubscribe'):
+            return 'news/subscribe_comments', {
+                'slug': self.slug,
+                'action': action,
+            }
+
         values = {
             'view': 'news/detail',
             'edit': 'admin/news/article_edit',

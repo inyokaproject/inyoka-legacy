@@ -65,7 +65,7 @@ class NewsController(IController):
         Rule('/tag/<slug>/', endpoint='index'),
         Rule('/tag/<slug>/<int:page>/', endpoint='index'),
         Rule('/<slug>/', endpoint='detail'),
-        Rule('/<article>/+<any(subscribe, unsubscribe):action>',
+        Rule('/<slug>/+<any(subscribe, unsubscribe):action>',
              endpoint='subscribe_comments'),
         Rule('/archive/', endpoint='archive'),
         Rule('/archive/<int(fixed_digits=4):year>/', endpoint='archive'),
@@ -116,6 +116,7 @@ class NewsController(IController):
                 else:
                     comment = Comment(text=form.data['text'], article=article,
                                       author=request.user)
+                    Subscription.new(comment, 'news.new_comment')
                     request.flash(_(u'Your comment was successfully created'), True)
                 db.session.commit()
                 return redirect_to(comment)
@@ -124,10 +125,13 @@ class NewsController(IController):
 
         # increase counters
         article.touch()
+        
+        comments = list(article.comments.options(db.eagerload('author')))
+        Subscription.accessed(request.user, comments[-1])
 
         return {
             'article':  article,
-            'comments': list(article.comments.options(db.eagerload('author'))),
+            'comments': comments,
             'form': form.as_widget(),
         }
 
@@ -179,47 +183,39 @@ class NewsController(IController):
     @view('subscribe_articles')
     def subscribe_articles(self, request, action):
         do = {
-            'subscribe': Article.subscribe,
-            'unsubscribe': Article.unsubscribe,
+            'subscribe': Subscription.subscribe,
+            'unsubscribe': Subscription.unsubscribe,
         }[action]
         existed = do(request.user, ArticleSubscriptionType)
 
         msg = {
-            'subscribe': [(_(u'You were already subscribed before.'),),
-                          (_(u'You have successfully been subscribed to '
-                             u'new News articles.'), True)
-                         ],
-            'unsubscribe':[(_(u'You had not been subscribed before.'),),
-                           (_(u'You have successfully been unsubscribed from '
-                              u'new News articles.'), True)
-                          ],
+            'subscribe': [_(u'You were already subscribed before.'),
+                          _(u'You have successfully been subscribed to '
+                            u'new News articles.')],
+            'unsubscribe':[_(u'You had not been subscribed before.'),
+                           _(u'You have successfully been unsubscribed from '
+                             u'new News articles.')],
         }
-        request.flash(*msg[action][existed])
-
-
-        if existed:
-            if action == 'subscribe':
-                request.flash(_(u'You have successfully been subscribed to '
-                                u'new News articles.'), True)
-            else:
-                request.flash(_(u'You have successfully been unsubscribed from '
-                                u'new News articles.'), True)
-        else:
-            if action == 'subscribe':
-                request.flash(_(u'You were already subscribed before.'))
-            else:
-                request.flash(_(u'You had not been subscribed before.'))
+        request.flash(msg[action][existed], True if not existed else None)
 
         return redirect_to('news/index')
 
     @view('subscribe_comments')
     def subscribe_comments(self, request, action, slug):
         do = {
-            'subscribe': Article.subscribe,
-            'unsubscribe': Article.unsubscribe,
+            'subscribe': Subscription.subscribe,
+            'unsubscribe': Subscription.unsubscribe,
         }[action]
         article = Article.query.filter_by(slug=slug).one()
         existed = do(request.user, CommentSubscriptionType, article)
 
-        request.flash('you have been %sd to comments on this article')
+        msg = {
+            'subscribe': [_(u'You were already subscribed before.'),
+                          _(u'You have successfully been subscribed to '
+                            u'new comments on this article.')],
+            'unsubscribe':[_(u'You had not been subscribed before.'),
+                           _(u'You have successfully been unsubscribed from '
+                             u'new comments on this article.')],
+        }
+        request.flash(msg[action][existed], True if not existed else None)
         return redirect_to(article)

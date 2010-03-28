@@ -17,4 +17,9 @@
   {%- endif %}
 
   {{ pagination }}
+
+  <p>{# TODO: display only the matching link #}
+    <a href="{{ href('news/subscribe_articles', action='subscribe') }}">subscribe</a> ·
+    <a href="{{ href('news/subscribe_articles', action='unsubscribe') }}">unsubscribe</a>
+  </p>
 {% endblock %}

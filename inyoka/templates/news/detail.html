@@ -79,5 +79,9 @@
         </tr>
       </table>
     {%- endif %}
+    <p>{# TODO: display only the matching link #}
+      <a href="{{ href(article, action='subscribe') }}">subscribe</a> ·
+      <a href="{{ href(article, action='unsubscribe') }}">unsubscribe</a>
+    </p>
   </div>
 {% endblock %}

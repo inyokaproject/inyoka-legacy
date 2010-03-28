@@ -171,7 +171,7 @@ class Subscription(db.Model):
         """
         if isinstance(user_or_subscription, Subscription):
             assert type_ is _missing and subject is None
-            db.session.remove(user_or_subscription)
+            db.session.delete(user_or_subscription)
             db.session.commit()
             return True
         else:
@@ -188,7 +188,7 @@ class Subscription(db.Model):
         if len(s) > 1:
             raise ValueError('Duplicate found!')
 
-        db.session.remove(s[0])
+        db.session.delete(s[0])
         db.session.commit()
         return True
 

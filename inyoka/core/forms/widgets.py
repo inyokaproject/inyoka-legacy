@@ -20,11 +20,14 @@ class TokenInput(TextInput):
         tags = self._form.data[self.name]
         serializer, mime = get_serializer('json')
         # TODO remove the reference to core.tag here
-        ro = primitive(tags, config={'show_type':False, 'core.tag':('id', 'name')})
+        ro = primitive(tags, config={
+            'show_type': False,
+            'core.tag': ('id', 'name')
+        })
         tags_json = serializer(ro)
         js = """<script type="text/javascript">
 $(document).ready(function () {
-  $("#%s").tokenInput("%s", {'prePopulate':%s});
+  $("#%s").tokenInput("%s", {'prePopulate': %s});
 });
 </script>""" % (self.id, href('api/core/get_tags', format='json'), tags_json)
         return input_html + js

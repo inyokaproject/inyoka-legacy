@@ -21,8 +21,8 @@ class AskQuestionForm(forms.Form):
     title = forms.TextField(_(u'Title'), max_length=160, required=True)
     text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
         required=True)
-    tags = forms.Autocomplete(forms.ModelField(Tag),
-                              label=_(u'Tags'), sep=',', min_size=1)
+    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
+                                label=_(u'Tags'), sep=',', min_size=1)
 
 
 class AnswerQuestionForm(forms.Form):
@@ -39,9 +39,8 @@ class EditForumForm(forms.Form):
                                 widget=forms.widgets.SelectBox)
     description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea,
             required=True)
-    # TODO on_not_found create_tag
-    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
-                                label=_(u'Tags'), sep=' ', min_size=1)
+    tags = forms.Autocomplete(forms.ModelField(Tag, 'name',
+            on_not_found=create_tag), label=_(u'Tags'), sep=',', min_size=1)
 
     def __init__(self, *args, **kwargs):
         forms.Form.__init__(self, *args, **kwargs)

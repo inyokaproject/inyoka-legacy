@@ -87,7 +87,7 @@ def to_datetime(obj):
 _timezone_aware = ('format_datetime', 'format_time')
 
 def get_dummy(func):
-    @wraps(func, ('__module__', '__name__'))
+    @wraps(func, ('__module__', '__name__', '__doc__'))
     def _inner(*args, **kwargs):
         if 'locale' not in kwargs or kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()
@@ -112,14 +112,23 @@ for func in dates.__all__ + _additional_all:
 
 
 # our locale aware special format methods
-def timedeltaformat(datetime_or_timedelta, granularity='second'):
-    """Format the elapsed time from the given date to now of the given
-    timedelta.
+def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
+    """Special locale aware timedelta format function
+
+    :param datetime_or_timedelta: Either a datetime or timedelta object.
+                                  If it's a datetime object we caclculate the
+                                  timedelta from this object to now (using UTC)
+    :param threshold: factor that determines at which point the presentation
+                      switches to the next higher unit
+    :param granularity: determines the smallest unit that should be displayed,
+                        the value can be one of "year", "month", "week", "day",
+                        "hour", "minute" or "second"
     """
     if isinstance(datetime_or_timedelta, datetime):
         datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
     return lazy_gettext(u'%(timedelta)s ago') % {
-        'timedelta': format_timedelta(datetime_or_timedelta, granularity)}
+        'timedelta': format_timedelta(datetime_or_timedelta, granularity,
+                                      threshold=threshold)}
 
 
 def format_month(date=None):

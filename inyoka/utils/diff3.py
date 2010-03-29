@@ -320,12 +320,12 @@ def generate_udiff(old, new, old_title='', new_title='',
     ))
 
 
-def prepare_udiff(udiff):
+def prepare_udiff(udiff, disable_escaping=False):
     """
     Prepare an udiff for the template.  The `Diff` model uses this to render
     an udiff into a HTML table.
     """
-    return DiffRenderer(udiff).prepare()
+    return DiffRenderer(udiff, disable_escaping).prepare()
 
 
 class DiffRenderer(object):
@@ -336,11 +336,12 @@ class DiffRenderer(object):
     """
     _chunk_re = re.compile(r'@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@')
 
-    def __init__(self, udiff):
+    def __init__(self, udiff, disable_escaping=False):
         """
         :param udiff:   a text in udiff format
         """
-        self.lines = [escape(line) for line in udiff.splitlines()]
+        self.lines = [escape(line) if not disable_escaping else line
+                      for line in udiff.splitlines()]
 
     def _extract_rev(self, line1, line2):
         """Extract the filename and revision hint from a line."""

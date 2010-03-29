@@ -5,7 +5,7 @@
     Here you can see the requested tree of paste replies. The paste you're coming from is highlighted.
     {%- endtrans %}
   </p>
-  <ul class="paste_tree">
+  <ul class="revision_tree">
   {%- for paste in [paste] recursive %}
     <li{% if paste.id == current %} class="highlighted"{% endif %}>
       <a href="{{ href(paste)|e }}">{{ paste.display_title|e }}</a> &mdash;

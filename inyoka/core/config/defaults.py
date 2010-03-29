@@ -135,7 +135,15 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Path to the directory for shared static files, '
                                u'aka media. Relative to '
                                u'the directory where the inyoka package lies in.')),
+
+    # wiki specific values
     'wiki.index.name':              TextField(default=u'Main Page',
         help_text=lazy_gettext(u'Name of the wiki index page (the one a user '
                                u"accessing the wiki's / is redirected to)")),
+
+    # various paste settings
+    'paste.diffviewer_syntax_highlighting_threshold': IntegerField(default=0,
+        help_text=lazy_gettext(u'Files with lines greater than this number '
+                               u'will not have syntax highlighting. '
+                               u'Enter 0 for no limit.')),
 }

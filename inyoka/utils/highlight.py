@@ -5,7 +5,7 @@
 
     Utils for highlighting code.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from pygments import highlight
@@ -16,11 +16,12 @@ from pygments.util import ClassNotFound
 
 CLASSNAME = 'highlighted'
 
-_pygments_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table',
+_default_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table',
                                     lineanchors='cl', anchorlinenos=True)
+_inline_formatter = HtmlFormatter(cssclass=CLASSNAME)
 
 
-def highlight_code(code, lang=None, filename=None, mimetype=None):
+def highlight_code(code, lang=None, filename=None, mimetype=None, inline=False):
     """Highlight a block using pygments to HTML."""
     try:
         lexer = None
@@ -40,4 +41,5 @@ def highlight_code(code, lang=None, filename=None, mimetype=None):
             lexer = TextLexer(stripnl=False)
     except LookupError:
         lexer = TextLexer(stripnl=False)
-    return highlight(code, lexer, _pygments_formatter)
+
+    return highlight(code, lexer, _default_formatter if not inline else _inline_formatter)

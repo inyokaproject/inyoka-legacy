@@ -10,10 +10,13 @@
 """
 from datetime import datetime
 from operator import attrgetter
+from functools import partial
 from inyoka.core.api import _, db
 from inyoka.core.mixins import RevisionedModelMixin, TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
+from inyoka.paste.utils import generate_highlighted_udiff
+from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 from inyoka.utils.highlight import highlight_code
 
 
@@ -79,6 +82,35 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
     @property
     def has_tree(self):
         return bool(self.children) or bool(self.parent_id)
+
+    def compare_to(self, other, column, context_lines=4, template=False):
+        """Compare the mdoel with another revision.
+
+        Special version to enable highlighting between files.
+
+        :param other: The other model instance to compare with.
+        :param column: A string what column to compare.
+        :param context_lines: How many additional lines to show on the udiff.
+        :param template: Either or not to prepare the udiff for templates use.
+        """
+        differ = generate_highlighted_udiff if template else generate_udiff
+
+        generator = partial(differ,
+            old=getattr(self, column, u''),
+            new=getattr(other, column, u''),
+            old_title=unicode(self),
+            new_title=unicode(other),
+            context_lines=context_lines)
+
+        if template:
+            udiff = generator(old_lang=self.language, new_lang=other.language)
+        else:
+            udiff = generator()
+
+        if template:
+            diff = prepare_udiff(udiff, True)
+            return diff and diff[0] or None
+        return udiff
 
     def __unicode__(self):
         return self.display_title

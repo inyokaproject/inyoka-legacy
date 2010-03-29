@@ -3,7 +3,7 @@
     inyoka.news.subscriptions
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Subscription management for the Inyoka News application-
+    Subscription management for the Inyoka News application.
 
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -11,6 +11,7 @@
 from inyoka.core.subscriptions import SubscriptionType
 from inyoka.core.models import Tag
 from inyoka.news.models import Article, Comment
+
 
 class ArticleSubscriptionType(SubscriptionType):
     name = 'news.article.all'

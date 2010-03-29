@@ -120,7 +120,7 @@ class BasicProfile(IUserProfileExtender):
         },
         'jabber': {
             'column': db.Column(db.String(200)),
-            'form': forms.TextField(_(u'Jabber JID'), validators=[is_valid_jabber()]),
+            'form': forms.TextField(_(u'Jabber ID'), validators=[is_valid_jabber()]),
         },
         'skype': {
             'column': db.Column(db.String(200)),

@@ -17,7 +17,7 @@ class StandardLoginForm(forms.Form):
     username = forms.TextField(lazy_gettext(u'Username'), required=True)
     password = forms.TextField(lazy_gettext(u'Password'), required=True,
                                widget=forms.widgets.PasswordInput)
-    permanent = forms.BooleanField(lazy_gettext(u'Remember me for one month'))
+    permanent = forms.BooleanField(lazy_gettext(u'Remember me'))
 
     def __init__(self, auth_system, initial=None, action=None, request=None):
         forms.Form.__init__(self, initial, action, request)

@@ -64,7 +64,7 @@ def is_valid_email(message=None):
     the second.
     """
     if message is None:
-        message = lazy_gettext(u'You have to enter a valid e-mail address.')
+        message = lazy_gettext(u'You have to enter a valid email address.')
     def validator(form, value):
         if len(value) > 250 or _mail_re.match(value) is None:
             raise exc.ValidationError(message)
@@ -95,7 +95,7 @@ def is_valid_url(message=None):
 
 def is_valid_jabber(message=None):
     if message is None:
-        message = lazy_gettext(u'You have to enter a valid Jabber JID')
+        message = lazy_gettext(u'You have to enter a valid Jabber ID')
     def validator(form, value):
         if _jabber_re.match(value) is None:
             raise exc.ValidationError(message)

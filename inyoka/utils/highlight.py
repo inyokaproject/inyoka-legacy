@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from pygments import highlight
+from pygments.formatters.html import HtmlFormatter, escape_html
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name, get_lexer_for_filename, \
     get_lexer_for_mimetype, TextLexer
@@ -16,9 +17,23 @@ from pygments.util import ClassNotFound
 
 CLASSNAME = 'highlighted'
 
+
+class InlineHtmlFormatter(HtmlFormatter):
+
+    def _format_lines(self, tokensource):
+        # resolve a bug that on oneliners we get a newline at the end that looks
+        # kinda ugly...
+        tuples = list(HtmlFormatter._format_lines(self, tokensource))
+        last_tuple = tuples[-1]
+        last_tuple = [(last_tuple[0], last_tuple[1].rstrip('\n'))]
+        tuples = tuples[:-1] + last_tuple
+        for tuple in tuples:
+            yield tuple
+
+
 _default_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table',
                                     lineanchors='cl', anchorlinenos=True)
-_inline_formatter = HtmlFormatter(cssclass=CLASSNAME)
+_inline_formatter = InlineHtmlFormatter(cssclass=CLASSNAME)
 
 
 def highlight_code(code, lang=None, filename=None, mimetype=None, inline=False):

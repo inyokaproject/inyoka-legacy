@@ -49,9 +49,9 @@ class Forum(db.Model, SerializableObject):
 
     subforums = db.relationship('Forum',
             backref=db.backref('parent',remote_side=id),
-            lazy=False, join_depth=1)
+            lazy='joined', join_depth=1)
     tags = db.relationship(Tag, secondary=forum_tag, backref='forums',
-            lazy=False)
+            lazy='joined')
 
     @cached_property
     def all_tags(self):
@@ -147,7 +147,7 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     rendered_text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relationship('User', lazy=False)
+    author = db.relationship('User', lazy='joined')
     votes = db.relationship('Vote', backref='entry',
             extension=EntryVotesExtension())
 
@@ -220,7 +220,7 @@ class Question(Entry):
     answer_count = db.Column(db.Integer, default=0)
 
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-                           lazy=False)
+                           lazy='joined')
 
     def get_url_values(self, **kwargs):
         """Generates an URL for this question."""

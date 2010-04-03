@@ -142,7 +142,7 @@ class Article(db.Model):
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
     author = db.relationship(auth.User,
         backref=db.backref('articles', lazy='dynamic'))
-    comments = db.relationship(Comment, backref=db.backref('article', lazy=True),
+    comments = db.relationship(Comment, backref=db.backref('article', lazy='select'),
         primaryjoin=id==Comment.article_id,
         order_by=[db.asc(Comment.pub_date)],
         lazy='dynamic',

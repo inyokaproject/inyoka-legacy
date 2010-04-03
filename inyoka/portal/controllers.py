@@ -67,7 +67,7 @@ class PortalController(IController):
     @view
     @templated('portal/users.html', modifier=context_modifier)
     def users(self, request, page=1):
-        query = User.query.options(db.eagerload('profile'))
+        query = User.query.options(db.joinedload('profile'))
         sortable = Sortable(query, 'id', request)
         pagination = URLPagination(sortable.get_sorted(), page=page)
         return {

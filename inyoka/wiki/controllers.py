@@ -90,7 +90,7 @@ class WikiController(IController):
             raise NotFound()
 
         revisions = page.revisions.order_by(Revision.id.desc()) \
-                        .options(db.eagerload(Revision.change_user)).all()
+                        .options(db.joinedload(Revision.change_user)).all()
 
         return {
             'page': page,

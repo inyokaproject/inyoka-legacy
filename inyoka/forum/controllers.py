@@ -60,7 +60,7 @@ class ForumController(IController):
     @view('questions')
     @templated('forum/questions.html', modifier=context_modifier)
     def questions(self, request, forum=None, tags=None, sort='latest', page=1):
-        query = Question.query.options(db.eagerload('answers'))
+        query = Question.query.options(db.joinedload('answers'))
 
         # Filter by Forum or Tag (optionally)
         if forum:
@@ -88,9 +88,9 @@ class ForumController(IController):
     @view('question')
     @templated('forum/question.html', modifier=context_modifier)
     def question(self, request, slug, sort='votes', page=1):
-        question = Question.query.options(db.eagerload('author')) \
+        question = Question.query.options(db.joinedload('author')) \
                                  .filter_by(slug=slug).one()
-        answer_query = Answer.query.options(db.eagerload('votes')) \
+        answer_query = Answer.query.options(db.joinedload('votes')) \
                                    .filter_by(question=question)
         answer_query = getattr(answer_query, sort)
         pagination = URLPagination(answer_query, page=page)

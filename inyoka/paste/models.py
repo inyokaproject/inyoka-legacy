@@ -45,7 +45,7 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
     pub_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     hidden = db.Column(db.Boolean, default=False)
 
-    author = db.relationship(User, lazy=False)
+    author = db.relationship(User, lazy='joined')
 
     # revision model implementation
     parent_id = db.Column(db.Integer, db.ForeignKey(id), nullable=True)

@@ -10,7 +10,7 @@
 """
 import difflib
 from inyoka.core.api import ctx
-from inyoka.utils.highlight import highlight_code
+from inyoka.utils.highlight import highlight_text
 
 
 def generate_highlighted_udiff(old, new, old_title='', new_title='',
@@ -28,8 +28,8 @@ def generate_highlighted_udiff(old, new, old_title='', new_title='',
 
     # highlight if the threshold allows it.
     if not (threshold and (old_lines > threshold or new_lines > threshold)):
-        old = highlight_code(old, old_lang, inline=True)
-        new = highlight_code(new, new_lang, inline=True)
+        old = highlight_text(old, old_lang, inline=True)
+        new = highlight_text(new, new_lang, inline=True)
 
     return u'\n'.join(difflib.unified_diff(
         old.splitlines(),

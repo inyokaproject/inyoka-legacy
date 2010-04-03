@@ -41,7 +41,7 @@ class PasteController(IController):
     def index(self, request):
         form = AddPasteForm()
         if request.method == 'POST' and form.validate(request.form):
-            e = Entry(code=form.data['code'],
+            e = Entry(text=form.data['text'],
                       language=form.data['language'] or None,
                       title=form.data['title'],
                       author=request.user,
@@ -55,7 +55,7 @@ class PasteController(IController):
                 form = AddPasteForm({
                     'title': parent.title,
                     'language': parent.language,
-                    'code': parent.code,
+                    'text': parent.text,
                     'parent': parent.id
                 })
 
@@ -74,7 +74,7 @@ class PasteController(IController):
     @view('raw')
     def raw_paste(self, request, id):
         e = Entry.query.get(id)
-        return Response(e.code, mimetype='text/plain')
+        return Response(e.text, mimetype='text/plain')
 
     @view('browse')
     @templated('paste/browse.html', modifier=context_modifier)
@@ -110,7 +110,7 @@ class PasteController(IController):
         return {
             'old': old,
             'new': new,
-            'diff': old.compare_to(new, 'code', template=True)
+            'diff': old.compare_to(new, 'text', template=True)
         }
 
     @view('unidiff_paste')
@@ -122,4 +122,4 @@ class PasteController(IController):
         if old is None or new is None:
             raise NotFound()
 
-        return Response(old.compare_to(new, 'code'), mimetype='text/plain')
+        return Response(old.compare_to(new, 'text'), mimetype='text/plain')

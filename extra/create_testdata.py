@@ -129,9 +129,9 @@ def create_pastebin_test_data():
     from inyoka.core.auth.models import User
     from inyoka.paste.models import Entry
     u = User.query.get('admin')
-    e1 = Entry(code=u'print "Hello World"', author=u, language='python')
+    e1 = Entry(text=u'print "Hello World"', author=u, language='python')
     db.session.commit()
-    e1.children.append(Entry(code=u'print "hello world"', author=u, language='python'))
+    e1.children.append(Entry(text=u'print "hello world"', author=u, language='python'))
     db.session.commit()
 
 

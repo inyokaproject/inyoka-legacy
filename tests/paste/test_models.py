@@ -7,40 +7,40 @@
 """
 from inyoka.core.test import *
 from inyoka.core.auth.models import User
-from inyoka.utils.highlight import highlight_code
+from inyoka.utils.highlight import highlight_text
 from inyoka.paste.models import Entry
 
 
 def test_automatic_rendering():
-    code1 = '@property\ndef(self, foo=None):\n    raise Exception\n'
-    rendered_code1 = highlight_code(code1, 'python')
-    code2 = 'import sys\nclass Example(object):\n    pass\n'
-    rendered_code2 = highlight_code(code2, 'python')
-    rendered_code2_plain = highlight_code(code2)
+    text1 = '@property\ndef(self, foo=None):\n    raise Exception\n'
+    rendered_text1 = highlight_text(text1, 'python')
+    text2 = 'import sys\nclass Example(object):\n    pass\n'
+    rendered_text2 = highlight_text(text2, 'python')
+    rendered_text2_plain = highlight_text(text2)
 
     # assert the model does rendering the right way
-    e = Entry(code=code1, author=User.query.get_anonymous(), language='python')
-    eq_(e.code, code1)
-    eq_(e.rendered_code, rendered_code1)
-    e.code = code2
-    eq_(e.code, code2)
-    eq_(e.rendered_code, rendered_code2)
+    e = Entry(text=text1, author=User.query.get_anonymous(), language='python')
+    eq_(e.text, text1)
+    eq_(e.rendered_text, rendered_text1)
+    e.text = text2
+    eq_(e.text, text2)
+    eq_(e.rendered_text, rendered_text2)
 
     db.session.commit()
 
     e2 = Entry.query.get(e.id)
     eq_(e.language, 'python')
-    eq_(e2.rendered_code, rendered_code2)
+    eq_(e2.rendered_text, rendered_text2)
     e2.language = None
     eq_(e.language, None)
-    eq_(e2.rendered_code, rendered_code2_plain)
+    eq_(e2.rendered_text, rendered_text2_plain)
 
     # assert that we don't call the rerender method when not required
     e2.language = 'python'
-    eq_(e2.rendered_code, rendered_code2)
+    eq_(e2.rendered_text, rendered_text2)
     mock('Entry._render', tracker=tracker)
     tracker.clear()
-    e2.code = e2.code
+    e2.text = e2.text
     e2.language = e2.language
     assert_false(tracker.check('Called Entry._render()'))
 
@@ -49,7 +49,7 @@ def get_data_callback(title=None):
     def callback():
         data = {
             'author': User.query.get_anonymous(),
-            'code': 'void'
+            'text': 'void'
         }
         if title is not None:
             data['title'] = title

@@ -3,7 +3,7 @@
     inyoka.utils.highlight
     ~~~~~~~~~~~~~~~~~~~~~~
 
-    Utils for highlighting code.
+    Utils for highlighting text.
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -36,7 +36,7 @@ _default_formatter = HtmlFormatter(cssclass=CLASSNAME, linenos='table',
 _inline_formatter = InlineHtmlFormatter(cssclass=CLASSNAME)
 
 
-def highlight_code(code, lang=None, filename=None, mimetype=None, inline=False):
+def highlight_text(text, lang=None, filename=None, mimetype=None, inline=False):
     """Highlight a block using pygments to HTML."""
     try:
         lexer = None
@@ -57,4 +57,4 @@ def highlight_code(code, lang=None, filename=None, mimetype=None, inline=False):
     except LookupError:
         lexer = TextLexer(stripnl=False)
 
-    return highlight(code, lexer, _default_formatter if not inline else _inline_formatter)
+    return highlight(text, lexer, _default_formatter if not inline else _inline_formatter)

@@ -17,8 +17,8 @@ Paste {{ title }} by {{ author }}
 {% endblock %}
 
 {%- block paste_content %}
-<div class="code">
-  {{ paste.rendered_code }}
+<div class="highlighted">
+  {{ paste.rendered_text }}
 </div>
 <p><span class="small">Created on {{ paste.pub_date|datetimeformat }}.
 {%- if paste.parent %} Answer to <a href="{{ href(paste.parent) }}">{{ paste.parent.display_title }}</a> or <a href="{{ href('paste/compare_paste', new_id=paste.id, old_id=paste.parent.id) }}">compare with parent</a>{% endif -%}</span></p>

@@ -28,7 +28,7 @@ def _get_pygments_lexers(add_empty=True):
 
 class AddPasteForm(forms.Form):
     title = forms.TextField(_(u'Title (optional)'), max_length=50)
-    code = forms.TextField(_(u'Code'), required=True, widget=forms.widgets.Textarea)
+    text = forms.TextField(_(u'Text'), required=True, widget=forms.widgets.Textarea)
     language = forms.ChoiceField(_(u'Language'),
                                  choices=list(_get_pygments_lexers()))
     parent = forms.TextField(widget=forms.widgets.HiddenInput)

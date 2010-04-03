@@ -35,11 +35,11 @@ class PasteAdminProvider(IAdminProvider):
     def edit(self, request, id):
         entry = Entry.query.get(id)
         form = EditPasteForm(model_to_dict(entry,
-            exclude=('rendered_code', 'id', 'author_id')
+            exclude=('rendered_text', 'id', 'author_id')
         ))
         if request.method == 'POST' and form.validate(request.form):
             entry = update_model(entry, form,
-                ('code', 'language', 'title', 'author', 'hidden'))
+                ('text', 'language', 'title', 'author', 'hidden'))
             db.session.update(entry)
             db.session.commit()
             return redirect_to(entry)

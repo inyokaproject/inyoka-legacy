@@ -17,7 +17,7 @@ from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
 from inyoka.paste.utils import generate_highlighted_udiff
 from inyoka.utils.diff3 import prepare_udiff, generate_udiff
-from inyoka.utils.highlight import highlight_code
+from inyoka.utils.highlight import highlight_text
 
 
 class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixin):
@@ -25,20 +25,18 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
 
     # serializer properties
     object_type = 'paste.entry'
-    public_fields = ('id', 'code', 'title', 'author', 'pub_date',
+    public_fields = ('id', 'text', 'title', 'author', 'pub_date',
                      'hidden')
 
-    #: The renderer that renders the code
-    text_renderer = lambda s, v: highlight_code(v, s._language)
+    #: The renderer that renders the text
+    text_renderer = lambda s, v: highlight_text(v, s._language)
 
     #: Model columns
     id = db.Column(db.Integer, primary_key=True)
-    _text = db.Column('code', db.Text, nullable=False)
-    code = db.synonym('text')
+    _text = db.Column(db.Text, nullable=False)
 
     title =  db.Column(db.String(50), nullable=True)
     rendered_text = db.Column(db.Text, nullable=False)
-    rendered_code = db.synonym('rendered_text')
 
     _language = db.Column('language', db.String(30))
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
@@ -71,7 +69,6 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
             self._render()
     language = db.synonym('_language', descriptor=property(
         attrgetter('_language'), _set_language))
-    code = db.synonym('text')
 
     @property
     def display_title(self):

@@ -18,7 +18,7 @@ from inyoka.paste.models import Entry
 def get_data():
     author = User.query.first()
     return {
-        'code': u"print 'hello world'",
+        'text': u"print 'hello world'",
         'language': 'python',
         'author': author
     }

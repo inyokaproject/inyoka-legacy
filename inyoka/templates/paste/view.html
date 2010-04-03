@@ -17,7 +17,7 @@ Paste {{ title }} by {{ author }}
 {% endblock %}
 
 {%- block paste_content %}
-<div class="pasted_code">
+<div class="code">
   {{ paste.rendered_code }}
 </div>
 <p><span class="small">Created on {{ paste.pub_date|datetimeformat }}.

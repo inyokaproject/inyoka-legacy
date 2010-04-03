@@ -1,5 +1,9 @@
-.highlighted , .code .hll { background-color: #ffffcc }
-.highlighted , .code  { background: #f8f8f8; }
+.highlighted .hll , .code .hll { background-color: #ffffcc }
+.highlighted , .code  {
+  background: #f8f8f8;
+  word-wrap: break-word;
+  overflow-x: auto;
+}
 .highlighted .c, .code .c { color: #408080; font-style: italic } /* Comment */
 .highlighted .err, .code .err { border: 1px solid #FF0000 } /* Error */
 .highlighted .k, .code .k { color: #008000; font-weight: bold } /* Keyword */

@@ -7,7 +7,7 @@ body {
 
 #head {
   margin: 0 auto;
-  padding: 20px 10px 10px 10px;
+  padding: 5px 10px 10px 10px;
   width: 972px;
   background-color: #90a818;
   background-image: url(../img/head.png);
@@ -18,7 +18,7 @@ body {
 
 #head h1 {
   margin: 0 0 0 10px;
-  padding: 90px 0 0 140px;
+  padding: 80px 0 0 140px;
   height: 62px;
   color: #FFFFFF;
   font-size: 3em;
@@ -59,27 +59,27 @@ body {
 }
 
 #navi a.icon-portal {
-  background: url(../img/headericons/portal.png) no-repeat top center;
+  background: url(../img/icons/portal.png) no-repeat top center;
 }
 
 #navi a.icon-pastebin {
-  background: url(../img/headericons/pastebin.png) no-repeat top center;
+  background: url(../img/icons/pastebin.png) no-repeat top center;
 }
 
 #navi a.icon-news {
-  background: url(../img/headericons/news.png) no-repeat top center;
+  background: url(../img/icons/news.png) no-repeat top center;
 }
 
 #navi a.icon-forum {
-  background: url(../img/headericons/forum.png) no-repeat top center;
+  background: url(../img/icons/forum.png) no-repeat top center;
 }
 
 #navi a.icon-admin {
-  background: url(../img/headericons/admin.png) no-repeat top center;
+  background: url(../img/icons/admin.png) no-repeat top center;
 }
 
 #navi a.icon-wiki {
-  background: url(../img/headericons/wiki.png) no-repeat top center;
+  background: url(../img/icons/wiki.png) no-repeat top center;
 }
 
 #page {
@@ -145,6 +145,23 @@ body {
 #footer {
   clear: both;
 }
+
+/* clearing */
+.fix {
+	clear: both;
+	height: 1px;
+	margin: -1px 0 0;
+	overflow: hidden;
+}
+.clear {	display:inline-block; }
+.clear:after {
+	display:block;
+	visibility:hidden;
+	clear:both;
+	height:0;
+	content: " ";
+}
+
 
 /* Pagetabs */
 
@@ -245,3 +262,41 @@ div.flash_message {
   border-color: #FFD324;
 }
 
+.tagcloud a {
+  text-decoration: none;
+}
+
+/* Application Icons /*
+ * TODO: make this a bit more abstract and application aware
+ *
+ */
+
+.portal, .forum, .wiki, .news, .pastebin {
+  background-repeat: no-repeat;
+  background-position: center left;
+  padding-left: 20px;
+}
+
+.portal {
+  background-image: url('../img/icons/small/portal.png') !important;
+}
+
+.forum {
+  background-image: url('../img/icons/small/forum.png') !important;
+}
+
+.wiki {
+  background-image: url('../img/icons/small/wiki.png') !important;
+}
+
+.news {
+  background-image: url('../img/icons/small/news.png') !important;
+}
+
+.comment {
+  background-image: url('../img/icons/small/comment.png') !important;
+}
+
+.pastebin {
+  background-image: url('../img/icons/small/pastebin.png') !important;
+}

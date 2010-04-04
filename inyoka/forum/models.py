@@ -8,13 +8,14 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import re
 from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
 from inyoka.core.models import Tag
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
-import re
+from inyoka.utils import confidence
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -184,7 +185,7 @@ class QuestionQuery(EntryQuery):
             Question.id == question_tag.c.question_id,
             question_tag.c.tag_id.in_(tag_ids)))
 
-    @property
+    @cached_property
     def unanswered(self):
         return self.filter(Question.answer_count == 0)
 
@@ -222,6 +223,13 @@ class Question(Entry):
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
                            lazy='joined')
 
+    @cached_property
+    def popularity(self):
+        pos = len([v for v in self.votes if v.score==1]) + self.answer_count
+        neg = len([v for v in self.votes if v.score==-1])
+        neg += len([a for a in self.answers if a.score<0])
+        return confidence(pos, neg)
+
     def get_url_values(self, **kwargs):
         """Generates an URL for this question."""
         action = kwargs.get('action')
@@ -233,6 +241,9 @@ class Question(Entry):
             'slug': self.slug
         })
         return 'forum/question', kwargs
+
+    def __unicode__(self):
+        return self.title
 
 
 class Answer(Entry):
@@ -253,6 +264,11 @@ class Answer(Entry):
             backref=db.backref('answers', extension=QuestionAnswersExtension()),
             primaryjoin=(question_id == Question.id))
 
+    @cached_property
+    def popularity(self):
+        good_votes = len([v for v in self.votes if v.score==1])
+        bad_votes = len([v for v in self.votes if v.score==-1])
+        return confidence(good_votes, bad_votes)
 
     def get_url_values(self, **kwargs):
         """Generates an URL for this answer."""

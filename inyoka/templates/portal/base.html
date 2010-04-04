@@ -1,5 +1,8 @@
-{% set introduction=true %}
 {% extends "base.html" %}
+{% set introduction=true %}
+{% set sidebar=false %}
+{% set title_trace = title_trace|default([]) + [_('Portal')] %}
+{% set styles = ['portal.css'] + styles|default([]) %}
 
 {% block sidebar %}
   {{ super }}

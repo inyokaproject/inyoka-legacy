@@ -1,0 +1,41 @@
+#portal a {
+  color: #777;
+}
+
+#portal a:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+#portal .column {
+  float: left;
+  width: 280px;
+  margin-right: 20px;
+}
+
+#portal #last {
+  margin-right: 0;
+}
+
+#portal .column .block {
+  margin-bottom: 30px;
+}
+
+#portal h2 {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: #333 solid 1px;
+}
+
+#portal h3 {
+  padding-top: 10px;
+}
+
+#portal ul {
+  margin: 0;
+  padding: 0;
+}
+
+#portal ul li {
+  list-style: none;
+}

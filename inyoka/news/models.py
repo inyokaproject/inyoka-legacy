@@ -77,6 +77,11 @@ class Comment(db.Model):
             '_anchor': 'comment_%s' % self.id
         }
 
+    def __unicode__(self):
+        return u'Comment by %s on %s' % (
+               self.author.display_name, self.article.title
+        )
+
 
 class ArticleQuery(db.Query):
 
@@ -206,10 +211,7 @@ class Article(db.Model):
         return values[action], kwargs
 
     def __unicode__(self):
-        return u'%s - %s' % (
-            self.pub_date.strftime('%d.%m.%Y'),
-            self.title
-        )
+        return self.title
 
 
 class NewsSchemaController(db.ISchemaController):

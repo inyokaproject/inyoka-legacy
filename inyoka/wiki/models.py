@@ -122,6 +122,13 @@ class Revision(db.Model):
         pn = repr(self.page.name) if self.page else None
         return '<Revision #%r %s>' % (self.id, pn)
 
+    def __unicode__(self):
+        return self.page.name
+
+    def get_url_values(self, action='show', revision=None):
+        if action == 'show':
+            return 'wiki/show', {'page': self.page.url_name, 'revision': revision}
+
 
 class WikiSchemaController(db.ISchemaController):
     models = [Page, Revision, Text]

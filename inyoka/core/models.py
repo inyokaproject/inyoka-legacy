@@ -11,10 +11,12 @@
 import re
 import random
 import string
-
+from math import log
 from datetime import date, datetime, timedelta
 from sqlalchemy.orm import MapperExtension
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from sqlalchemy.orm.dynamic import AppenderQuery
+from sqlalchemy.orm.properties import RelationshipProperty
 from inyoka.core.database import db
 from inyoka.core.context import ctx
 from inyoka.core.routing import href
@@ -34,6 +36,52 @@ class TagQuery(db.Query):
         """This method is a wrapper around common tag caching
         to not write the cache key everywhere in the code"""
         return self.cached('core/tags')
+
+    def get_cloud(self, max=None):
+        """Get all informations required for a tag cloud"""
+        # we try to count all external relationships as those should represent
+        # only content refering to tags.
+        props = [prop.key for prop in Tag.__mapper__.iterate_properties
+                 if isinstance(prop, RelationshipProperty)]
+
+        # we coult all properties that are mapped to a tag and are queriable
+        # by their attribute.  We do not query for hidden or not published
+        # contents as those should not appear in this list.  If they do
+        # modify the related relationship configuration.
+        if max is None:
+            tags = self.get_cached()
+        else:
+            tags = self.query.limit(max).all()
+
+        #TODO: find a way to join those counts in one query
+        # Something like that:
+        #
+        # >>> articles = db.session.query(Article.tag_id, db.func.count(Article.id) \
+        #                   .label('article_count')).group_by(Article.id).subquery()
+        # >>> forums = db.session.query(forum_tag.c.tag_id, db.func.count(forum_tag.c.forum_id) \
+        #                   .label('forum_count')).group_by(forum_tag.c.forum_id).subquery()
+        # >>> db.session.query(Tag, articles.c.article_count, forums.c.forum_count) \
+        #               .outerjoin((articles, Tag.id==articles.c.tag_id),
+        #                          (forums, Tag.id==forums.c.tag_id)) \
+        #               .order_by(Tag.id).all()
+        #
+        # but with a more generic way...
+        items = []
+        for tag in tags:
+            count = int(sum(
+                rel.count() if isinstance(rel, (db.Query, AppenderQuery))
+                            else len(rel)
+                for rel in (getattr(tag, prop) for prop in props)
+            ))
+            items.append({
+                'id': tag.id,
+                'name': tag.name,
+                'count': count,
+                'size': 100 + log(count or 1) * 20
+            })
+
+        items.sort(key=lambda x: x['name'].lower())
+        return items
 
 
 class Tag(db.Model, SerializableObject):

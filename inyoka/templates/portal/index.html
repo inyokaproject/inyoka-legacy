@@ -6,30 +6,34 @@ Inyoka is a portal software that integrates a complete News, Wiki and Bulletin B
 {% endblock %}
 
 {% block content %}
-<p>
-  This is the portal index page.
-</p>
-<p>
-  called URL is: {{ called_url|e }},
-  link is {{ link|e }}.
-  current url is {{ request.current_url|e }}
-</p>
-<p>
-  python version: {{ version }}
-</p>
-
-<strong>Various Text styles:</strong>
-<ul>
-<li>Small: <span class="small">Some Text</span></li>
-<li>Large: <span class="large">Some Text</span></li>
-<li>Hidden: <span class="hide">Some text</span></li>
-<li>Quiet: <span class="quiet">Some Text</span></li>
-<li>Loud: <span class="loud">Some Text</span></li>
-<li>Highlight: <span class="highlight">Some Text</span></li>
-<li>Thin: <span class="thin">Some Text</span></li>
-<li>Error: <span class="error">Some Text <a href="#">Link</a></span></li>
-<li>Notice: <span class="notice">Some Text <a href="#">Link</a></span></li>
-<li>Success: <span class="success">Some Text <a href="#">Link</a></span></li>
-</ul>
-
+<div id="portal" class="clear">
+  <div class="column">
+    <h2>Popular content</h2>
+    <div class="content">
+    {% if latest_content %}
+      <h3>Today's:</h3>
+      <ul>
+        {% for app, item in latest_content %}
+        <li class="{{ app }}"><a href="{{ href(item) }}">{{ item }}</a></li>
+        {% endfor %}
+      </ul>
+      <h3>All Time</h3>
+      <ul>
+        <li class="portal"><a href="#">To be done…</a></li>
+      </ul>
+    {% else %}
+    <strong>There's no content yet!</strong>
+    {% endif %}
+    </div>
+  </div>
+  <div class="column tagcloud">
+    <h2>Tags</h2>
+    {%- for tag in tag_cloud %}
+      <a href="#" style="font-size: {{ tag.size }}%" 
+                  title="{% trans count=tag.count, tag=(tag.name|e) %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} posts tagged {{ tag }}{% endtrans %}">
+        {{ tag.name|e }}
+      </a>
+    {%- endfor %}
+  </div>
+</div>
 {% endblock %}

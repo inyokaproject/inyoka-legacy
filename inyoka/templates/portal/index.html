@@ -8,18 +8,13 @@ Inyoka is a portal software that integrates a complete News, Wiki and Bulletin B
 {% block content %}
 <div id="portal" class="clear">
   <div class="column">
-    <h2>Popular content</h2>
+    <h2>Latest Content</h2>
     <div class="content">
     {% if latest_content %}
-      <h3>Today's:</h3>
-      <ul>
+      <ul class="itemlist">
         {% for app, item in latest_content %}
         <li class="{{ app }}"><a href="{{ href(item) }}">{{ item }}</a></li>
         {% endfor %}
-      </ul>
-      <h3>All Time</h3>
-      <ul>
-        <li class="portal"><a href="#">To be done…</a></li>
       </ul>
     {% else %}
     <strong>There's no content yet!</strong>

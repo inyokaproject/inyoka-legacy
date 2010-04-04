@@ -274,6 +274,9 @@ div.flash_message {
 .portal, .forum, .wiki, .news, .pastebin {
   background-repeat: no-repeat;
   background-position: center left;
+}
+
+.portal a, .forum a, .wiki a, .news a, .pastebin a {
   padding-left: 20px;
 }
 

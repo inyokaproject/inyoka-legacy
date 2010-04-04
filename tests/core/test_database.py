@@ -29,6 +29,8 @@ class SlugGeneratorTestModel(db.Model):
     name = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=True)
     slug = db.Column(db.String(100), nullable=False, unique=True)
+    category = db.Column(db.Integer, db.ForeignKey(Category.id))
+    categories = db.relationship(Category, lazy='joined', backref='sluggies')
 
 
 class DatabaseTestSchemaController(db.ISchemaController):
@@ -84,3 +86,13 @@ def test_cached_query():
     x = Category.query.cached('_test/categories', timeout=0.5)
     assert_true(cache.get('_test/categories') is None)
     assert_true(tester())
+
+    # A bug fixed in revision 842:19fb808dfa7f raised a DetachedInstanceError
+    # if we accessed the cached entries twice with a lazy relationship
+    # TODO: Test this only if caching is enabled!
+    c1 = SlugGeneratorTestModel(name=u'cat')
+    db.session.commit()
+    obj = Category.query.cached('_test/categories')[0]
+    obj.sluggies
+    obj = Category.query.cached('_test/categories')[0]
+    obj.sluggies

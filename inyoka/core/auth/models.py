@@ -40,6 +40,7 @@ class UserQuery(db.Query):
         if user is None:
             user = User.query.get('anonymous')
             cache.set('core/anonymous', user)
+        user = db.session.merge(user, load=False)
         return user
 
 

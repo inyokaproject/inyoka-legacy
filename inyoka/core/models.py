@@ -30,6 +30,18 @@ CONFIRM_ACTIONS = {}
 tag_re = re.compile(r'[\w-]{2,20}')
 
 
+class TagCounterExtension(db.AttributeExtension):
+    """Counts the comments on the post."""
+
+    def append(self, state, value, initiator):
+        db.atomic_add(value, 'tagged', 1)
+        return value
+
+    def remove(self, state, value, initiator):
+        db.atomic_add(value, 'tagged', -1)
+        return value
+
+
 class TagQuery(db.Query):
 
     def get_cached(self):
@@ -53,31 +65,13 @@ class TagQuery(db.Query):
         else:
             tags = self.query.limit(max).all()
 
-        #TODO: find a way to join those counts in one query
-        # Something like that:
-        #
-        # >>> articles = db.session.query(Article.tag_id, db.func.count(Article.id) \
-        #                   .label('article_count')).group_by(Article.id).subquery()
-        # >>> forums = db.session.query(forum_tag.c.tag_id, db.func.count(forum_tag.c.forum_id) \
-        #                   .label('forum_count')).group_by(forum_tag.c.forum_id).subquery()
-        # >>> db.session.query(Tag, articles.c.article_count, forums.c.forum_count) \
-        #               .outerjoin((articles, Tag.id==articles.c.tag_id),
-        #                          (forums, Tag.id==forums.c.tag_id)) \
-        #               .order_by(Tag.id).all()
-        #
-        # but with a more generic way...
         items = []
         for tag in tags:
-            count = int(sum(
-                rel.count() if isinstance(rel, (db.Query, AppenderQuery))
-                            else len(rel)
-                for rel in (getattr(tag, prop) for prop in props)
-            ))
             items.append({
                 'id': tag.id,
                 'name': tag.name,
-                'count': count,
-                'size': 100 + log(count or 1) * 20
+                'count': tag.tagged,
+                'size': tag.size
             })
 
         items.sort(key=lambda x: x['name'].lower())
@@ -97,6 +91,8 @@ class Tag(db.Model, SerializableObject):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, index=True)
     slug = db.Column(db.String(20), nullable=False, unique=True)
+    #: number of items tagged
+    tagged = db.Column(db.Integer, nullable=False, default=0)
 
     def __unicode__(self):
         return self.name
@@ -106,6 +102,10 @@ class Tag(db.Model, SerializableObject):
         if not tag_re.match(tag):
             raise ValueError(u'Invalid tag name %s' % tag)
         return tag
+
+    @property
+    def size(self):
+        return 100 + log(self.tagged or 1) * 20
 
     def get_url_values(self, action='view'):
         values = {

@@ -12,7 +12,7 @@ import re
 from datetime import datetime
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
-from inyoka.core.models import Tag
+from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.utils import confidence
@@ -52,7 +52,7 @@ class Forum(db.Model, SerializableObject):
             backref=db.backref('parent',remote_side=id),
             lazy='joined', join_depth=1)
     tags = db.relationship(Tag, secondary=forum_tag, backref='forums',
-            lazy='joined')
+                           lazy='joined', extension=TagCounterExtension())
 
     @cached_property
     def all_tags(self):
@@ -221,7 +221,7 @@ class Question(Entry):
     answer_count = db.Column(db.Integer, default=0)
 
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-                           lazy='joined')
+                           lazy='joined', extension=TagCounterExtension())
 
     @cached_property
     def popularity(self):

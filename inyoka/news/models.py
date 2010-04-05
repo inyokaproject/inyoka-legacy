@@ -11,7 +11,7 @@
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, auth, markup, cache
-from inyoka.core.models import Tag
+from inyoka.core.models import Tag, TagCounterExtension
 
 
 class ArticleMapperExtension(db.MapperExtension):
@@ -143,7 +143,8 @@ class Article(db.Model):
 
     tag_id = db.Column(db.ForeignKey(Tag.id), nullable=False)
     tag = db.relationship(Tag,
-        backref=db.backref('articles', lazy='dynamic'))
+        backref=db.backref('articles', lazy='dynamic'),
+        extension=TagCounterExtension())
     author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
     author = db.relationship(auth.User,
         backref=db.backref('articles', lazy='dynamic'))

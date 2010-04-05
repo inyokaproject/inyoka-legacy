@@ -8,12 +8,12 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from sqlalchemy.util import classproperty
 from inyoka import Interface
 from inyoka.core import forms
 from inyoka.core.api import _, auth, db, ctx
 from inyoka.core.forms.validators import is_valid_url, is_valid_jabber
 from inyoka.core.forms import widgets
-from inyoka.utils.decorators import classproperty
 
 
 class UserProfile(db.Model):

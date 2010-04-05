@@ -94,6 +94,24 @@ def is_valid_url(message=None):
 
 
 def is_valid_jabber(message=None):
+    """Check if the string passed is a valid Jabber ID.
+
+    This does neither check the domain nor the ressource id because we
+    require an adress similar to a email adress with a nodeid set.
+
+    Since that nodeid is optional in the real-world we'd have to check
+    the domain and ressource id if it's not specified.  To avoid that
+    we require that nodeid.
+
+    Examples::
+
+        >>> check(is_valid_jabber, 'ente@quaki.org')
+        True
+        >>> check(is_valid_jabber, 'boy_you_suck@') # we don't check the domain
+        True
+        >>> check(is_valid_jabber, "yea, that's invalid")
+        False
+    """
     if message is None:
         message = lazy_gettext(u'You have to enter a valid Jabber ID')
     def validator(form, value):

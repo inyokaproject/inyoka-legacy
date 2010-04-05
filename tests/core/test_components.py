@@ -8,7 +8,7 @@
     :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Interface, InterfaceMeta
+from inyoka import Interface, InterfaceMeta, _is_interface, _import_modules
 from inyoka.core.api import ctx
 from inyoka.core.test import *
 
@@ -115,3 +115,34 @@ def test_unable_to_load_non_interface():
         pass
 
     ctx.load_component(SomeDummy)
+
+
+def test_import_modules():
+    from inyoka.core.auth import models
+    # import definite modules
+    assert_true(models is list(_import_modules(('inyoka.core.auth.models',)))[0])
+    # star import packages
+    assert_true(models in list(_import_modules(('inyoka.core.*',))))
+    # star import to definite modules not packages
+    # we assert here to import the module rather than to raise a ValueError
+    # as werkzeug's find_modules would do.
+    list(_import_modules(('werkzeug._internal',)))
+
+
+def test_automatical_config_creation():
+    import os
+    from inyoka import ApplicationContext
+    from inyoka.core.api import ctx
+    from inyoka.core.config import Configuration
+    # ensure that our config file really exists
+    assert_true(ctx.cfg.exists)
+    # remove the config file and ensure that it's really removed
+    # and marked as such by our configuration system.
+    fn = ctx.cfg.filename
+    content = open(fn).read()
+    os.remove(fn)
+    assert_false(Configuration(fn).exists)
+    # check that it's created automatically by our :cls:`ApplicationContext`
+    new_ctx = ApplicationContext()
+    assert_true(os.path.exists(fn))
+    open(fn, 'w').write(content)

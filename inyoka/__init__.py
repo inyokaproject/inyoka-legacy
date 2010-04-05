@@ -102,7 +102,8 @@ def _import_modules(modules):
                 # find_modules does import our package, but doesn't yield it
                 # hence we import it ourself.
                 yield import_string(module[:-2])
-            except ValueError: # module is a module and not a package
+            except ValueError: #pragma: no cover
+                # module is a module and not a package
                 yield import_string(module[:-2])
 
 
@@ -233,12 +234,8 @@ class ApplicationContext(object):
             self._instances[compcls] = compcls(self)
         return self._instances[compcls]
 
-    def __call__(self, environ, start_response):
-        """Wrap the WSGI stack.
-
-        This binds the :class:`ApplicationContext` afterwards to the
-        thread-locals again because we're cleaning up those after each request
-        """
+    def __call__(self, environ, start_response): #pragma: no cover
+        """Wrap the WSGI stack.  This only forwards to the respective dispatcher"""
         return self.dispatcher(environ, start_response)
 
 

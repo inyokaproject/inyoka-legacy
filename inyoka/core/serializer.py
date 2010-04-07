@@ -26,12 +26,13 @@ from inyoka.utils.urls import make_full_domain
 
 try:
     import simplejson
-except:
+except: #pragma: no cover
     import json as simplejson
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
 
 _escaped_newline_re = re.compile(r'(?:(?:\\r)?\\n)')
+_iterables = (list, set, frozenset, tuple)
 
 
 def _recursive_getattr(obj, key):
@@ -70,9 +71,13 @@ class SerializableObject(object):
         serialized.  This is always a dict with string keys and
         the values are safe for pickeling.
         """
+        if config is None:
+            config = {}
         result = {} if config.get('show_type', True) is False \
                     else {'#type': self.object_type}
-        fields = (config or {}).get(self.object_type) or self.public_fields
+        fields = config.get(self.object_type) or self.public_fields
+        assert isinstance(fields, _iterables), \
+               u'`fields` must be iterable`' #pragma: no cover
         for key in fields:
             if isinstance(key, tuple):
                 alias, key = key

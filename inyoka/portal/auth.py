@@ -21,11 +21,14 @@ class EasyAuth(AuthSystemBase):
     It also supports permanent sessions using the `_permanent_session`
     key in the current session.
     """
+    
+    login_failed_message = _(u'User is unknown or the password is not correct.')
+
     def perform_login(self, request, username, password, permanent=False):
         try:
             user = User.query.get(username)
         except db.NoResultFound:
-            raise LoginUnsucessful(_(u'This username does not exist.'))
+            raise LoginUnsucessful(self.login_failed_message)
         if user.check_password(password):
             self.set_user(request, user)
             if permanent:
@@ -33,7 +36,7 @@ class EasyAuth(AuthSystemBase):
             request.flash(_(u'You are now logged in.'))
             return redirect_to('portal/index')
         else:
-            raise LoginUnsucessful(_(u'The password is not correct.'))
+            raise LoginUnsucessful(self.login_failed_message)
 
     def get_user(self, request):
         if request.session.get('user_id'):

@@ -182,15 +182,9 @@ class AuthSystemBase(object):
 
     def send_activation_mail(self, request, user):
         """Sends an activation mail."""
-        if True:
-            db.session.commit()
-            c = Confirm('activate_user', {'user': user.id}, 3)
-            db.session.commit()
-            return Response('activation link: %s' % c.url)
-        else:
-            user.status = 'normal'
-            db.session.commit()
-            return redirect_to('portal/login')
+        c = Confirm('activate_user', {'user': user.id}, 3)
+        db.session.commit()
+        return Response('activation link: %s' % c.url)
 
     def before_login(self, request):
         """If this login system uses an external login URL, this function

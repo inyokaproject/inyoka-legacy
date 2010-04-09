@@ -53,13 +53,17 @@ def update_model(instance, form, includes=None):
             db.session.update(user)
             db.session.commit()
 
-    If `includes` is applied only these fields will be updated.
+    If `includes` is applied only these fields will be updated.  This function
+    fails silently if you applied the wrong include keys or tried to update
+    not existing attributes.
     """
     attrs = _get_attrs(instance)
+    if not isinstance(form, dict):
+        # assume we work with a form instance instead of a dicct
+        form = form.data
 
-    for key, value in form.data.iteritems():
+    for key, value in form.iteritems():
         if key not in attrs:
-            #XXX: raise?
             continue
         if includes and key not in includes:
             continue

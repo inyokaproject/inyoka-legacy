@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Original Author: Enrico Batista da Luz
+# Modified by the Inyoka Team, see AUTHORS for more details.
+#
+# Installation: point to this file from your .bash_profile, like so:
+#
+# . ~/path/to/fab_bash_completion
+#
+
+_fab_completion()
+{
+	local cur prev opts
+
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	# Get the list of available tasks, ignoring errors (missing or invalid fabfile)
+	# Removing the "Available commands" header and any empty line or spaces
+	opts="`fab --list 2> /dev/null | grep -v -e 'Available commands' -e "^$" | sed -e 's/ \+\(\w\+\).*/\1/g'`"
+
+	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+	return 0
+}
+complete -F _fab_completion -o default fab

@@ -17,6 +17,7 @@ from inyoka.core.cache import cache
 from inyoka.core.context import ctx
 from inyoka.core.database import db, IModelPropertyProvider
 from inyoka.core.serializer import SerializableObject
+from inyoka.core.subscriptions import subscribed
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
@@ -113,6 +114,9 @@ class User(db.Model, SerializableObject):
     def is_anonymous(self):
         name = ctx.cfg['anonymous_name']
         return self.username == name
+
+    def subscribed(self, name, subject_id=None):
+        return subscribed(name, self, subject_id)
 
     def __repr__(self):
         i = '#%d' % self.id if self.id else '[no id]'

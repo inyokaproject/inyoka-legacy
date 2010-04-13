@@ -145,6 +145,7 @@ class InyokaEnvironment(Environment):
             cache_size=-1,
             bytecode_cache=cache_obj
         )
+
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             href=href,

@@ -14,6 +14,7 @@ from inyoka.core.database import db
 from inyoka.core.subscriptions import SubscriptionType
 from inyoka.utils.datastructures import _missing
 
+
 def _create_subscriptionunreadobjects_by_object_id(id):
     return SubscriptionUnreadObjects(object_id=id)
 
@@ -81,7 +82,6 @@ class Subscription(db.Model):
                     t.notify(s, object, subject)
                     s.count = len(s.unread_object_ids)
                 db.session.commit()
-
 
     @staticmethod
     def accessed(user, object):
@@ -187,9 +187,6 @@ class Subscription(db.Model):
         db.session.delete(s[0])
         db.session.commit()
         return True
-
-
-
 
 
 class SubscriptionUnreadObjects(db.Model):

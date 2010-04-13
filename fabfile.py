@@ -6,7 +6,7 @@
 
     Our makefile replacement with `Fabric <http://fabfile.org>`_.
 
-    :copyright: 2009 by the Inyok Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
@@ -149,11 +149,13 @@ def i18n():
     local("python %s" % _j("extra/compile-translations"), capture=False)
 
 
-def test(clean='yes'):
+def test(file='', clean='yes'):
     """
     Run all unit tests and doctests.
 
     Specify clean=no if you don't want to remove old .coverage/.noseid files.
+    To only run tests from specific files, use test:tests/foo/test_bar.py,
+    separate multiple files by spaces (don't forget to escape it on the shell)
     """
 
     clean = True if clean == 'yes' else False
@@ -169,7 +171,7 @@ def test(clean='yes'):
         with settings(hide('running')):
             _clean()
 
-    local('python %s' % _j('extra/runtests.py'), capture=False)
+    local('python %s %s' % (_j('extra/runtests.py'), file), capture=False)
 
 
 def reindent():

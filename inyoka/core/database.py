@@ -510,7 +510,8 @@ def init_db(**kwargs):
         # some essential database things
         from inyoka.core.auth.models import User
         from inyoka.portal.models import UserProfile
-        anon = User(u'anonymous', u'', u'')
+        anon_name = ctx.cfg['anonymous_name']
+        anon = User(anon_name, u'', u'')
         anon_profile = UserProfile(user=anon)
         db.session.commit()
 

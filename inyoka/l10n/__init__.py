@@ -17,7 +17,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from functools import wraps
-from datetime import date, datetime
+from datetime import date, time, datetime, timedelta
 import pytz
 from babel import dates
 from inyoka.i18n import get_locale, lazy_gettext
@@ -87,7 +87,13 @@ def to_datetime(obj):
 _timezone_aware = ('format_datetime', 'format_time')
 
 def get_dummy(func):
-    @wraps(func, ('__module__', '__name__', '__doc__'))
+    #: avoid failing doctest from the original docstring
+    #TODO: less ugly solution wanted
+    if func.func_name in _timezone_aware:
+        w = wraps(func, ('__module__', '__name__'))
+    else:
+        w = wraps(func, ('__module__', '__name__', '__doc__'))
+    @w
     def _inner(*args, **kwargs):
         if 'locale' not in kwargs or kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()

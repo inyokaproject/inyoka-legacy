@@ -22,7 +22,7 @@ _mail_re = re.compile(r'''(?xi)
 ''')
 
 
-#XXX: according to rfc4622 a nodeid is optional. But we require one
+#NOTE: according to rfc4622 a nodeid is optional. But we require one
 #     'cause nobody should enter a service-jid in the jabber field.
 #     Should we permit or deny? If we permit we need to validate the
 #     domain and resid!

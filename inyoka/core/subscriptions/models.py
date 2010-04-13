@@ -129,10 +129,6 @@ class Subscription(db.Model):
         if isinstance(type_, basestring):
             type_ = SubscriptionType.by_name(type_)
 
-#        if type_.subject_type is not None and subject is None:
-#            raise ValueError('No subject specified')
-#            #TODO: also validate this in the MapperExtension?
-#
         subject_type = type_.subject_type or type(None)
         if not isinstance(subject, subject_type):
             raise ValueError('subject (%r) does not match the subject_type '

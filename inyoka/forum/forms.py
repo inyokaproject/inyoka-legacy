@@ -8,13 +8,10 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core import forms, auth
+from inyoka.core.api import _, db, forms
 from inyoka.i18n import _
 from inyoka.forum.models import Forum, Tag
 
-
-def create_tag(name):
-    return Tag(name=name)
 
 class AskQuestionForm(forms.Form):
 
@@ -22,7 +19,7 @@ class AskQuestionForm(forms.Form):
     text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
         required=True)
     tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
-                                label=_(u'Tags'), sep=',', min_size=1)
+                              label=_(u'Tags'), sep=',', min_size=1)
 
 
 class AnswerQuestionForm(forms.Form):
@@ -39,8 +36,7 @@ class EditForumForm(forms.Form):
                                 widget=forms.widgets.SelectBox)
     description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea,
             required=True)
-    tags = forms.Autocomplete(forms.ModelField(Tag, 'name',
-            on_not_found=create_tag), label=_(u'Tags'), sep=',', min_size=1)
+    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'), label=_(u'Tags'), sep=',', min_size=1)
 
     def __init__(self, *args, **kwargs):
         forms.Form.__init__(self, *args, **kwargs)

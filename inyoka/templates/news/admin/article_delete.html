@@ -1,5 +1,5 @@
 <form action="{{ href('admin/news/article_delete', slug=article.slug) }}" method="post">
-  <p>{{ _('Do you really want to delete that article?') }}</p>
+  <p>{% trans article=article.slug %}Do you really want to delete the article “{{ article }}”? %}</p>
   <div class="actions">
     <input type="submit" name="cancel" value="{{ _('No') }}">
     <input type="submit" name="confirm" value="{{ _('Yes') }}">

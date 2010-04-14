@@ -251,34 +251,37 @@ $.TokenList = function (input, settings) {
 
     // Pre-populate list if items exist
     function init_list () {
-        li_data = settings.prePopulate;
+        var li_data = settings.prePopulate;
         if(li_data && li_data.length) {
             for(var i in li_data) {
-                var this_token = $("<li><p>"+li_data[i].name+"</p> </li>")
-                    .addClass(settings.classes.token)
-                    .insertBefore(input_token);
+                if (!$.inArray(li_data[i].name, saved_tokens) > -1) {
+                  saved_tokens.push(li_data[i].name)
+                  var this_token = $("<li><p>"+li_data[i].name+"</p> </li>")
+                      .addClass(settings.classes.token)
+                      .insertBefore(input_token);
 
-                $("<span>x</span>")
-                    .addClass(settings.classes.tokenDelete)
-                    .appendTo(this_token)
-                    .click(function () {
-                        delete_token($(this).parent());
-                        return false;
-                    });
+                  $("<span>x</span>")
+                      .addClass(settings.classes.tokenDelete)
+                      .appendTo(this_token)
+                      .click(function () {
+                          delete_token($(this).parent());
+                          return false;
+                      });
 
-                $.data(this_token.get(0), "tokeninput", {"id": li_data[i].id, "name": li_data[i].name});
+                  $.data(this_token.get(0), "tokeninput", {"id": li_data[i].id, "name": li_data[i].name});
 
-                // Clear input box and make sure it keeps focus
-                input_box
-                    .val("")
-                    .focus();
+                  // Clear input box and make sure it keeps focus
+                  input_box
+                      .val("")
+                      .focus();
 
-                // Don't show the help dropdown, they've got the idea
-                hide_dropdown();
+                  // Don't show the help dropdown, they've got the idea
+                  hide_dropdown();
 
-                // Save this token id
-                var id_string = li_data[i].id + ","
-                hidden_input.val(hidden_input.val() + id_string);
+                  // Save this token id
+                  var id_string = li_data[i].name
+                  hidden_input.val(hidden_input.val() + "," + id_string);
+                }
             }
         }
     }
@@ -343,11 +346,13 @@ $.TokenList = function (input, settings) {
         hide_dropdown();
 
         // Save this token id
-        var id_string = li_data.id + ","
-        hidden_input.val(hidden_input.val() + id_string);
-        
-        token_count++;
-        
+        if (!$.inArray(li_data.name, saved_tokens) > -1) {
+          var id_string = li_data.name
+          hidden_input.val(hidden_input.val() + "," + id_string);
+          saved_tokens.push(id_string);
+          token_count++;
+        }
+
         if(settings.tokenLimit != null && settings.tokenLimit >= token_count) {
             input_box.hide();
             hide_dropdown();
@@ -409,7 +414,7 @@ $.TokenList = function (input, settings) {
 
         // Delete this token's id from hidden input
         var str = hidden_input.val()
-        var start = str.indexOf(token_data.id+",");
+        var start = str.indexOf(token_data.name+",");
         var end = str.indexOf(",", start) + 1;
 
         if(end >= str.length) {

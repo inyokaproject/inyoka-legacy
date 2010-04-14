@@ -61,7 +61,10 @@ class PortalAdminController(IAdminProvider):
         elif request.method == 'POST' and form.validate(request.form):
             tag = update_model(tag, form, ('name'))
             db.session.commit()
-            request.flash(_(u'Updated tag'), True)
+            if new:
+                request.flash(_(u'Created tag “%s”' % tag.name), True)
+            else:
+                request.flash(_(u'Updated tag “%s”' % tag.name), True)
         return {
             'form': form.as_widget(),
             'tag': tag,
@@ -75,7 +78,7 @@ class PortalAdminController(IAdminProvider):
         elif request.method == 'POST' and 'confirm' in request.form:
             db.session.delete(tag)
             db.session.commit()
-            request.flash(_(u'The tag %s was deleted successfully.'
+            request.flash(_(u'The tag “%s” was deleted successfully.'
                           % tag.name))
             return redirect_to('admin/news/tags')
         else:

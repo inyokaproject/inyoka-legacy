@@ -6,7 +6,7 @@
     Datastructures used to ease our life and to implement crutial
     parts of the `inyoka.markup` interface.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import sys

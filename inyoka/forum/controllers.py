@@ -80,7 +80,7 @@ class ForumController(IController):
         return {
             'forum': forum,
             'tags': tags or [],
-            'questions': pagination.get_objects(),
+            'questions': pagination.query,
             'sort': sort,
             'pagination': pagination
         }

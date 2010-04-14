@@ -243,8 +243,8 @@ div.pagination a:hover {
     background: #fff;
 }
 
-div.pagination span.commata {
-    display: none;
+div.pagination span.comma {
+    visibility: hidden;
 }
 
 div.flash_message {

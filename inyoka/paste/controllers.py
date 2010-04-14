@@ -82,7 +82,7 @@ class PasteController(IController):
         query = Entry.query
         pagination = URLPagination(query, page=page)
         return {
-            'pastes': pagination.get_objects(),
+            'pastes': pagination.query,
             'pagination': pagination,
         }
 

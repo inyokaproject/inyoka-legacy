@@ -10,7 +10,9 @@
 """
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
-from inyoka.core.api import ctx, db, auth, markup, cache
+from inyoka.core.api import ctx, db, cache
+from inyoka.core.auth import User
+from inyoka.core.markup import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
 
 
@@ -31,8 +33,8 @@ class CommentMapperExtension(db.MapperExtension):
         self.before_update(mapper, connection, instance)
 
     def before_update(self, mapper, connection, instance):
-        context = markup.RenderContext(ctx.current_request)
-        node = markup.parse(instance.text)
+        context = RenderContext(ctx.current_request)
+        node = parse(instance.text)
         instance.rendered_text = node.render(context, 'html')
 
 
@@ -62,8 +64,8 @@ class Comment(db.Model):
     #TODO: do we really need the rendered text in the database?
     rendered_text = db.Column(db.Text, nullable=False)
 
-    author_id = db.Column(db.Integer, db.ForeignKey(auth.User.id))
-    author = db.relationship(auth.User, backref=db.backref('comments',
+    author_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    author = db.relationship(User, backref=db.backref('comments',
         lazy='dynamic'))
     article_id = db.Column(db.Integer, db.ForeignKey('news_article.id'))
 
@@ -145,9 +147,8 @@ class Article(db.Model):
     tag = db.relationship(Tag,
         backref=db.backref('articles', lazy='dynamic'),
         extension=TagCounterExtension())
-    author_id = db.Column(db.ForeignKey(auth.User.id), nullable=False)
-    author = db.relationship(auth.User,
-        backref=db.backref('articles', lazy='dynamic'))
+    author_id = db.Column(db.ForeignKey(User.id), nullable=False)
+    author = db.relationship(User, backref=db.backref('articles', lazy='dynamic'))
     comments = db.relationship(Comment, backref=db.backref('article', lazy='select'),
         primaryjoin=id==Comment.article_id,
         order_by=[db.asc(Comment.pub_date)],
@@ -162,12 +163,12 @@ class Article(db.Model):
         we use a more caching aware implementation and need to implement
         two fields to render.
         """
-        context = markup.RenderContext(ctx.current_request)
+        context = RenderContext(ctx.current_request)
         instructions = cache.get(key)
         if instructions is None:
-            instructions = markup.parse(text).compile('html')
+            instructions = parse(text).compile('html')
             cache.set(key, instructions)
-        return markup.render(instructions, context)
+        return render(instructions, context)
 
     @cached_property
     def rendered_text(self):

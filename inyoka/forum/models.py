@@ -11,7 +11,7 @@
 import re
 from datetime import datetime
 from werkzeug import cached_property
-from inyoka.core.api import ctx, db, auth, markup, cache, SerializableObject
+from inyoka.core.api import ctx, db, cache, SerializableObject
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User

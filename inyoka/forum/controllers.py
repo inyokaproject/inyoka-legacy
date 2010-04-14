@@ -76,7 +76,7 @@ class ForumController(IController):
         query = getattr(query, sort)
 
         # Paginate results
-        pagination = URLPagination(query, page=page)
+        pagination = URLPagination(query, page)
         return {
             'forum': forum,
             'tags': tags or [],
@@ -93,7 +93,7 @@ class ForumController(IController):
         answer_query = Answer.query.options(db.joinedload('votes')) \
                                    .filter_by(question=question)
         answer_query = getattr(answer_query, sort)
-        pagination = URLPagination(answer_query, page=page)
+        pagination = URLPagination(answer_query, page)
 
         form = AnswerQuestionForm()
         if request.method == 'POST' and form.validate(request.form):
@@ -109,7 +109,7 @@ class ForumController(IController):
         question.touch()
 
         # precalculate user votes
-        answers = pagination.get_objects()
+        answers = pagination.query
         user_votes = {question.id: question.get_vote(request.user)}
         for answer in answers:
             vote = [vote for vote in answer.votes
@@ -119,7 +119,7 @@ class ForumController(IController):
         return {
             'sort': sort,
             'question': question,
-            'answers': pagination.get_objects(),
+            'answers': pagination.query,
             'form': form.as_widget(),
             'pagination': pagination,
             'user_votes': user_votes

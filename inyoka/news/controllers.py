@@ -90,10 +90,10 @@ class NewsController(IController):
         #TODO: add ACL for public articles
         articles = articles.order_by('-updated')
 
-        pagination = URLPagination(articles, page=page, per_page=10)
+        pagination = URLPagination(articles, page, per_page=10)
 
         return {
-            'articles':      pagination.get_objects(),
+            'articles':      pagination.query,
             'pagination':    pagination,
             'tag':           tag
         }
@@ -177,7 +177,7 @@ class NewsController(IController):
 
         ret = dict(year=year, month=month, day=day,
             date=date(year, month or 1, day or 1), month_list=False,
-            pagination=pagination, articles=pagination.get_objects())
+            pagination=pagination, articles=pagination.query)
         return ret
 
     @view('subscribe_articles')

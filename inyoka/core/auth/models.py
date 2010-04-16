@@ -5,7 +5,7 @@
 
     Models for the authentication system.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import random
@@ -14,8 +14,10 @@ from datetime import datetime
 from inyoka import Interface
 from inyoka.i18n import _
 from inyoka.core.cache import cache
+from inyoka.core.context import ctx
 from inyoka.core.database import db, IModelPropertyProvider
 from inyoka.core.serializer import SerializableObject
+from inyoka.core.subscriptions import subscribed
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 
@@ -35,10 +37,10 @@ class UserQuery(db.Query):
         return super(UserQuery, self).get(pk)
 
     def get_anonymous(self):
-        #TODO: make configurable
         user = cache.get('core/anonymous')
         if user is None:
-            user = User.query.get('anonymous')
+            name = ctx.cfg['anonymous_name']
+            user = User.query.get(name)
             cache.set('core/anonymous', user)
         user = db.session.merge(user, load=False)
         return user
@@ -110,8 +112,11 @@ class User(db.Model, SerializableObject):
 
     @property
     def is_anonymous(self):
-        # TODO: make configurable
-        return True if self.username == 'anonymous' else False
+        name = ctx.cfg['anonymous_name']
+        return self.username == name
+
+    def subscribed(self, name, subject_id=None):
+        return subscribed(name, self, subject_id)
 
     def __repr__(self):
         i = '#%d' % self.id if self.id else '[no id]'

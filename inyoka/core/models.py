@@ -5,7 +5,7 @@
 
     Core models not specific to a single app.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
@@ -51,15 +51,6 @@ class TagQuery(db.Query):
 
     def get_cloud(self, max=None):
         """Get all informations required for a tag cloud"""
-        # we try to count all external relationships as those should represent
-        # only content refering to tags.
-        props = [prop.key for prop in Tag.__mapper__.iterate_properties
-                 if isinstance(prop, RelationshipProperty)]
-
-        # we coult all properties that are mapped to a tag and are queriable
-        # by their attribute.  We do not query for hidden or not published
-        # contents as those should not appear in this list.  If they do
-        # modify the related relationship configuration.
         if max is None:
             tags = self.get_cached()
         else:

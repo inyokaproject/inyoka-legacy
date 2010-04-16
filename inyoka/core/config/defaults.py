@@ -5,7 +5,7 @@
 
     This module implements and documents the default values for our configuration.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
@@ -35,6 +35,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'The current language locale')),
     'default_timezone':             TextField(default=u'Europe/Berlin',
         help_text=lazy_gettext(u'The default timezone for all users.')),
+    'anonymous_name':               TextField(default=u'anonymous',
+        help_text=lazy_gettext(u'The name of the anonymous user.')),
     'recaptcha.public_key':         TextField(
         default=u'6Lc1LwsAAAAAAPSQ4FcfLKJVcwzicnZl8v-RmeLj',
         help_text=lazy_gettext(u'Recaptcha public key')),

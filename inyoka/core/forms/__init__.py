@@ -57,7 +57,7 @@ class Form(FormBase):
         return redirect_(url)
 
     def _resolve_url(self, args, kwargs):
-        assert len(args) == 1 # TODO
+        assert len(args) == 1
         return href(args[0], **kwargs)
 
     def _get_session(self):

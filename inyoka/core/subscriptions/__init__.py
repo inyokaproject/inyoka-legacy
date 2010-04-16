@@ -12,12 +12,18 @@
        comment on a news entry respectively. Each object has one subject (for
        the given examples: The topic / news entry it was posted in)
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Interface
+from inyoka import Interface, InterfaceMeta
 from inyoka.core.api import ctx
 from inyoka.utils.datastructures import _missing
+
+
+def subscribed(type, user, subject_id=None):
+    from inyoka.core.subscriptions.models import Subscription
+    return bool(Subscription.query.filter_by(user=user, type_name=type,
+                                             subject_id=subject_id).count())
 
 
 class SubscriptionType(Interface):

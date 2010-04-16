@@ -70,7 +70,7 @@
 
     .. _SQLAlchemy: <http://sqlalchemy.org>
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
@@ -510,7 +510,8 @@ def init_db(**kwargs):
         # some essential database things
         from inyoka.core.auth.models import User
         from inyoka.portal.models import UserProfile
-        anon = User(u'anonymous', u'', u'')
+        anon_name = ctx.cfg['anonymous_name']
+        anon = User(anon_name, u'', u'')
         anon_profile = UserProfile(user=anon)
         db.session.commit()
 

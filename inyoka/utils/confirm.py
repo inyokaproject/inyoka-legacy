@@ -6,7 +6,7 @@
     Provides various utilities to store confirmation data in the database and
     retrieve it.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
@@ -56,6 +56,10 @@ def call_confirm(key):
     """
     Fetch the confirm entry with the specified key from the database and call
     the registered function, if the confirm key has not yet expired.
+
+    .. note::
+
+        The database entry will be erased!
     """
     c = Confirm.query.get(key)
     if c is None:
@@ -63,8 +67,6 @@ def call_confirm(key):
     if c.is_expired:
         raise Expired('Expired on %s' % c.expires.strftime('%F'))
     ret = CONFIRM_ACTIONS[c.action](c.data)
-
-    #TODO: maybe we should keep it for a while? (for error messages etc?)
     db.session.delete(c)
     db.session.commit()
     return ret

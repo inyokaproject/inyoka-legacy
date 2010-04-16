@@ -5,7 +5,7 @@
 
     Models for the subscription facility.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -13,6 +13,7 @@ from inyoka.core.auth.models import User
 from inyoka.core.database import db
 from inyoka.core.subscriptions import SubscriptionType
 from inyoka.utils.datastructures import _missing
+
 
 def _create_subscriptionunreadobjects_by_object_id(id):
     return SubscriptionUnreadObjects(object_id=id)
@@ -82,7 +83,6 @@ class Subscription(db.Model):
                     s.count = len(s.unread_object_ids)
                 db.session.commit()
 
-
     @staticmethod
     def accessed(user, object):
         """
@@ -129,10 +129,6 @@ class Subscription(db.Model):
         if isinstance(type_, basestring):
             type_ = SubscriptionType.by_name(type_)
 
-#        if type_.subject_type is not None and subject is None:
-#            raise ValueError('No subject specified')
-#            #TODO: also validate this in the MapperExtension?
-#
         subject_type = type_.subject_type or type(None)
         if not isinstance(subject, subject_type):
             raise ValueError('subject (%r) does not match the subject_type '
@@ -191,9 +187,6 @@ class Subscription(db.Model):
         db.session.delete(s[0])
         db.session.commit()
         return True
-
-
-
 
 
 class SubscriptionUnreadObjects(db.Model):

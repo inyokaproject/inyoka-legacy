@@ -11,7 +11,8 @@
 from sqlalchemy.util import classproperty
 from inyoka import Interface
 from inyoka.core import forms
-from inyoka.core.api import _, auth, db, ctx
+from inyoka.core.api import _, db, ctx
+from inyoka.core.auth import User
 from inyoka.core.forms.validators import is_valid_url, is_valid_jabber
 from inyoka.core.forms import widgets
 
@@ -40,10 +41,9 @@ class UserProfile(db.Model):
     __tablename__ = 'portal_userprofile'
     __extendable__ = True
 
-    user_id = db.Column(db.ForeignKey(auth.User.id), primary_key=True)
-    user = db.relationship(auth.User,
-        backref=db.backref('profile', uselist=False), innerjoin=True,
-                           lazy='select')
+    user_id = db.Column(db.ForeignKey(User.id), primary_key=True)
+    user = db.relationship(User, innerjoin=True, lazy='select',
+        backref=db.backref('profile', uselist=False))
 
     def get_url_values(self, action='view'):
         values = {

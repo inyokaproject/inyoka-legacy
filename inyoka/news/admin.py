@@ -5,7 +5,7 @@
 
     Admin providers for the news application.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
@@ -65,7 +65,7 @@ class NewsAdminProvider(IAdminProvider):
                 'title', 'intro', 'text', 'public', 'tag',
                 'author'))
             db.session.commit()
-            request.flash(_(u'Updated article'), True)
+            request.flash(_(u'Updated article “%s”' % article.title), True)
         return {
             'form': form.as_widget(),
             'article': article,
@@ -79,7 +79,7 @@ class NewsAdminProvider(IAdminProvider):
         elif request.method == 'POST' and 'confirm' in request.form:
             db.session.delete(article)
             db.session.commit()
-            request.flash(_(u'The article %s was deleted successfully.'
+            request.flash(_(u'The article “%s” was deleted successfully.'
                           % article.title))
             return redirect_to('admin/news/articles')
         else:

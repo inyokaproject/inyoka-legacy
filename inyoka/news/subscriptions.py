@@ -27,6 +27,7 @@ class ArticleSubscriptionType(SubscriptionType):
         print 'Notify %s about new article „%s“' % \
                 (subscription.user.username, object.title)
 
+
 #TODO: need support for multiple subjects per object
 #class TagSubscriptionType(SubscriptionType):
 #    name = 'news.article.by_tag'

@@ -48,8 +48,8 @@ class ForumAdminProvider(IAdminProvider):
 
         if request.method == 'POST' and form.validate(request.form):
             if forum:
-                forum = update_model(forum, form, ('name', 'slug',
-                            'parent', 'description', 'tags'))
+                forum = update_model(forum, form,
+                    ('name', 'slug', 'parent', 'description', 'tags'))
             else:
                 forum = Forum(
                     name=form.data['name'],

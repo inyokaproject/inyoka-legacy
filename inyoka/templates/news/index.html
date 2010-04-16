@@ -18,8 +18,11 @@
 
   {{ pagination }}
 
-  <p>{# TODO: display only the matching link #}
-    <a href="{{ href('news/subscribe_articles', action='subscribe') }}">subscribe</a> ·
+  <p>
+    {% if not request.user.subscribed('news.article.all') %}
+    <a href="{{ href('news/subscribe_articles', action='subscribe') }}">subscribe</a>
+    {% else %}
     <a href="{{ href('news/subscribe_articles', action='unsubscribe') }}">unsubscribe</a>
+    {% endif %}
   </p>
 {% endblock %}

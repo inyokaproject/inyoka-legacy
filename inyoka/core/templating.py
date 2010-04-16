@@ -5,7 +5,7 @@
 
     Description goes here...
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
@@ -145,6 +145,7 @@ class InyokaEnvironment(Environment):
             cache_size=-1,
             bytecode_cache=cache_obj
         )
+
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             href=href,

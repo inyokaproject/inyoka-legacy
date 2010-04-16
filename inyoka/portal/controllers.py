@@ -5,7 +5,7 @@
 
     Controllers for the portal app.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import sys
@@ -54,7 +54,7 @@ class PortalController(IController):
 
         if request.method == 'POST' and form.validate(request.form):
             form.save()
-            request.flash(_(u'Profile saved'), True)
+            request.flash(_(u'Your profile was saved successfully'), True)
 
         return {'form':form.as_widget()}
 
@@ -129,8 +129,6 @@ class PortalController(IController):
             ret = _('The supplied key is not valid anymore.'), False
 
         if isinstance(ret, tuple) and len(ret) == 2:
-            # flash(*ret)
-            # return redirect_to('portal/index')
             return Response('%s: %s' % (['success', 'fail'][not ret[1]],
                                         ret[0]), mimetype='text/plain')
         return ret

@@ -10,7 +10,7 @@
     object at all.  If there are easy ways of *not* using
     thread locals, you should not use them.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 

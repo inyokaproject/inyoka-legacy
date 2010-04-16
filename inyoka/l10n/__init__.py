@@ -13,7 +13,7 @@
     Please note that all functions here always return a localized object so
     do not use those for calculations only for presentation purposes!
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from functools import wraps

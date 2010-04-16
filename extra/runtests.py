@@ -6,7 +6,7 @@
     Note, that running the tests is not available via manage-inyoka.py, cause
     we import some stuff there and that does kill coverage.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import nose, os, sys

@@ -30,6 +30,32 @@ USER_STATUS_MAP = BidiMap({
 })
 
 
+group_group = db.Table('core_group_group', db.metadata,
+    db.Column('group_id', db.Integer, db.ForeignKey('core_group.id')),
+    db.Column('parent_id', db.Integer, db.ForeignKey('core_group.id')),
+)
+
+user_group = db.Table('core_group_user', db.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('core_user.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('core_group.id'))
+)
+
+
+class Group(db.Model):
+    __tablename__ = 'core_group'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40), unique=True)
+
+    children = db.relationship('Group', secondary=group_group,
+        backref=db.backref('parents', collection_class=set),
+        primaryjoin=id==group_group.c.group_id,
+        secondaryjoin=group_group.c.parent_id==id,
+        foreign_keys=[group_group.c.group_id, group_group.c.parent_id],
+        collection_class=set)
+
+
+
 class UserQuery(db.Query):
     def get(self, pk):
         if isinstance(pk, basestring):
@@ -76,6 +102,8 @@ class User(db.Model, SerializableObject):
     # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
 
+    groups = db.relationship(Group, secondary=user_group, backref='users',
+        collection_class=set)
 
     def __init__(self, username, email, password=''):
         self.username = username
@@ -127,4 +155,4 @@ class User(db.Model, SerializableObject):
 
 
 class UserSchemaController(db.ISchemaController):
-    models = [User]
+    models = [User, Group, group_group, user_group]

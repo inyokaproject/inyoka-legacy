@@ -10,7 +10,7 @@
 """
 from inyoka.core.test import *
 from inyoka.core.mixins import RevisionedModelMixin
-from inyoka.core.auth.models import User, USER_STATUS_MAP
+from inyoka.core.auth.models import User, USER_STATUS_MAP, Group
 
 
 def test_user():
@@ -28,6 +28,22 @@ def test_user():
     assert_false(me.check_password('secret'))
     # and test if check_password hashing does work with unicode strings
     assert_true(me.check_password(u's3cr3t'))
+
+
+def test_groups():
+    """Check that the self-referential many-to-many group relationship works"""
+    g1 = Group(name='g1')
+    g2 = Group(name='g2')
+    g3 = Group(name='g3')
+    g4 = Group(name='g4')
+    db.session.commit()
+    g1.children.update((g2, g3))
+    g4.children.add(g2)
+    g2.children.add(g3)
+    db.session.commit()
+    eq_(g1.children, set([g2, g3]))
+    eq_(g4.children, set([g2]))
+    eq_(g3.parents, set([g1, g2]))
 
 
 class FancyModel(db.Model, RevisionedModelMixin):

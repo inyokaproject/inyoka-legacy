@@ -148,7 +148,7 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     rendered_text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relationship('User', lazy='joined')
+    author = db.relationship(User, lazy='joined')
     votes = db.relationship('Vote', backref='entry',
             extension=EntryVotesExtension())
 
@@ -298,7 +298,7 @@ class Vote(db.Model, SerializableObject):
             default=0), extension=VoteScoreExtension())
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    user = db.relationship('User', backref='votes')
+    user = db.relationship(User, backref='votes')
 
 
 class ForumSchemaController(db.ISchemaController):

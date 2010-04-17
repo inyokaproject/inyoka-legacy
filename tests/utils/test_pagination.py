@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
     test_pagination
+    ~~~~~~~~~~~~~~~
 
     Unittests for the pagination utility.
 
-    :copyright: 2009 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import random

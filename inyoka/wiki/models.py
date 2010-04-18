@@ -59,7 +59,6 @@ class Page(db.Model):
 
     def __init__(self, name):
         self.name = deurlify_page_name(name)
-        db.session.add(self)
 
     def __repr__(self):
         return '<Page %r>' % self.name

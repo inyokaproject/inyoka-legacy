@@ -170,7 +170,6 @@ class Confirm(db.Model):
 
         self.action = action
         self.data = data
-        db.session.add(self)
 
     def __repr__(self):
         return '<Confirm %s %s>' % (self.action, getattr(self, 'key', ''))

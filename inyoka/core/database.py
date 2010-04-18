@@ -277,6 +277,12 @@ def mapper(model, table, **options):
     """A mapper that hooks in standard extensions."""
     extensions = to_list(options.pop('extension', None), [])
     options['extension'] = extensions
+    # automatically register the model to the session
+    old_init = getattr(model, '__init__', lambda s: None)
+    def register_init(self, *args, **kwargs):
+        old_init(self, *args, **kwargs)
+        db.session.add(self)
+    model.__init__ = register_init
     return orm.mapper(model, table, **options)
 
 

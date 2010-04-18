@@ -41,6 +41,7 @@ user_group = db.Table('core_group_user', db.metadata,
 )
 
 
+
 class Group(db.Model):
     __tablename__ = 'core_group'
 
@@ -53,7 +54,6 @@ class Group(db.Model):
         secondaryjoin=group_group.c.parent_id==id,
         foreign_keys=[group_group.c.group_id, group_group.c.parent_id],
         collection_class=set)
-
 
 
 class UserQuery(db.Query):
@@ -109,7 +109,6 @@ class User(db.Model, SerializableObject):
         self.username = username
         self.email = email
         self.set_password(password)
-        db.session.add(self)
 
     def set_password(self, raw_password):
         """Set a new sha1 generated password hash"""

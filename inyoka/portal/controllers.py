@@ -73,9 +73,6 @@ class PortalController(IController):
                      model.query.order_by(column.desc()).limit(2).all()]
             items.extend(value)
         return {
-            'called_url':   request.current_url,
-            'link':         href('portal/index'),
-            'version':      '%d.%d.%d' % sys.version_info[:3],
             'introduction': True,
             'tag_cloud': Tag.query.get_cloud(),
             'latest_content': items

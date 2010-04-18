@@ -534,6 +534,7 @@ def _make_module():
     db.metadata = metadata
     db.mapper = mapper
     db.atomic_add = atomic_add
+    db.no_autoflush = no_autoflush
     db.find_next_increment = find_next_increment
     db.Model = Model
     db.Query = Query

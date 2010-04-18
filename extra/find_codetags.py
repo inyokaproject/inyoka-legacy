@@ -57,13 +57,10 @@ def process_file(store, filename):
                 llmatch = m.start('what')
             elif llmatch:
                 # continuation lines
-                # XXX: this is Python centric, doesn't work for
-                #      JavaScript, for example.
-                if line[:llmatch].replace('#', '').isspace():
-                    cont = line[llmatch:].strip()
-                    if cont:
-                        store[filename][-1]['what'] += ' ' + escape_html(cont)
-                        continue
+                cont = line[llmatch:].strip()
+                if cont:
+                    store[filename][-1]['what'] += ' ' + cont
+                    continue
                 llmatch = 0
         return True
     finally:

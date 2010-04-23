@@ -16,7 +16,7 @@
   {%- for user in users %}
   <tr>
     <td>{{ user.id }}</td>
-    <td><a href="{{ href(user.profile) }}">{{ user.username|e }}</a></td>
+    <td><a href="{{ href(user.profile) }}">{{ user.username }}</a></td>
     <td>{{ user.date_joined|datetimeformat('short') }}</td>
   </tr>
   {%- endfor %}

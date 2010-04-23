@@ -6,11 +6,11 @@
     <p>This is a debug dump of the data exported from this API
     <dl>
       <dt>API Request
-      <dd><code>{{ request.method|e }}</code>: {{ request.path|e }}
+      <dd><code>{{ request.method }}</code>: {{ request.path }}
       <dt>Internal API handler
       <dd><code>{{ request.endpoint }}</code>
     </dl>
     <h3>Dump</h3>
-    <pre>{{ dump|e }}</pre>
+    <pre>{{ dump }}</pre>
   </div>
 {% endblock %}

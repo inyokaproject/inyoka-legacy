@@ -3,9 +3,9 @@
 {%- block content %}
 
 {% if forum %}
-  <h1>Forum “{{ forum.name|e }}”</h1>
+  <h1>Forum “{{ forum.name }}”</h1>
 
-  <p>{{ forum.description|e }}</p>
+  <p>{{ forum.description }}</p>
 
   {% if forum.subforums %}
     <p><strong>Subforums:</strong>
@@ -85,7 +85,7 @@
   </div>
 
   <div class="summary">
-    <h2><a href="{{ href(question) }}">{{ question.title|e }}</a></h2>
+    <h2><a href="{{ href(question) }}">{{ question.title }}</a></h2>
 
     <ul class="tags">
       {% for tag in question.tags %}

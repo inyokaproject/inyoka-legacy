@@ -3,7 +3,7 @@
 {% block admin_content %}
 <ul>
     {% for forum in forums %}
-    <li><a href="{{ href('admin/forum/forum', id=forum.id) }}">{{ forum.name|e }}</a></li>
+    <li><a href="{{ href('admin/forum/forum', id=forum.id) }}">{{ forum.name }}</a></li>
     {% endfor %}
 </ul>
 <a href="{{ href('admin/forum/forum') }}">Create new Forum</a>

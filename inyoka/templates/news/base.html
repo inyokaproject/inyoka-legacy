@@ -20,7 +20,7 @@
       <h3 class="navi_tags">{{ _('Tags') }}</h3>
       <ul>
       {%- for tag in tags -%}
-        <li><a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name|e }}</a></li>
+        <li><a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a></li>
       {%- endfor %}
       </ul>
     {% endif %}

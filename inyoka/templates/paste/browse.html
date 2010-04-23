@@ -23,7 +23,7 @@
   {# TODO: ACL for hidden pastes and edit link! #}
   <tr{% if p.hidden %} class="hidden"{% endif %}>
     <td><a href="{{ href(p) }}">{{ p }}</a> <span class="small"><a href="{{ href(p, action='edit') }}">{{ _('edit') }}</a></span></td>
-    <td>{{ p.author.display_name|e }}</td>
+    <td>{{ p.author.display_name }}</td>
     <td>{{ p.pub_date|datetimeformat('short') }}</td>
     <td>{{ p.language|default('plain text') }}</td>
   </tr>

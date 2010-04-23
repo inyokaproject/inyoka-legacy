@@ -8,7 +8,7 @@
   <ul class="revision_tree">
   {%- for paste in [paste] recursive %}
     <li{% if paste.id == current %} class="highlighted"{% endif %}>
-      <a href="{{ href(paste)|e }}">{{ paste.display_title|e }}</a> &mdash;
+      <a href="{{ href(paste) }}">{{ paste.display_title }}</a> &mdash;
       {{ paste.pub_date|datetimeformat }}
       {%- if paste.children -%}
         <ul>{{ loop(paste.children) }}</ul>

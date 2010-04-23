@@ -4,8 +4,8 @@
 {% block paste_content %}
   <p>
     Differences between the pastes
-    <a href="{{ href(old)|e }}">{{ old.display_title|e }}</a> ({{ old.pub_date|datetimeformat }})
-    and <a href="{{ href(new)|e }}">{{ new.display_title|e }}</a> ({{ new.pub_date|datetimeformat }}). Download as <a href="/unidiff/{{ old.id|e }}/{{ new.id }}/">unified diff</a>.
+    <a href="{{ href(old) }}">{{ old.display_title }}</a> ({{ old.pub_date|datetimeformat }})
+    and <a href="{{ href(new) }}">{{ new.display_title }}</a> ({{ new.pub_date|datetimeformat }}). Download as <a href="/unidiff/{{ old.id }}/{{ new.id }}/">unified diff</a>.
   </p>
   {% if diff.chunks %}
     {{ render_diff_part(diff) }}

@@ -10,17 +10,13 @@
 """
 from __future__ import division
 from xml.sax.saxutils import quoteattr
+from jinja2.utils import escape
 from werkzeug import escape as wzescape
 
 
 #: set of tags that don't want child elements.
 EMPTY_TAGS = set(['br', 'img', 'area', 'hr', 'param', 'meta', 'link', 'base',
                   'input', 'embed', 'col', 'frame', 'spacer'])
-
-
-def escape(s, quote=True):
-    """Like `werkzeug.escape`, but with `quote` set to True per default."""
-    return wzescape(s, quote)
 
 
 def _build_html_tag(tag, attrs):

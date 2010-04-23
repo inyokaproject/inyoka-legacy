@@ -8,7 +8,7 @@
 </div>
 
 <div class="question-detail">
-  <h1><a href="{{ href(question) }}">{{ question.title|e }}</a></h1>
+  <h1><a href="{{ href(question) }}">{{ question.title }}</a></h1>
 
 
   <div class="vote">
@@ -22,7 +22,7 @@
         <img src="{{ href('static', file='img/vote-up.png') }}" alt="vote up" />
       </a>
     {% endif %}
-    <strong>{{ question.score|e }}</strong>
+    <strong>{{ question.score }}</strong>
     {% if vote and vote.score < 0 %}
       <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
         <img src="{{ href('static', file='img/voted-down.png') }}" alt="vote revoke" />
@@ -88,7 +88,7 @@
         <img src="{{ href('static', file='img/vote-up.png') }}" alt="vote up" />
       </a>
     {% endif %}
-    <strong>{{ answer.score|e }}</strong>
+    <strong>{{ answer.score }}</strong>
     {% if vote and vote.score < 0 %}
       <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
         <img src="{{ href('static', file='img/voted-down.png') }}" alt="vote revoke" />

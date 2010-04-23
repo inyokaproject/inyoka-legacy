@@ -1,9 +1,9 @@
 {%- extends 'paste/base.html' %}
-{%- set title_trace = [paste.display_title|e] %}
+{%- set title_trace = [paste.display_title] %}
 {%- set tab = 'browse' %}
 
 {%- block paste_header %}
-{%- trans title=paste.display_title|e, author=paste.author|e -%}
+{%- trans title=paste.display_title, author=paste.author -%}
 Paste {{ title }} by {{ author }}
 {%- endtrans %}
 {% endblock %}

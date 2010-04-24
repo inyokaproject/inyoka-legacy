@@ -16,7 +16,7 @@ from inyoka.core.api import db
 
 
 def create_test_users():
-    from inyoka.core.auth.models import User
+    from inyoka.core.auth.models import User, Group
     from inyoka.portal.models import UserProfile
 
     # admin user
@@ -24,6 +24,7 @@ def create_test_users():
     admin_profile = UserProfile(user=admin)
 
     # some crazy users
+    user_instances = []
     users = {
         u'apollonier':       (u'apollonier@crazynickname.com', u'rocket!'),
         u'tux der große':    (u'tuxi@grossi.de', u'pinguin'),
@@ -33,7 +34,13 @@ def create_test_users():
     for user in users:
         u = User(user, *users[user])
         p = UserProfile(user=u)
+        user_instances.append(u)
 
+    db.session.commit()
+
+    team = Group(name=u'Team')
+    webteam = Group(name=u'Webteam', parents=set([team]))
+    webteam.users.extend(user_instances[:3])
     db.session.commit()
 
 

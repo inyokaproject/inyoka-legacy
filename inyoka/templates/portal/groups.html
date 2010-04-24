@@ -1,0 +1,23 @@
+{%- extends 'portal/base.html' %}
+
+{% block introduction %}
+{%- trans -%}On this page you can see all existing groups.{% endtrans %}
+{% endblock %}
+
+{%- block content %}
+<h1>{{ _('Grouplist') }}</h1>
+
+<table>
+  <tr>
+    <th>{{ table.get_html('id', _('#')) }}</th>
+    <th>{{ table.get_html('name', _('Groupname')) }}</th>
+  </tr>
+  {%- for group in groups %}
+  <tr>
+    <td>{{ group.id }}</td>
+    <td>{{ group.name }}</td>
+  </tr>
+  {%- endfor %}
+</table>
+{{ pagination }}
+{%- endblock %}

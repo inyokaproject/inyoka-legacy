@@ -12,7 +12,7 @@ import sys
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
-from inyoka.core.auth.models import User
+from inyoka.core.auth.models import User, Group
 from inyoka.core.models import Tag
 from inyoka.core.context import ctx
 from inyoka.core.database import db
@@ -44,6 +44,7 @@ class PortalController(IController):
         Rule('/users/', endpoint='users'),
         Rule('/user/<username>/', endpoint='profile'),
         Rule('/usercp/profile/', endpoint='profile_edit'),
+        Rule('/groups/', endpoint='groups'),
     ]
 
     @view
@@ -86,6 +87,17 @@ class PortalController(IController):
         pagination = URLPagination(sortable.get_sorted(), page)
         return {
             'users': pagination.query,
+            'pagination': pagination,
+            'table': sortable
+        }
+
+    @view
+    @templated('portal/groups.html', modifier=context_modifier)
+    def groups(self, request, page=1):
+        sortable = Sortable(Group.query, 'id', request)
+        pagination = URLPagination(sortable.get_sorted(), page)
+        return {
+            'groups': pagination.query,
             'pagination': pagination,
             'table': sortable
         }

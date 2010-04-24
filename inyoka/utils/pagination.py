@@ -10,6 +10,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import Href, url_encode
+from jinja2.utils import Markup
 from inyoka.core.exceptions import NotFound
 from inyoka.utils.html import escape
 from inyoka.i18n import _
@@ -201,11 +202,10 @@ class Pagination(object):
                         % (_pageclass, type))
 
         add('</div>')
-        return ''.join(ret)
+        return Markup(u''.join(ret))
 
     def __unicode__(self):
         return self.buttons()
-
 
 
 class URLPagination(Pagination):

@@ -6,6 +6,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from jinja2.utils import Markup
 from inyoka.i18n import _
 from inyoka.core.database import db
 from inyoka.core.routing import href
@@ -80,7 +81,7 @@ class Sortable(object):
             new_order = key
             img = ''
 
-        return '<a href="?order=%s">%s</a>%s' % (new_order, value, img)
+        return Markup(u'<a href="?order=%s">%s</a>%s' % (new_order, value, img))
 
     def get_sorted(self):
         ocol = self.order_by.lstrip('-')

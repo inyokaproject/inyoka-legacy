@@ -10,8 +10,7 @@
 """
 from __future__ import division
 from xml.sax.saxutils import quoteattr
-from jinja2.utils import escape
-from werkzeug import escape as wzescape
+from jinja2.utils import escape, Markup
 
 
 #: set of tags that don't want child elements.

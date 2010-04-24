@@ -6,12 +6,11 @@ body {
 }
 
 #head {
-  margin: 0 auto;
+  margin: 5px 10px;
   padding: 5px 10px 10px 10px;
-  width: 972px;
   background-color: #90a818;
   background-image: url(../img/head.png);
-  background-repeat: no-repeat;
+  background-repeat: repeat-x;
   -moz-border-radius: 0 0 0.4em 0.4em;
   -webkit-border-radius: 0 0 0.4em 0.4em;
 }
@@ -89,8 +88,7 @@ body {
 }
 
 #page-inner {
-  margin: 0 auto;
-  width: 992px;
+  margin: 5px 10px;
 }
 
 #page-inner > div {
@@ -103,7 +101,7 @@ body {
 #page-sidebar {
   background-color: #EEEEEE;
   float: left;
-  width: 338px;
+  width: 22%;
   margin-bottom: 0.4em;
   color: #444;
   padding: 0.5em 0.5em 0.5em 28px;

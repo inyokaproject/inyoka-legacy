@@ -264,6 +264,18 @@ div.flash_message {
   text-decoration: none;
 }
 
+div.grouper {
+  font-size: 2em;
+  text-align: center;
+  border-top: 1px solid #000;
+  border-bottom: 1px dotted #ccc;
+}
+
+div.grouper:hover {
+  background-color: #ccc;
+}
+
+
 /* Application Icons /*
  * TODO: make this a bit more abstract and application aware
  *

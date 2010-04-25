@@ -7,17 +7,21 @@
 {%- block content %}
 <h1>{{ _('Grouplist') }}</h1>
 
+{%- for parent in groups|groupby('grant_parent') %}
+<div class="grouper">{{ parent.grouper.name }}</div>
 <table>
   <tr>
     <th>{{ table.get_html('id', _('#')) }}</th>
     <th>{{ table.get_html('name', _('Groupname')) }}</th>
   </tr>
-  {%- for group in groups %}
+  {% for group in parent.list %}
   <tr>
     <td>{{ group.id }}</td>
     <td>{{ group.name }}</td>
   </tr>
   {%- endfor %}
 </table>
+{% endfor %}
+
 {{ pagination }}
 {%- endblock %}

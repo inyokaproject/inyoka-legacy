@@ -10,6 +10,7 @@
 """
 import random
 from datetime import datetime
+from werkzeug import cached_property
 
 from inyoka import Interface
 from inyoka.i18n import _
@@ -41,19 +42,43 @@ user_group = db.Table('core_group_user', db.metadata,
 )
 
 
+class GroupMapperExtension(db.MapperExtension):
+
+    def after_update(self, mapper, connection, instance):
+        """Cleanup caches"""
+        cache.delete('core/groups')
+
 
 class Group(db.Model):
     __tablename__ = 'core_group'
+    __mapper_args__ = {'extension': GroupMapperExtension()}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True)
 
     children = db.relationship('Group', secondary=group_group,
-        backref=db.backref('parents', collection_class=set),
+        backref=db.backref('parents', collection_class=set, lazy='joined',
+                           innerjoin=True),
         primaryjoin=id==group_group.c.group_id,
         secondaryjoin=group_group.c.parent_id==id,
         foreign_keys=[group_group.c.group_id, group_group.c.parent_id],
-        collection_class=set)
+        collection_class=set, lazy='joined')
+
+    def get_parents(self):
+        if not self.parents:
+            return []
+
+        #TODO: find some way to cache that!
+        parents = []
+        for group in self.parents:
+            parents.append(group)
+            if group.parents:
+                parents.extend(group.get_parents())
+        return parents
+
+    @cached_property
+    def grant_parent(self):
+        return self.get_parents()[-1]
 
 
 class UserQuery(db.Query):

@@ -97,7 +97,7 @@ class PortalController(IController):
         sortable = Sortable(Group.query, 'id', request)
         pagination = URLPagination(sortable.get_sorted(), page)
         return {
-            'groups': pagination.query,
+            'groups': [group for group in pagination.query if group.parents],
             'pagination': pagination,
             'table': sortable
         }

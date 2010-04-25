@@ -62,7 +62,7 @@ class Group(db.Model):
         primaryjoin=id==group_group.c.group_id,
         secondaryjoin=group_group.c.parent_id==id,
         foreign_keys=[group_group.c.group_id, group_group.c.parent_id],
-        collection_class=set, lazy='dynamic', join_depth=2)
+        collection_class=set, lazy='joined', join_depth=2)
 
     def get_parents(self):
         if not self.parents:

@@ -54,7 +54,7 @@ def after_install(options, home_dir):
     easy_install('coverage', home_dir)
     easy_install('minimock', home_dir)
     easy_install('Fabric', home_dir)
-    easy_install('http://hg.sqlalchemy.org/sqlalchemy/archive/tip.tar.gz', home_dir)
+    easy_install('SQLAlchemy==0.6', home_dir)
     easy_install('http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz', home_dir)
     easy_install('http://dev.pocoo.org/hg/bureaucracy-main/archive/tip.tar.gz', home_dir)
     easy_install('lxml', home_dir)

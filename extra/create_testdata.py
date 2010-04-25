@@ -40,6 +40,8 @@ def create_test_users():
 
     team = Group(name=u'Team')
     webteam = Group(name=u'Webteam', parents=set([team]))
+    supporter = Group(name=u'Supporter', parents=set([team]))
+    multimedia = Group(name=u'Supporter Multimedia', parents=set([supporter]))
     webteam.users.extend(user_instances[:3])
     db.session.commit()
 

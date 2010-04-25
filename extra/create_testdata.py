@@ -33,16 +33,15 @@ def create_test_users():
     }
     for user in users:
         u = User(user, *users[user])
-        p = UserProfile(user=u)
+        p = UserProfile(user=u, real_name=u'Some Realname', location=u'Germany')
         user_instances.append(u)
 
     db.session.commit()
 
     team = Group(name=u'Team')
-    webteam = Group(name=u'Webteam', parents=set([team]))
+    webteam = Group(name=u'Webteam', parents=set([team]), users=user_instances[:3])
     supporter = Group(name=u'Supporter', parents=set([team]))
     multimedia = Group(name=u'Supporter Multimedia', parents=set([supporter]))
-    webteam.users.extend(user_instances[:3])
     db.session.commit()
 
 

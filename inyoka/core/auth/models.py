@@ -78,6 +78,12 @@ class Group(db.Model):
     def grant_parent(self):
         return self.get_parents()[-1]
 
+    def get_url_values(self, action='view'):
+        values = {
+            'view': 'portal/group',
+        }
+        return values[action], {'name': self.name}
+
 
 class UserQuery(db.Query):
     def get(self, pk):
@@ -125,8 +131,8 @@ class User(db.Model, SerializableObject):
     # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
 
-    groups = db.relationship(Group, secondary=user_group, backref='users',
-        collection_class=set)
+    groups = db.relationship(Group, secondary=user_group,
+        backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, username, email, password=''):
         self.username = username

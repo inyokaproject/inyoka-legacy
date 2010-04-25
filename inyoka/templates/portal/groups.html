@@ -17,7 +17,7 @@
   {% for group in parent.list %}
   <tr>
     <td>{{ group.id }}</td>
-    <td>{{ group.name }}</td>
+    <td><a href="{{ href(group) }}">{{ group.name }}</a></td>
   </tr>
   {%- endfor %}
 </table>

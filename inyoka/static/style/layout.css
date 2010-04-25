@@ -275,6 +275,29 @@ div.grouper:hover {
   background-color: #ccc;
 }
 
+.zealots {
+  width: 350px;
+  height: 100px;
+	font-size: 0.8em;
+	padding: 10px 20px;
+	margin: 0 10px 10px 10px;
+	border: 1px solid #ddd;
+}
+
+.zealots img {
+  float: left;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.zealot-right {
+  display: inline-block;
+}
+
+.zealot-left {
+  display: inline-block;
+  float: left;
+}
 
 /* Application Icons /*
  * TODO: make this a bit more abstract and application aware

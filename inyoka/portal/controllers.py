@@ -45,6 +45,7 @@ class PortalController(IController):
         Rule('/user/<username>/', endpoint='profile'),
         Rule('/usercp/profile/', endpoint='profile_edit'),
         Rule('/groups/', endpoint='groups'),
+        Rule('/group/<name>/', endpoint='group'),
     ]
 
     @view
@@ -100,6 +101,17 @@ class PortalController(IController):
             'groups': [group for group in pagination.query if group.parents],
             'pagination': pagination,
             'table': sortable
+        }
+
+    @view
+    @templated('portal/group.html', modifier=context_modifier)
+    def group(self, request, name, page=1):
+        group = Group.query.filter_by(name=name).one()
+        pagination = URLPagination(group.users, page)
+        return {
+            'group': group,
+            'users': pagination.query,
+            'pagination': pagination
         }
 
     @view

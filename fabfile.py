@@ -119,7 +119,7 @@ def build_docs(clean='no', browse='no'):
     """
     if clean.lower() in ['yes', 'y']:
         local('rm -r -f docs/_build/')
-    with cd('docs'):
+    with cd(_j('docs')):
         local('sphinx-build -d _build/doctrees -c . source _build/html', capture=False)
     if browse.lower() in ['yes', 'y']:
         local('open docs/_build/html/index.html')
@@ -130,7 +130,7 @@ def build_test_venv(pyver=None):
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
           pyver, _j('../bootstrap.py')), capture=False)
-    with cd('..'):
+    with cd(_j('..')):
         local('python ./bootstrap.py inyoka-testsuite', capture=False)
 
 

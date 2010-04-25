@@ -1,0 +1,25 @@
+{%- extends 'portal/base.html' %}
+
+{% block introduction %}
+{%- trans group=group.name -%}On this page you can see all members of “{{ group }}”.{% endtrans %}
+{% endblock %}
+
+{%- block content %}
+<h1>{% trans group=group.name %}Group “{{ group }}”{% endtrans %}</h1>
+
+{% for user in users %}
+<div class="zealots {{ loop.cycle('zealot-left', 'zealot-right') }}">
+  {# TODO: yet a dummy! #}<img src="{{ href('static', file='img/no_avatar.png') }}">
+  <span><a href="{{ href(user.profile) }}">{{ user.profile.real_name }}</a> / <a href="{{ href(user.profile) }}">{{ user.display_name }}</a><br />
+     {%- if user.profile.website %}{{ _('Website: ') }}<a href="{{ user.profile.website }}">{{ user.profile.website }}</a>{% endif -%}
+     {%- if user.profile.location %}{{ _('Location: ') }}{{ user.profile.location }}{% endif -%}
+  </span>
+</div>
+{% else %}
+<span>There are no users in this group yet!</span>
+{% endfor %}
+<br style="clear: both;">
+</div>
+
+{{ pagination }}
+{%- endblock %}

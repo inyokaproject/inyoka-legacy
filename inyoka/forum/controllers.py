@@ -60,7 +60,7 @@ class ForumController(IController):
     @view('questions')
     @templated('forum/questions.html', modifier=context_modifier)
     def questions(self, request, forum=None, tags=None, sort='latest', page=1):
-        query = Question.query.options(db.joinedload('answers'))
+        query = Question.query
 
         # Filter by Forum or Tag (optionally)
         if forum:

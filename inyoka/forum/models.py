@@ -105,7 +105,7 @@ class EntryQuery(db.Query):
     def oldest(self):
         """Sort the entries by their creation date. The oldest entries are
         returned first."""
-        return self.order_by(Entry.date_created)
+        return self.order_by(Entry.date_created.asc())
 
     @property
     def active(self):
@@ -148,11 +148,14 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     rendered_text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relationship(User, lazy='joined')
+    author = db.relationship(User, lazy='joined', innerjoin=True)
     votes = db.relationship('Vote', backref='entry',
             extension=EntryVotesExtension())
 
-    __mapper_args__ = {'polymorphic_on': discriminator}
+    __mapper_args__ = {
+        'polymorphic_on': discriminator,
+        'with_polymorphic': '*',
+    }
 
     def touch(self):
         db.atomic_add(self, 'view_count', 1)
@@ -220,8 +223,9 @@ class Question(Entry):
     slug = db.Column(db.String(160), nullable=False, index=True)
     answer_count = db.Column(db.Integer, default=0)
 
-    tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-                           lazy='joined', extension=TagCounterExtension())
+    tags = db.relationship(Tag, secondary=question_tag, backref=db.backref('questions', lazy='noload'),
+                           lazy='subquery',
+                           extension=TagCounterExtension())
 
     @cached_property
     def popularity(self):
@@ -261,7 +265,8 @@ class Answer(Entry):
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
 
     question = db.relationship(Question,
-            backref=db.backref('answers', extension=QuestionAnswersExtension()),
+            backref=db.backref('answers', extension=QuestionAnswersExtension(),
+                               lazy='dynamic'),
             primaryjoin=(question_id == Question.id))
 
     @cached_property

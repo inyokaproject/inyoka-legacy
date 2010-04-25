@@ -48,7 +48,7 @@ class Sortable(object):
                                  or default_col)
         self.default_col = default_col
 
-    def get_html(self, key, value):
+    def get_html(self, key, value, nolink=False):
         """
         Returns a HTML link for sorting the table.
         This function is usually called inside the template.
@@ -70,6 +70,7 @@ class Sortable(object):
         :parameter key: The name of the database column that should be used
                         for sorting.
         :param value: The name that is displayed for the link.
+        :param nolink: Don't make this column sortable but display a cool link.
         """
         ocol = self.order_by.lstrip('-')
         if key == ocol:
@@ -81,6 +82,8 @@ class Sortable(object):
             new_order = key
             img = ''
 
+        if nolink:
+            return value
         return Markup(u'<a href="?order=%s">%s</a>%s' % (new_order, value, img))
 
     def get_sorted(self):

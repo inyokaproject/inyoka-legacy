@@ -11,6 +11,7 @@
 import random
 from datetime import datetime
 from werkzeug import cached_property
+from sqlalchemy.util import classproperty
 
 from inyoka import Interface
 from inyoka.i18n import _
@@ -42,16 +43,9 @@ user_group = db.Table('core_group_user', db.metadata,
 )
 
 
-class GroupMapperExtension(db.MapperExtension):
-
-    def after_update(self, mapper, connection, instance):
-        """Cleanup caches"""
-        cache.delete('core/groups')
-
 
 class Group(db.Model):
     __tablename__ = 'core_group'
-    __mapper_args__ = {'extension': GroupMapperExtension()}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True)
@@ -101,8 +95,16 @@ class UserQuery(db.Query):
         return user
 
 
+class AutomaticUserProfile(db.MapperExtension):
+
+    def before_insert(self, mapper, connection, instance):
+        if instance.profile is None:
+            instance.profile = UserProfile()
+
+
 class User(db.Model, SerializableObject):
     __tablename__ = 'core_user'
+    __mapper_args__ = {'extension': AutomaticUserProfile()}
 
     query = db.session.query_property(UserQuery)
 
@@ -182,5 +184,77 @@ class User(db.Model, SerializableObject):
         return self.display_name
 
 
+class UserProfile(db.Model):
+    """The profile for an user.
+
+    The user profile contains various information about the user
+    e.g the real name, his website and various contact information.
+
+    This model provides basic fields but is extendable to provide much
+    more information if required.
+
+    To add new fields to the user profile implement the
+    :class:`IUserProfileExtender` interface::
+
+        class HardwareInformationProfile(IUserProfileExtender):
+            properties = {
+                'cpu': db.Column(db.String(200)),
+                'gpu': db.Column(db.String(200))
+                'mainboard': db.Column(db.String(200))
+            }
+
+    These fields are added to the user profile model on initialisation.
+    """
+    __tablename__ = 'core_userprofile'
+    __extendable__ = True
+
+    user_id = db.Column(db.ForeignKey(User.id), primary_key=True)
+    user = db.relationship(User, backref=db.backref('profile',
+        uselist=False, lazy='joined', innerjoin=True))
+
+    def get_url_values(self, action='view'):
+        values = {
+            'view':     ('portal/profile', {'username': self.user.username}),
+            'edit':     ('portal/profile_edit', {}),
+        }
+
+        return values[action][0], values[action][1]
+
+
+class IUserProfileExtender(db.IModelPropertyProvider, Interface):
+    model = UserProfile
+    profile_properties = {}
+
+    @classproperty
+    def properties(cls):
+        return dict((k, cls.profile_properties[k]['column'])
+                    for k in cls.profile_properties)
+
+    @classmethod
+    def get_all_properties(cls):
+        props = {}
+        for imp in ctx.get_implementations(cls):
+            props.update(dict(
+                (k, imp.profile_properties[k]['column']) for k in imp.profile_properties.keys()
+            ))
+        return props
+
+    @classmethod
+    def get_profile_names(cls):
+        fields = []
+        for imp in ctx.get_implementations(cls):
+            fields += imp.profile_properties.keys()
+        return fields
+
+    @classmethod
+    def get_profile_forms(cls):
+        fields = {}
+        for imp in ctx.get_implementations(cls):
+            fields.update(dict(
+                (k, imp.profile_properties[k]['form']) for k in imp.profile_properties.keys()
+            ))
+        return fields
+
+
 class UserSchemaController(db.ISchemaController):
-    models = [User, Group, group_group, user_group]
+    models = [User, UserProfile, Group, group_group, user_group]

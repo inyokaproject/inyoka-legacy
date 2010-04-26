@@ -514,8 +514,7 @@ def init_db(**kwargs):
     if tables:
         metadata.create_all(**kwargs)
         # some essential database things
-        from inyoka.core.auth.models import User
-        from inyoka.portal.models import UserProfile
+        from inyoka.core.auth.models import User, UserProfile
         anon_name = ctx.cfg['anonymous_name']
         anon = User(anon_name, u'', u'')
         anon_profile = UserProfile(user=anon)

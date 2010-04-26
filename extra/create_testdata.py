@@ -58,8 +58,7 @@ def get_date(last=None):
 
 
 def create_test_users():
-    from inyoka.core.auth.models import User, Group
-    from inyoka.portal.models import UserProfile
+    from inyoka.core.auth.models import User, UserProfile, Group
 
     # admin user
     admin = User(u'admin', u'root@localhost', u'default')

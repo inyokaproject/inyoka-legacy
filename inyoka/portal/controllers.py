@@ -12,14 +12,14 @@ import sys
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
-from inyoka.core.auth.models import User, Group
+from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
+    Group
 from inyoka.core.models import Tag
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.models import UserProfile, IUserProfileExtender
 from inyoka.portal.forms import get_profile_form
 from inyoka.wiki.models import Revision as WikiRevision
 from inyoka.forum.models import Question as ForumQuestion

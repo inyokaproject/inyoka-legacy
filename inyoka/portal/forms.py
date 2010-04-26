@@ -13,7 +13,7 @@ from inyoka.core import forms
 from inyoka.core.database import db
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.i18n import _
-from inyoka.portal.models import UserProfile, IUserProfileExtender
+from inyoka.core.auth.models import UserProfile, IUserProfileExtender
 
 
 def get_profile_form():

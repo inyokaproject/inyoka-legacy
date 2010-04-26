@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import difflib
+from jinja2.utils import Markup
 from inyoka.core.api import ctx
 from inyoka.utils.highlight import highlight_text
 
@@ -31,11 +32,11 @@ def generate_highlighted_udiff(old, new, old_title='', new_title='',
         old = highlight_text(old, old_lang, inline=True)
         new = highlight_text(new, new_lang, inline=True)
 
-    return u'\n'.join(difflib.unified_diff(
+    return Markup(u'\n'.join(difflib.unified_diff(
         old.splitlines(),
         new.splitlines(),
         fromfile=old_title,
         tofile=new_title,
         lineterm='',
         n=context_lines
-    ))
+    )))

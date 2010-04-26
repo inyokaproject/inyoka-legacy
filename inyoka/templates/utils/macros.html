@@ -1,4 +1,5 @@
 {% macro render_diff_part(diff) %}
+  {% autoescape false %}
   <table class="diff">
     {%- for chunk in diff.chunks -%}
       {% if not loop.first -%}
@@ -15,4 +16,5 @@
       {%- endfor -%}
     {% endfor %}
   </table>
+  {% endautoescape %}
 {% endmacro %}

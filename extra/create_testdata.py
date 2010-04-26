@@ -10,9 +10,51 @@
 """
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
+from random import randrange, choice, random, shuffle
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
+from jinja2.utils import generate_lorem_ipsum
 from inyoka.core.api import db
+
+
+# one of small, medium or large
+SIZE = 'small'
+
+USERNAMES = '''
+    asanuma bando chiba ekiguchi erizawa fukuyama inouye ise jo kanada
+    kaneko kasahara kasuse kazuyoshi koyama kumasaka matsushina
+    matsuzawa mazaki miwa momotami morri moto nakamoto nakazawa obinata
+    ohira okakura okano oshima raikatuji saigo sakoda santo sekigawa
+    shibukji sugita tadeshi takahashi takizawa taniguchi tankoshitsu
+    tenshin umehara yamakage yamana yamanouchi yamashita yamura
+    aebru aendra afui asanna callua clesil daev danu eadyel eane efae
+    ettannis fisil frudali glapao glofen grelnor halissa iorran oamira
+    oinnan ondar orirran oudin paenael
+'''.split()
+
+TAGS = '''
+    ajhar amuse animi apiin azoic bacon bala bani bazoo bear bloom bone
+    broke bungo burse caam cento clack clear clog coyly creem cush deity
+    durry ella evan firn grasp gype hance hanky havel hunks ingot javer
+    juno kroo larix lift luke malo marge mart mash nairy nomos noyau
+    papey parch parge parka pheal pint poche pooch puff quit ravin ream
+    remap rotal rowen ruach sadhu saggy saura savor scops seat sere
+    shone shorn sitao skair skep smush snoop soss sprig stalk stiff
+    stipa study swept tang tars taxis terry thirt ulex unkin unmix unsin
+    uprid vire wally wheat woven xylan
+'''.split()
+
+EPOCH = datetime(1930, 1, 1)
+
+_highest_date = EPOCH
+
+def get_date(last=None):
+    global _highest_date
+    secs = randrange(10, 120)
+    d = (last or EPOCH) + timedelta(seconds=secs)
+    if _highest_date is None or d > _highest_date:
+        _highest_date = d
+    return d
 
 
 def create_test_users():
@@ -44,9 +86,36 @@ def create_test_users():
     multimedia = Group(name=u'Supporter Multimedia', parents=set([supporter]))
     db.session.commit()
 
+    # create some stub and dummy users...
+    num = {'small': 15, 'medium': 30, 'large': 50}[SIZE]
+    used = set()
+    for x in xrange(num):
+        while 1:
+            username = choice(USERNAMES)
+            if username not in used:
+                used.add(username)
+                break
+        u = User(username, '%s@example.com' % username, 'default')
+        UserProfile(user=u)
+    db.session.commit()
+
+
+def create_stub_tags():
+    from inyoka.core.models import Tag
+    num = {'small': 10, 'medium': 20, 'large': 50}[SIZE]
+    used = set()
+    for x in xrange(randrange(num - 5, num + 5)):
+        while 1:
+            tag = choice(TAGS)
+            if tag not in used:
+                used.add(tag)
+                obj = Tag(name=tag)
+                break
+    db.session.commit()
+
 
 def create_forum_test_data():
-    from inyoka.forum.models import Tag, Forum, Question, Answer
+    from inyoka.forum.models import Tag, Forum, Question, Answer, Vote, Entry
     from inyoka.core.auth.models import User
     u1 = User.query.filter_by(username='dummuser').first()
     u2 = User.query.filter_by(username='quaki').first()
@@ -86,27 +155,50 @@ def create_forum_test_data():
         tags=[hardware])
     db.session.commit()
 
-    # questions
-    q1 = Question(
-        title=u'Which deskop environment should I choose?',
-        text=u'Is GNOME or KDE the better choice? What do you think?',
-        author=u1, tags=[gnome, kde])
-    q2 = Question(
-        title=u'Is there a good audio player like Amorok for GNOME?',
-        text=u'I hate the KDE design, so is there any good audio player for GNOME?',
-        author=u1, tags=[gnome, audio])
-    q3 = Question(
-        title=u'What do you like most about Inyoka?',
-        text=u'Please, be honest!',
-        author=u2, tags=[inyoka])
+    tags = Tag.query.all()
+    users = User.query.all()
+    last_date = None
+
+    num, var = {'small': (50, 10), 'medium': (200, 20),
+                'large': (1000, 200)}[SIZE]
+    count = 0
+    for x in xrange(randrange(num - var, num + var)):
+        these_tags = list(tags)
+        shuffle(these_tags)
+        question = Question(title=generate_lorem_ipsum(1, False, 3, 9),
+                            text=generate_lorem_ipsum(randrange(1, 5), False, 40, 140),
+                            author=choice(users), date_created=get_date(last_date),
+                            tags=these_tags[:randrange(2, 6)])
+        last_date = question.date_created
     db.session.commit()
 
     # answers
-    q1a1 = Answer(
-        question=q1,
-        text=u'I use GNOME because I like it.',
-        author=u2,
-        date_created=datetime.utcnow())
+    questions = Question.query.all()
+    replies = {'small': 4, 'medium': 8, 'large': 12}[SIZE]
+    answers = []
+    last_date = questions[-1].date_created
+    for question in questions:
+        for x in xrange(randrange(2, replies)):
+            answer = Answer(question=question, author=choice(users),
+                text=generate_lorem_ipsum(randrange(1, 3), False, 20, 100),
+                date_created=get_date(last_date))
+            answers.append(answer)
+            last_date = answer.date_created
+
+    db.session.commit()
+
+    voted_map = set([])
+    for answer in answers:
+        for x in xrange(randrange(replies * 4)):
+            answer = choice(answers)
+            user = choice(users)
+            if (user.id, answer.entry_id) not in voted_map:
+                if random() >= 0.05:
+                    v = Vote(score=+1, user=user)
+                else:
+                    v = Vote(score=-1, user=user)
+                v.entry = Entry.query.get(answer.entry_id)
+                voted_map.add((user.id, answer.entry_id))
     db.session.commit()
 
 
@@ -163,10 +255,20 @@ def create_wiki_test_data():
     db.session.commit()
 
 
+def rebase_dates():
+    """Rebase all dates so that they are most recent."""
+    from inyoka.forum.models import Entry
+    entries = Entry.query.all()
+    delta = datetime.utcnow() - _highest_date
+    for entry in entries:
+        entry.date_active += delta
+        entry.date_created += delta
+    db.session.commit()
+
+
 def main():
-    funcs = (create_test_users, create_forum_test_data, create_news_test_data,
-             create_pastebin_test_data,
-             create_wiki_test_data)
+    funcs = (create_test_users, create_stub_tags, create_forum_test_data, create_news_test_data,
+             create_pastebin_test_data, create_wiki_test_data, rebase_dates)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

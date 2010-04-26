@@ -96,6 +96,7 @@ class EntryQuery(db.Query):
     """Entries can be sorted by their creation date, their last activity or the
     number of votes they have received."""
 
+
     @property
     def latest(self):
         """Sort the entries by their creation date."""
@@ -118,6 +119,7 @@ class EntryQuery(db.Query):
         return self.order_by(Entry.score.desc(), Entry.date_active.desc())
 
 
+
 class Entry(db.Model, SerializableObject, TextRendererMixin):
     """The base class of a `Question` or `Answer`, which contains some general
     information about the author and the creation date, as well as the actual
@@ -131,13 +133,6 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
                      'date_active', 'score', 'text', 'votes')
 
-    def __init__(self, **kwargs):
-        for c in ('date_created', 'date_active'):
-            if kwargs.get(c) is None:
-                kwargs[c] = datetime.utcnow()
-
-        super(Entry, self).__init__(**kwargs)
-
     entry_id = db.Column(db.Integer, primary_key=True)
     discriminator = db.Column('type', db.String(12))
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
@@ -148,14 +143,11 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     rendered_text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relationship(User, lazy='joined', innerjoin=True)
+    author = db.relationship(User, lazy='joined')
     votes = db.relationship('Vote', backref='entry',
             extension=EntryVotesExtension())
 
-    __mapper_args__ = {
-        'polymorphic_on': discriminator,
-        'with_polymorphic': '*',
-    }
+    __mapper_args__ = {'polymorphic_on': discriminator}
 
     def touch(self):
         db.atomic_add(self, 'view_count', 1)
@@ -206,12 +198,6 @@ class Question(Entry):
     }
     query = db.session.query_property(QuestionQuery)
 
-    def __init__(self, **kwargs):
-        if kwargs.get('answer_count') is None:
-            kwargs['answer_count'] = 0
-
-        super(Question, self).__init__(**kwargs)
-
     #: Serializer attributes
     object_type = 'forum.question'
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
@@ -223,7 +209,7 @@ class Question(Entry):
     slug = db.Column(db.String(160), nullable=False, index=True)
     answer_count = db.Column(db.Integer, default=0)
 
-    tags = db.relationship(Tag, secondary=question_tag, backref=db.backref('questions', lazy='noload'),
+    tags = db.relationship(Tag, secondary=question_tag, backref='questions',
                            lazy='subquery',
                            extension=TagCounterExtension())
 
@@ -303,7 +289,7 @@ class Vote(db.Model, SerializableObject):
             default=0), extension=VoteScoreExtension())
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    user = db.relationship(User, backref='votes')
+    user = db.relationship(User, backref='votes', lazy='joined')
 
 
 class ForumSchemaController(db.ISchemaController):

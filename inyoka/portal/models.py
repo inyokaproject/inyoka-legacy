@@ -42,8 +42,8 @@ class UserProfile(db.Model):
     __extendable__ = True
 
     user_id = db.Column(db.ForeignKey(User.id), primary_key=True)
-    user = db.relationship(User, innerjoin=True, lazy='select',
-        backref=db.backref('profile', uselist=False))
+    user = db.relationship(User, backref=db.backref('profile',
+        uselist=False, lazy='joined', innerjoin=True))
 
     def get_url_values(self, action='view'):
         values = {

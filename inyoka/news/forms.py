@@ -32,7 +32,6 @@ class EditArticleForm(forms.Form):
         authors = [u.username for u in auth.User.query.autoflush(False).all()]
         tags = [c.name for c in Tag.query.autoflush(False).all()]
         self.author.choices = authors
-        self.tag.choices = tags
 
 
 class EditCommentForm(forms.Form):

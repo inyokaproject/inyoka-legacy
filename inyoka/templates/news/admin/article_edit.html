@@ -1,4 +1,6 @@
 {%- extends 'admin/base.html' %}
+{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
+{%- set styles = styles|default([]) + ['widgets.css'] %}
 
 {%- block admin_content %}
 {% if article.slug %}

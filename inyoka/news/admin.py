@@ -42,7 +42,7 @@ class NewsAdminProvider(IAdminProvider):
     @view('articles')
     @templated('news/admin/articles.html')
     def articles(self, request):
-        articles = Article.query.all()
+        articles = Article.query.order_by(Article.updated.desc()).all()
         return {
             'articles': articles
         }
@@ -52,7 +52,7 @@ class NewsAdminProvider(IAdminProvider):
     def articles_edit(self, request, slug=None):
         new = slug is None
         if new:
-            article, data = Article(), {}
+            article, data = Article(), {'tags': []}
         else:
             article = Article.query.filter_by(slug=slug).one()
             data = model_to_dict(article, exclude=('slug'))

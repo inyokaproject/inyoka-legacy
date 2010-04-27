@@ -149,8 +149,9 @@ class Article(db.Model):
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
-    tags = db.relationship(Tag, secondary=article_tag, backref='articles',
-                           lazy='joined', extension=TagCounterExtension())
+    tags = db.relationship(Tag, secondary=article_tag, backref=db.backref(
+        'articles', lazy='dynamic'), lazy='joined',
+        extension=TagCounterExtension())
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     author = db.relationship(User, backref=db.backref('articles', lazy='dynamic'))
     comments = db.relationship(Comment, backref=db.backref('article', lazy='select'),

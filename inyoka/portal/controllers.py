@@ -74,9 +74,11 @@ class PortalController(IController):
             value = [(app, obj) for obj in
                      model.query.order_by(column.desc()).limit(2).all()]
             items.extend(value)
+        cloud, more = Tag.query.get_cloud()
         return {
             'introduction': True,
-            'tag_cloud': Tag.query.get_cloud(),
+            'tag_cloud': cloud,
+            'more_tags': more,
             'latest_content': items
         }
 

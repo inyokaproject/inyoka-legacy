@@ -260,7 +260,7 @@ div.flash_message {
   border-color: #FFD324;
 }
 
-.tagcloud a {
+.tagcloud a.tag {
   text-decoration: none;
 }
 

@@ -49,41 +49,37 @@ class SubscriptionType(Interface):
     actions
         A list of actions on whom subscriptions of the SubscriptionType
         shall be updated, i.e. which actions they shall “listen” to.
+
+        You have to use the actions' names here, not the classes.
     mode
-        Defines the character of this SubscriptionType:
-            * **multiple**: The objects don't strongly relate to each other.
-              The user is notified for each new object; in the subscriptions
-              list a link is shown for each unread object.  Examples: topics
-              in forum, entries in news portal.
-            * **sequent**: The objects are presented in a consecutive manner,
-              the user can simply read on with the next object after reading
-              one. The user is notified only once for each subject, until he
-              has accessed it; in the subscriptions list only a link to the
-              first unread object is shown.  Examples: posts in topic,
-              comments in news entry.
+        Defines the character of this SubscriptionType, ``multiple`` or
+        ``sequent``. See :ref:`above <subscription-modes-verbose>` for
+        details.
 
-    **Methods that must be definded by subclasses:**
+    **Classmethods that must be definded by subclasses:**
 
-    get_subject(cls, object)
-        A classmethod returning the subject holding the given object.
-        Needs not to be defined if the class has no subjects (see note for
-        for ``subject_type`` above)
-    notify(cls, subscription, object, subject)
-        A classmethod sending out notifications to the given user.
-        It is called by :meth:`Subscription.new`.
+    get_subjects(cls, object)
+        A classmethod returning an iterable of subjects holding the given
+        object.  Needs not to be defined if the class has no subjects (see note
+        for ``subject_type`` above).
 
+        Types where there is only one subject per object may also just define a
+        `get_subject` method for convenience.  In most cases, an attrgetter
+        will be sufficient.
     """
     is_singleton = False
 
     @classmethod
-    def get_subject(cls, object):
+    def get_subjects(cls, object):
         """
-        Returns the subject holding the given object.
+        Returns the subjects holding the given object.
 
         Subclasses must implement this unless they have no subjects.
         """
         if cls.subject_type is None:
-            return None
+            return [None]
+        if hasattr(cls, 'get_subject'):
+            return [cls.get_subject(object)]
         raise NotImplementedError()
 
     @classmethod
@@ -118,4 +114,45 @@ class SubscriptionType(Interface):
         """
         Return all subscription types which implement the given action.
         """
+        if not isinstance(action, basestring):
+            action = action.name
         return [c for c in ctx.get_implementations(cls) if action in c.actions]
+
+
+class SubscriptionAction(Interface):
+    """
+    Must be subclassed to represent a Subscription event.
+    See the main docs for a more verbose description of the terms.
+
+    **Values that must be defined by subclasses:**
+
+    name
+        This is used to identify the type in the database and in the code, so
+        it must *never ever* change.
+
+    **Classmethods that must be definded by subclasses:**
+
+    notify(cls, user, object, subjects)
+        A classmethod sending out notifications to the given user.
+        It is called by :meth:`Subscription.new` once for every user
+        and passes the new object and the matching (only those!) subjects,
+        grouped by type name, e.g::
+            NewQuestionSubscriptionAction.notify(user23, entry1,
+                {'blog.entry.tag': [tag1, tag2],
+                 'blog.entry.author': [user42]})
+    """
+
+    @classmethod
+    def by_name(cls, name):
+        """
+        Return the subscription type with the given name.
+        """
+        for c in ctx.get_implementations(cls):
+            if c.name == name:
+                return c
+
+    @classmethod
+    def notify(cls, user, object, subjects):
+        if cls == SubscriptionAction:
+            raise NotImplementedError('use a subclass!')
+        raise NotImplementedError('%s should have implemented this!' % cls.__name__)

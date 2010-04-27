@@ -11,7 +11,7 @@ Contents
 Inyoka Basics
 -------------
 
-This section covers the very basics of inyoka and its development.
+This section covers the basics of inyoka and its development.
 
 .. toctree::
     :maxdepth: 2

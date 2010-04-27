@@ -21,8 +21,8 @@ class EditArticleForm(forms.Form):
     text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
                            required=True)
     public = forms.BooleanField(_(u'Published'))
-    tag = forms.ModelField(Tag, 'name', _(u'Tag'),
-                           widget=forms.widgets.SelectBox, required=True)
+    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
+                              label=_(u'Tags'), sep=',', min_size=1)
     author = forms.ModelField(auth.User, 'username', _(u'Author'),
                               widget=forms.widgets.SelectBox, required=True)
 

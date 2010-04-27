@@ -180,6 +180,10 @@ class InyokaPlugin(cover.Coverage):
         # then we create everything
         database.init_db(bind=engine)
 
+        # connect to the engine
+        self._connection = conn = self._engine.connect()
+        db.session.bind = conn
+
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
     def finalize(self, result):
@@ -211,9 +215,7 @@ class InyokaPlugin(cover.Coverage):
 
         # setup the new transaction context so that we can revert
         # it to get a clean and nice database
-        self._connection = conn = self._engine.connect()
-        self._transaction = trans = conn.begin()
-        db.session.bind = conn
+        self._transaction = trans = self._connection.begin()
 
         if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
             self._started = True

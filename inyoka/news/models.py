@@ -16,6 +16,12 @@ from inyoka.core.markup import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
 
 
+article_tag = db.Table('news_article_tag', db.metadata,
+    db.Column('article_id', db.Integer, db.ForeignKey('news_article.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id))
+)
+
+
 class ArticleMapperExtension(db.MapperExtension):
 
     def before_insert(self, mapper, connection, instance):
@@ -143,10 +149,8 @@ class Article(db.Model):
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
 
-    tag_id = db.Column(db.ForeignKey(Tag.id), nullable=False)
-    tag = db.relationship(Tag,
-        backref=db.backref('articles', lazy='dynamic'),
-        extension=TagCounterExtension())
+    tags = db.relationship(Tag, secondary=article_tag, backref='articles',
+                           lazy='joined', extension=TagCounterExtension())
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     author = db.relationship(User, backref=db.backref('articles', lazy='dynamic'))
     comments = db.relationship(Comment, backref=db.backref('article', lazy='select'),
@@ -217,4 +221,4 @@ class Article(db.Model):
 
 
 class NewsSchemaController(db.ISchemaController):
-    models = [Article, Comment]
+    models = [Article, Comment, article_tag]

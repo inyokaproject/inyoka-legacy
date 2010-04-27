@@ -24,7 +24,7 @@ def get_article_data():
         'title': u'My Ubuntu rocks!!',
         'intro': u'Well, it just rocks!!',
         'text': u'And because you\'re so tschaka baam, you\'re using Ubuntu!!',
-        'public': True, 'tag': cat, 'author': get_user_callback()
+        'public': True, 'tags': [cat], 'author': get_user_callback()
     }
 
 
@@ -48,11 +48,6 @@ class TestNewsModels(TestSuite):
         'comments': get_comments
     }
 
-    @with_fixtures('tags')
-    def test_tag_automatic_slug(self, fixtures):
-        tag = fixtures['tags'][0]
-        eq_(tag.slug, 'ubuntu')
-
     @with_fixtures('tags', 'articles')
     def test_article_attributes(self, fixtures):
         article = fixtures['articles'][0]
@@ -67,7 +62,7 @@ class TestNewsModels(TestSuite):
     def test_article_automatic_updated_pub_date(self, fixtures):
         tag = fixtures['tags'][0]
         article = Article(title=u'foo', intro=u'bar', text=u'baz', public=True,
-                          tag=tag, author=get_user_callback())
+                          tags=[tag], author=get_user_callback())
         db.session.commit()
         eq_(article.was_updated, False)
         article.updated = article.pub_date + datetime.timedelta(days=2)

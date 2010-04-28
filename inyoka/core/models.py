@@ -71,7 +71,9 @@ class TagQuery(db.Query):
         else:
             tags = self.order_by(Tag.tagged.desc()).limit(max_visible).all()
             tag_count = self.count()
-
+        
+        if not tag_count:
+            return [], False
         items = []
         counts = [tag.tagged for tag in tags]
         min_weight = float(min(counts))

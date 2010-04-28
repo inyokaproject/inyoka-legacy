@@ -129,8 +129,12 @@ class Subscription(db.Model):
                         s.first_unread_object_id = None
                         s.count = 0
                     elif t.mode == 'multiple':
-                        s.unread_object_ids.remove(object.id)
-                        s.count -= 1
+                        try:
+                            s.unread_object_ids.remove(object.id)
+                        except KeyError:
+                            pass
+                        else:
+                            s.count -= 1
                 db.session.commit()
 
         if subject is not None:

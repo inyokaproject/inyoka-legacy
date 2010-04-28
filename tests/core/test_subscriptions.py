@@ -232,6 +232,7 @@ class TestSubscriptions(TestSuite):
                               set((entries[0].id, entries[3].id)), 2)
 
         Subscription.accessed(one, subject=cat1)
+        Subscription.accessed(one, subject=cat1) # must work also if not unread
         self._check_multiple_state(one, '__test_category', cat1.id,
                               set(), 0)
 
@@ -291,6 +292,7 @@ class TestSubscriptions(TestSuite):
 
         self._check_multiple_state(three, '__test_category', cat2.id,
                                    set((entries[1].id,)), 1)
+        Subscription.accessed(three, object=entries[1])
         Subscription.accessed(three, object=entries[1])
         self._check_multiple_state(three, '__test_category', cat2.id,
                                    set(), 0)

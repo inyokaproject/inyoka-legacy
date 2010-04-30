@@ -116,7 +116,7 @@ class NewsController(IController):
                 else:
                     comment = Comment(text=form.data['text'], article=article,
                                       author=request.user)
-                    Subscription.new(comment, 'news.new_comment')
+                    Subscription.new(comment, 'news.comment.new')
                     request.flash(_(u'Your comment was successfully created'), True)
                 db.session.commit()
                 return redirect_to(comment)
@@ -127,7 +127,7 @@ class NewsController(IController):
         article.touch()
 
         comments = list(article.comments.options(db.joinedload('author')))
-        Subscription.accessed(request.user, comments[-1])
+        Subscription.accessed(request.user, object=article, subject=article)
 
         return {
             'article':  article,
@@ -189,7 +189,7 @@ class NewsController(IController):
         existed = do(request.user, ArticleSubscriptionType)
 
         msg = {
-            'subscribe': [_(u'You were already subscribed before.'),
+            'subscribe': [_(u'You had already been subscribed before.'),
                           _(u'You have successfully been subscribed to '
                             u'new News articles.')],
             'unsubscribe':[_(u'You had not been subscribed before.'),
@@ -210,7 +210,7 @@ class NewsController(IController):
         existed = do(request.user, CommentSubscriptionType, article)
 
         msg = {
-            'subscribe': [_(u'You were already subscribed before.'),
+            'subscribe': [_(u'You had already been subscribed before.'),
                           _(u'You have successfully been subscribed to '
                             u'new comments on this article.')],
             'unsubscribe':[_(u'You had not been subscribed before.'),

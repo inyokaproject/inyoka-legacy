@@ -3,7 +3,7 @@
 {%- set current_tab = 'history' %}
 
 {%- block wiki_content %}
-<h1>{{ page.name|e }}</h1>
+<h1>{{ page.name }}</h1>
 
 <table>
   <thead>
@@ -17,8 +17,8 @@
 {%- for rev in revisions %}
     <tr>
       <td>{{ rev.change_date|datetimeformat }}</td>
-      <td>{{ rev.change_user.username|e }}</td>
-      <td>{{ rev.change_comment|e }}</td>
+      <td>{{ rev.change_user.username }}</td>
+      <td>{{ rev.change_comment }}</td>
     </tr>
 {%- endfor %}
   </tbody>

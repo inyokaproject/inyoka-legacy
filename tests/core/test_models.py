@@ -22,6 +22,7 @@ def test_user():
     me.status = 'normal'
     eq_(USER_STATUS_MAP[me._status], me.status)
     assert_true(me.is_active)
+    assert_true(me.profile is not None)
     assert_true(me is User.query.get('me'))
     assert_true(me is User.query.get(me.id))
     assert_true(me.check_password('s3cr3t'))

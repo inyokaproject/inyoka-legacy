@@ -21,8 +21,8 @@ class EditArticleForm(forms.Form):
     text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
                            required=True)
     public = forms.BooleanField(_(u'Published'))
-    tag = forms.ModelField(Tag, 'name', _(u'Tag'),
-                           widget=forms.widgets.SelectBox, required=True)
+    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
+                              label=_(u'Tags'), sep=',', min_size=1)
     author = forms.ModelField(auth.User, 'username', _(u'Author'),
                               widget=forms.widgets.SelectBox, required=True)
 
@@ -32,7 +32,6 @@ class EditArticleForm(forms.Form):
         authors = [u.username for u in auth.User.query.autoflush(False).all()]
         tags = [c.name for c in Tag.query.autoflush(False).all()]
         self.author.choices = authors
-        self.tag.choices = tags
 
 
 class EditCommentForm(forms.Form):

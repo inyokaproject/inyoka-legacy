@@ -33,7 +33,7 @@ def pil_install(home_dir):
 
     file(f1, 'w').write(file(f2).read().replace('import _tkinter', 'raise ImportError()'))
 
-    cmd = ['CFLAGS="-fPIC -DPIC" ', os.path.join(home_dir, 'bin', 'python')]
+    cmd = [os.path.join(home_dir, 'bin', 'python')]
     cmd.extend([os.path.join(os.getcwd(), f1), 'install'])
     call_subprocess(cmd)
 
@@ -54,7 +54,7 @@ def after_install(options, home_dir):
     easy_install('coverage', home_dir)
     easy_install('minimock', home_dir)
     easy_install('Fabric', home_dir)
-    easy_install('http://hg.sqlalchemy.org/sqlalchemy/archive/tip.tar.gz', home_dir)
+    easy_install('SQLAlchemy==0.6', home_dir)
     easy_install('http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz', home_dir)
     easy_install('http://dev.pocoo.org/hg/bureaucracy-main/archive/tip.tar.gz', home_dir)
     easy_install('lxml', home_dir)
@@ -67,6 +67,7 @@ def easy_install(package, home_dir, optional_args=None):
     cmd.extend(optional_args)
     # update the environment
     cmd.append('-U')
+    cmd.append('-O2')
     cmd.append(package)
     call_subprocess(cmd)
 """

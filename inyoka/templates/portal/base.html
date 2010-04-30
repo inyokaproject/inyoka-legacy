@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% set introduction=true %}
-{% set sidebar=false %}
+{% set sidebar=true %}
 {% set title_trace = title_trace|default([]) + [_('Portal')] %}
 {% set styles = ['portal.css'] + styles|default([]) %}
 
 {% block sidebar %}
-  {{ super }}
+  {{ super() }}
   <ul>
     <li><a href="{{ href('portal/users') }}">{{ _('Users') }}</a></li>
-    <li>{{ _('Groups') }}</li>
+    <li><a href="{{ href('portal/groups') }}">{{ _('Groups') }}</a></li>
   </ul>
 {% endblock sidebar %}
 
 {% block introduction %}
-  {{ super }}
+  {{ super() }}
   Welcome to Inyoka :)
 {% endblock introduction %}

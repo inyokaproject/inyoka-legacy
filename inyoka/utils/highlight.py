@@ -8,6 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from jinja2.utils import Markup
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter, escape_html
 from pygments.formatters import HtmlFormatter
@@ -57,4 +58,6 @@ def highlight_text(text, lang=None, filename=None, mimetype=None, inline=False):
     except LookupError:
         lexer = TextLexer(stripnl=False)
 
-    return highlight(text, lexer, _default_formatter if not inline else _inline_formatter)
+    return Markup(highlight(text, lexer,
+        _default_formatter if not inline else _inline_formatter
+    ))

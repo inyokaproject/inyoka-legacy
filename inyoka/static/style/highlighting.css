@@ -1,5 +1,5 @@
 .highlighted .hll , .code .hll { background-color: #ffffcc }
-.highlighted , .code  {
+.code  {
   background: #f8f8f8;
   word-wrap: break-word;
   overflow-x: auto;

@@ -7,8 +7,8 @@
 
 <ul>
 {% for forum in forums %}
-    <li><a href="{{ href(forum) }}">{{ forum.name|e }}</a><br />
-    {{ forum.description|e }}</li>
+    <li><a href="{{ href(forum) }}">{{ forum.name }}</a><br />
+    {{ forum.description }}</li>
 {% endfor %}
 </ul>
 <p><a href="{{ href('forum/questions') }}">All Questions</a></p>

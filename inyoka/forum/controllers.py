@@ -30,8 +30,11 @@ class ForumController(IController):
         Rule('/', endpoint='index'),
 
         Rule('/questions/', endpoint='questions'),
+        Rule('/questions/<int:page>/', endpoint='questions'),
         Rule('/questions/<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
+        Rule('/questions/any(latest, active, unanswered, votes):sort>/<int:page>/',
+            endpoint='questions'),
         Rule('/tagged/<string:tags>/', endpoint='questions'),
         Rule('/tagged/<string:tags>/<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
@@ -60,7 +63,7 @@ class ForumController(IController):
     @view('questions')
     @templated('forum/questions.html', modifier=context_modifier)
     def questions(self, request, forum=None, tags=None, sort='latest', page=1):
-        query = Question.query.options(db.joinedload('answers'))
+        query = Question.query
 
         # Filter by Forum or Tag (optionally)
         if forum:

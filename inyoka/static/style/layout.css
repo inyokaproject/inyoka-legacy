@@ -6,12 +6,11 @@ body {
 }
 
 #head {
-  margin: 0 auto;
+  margin: 5px 10px;
   padding: 5px 10px 10px 10px;
-  width: 972px;
   background-color: #90a818;
   background-image: url(../img/head.png);
-  background-repeat: no-repeat;
+  background-repeat: repeat-x;
   -moz-border-radius: 0 0 0.4em 0.4em;
   -webkit-border-radius: 0 0 0.4em 0.4em;
 }
@@ -89,8 +88,7 @@ body {
 }
 
 #page-inner {
-  margin: 0 auto;
-  width: 992px;
+  margin: 5px 10px;
 }
 
 #page-inner > div {
@@ -103,7 +101,7 @@ body {
 #page-sidebar {
   background-color: #EEEEEE;
   float: left;
-  width: 338px;
+  width: 22%;
   margin-bottom: 0.4em;
   color: #444;
   padding: 0.5em 0.5em 0.5em 28px;
@@ -262,8 +260,43 @@ div.flash_message {
   border-color: #FFD324;
 }
 
-.tagcloud a {
+.tagcloud a.tag {
   text-decoration: none;
+}
+
+div.grouper {
+  font-size: 2em;
+  text-align: center;
+  border-top: 1px solid #000;
+  border-bottom: 1px dotted #ccc;
+}
+
+div.grouper:hover {
+  background-color: #ccc;
+}
+
+.zealots {
+  width: 350px;
+  height: 100px;
+	font-size: 0.8em;
+	padding: 10px 20px;
+	margin: 0 10px 10px 10px;
+	border: 1px solid #ddd;
+}
+
+.zealots img {
+  float: left;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.zealot-right {
+  display: inline-block;
+}
+
+.zealot-left {
+  display: inline-block;
+  float: left;
 }
 
 /* Application Icons /*

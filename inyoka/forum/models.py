@@ -96,6 +96,7 @@ class EntryQuery(db.Query):
     """Entries can be sorted by their creation date, their last activity or the
     number of votes they have received."""
 
+
     @property
     def latest(self):
         """Sort the entries by their creation date."""
@@ -105,7 +106,7 @@ class EntryQuery(db.Query):
     def oldest(self):
         """Sort the entries by their creation date. The oldest entries are
         returned first."""
-        return self.order_by(Entry.date_created)
+        return self.order_by(Entry.date_created.asc())
 
     @property
     def active(self):
@@ -116,6 +117,7 @@ class EntryQuery(db.Query):
     def votes(self):
         """Sort the entries by the score that they have received from votes."""
         return self.order_by(Entry.score.desc(), Entry.date_active.desc())
+
 
 
 class Entry(db.Model, SerializableObject, TextRendererMixin):
@@ -130,13 +132,6 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     object_type = 'forum.entry'
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
                      'date_active', 'score', 'text', 'votes')
-
-    def __init__(self, **kwargs):
-        for c in ('date_created', 'date_active'):
-            if kwargs.get(c) is None:
-                kwargs[c] = datetime.utcnow()
-
-        super(Entry, self).__init__(**kwargs)
 
     entry_id = db.Column(db.Integer, primary_key=True)
     discriminator = db.Column('type', db.String(12))
@@ -203,12 +198,6 @@ class Question(Entry):
     }
     query = db.session.query_property(QuestionQuery)
 
-    def __init__(self, **kwargs):
-        if kwargs.get('answer_count') is None:
-            kwargs['answer_count'] = 0
-
-        super(Question, self).__init__(**kwargs)
-
     #: Serializer attributes
     object_type = 'forum.question'
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
@@ -221,7 +210,8 @@ class Question(Entry):
     answer_count = db.Column(db.Integer, default=0)
 
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-                           lazy='joined', extension=TagCounterExtension())
+                           lazy='subquery',
+                           extension=TagCounterExtension())
 
     @cached_property
     def popularity(self):
@@ -261,7 +251,8 @@ class Answer(Entry):
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
 
     question = db.relationship(Question,
-            backref=db.backref('answers', extension=QuestionAnswersExtension()),
+            backref=db.backref('answers', extension=QuestionAnswersExtension(),
+                               lazy='dynamic'),
             primaryjoin=(question_id == Question.id))
 
     @cached_property
@@ -298,7 +289,7 @@ class Vote(db.Model, SerializableObject):
             default=0), extension=VoteScoreExtension())
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    user = db.relationship(User, backref='votes')
+    user = db.relationship(User, backref='votes', lazy='joined')
 
 
 class ForumSchemaController(db.ISchemaController):

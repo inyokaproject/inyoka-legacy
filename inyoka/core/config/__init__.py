@@ -264,9 +264,15 @@ class Configuration(object):
         """Check if a given key exists."""
         return key in self.config_vars
 
-    def itervalues(self):
+    def itersection(self, section):
         """Iterate over all values."""
         for key in self:
+            if key.startswith(section):
+                yield key, self[key]
+
+    def itervalues(self, section=None):
+        """Iterate over all values."""
+        for key in keys:
             yield self[key]
 
     def iteritems(self):

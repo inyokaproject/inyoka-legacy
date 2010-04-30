@@ -88,7 +88,7 @@ class NewsController(IController):
             articles = Article.query
 
         #TODO: add ACL for public articles
-        articles = articles.order_by('-updated')
+        articles = articles.order_by(Article.updated.desc())
 
         pagination = URLPagination(articles, page, per_page=10)
 

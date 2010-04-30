@@ -139,11 +139,13 @@ class InyokaEnvironment(Environment):
 
         Environment.__init__(self,
             loader=loader,
-            extensions=['jinja2.ext.i18n', 'jinja2.ext.do'],
+            extensions=['jinja2.ext.i18n', 'jinja2.ext.do', 'jinja2.ext.with_',
+                        'jinja2.ext.autoescape'],
             auto_reload=ctx.cfg['templates.auto_reload'],
             undefined=StrictUndefined,
             cache_size=-1,
-            bytecode_cache=cache_obj
+            bytecode_cache=cache_obj,
+            autoescape=True
         )
 
         self.globals.update(

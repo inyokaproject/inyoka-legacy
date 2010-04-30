@@ -39,14 +39,14 @@ input[type] {
 
 input[type="button"]:hover, a.button:hover,
 input[type="button"]:focus, a.button:focus {
-  background-color: #dff4ff;
-  border: 1px solid #c2e1ef;
-  color: #336699;
+  background-color: #dfe7b6;
+  border: 1px solid #dfe7b6;
+  color: #a87818;
 }
 
 input[type="button"]:active, a.button:active {
-  background-color: #6299c5;
-  border: 1px solid #6299c5;
+  background-color: #dfe7b6;
+  border: 1px solid #dfe7b6;
   color: #fff;
 }
 

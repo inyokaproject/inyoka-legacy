@@ -12,14 +12,14 @@ import sys
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
 from inyoka.core.auth import get_auth_system
-from inyoka.core.auth.models import User
+from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
+    Group
 from inyoka.core.models import Tag
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.models import UserProfile, IUserProfileExtender
 from inyoka.portal.forms import get_profile_form
 from inyoka.wiki.models import Revision as WikiRevision
 from inyoka.forum.models import Question as ForumQuestion
@@ -44,6 +44,8 @@ class PortalController(IController):
         Rule('/users/', endpoint='users'),
         Rule('/user/<username>/', endpoint='profile'),
         Rule('/usercp/profile/', endpoint='profile_edit'),
+        Rule('/groups/', endpoint='groups'),
+        Rule('/group/<name>/', endpoint='group'),
     ]
 
     @view
@@ -72,9 +74,11 @@ class PortalController(IController):
             value = [(app, obj) for obj in
                      model.query.order_by(column.desc()).limit(2).all()]
             items.extend(value)
+        cloud, more = Tag.query.get_cloud()
         return {
             'introduction': True,
-            'tag_cloud': Tag.query.get_cloud(),
+            'tag_cloud': cloud,
+            'more_tags': more,
             'latest_content': items
         }
 
@@ -88,6 +92,28 @@ class PortalController(IController):
             'users': pagination.query,
             'pagination': pagination,
             'table': sortable
+        }
+
+    @view
+    @templated('portal/groups.html', modifier=context_modifier)
+    def groups(self, request, page=1):
+        sortable = Sortable(Group.query, 'id', request)
+        pagination = URLPagination(sortable.get_sorted(), page)
+        return {
+            'groups': [group for group in pagination.query if group.parents],
+            'pagination': pagination,
+            'table': sortable
+        }
+
+    @view
+    @templated('portal/group.html', modifier=context_modifier)
+    def group(self, request, name, page=1):
+        group = Group.query.filter_by(name=name).one()
+        pagination = URLPagination(group.users, page)
+        return {
+            'group': group,
+            'users': pagination.query,
+            'pagination': pagination
         }
 
     @view

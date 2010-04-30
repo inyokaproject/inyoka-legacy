@@ -1,9 +1,9 @@
 {%- extends 'paste/base.html' %}
-{%- set title_trace = [paste.display_title|e] %}
+{%- set title_trace = [paste.display_title] %}
 {%- set tab = 'browse' %}
 
 {%- block paste_header %}
-{%- trans title=paste.display_title|e, author=paste.author|e -%}
+{%- trans title=paste.display_title, author=paste.author -%}
 Paste {{ title }} by {{ author }}
 {%- endtrans %}
 {% endblock %}
@@ -18,7 +18,7 @@ Paste {{ title }} by {{ author }}
 
 {%- block paste_content %}
 <div class="highlighted">
-  {{ paste.rendered_text }}
+  {{ paste.rendered_text|safe }}
 </div>
 <p><span class="small">Created on {{ paste.pub_date|datetimeformat }}.
 {%- if paste.parent %} Answer to <a href="{{ href(paste.parent) }}">{{ paste.parent.display_title }}</a> or <a href="{{ href('paste/compare_paste', new_id=paste.id, old_id=paste.parent.id) }}">compare with parent</a>{% endif -%}</span></p>

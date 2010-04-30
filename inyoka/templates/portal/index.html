@@ -24,11 +24,15 @@ Inyoka is a portal software that integrates a complete News, Wiki and Bulletin B
   <div class="column tagcloud">
     <h2>Tags</h2>
     {%- for tag in tag_cloud %}
-      <a href="#" style="font-size: {{ tag.size }}%" 
-                  title="{% trans count=tag.count, tag=(tag.name|e) %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} posts tagged {{ tag }}{% endtrans %}">
-        {{ tag.name|e }}
+      <a href="#" class="tag" style="font-size: {{ tag.size }}%"
+                  title="{% trans count=tag.count, tag=(tag.name) %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} posts tagged {{ tag }}{% endtrans %}">
+        {{ tag.name }}
       </a>
     {%- endfor %}
+    {% if more_tags %}
+    <br />
+    <a href="#">more Tags</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

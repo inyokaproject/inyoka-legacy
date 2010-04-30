@@ -1,4 +1,6 @@
 {%- extends 'admin/base.html' %}
+{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
+{%- set styles = styles|default([]) + ['widgets.css'] %}
 
 {%- block admin_content %}
 {% if article.slug %}
@@ -9,7 +11,7 @@
 
 <form action="" method="post">
 {{ form.as_dl() }}
-{{ form.hidden_fields }}
+{{ form.hidden_fields|safe }}
 <div class="actions">
   <input type="submit" value="{{ _('Submit') }}">
   {% if article.slug %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}

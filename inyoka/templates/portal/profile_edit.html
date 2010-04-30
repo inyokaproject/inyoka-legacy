@@ -3,7 +3,7 @@
 {%- block content %}
 <form action="" method="post">
 {{ form.as_dl() }}
-{{ form.hidden_fields }}
+{{ form.hidden_fields|safe }}
 <div class="actions">
   <input type="submit" value="{{ _('Submit') }}">
 </div>

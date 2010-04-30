@@ -11,7 +11,7 @@
 import re
 import random
 import string
-from math import log
+import math
 from datetime import date, datetime, timedelta
 from sqlalchemy.orm import MapperExtension
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -28,6 +28,16 @@ CONFIRM_ACTIONS = {}
 
 
 tag_re = re.compile(r'[\w-]{2,20}')
+
+
+def _calculate_thresholds(min_weight, max_weight, steps):
+    delta = (max_weight - min_weight) / float(steps)
+    return [min_weight + i * delta for i in range(1, steps + 1)]
+
+
+def _calculate_tag_weight(weight, max_weight):
+    """Lograithmic tag weight calculation"""
+    return math.log(weight) * max_weight / math.log(max_weight)
 
 
 class TagCounterExtension(db.AttributeExtension):
@@ -47,26 +57,48 @@ class TagQuery(db.Query):
     def get_cached(self):
         """This method is a wrapper around common tag caching
         to not write the cache key everywhere in the code"""
-        return self.cached('core/tags')
+        return self.order_by(Tag.tagged.asc()).cached('core/tags')
 
-    def get_cloud(self, max=None):
-        """Get all informations required for a tag cloud"""
+    def get_cloud(self, max_visible=None, steps=4):
+        """Get all informations required for a tag cloud
+
+        Returns a tuple containing the items and a boolean indicating
+        wheter there are more tags to show or not.
+        """
         if max is None:
             tags = self.get_cached()
+            tag_count = len(tags)
         else:
-            tags = self.query.limit(max).all()
-
+            tags = self.order_by(Tag.tagged.desc()).limit(max_visible).all()
+            tag_count = self.count()
+        
+        if not tag_count:
+            return [], False
         items = []
+        counts = [tag.tagged for tag in tags]
+        min_weight = float(min(counts))
+        max_weight = float(max(counts))
+        thresholds = _calculate_thresholds(min_weight, max_weight, steps)
         for tag in tags:
-            items.append({
+            item = {
                 'id': tag.id,
                 'name': tag.name,
                 'count': tag.tagged,
-                'size': tag.size
-            })
+                'size': 80
+            }
+            if item['count']:
+                font_set = False
+                for idx in xrange(steps):
+                    tag_weight = _calculate_tag_weight(item['count'] or 1, max_weight)
+                    if not font_set and tag_weight <= thresholds[idx]:
+                        item['size'] += tag_weight * idx
+                        font_set = True
+                item['size'] = int(item['size'])
+            items.append(item)
 
         items.sort(key=lambda x: x['name'].lower())
-        return items
+        more = False if max_visible is None else tag_count > max_visible
+        return items, more
 
 
 class Tag(db.Model, SerializableObject):
@@ -93,10 +125,6 @@ class Tag(db.Model, SerializableObject):
         if not tag_re.match(tag):
             raise ValueError(u'Invalid tag name %s' % tag)
         return tag
-
-    @property
-    def size(self):
-        return 100 + log(self.tagged or 1) * 20
 
     def get_url_values(self, action='view'):
         values = {

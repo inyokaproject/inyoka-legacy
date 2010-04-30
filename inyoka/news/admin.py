@@ -42,7 +42,7 @@ class NewsAdminProvider(IAdminProvider):
     @view('articles')
     @templated('news/admin/articles.html')
     def articles(self, request):
-        articles = Article.query.all()
+        articles = Article.query.order_by(Article.updated.desc()).all()
         return {
             'articles': articles
         }
@@ -52,7 +52,7 @@ class NewsAdminProvider(IAdminProvider):
     def articles_edit(self, request, slug=None):
         new = slug is None
         if new:
-            article, data = Article(), {}
+            article, data = Article(), {'tags': []}
         else:
             article = Article.query.filter_by(slug=slug).one()
             data = model_to_dict(article, exclude=('slug'))
@@ -62,7 +62,7 @@ class NewsAdminProvider(IAdminProvider):
             return redirect_to('admin/news/article_delete', slug=article.slug)
         elif request.method == 'POST' and form.validate(request.form):
             article = update_model(article, form, ('pub_date', 'updated',
-                'title', 'intro', 'text', 'public', 'tag',
+                'title', 'intro', 'text', 'public', 'tags',
                 'author'))
             db.session.commit()
             request.flash(_(u'Updated article “%s”' % article.title), True)

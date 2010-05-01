@@ -81,6 +81,21 @@ leakfinder = _action(lambda: _make_app(debug=True, leaky=True))
 leakfinder.__doc__ = u'Run a development server with activated leakfinder.'
 
 
+def runeventlet(hostname='localhost', port=5000):
+    from eventlet import api, wsgi
+    app = _make_app(debug=True)
+    wsgi.server(api.tcp_listener((hostname, port)), app)
+
+
+def runcherrypy(hostname='localhost', port=5000):
+    from cherrypy.wsgiserver import CherryPyWSGIServer
+    from inyoka.core.api import ctx
+    app = _make_app(debug=True)
+    server = CherryPyWSGIServer((hostname, port), app,
+        server_name=ctx.cfg['base_domain_name'])
+    server.start()
+
+
 def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
     """Spawn a new interactive python shell
 

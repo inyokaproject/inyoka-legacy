@@ -21,11 +21,10 @@ from os import path
 pil_version = '1.1.7'
 cldr_version = '1.6.1'
 
-
 def pil_install(home_dir):
     folder = tempfile.mkdtemp(prefix='virtualenv')
 
-    call_subprocess(['wget', 'http://effbot.org/downloads/Imaging-%s.tar.gz' % pil_version], cwd=folder)
+    call_subprocess(FETCH_CMD + ['http://effbot.org/downloads/Imaging-%s.tar.gz' % pil_version], cwd=folder)
     call_subprocess(['tar', '-xzf', 'Imaging-%s.tar.gz' % pil_version], cwd=folder)
 
     img_folder = path.join(folder, 'Imaging-%s' % pil_version)
@@ -47,7 +46,7 @@ def babel_svn_repo_install(home_dir):
     pypath = path.join(home_dir, 'bin', 'python')
 
     # checkout cldr
-    call_subprocess(['wget', 'http://unicode.org/Public/cldr/%s/core.zip' % cldr_version], cwd=folder)
+    call_subprocess(FETCH_CMD + ['http://unicode.org/Public/cldr/%s/core.zip' % cldr_version], cwd=folder)
     call_subprocess(['unzip', '-d', 'cldr', 'core.zip'], cwd=folder)
     cldr_folder = path.join(folder, 'cldr')
 
@@ -66,6 +65,13 @@ def babel_svn_repo_install(home_dir):
 
 
 def after_install(options, home_dir):
+    global FETCH_CMD
+    try:
+        FETCH_CMD = ['wget']
+        call_subprocess(['wget'])
+    except OSError:
+        # wget does not exist, try curl instead
+        FETCH_CMD = ['curl', '-L', '-O']
     easy_install('setuptools', home_dir)
     babel_svn_repo_install(home_dir)
     easy_install('Jinja2', home_dir)

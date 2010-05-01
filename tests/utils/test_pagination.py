@@ -242,5 +242,3 @@ def test_getpagination_links():
     eq_(GETPagination(q, 2, args={'a':'b'}).make_link(1), '?a=b')
     eq_(GETPagination(q, 2, args={'a':'b'}).make_link(2), '?a=b&page=2')
     eq_(GETPagination(q, 2, args={'a':'b'}).make_template(), '?a=b&page=!')
-
-

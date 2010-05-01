@@ -402,4 +402,3 @@ class TestSubscriptions(TestSuite):
         db.session.commit()
         assert_raises(NotImplementedError,
             lambda: Subscription.new(Other(wrapper=w1), '__test_new_other'))
-

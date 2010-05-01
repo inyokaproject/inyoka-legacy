@@ -66,4 +66,3 @@ class NewCommentSubscriptionAction(SubscriptionAction):
         print 'Notify %s about new comment by %s on %s' % \
                 (user.username, object.author.username,
                  object.article.title)
-

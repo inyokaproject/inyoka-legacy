@@ -8,7 +8,8 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.subscriptions import SubscriptionType
+from operator import attrgetter
+from inyoka.core.subscriptions import SubscriptionType, SubscriptionAction
 from inyoka.core.models import Tag
 from inyoka.news.models import Article, Comment
 
@@ -19,46 +20,50 @@ class ArticleSubscriptionType(SubscriptionType):
     subject_type = None
     object_type = Article
 
-    actions = ['news.new_article']
+    actions = ['news.article.new']
     mode = 'multiple'
 
-    @classmethod
-    def notify(cls, subscription, object, subject):
-        print 'Notify %s about new article „%s“' % \
-                (subscription.user.username, object.title)
 
+class TagSubscriptionType():# SubscriptionType):
+    #XXX articles have only one tag atm.
+    name = 'news.article.by_tag'
 
-#TODO: need support for multiple subjects per object
-#class TagSubscriptionType(SubscriptionType):
-#    name = 'news.article.by_tag'
-#
-#    subject_type = Tag
-#    object_type = Article
-#
-#    actions = ['news.new_article', 'news.article.add_tag']
-#    mode = 'multiple'
-#
-#    @classmethod
-#    def notify(cls, subscription, object, subject):
-#        print 'Notify %s about new article „%s“ with tag' % \
-#                (subscription.user.username, object.title, subject.name)
+    subject_type = Tag
+    object_type = Article
+
+    actions = ['news.article.new']#, 'news.article.add_tag']
+    mode = 'multiple'
+
+    get_subjects = staticmethod(attrgetter('tags'))
 
 
 class CommentSubscriptionType(SubscriptionType):
-    name = 'news.comments'
+    name = 'news.comments.by_entry'
 
     subject_type = Article
     object_type = Comment
 
-    actions = ['news.new_comment']
+    actions = ['news.comment.new']
     mode = 'sequent'
 
-    @classmethod
-    def get_subject(cls, object):
-        return object.article
+    get_subject = staticmethod(attrgetter('article'))
+
+
+class NewArticleSubscriptionAction(SubscriptionAction):
+    name = 'news.article.new'
 
     @classmethod
-    def notify(cls, subscription, object, subject):
+    def notify(cls, user, object, subjects):
+        print 'Notify %s about new article „%s“' % \
+                (user.username, object.title)
+
+
+class NewCommentSubscriptionAction(SubscriptionAction):
+    name = 'news.comment.new'
+
+    @classmethod
+    def notify(cls, user, object, subjects):
         print 'Notify %s about new comment by %s on %s' % \
-                (subscription.user.username, object.author.username,
-                 subject.title)
+                (user.username, object.author.username,
+                 object.article.title)
+

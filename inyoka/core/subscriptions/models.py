@@ -8,10 +8,11 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from collections import defaultdict
 from sqlalchemy.ext.associationproxy import association_proxy
 from inyoka.core.auth.models import User
 from inyoka.core.database import db
-from inyoka.core.subscriptions import SubscriptionType
+from inyoka.core.subscriptions import SubscriptionType, SubscriptionAction
 from inyoka.utils.datastructures import _missing
 
 
@@ -47,71 +48,110 @@ class Subscription(db.Model):
         :param object: The added object.
         :param action: The action which lead to the creation of the object.
                        It is used to select the SubscriptionTypes that need to
-                       be considered, it is also passed to the :meth:`notify`
-                       method to allow customizing the notification text.
+                       be considered and the action's :meth:`notify` method is
+                       called.
         """
+        if isinstance(action, basestring):
+            action = SubscriptionAction.by_name(action)
+
+        #: store notifications grouped by user and type
+        notifications = defaultdict(lambda: defaultdict(list))
+
         for t in SubscriptionType.by_action(action):
-            subject = t.get_subject(object)
-            subject_id = getattr(subject, 'id', None)
+            subjects = t.get_subjects(object)
+            if not subjects:
+                continue
+            subject_ids = [getattr(s, 'id', s) for s in subjects]
+
+            base_cond = (Subscription.type_name == t.name)
+            if t.subject_type is not None:
+                base_cond &= Subscription.subject_id.in_(subject_ids)
 
             if t.mode == 'sequent':
-                #: increment unread count if there already are unread objects
-                q = db.update(Subscription.__table__,
-                      (Subscription.type_name == t.name) &
-                      (Subscription.subject_id == subject_id) &
-                      (Subscription.count > 0),
-                      {'count': Subscription.count + 1}
-                     )
+                #: increment unread count where there already are unread objects
+                cond = base_cond & (Subscription.count > 0)
+                q = db.update(Subscription.__table__, cond,
+                              {'count': Subscription.count + 1})
                 db.session.execute(q)
                 db.session.commit()
 
                 #: then set the first unread object and notify the user
-                #: if there were no new objects since the last visit
-                for s in Subscription.query.filter_by(type_name=t.name,
-                                                      subject_id=subject_id,
-                                                      count=0):
-                    t.notify(s, object, subject)
+                #: where there were no new objects since the last visit
+                cond = base_cond & (Subscription.count == 0)
+                for s in Subscription.query.filter(cond):
+                    notifications[s.user][t.name].append(s.subject)
                     s.first_unread_object_id = object.id
                     s.count = 1
                 db.session.commit()
 
             if t.mode == 'multiple':
-                for s in Subscription.query.filter_by(type_name=t.name,
-                                                      subject_id=subject_id):
+                for s in Subscription.query.filter(base_cond):
+                    notifications[s.user][t.name].append(s.subject)
                     s.unread_object_ids.add(object.id)
-                    t.notify(s, object, subject)
                     s.count = len(s.unread_object_ids)
                 db.session.commit()
 
+        for user in notifications:
+            action.notify(user, object, notifications[user])
+
     @staticmethod
-    def accessed(user, object):
+    def accessed(user, **kwargs):
         """
-        Removes the object from the `unread_objects` or unsets
-        `first_unread_object` (depending on the type's mode) and decrements
-        the unread count.
+        Mark subscriptions as read.
+        This means to remove objects from the `unread_objects` or unset
+        `first_unread_object` (depending on the type's mode) and decrement the
+        unread count.
 
         Must be called whenever an object is accessed.
-        """
-        for t in SubscriptionType.by_object_type(type(object)):
-            if t.is_singleton:
-                subject = subject_id = None
-            else:
-                subject = t.get_subject(object)
-                subject_id = getattr(subject, 'id', subject)
 
-            try:
-                s = Subscription.query.filter_by(type_name=t.name,
-                    subject_id=subject_id, user=user).one()
-            except db.NoResultFound:
-                pass
-            else:
+        :param object: Mark all subscriptions with this object as read.
+        :param subject: Mark all subscriptions with this subject as read.
+        """
+        # enforce usage of keywords
+        object = kwargs.pop('object', None)
+        subject = kwargs.pop('subject', None)
+        assert not kwargs, 'Invalid Arguments %r' % kwargs.keys()
+
+        if object is not None:
+            for t in SubscriptionType.by_object_type(type(object)):
+                subjects = t.get_subjects(object)
+                if not subjects:
+                    continue
+                subject_ids = [getattr(s, 'id', s) for s in subjects]
+
+                cond = ((Subscription.type_name == t.name) &
+                        (Subscription.user == user))
+                if t.subject_type is not None:
+                    cond &= Subscription.subject_id.in_(subject_ids)
+                subscriptions = Subscription.query.filter(cond).all()
+                for s in subscriptions:
+                    if t.mode == 'sequent':
+                        s.first_unread_object_id = None
+                        s.count = 0
+                    elif t.mode == 'multiple':
+                        try:
+                            s.unread_object_ids.remove(object.id)
+                        except KeyError:
+                            pass
+                        else:
+                            s.count -= 1
+                db.session.commit()
+
+        if subject is not None:
+            for t in SubscriptionType.by_subject_type(type(subject)):
+                try:
+                    s = Subscription.query.filter_by(type_name=t.name,
+                        subject_id=subject.id, user=user).one()
+                except db.NoResultFound:
+                    continue
+
+                s.count = 0
                 if t.mode == 'sequent':
                     s.first_unread_object_id = None
-                    s.count = 0
                 elif t.mode == 'multiple':
-                    s.unread_object_ids.remove(object.id)
-                    s.count -= 1
+                    s.unread_object_ids = []
                 db.session.commit()
+
 
     @staticmethod
     def subscribe(user, type_, subject=None):
@@ -187,6 +227,15 @@ class Subscription(db.Model):
         db.session.delete(s[0])
         db.session.commit()
         return True
+
+    @property
+    def type(self):
+        return SubscriptionType.by_name(self.type_name)
+
+    @property
+    def subject(self):
+        if None not in (self.type.subject_type, self.subject_id):
+            return self.type.subject_type.query.get(self.subject_id)
 
 
 class SubscriptionUnreadObjects(db.Model):

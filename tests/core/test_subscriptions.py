@@ -12,7 +12,7 @@ import unittest
 from operator import attrgetter
 from inyoka.core.api import db, ctx
 from inyoka.core.auth.models import User
-from inyoka.core.subscriptions import SubscriptionType
+from inyoka.core.subscriptions import SubscriptionType, SubscriptionAction
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.core.test import *
 
@@ -45,6 +45,19 @@ class Comment(db.Model):
     entry = db.relationship(Entry)
 
 
+_entry_tag = db.Table('_test_subscription_entry_tag', db.metadata,
+    db.Column('entry_id', db.Integer, db.ForeignKey(Entry.id)),
+    db.Column('tag_id', db.Integer,
+              db.ForeignKey('_test_subscription_tag.id')),
+)
+
+class Tag(db.Model):
+    __tablename__ = '_test_subscription_tag'
+    id = db.Column(db.Integer, primary_key=True)
+    entries = db.relationship(Entry, secondary=_entry_tag, backref='tags',
+                              lazy='joined')
+
+
 class Other(db.Model):
     __tablename__ = '_test_subscription_other'
     id = db.Column(db.Integer, primary_key=True)
@@ -53,17 +66,32 @@ class Other(db.Model):
 
 
 class SubscriptionTestSchemaController(db.ISchemaController):
-    models = [Category, Entry, Comment, Wrapper, Other]
+    models = [Category, Entry, Comment, Wrapper, Other, Tag, _entry_tag]
 
 
 class NotifyTrackerMixin(object):
     tracker = []
+    epoch = 0
     @classmethod
-    def notify(cls, s, object, subject=None):
-        NotifyTrackerMixin.tracker.append((cls.name, s.user, object, subject))
+    def notify(cls, user, object, subjects):
+        NotifyTrackerMixin.tracker.append((NotifyTrackerMixin.epoch, cls.name,
+            user, object, subjects))
 
 
-class CategorySubscriptionType(SubscriptionType, NotifyTrackerMixin):
+class NewEntrySubscriptionAction(NotifyTrackerMixin, SubscriptionAction):
+    name = '__test_new_entry'
+
+class NewCommentSubscriptionAction(NotifyTrackerMixin, SubscriptionAction):
+    name = '__test_new_comment'
+
+class NewOtherSubscriptionAction(SubscriptionAction):
+    name = '__test_new_other'
+
+    @classmethod
+    def notify(cls, user, subscriptions):
+        raise RuntimeError('This should not have been called')
+
+class CategorySubscriptionType(SubscriptionType):
     name = '__test_category'
     subject_type = Category
     object_type = Entry
@@ -72,21 +100,21 @@ class CategorySubscriptionType(SubscriptionType, NotifyTrackerMixin):
 
     get_subject = attrgetter('category')
 
-class BlogSubscriptionType(SubscriptionType, NotifyTrackerMixin):
+class BlogSubscriptionType(SubscriptionType):
     name = '__test_blog'
     subject_type = None
     object_type = Entry
     mode = 'multiple'
     actions = ['__test_new_entry']
 
-class BadImplementedType(SubscriptionType, NotifyTrackerMixin):
+class BadImplementedType(SubscriptionType):
     name = '__test_something'
     subject_type = Wrapper
     object_type = Other
     mode = 'multiple'
     actions = ['__test_new_other']
 
-class CommentsSubscriptionType(SubscriptionType, NotifyTrackerMixin):
+class CommentsSubscriptionType(SubscriptionType):
     name = '__test_comments'
     subject_type = Entry
     object_type = Comment
@@ -94,6 +122,15 @@ class CommentsSubscriptionType(SubscriptionType, NotifyTrackerMixin):
     actions = ['__test_new_comment']
 
     get_subject = attrgetter('entry')
+
+class TagSubscriptionType(SubscriptionType):
+    name = '__test_tag'
+    subject_type = Tag
+    object_type = Entry
+    mode = 'multiple'
+    actions = ['__test_new_entry']
+
+    get_subjects = attrgetter('tags')
 
 
 class TestSubscriptions(TestSuite):
@@ -132,16 +169,47 @@ class TestSubscriptions(TestSuite):
         eq_(SubscriptionType.by_name('__test_comments'), CommentsSubscriptionType)
         eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
         eq_(SubscriptionType.by_subject_type(Category), [CategorySubscriptionType])
+        eq_(sorted(SubscriptionType.by_action(NewEntrySubscriptionAction)),
+            sorted([CategorySubscriptionType, BlogSubscriptionType, TagSubscriptionType]))
+        eq_(SubscriptionType.by_action('__test_new_comment'), [CommentsSubscriptionType])
+
+    @with_fixtures('one', 'categories', 'entries')
+    def test_subscription(self, fixtures):
+        one = fixtures['one']
+        cat1, cat2 = fixtures['categories']
+        eq_(Subscription.subscribe(one, '__test_category', cat1), True)
+        eq_(Subscription.subscribe(one, '__test_category', cat1), False)
+        eq_(Subscription.subscribe(one, '__test_blog'), True)
+        eq_(Subscription.subscribe(one, '__test_blog'), False)
+
+        s = Subscription.query.filter_by(user_id=one.id,
+                                         type_name='__test_category',
+                                         subject_id=cat1.id).one()
+        eq_(s.type, CategorySubscriptionType)
+        eq_(s.subject, cat1)
+        s = Subscription.query.filter_by(user_id=one.id,
+                                         type_name='__test_blog').one()
+        eq_(s.type, BlogSubscriptionType)
+        eq_(s.subject, None)
 
     @with_fixtures('one', 'two', 'categories', 'entries')
     def test_multiple_subscriptions(self, fixtures):
+        """
+        Test (with multiple mode) whether the subscription count and the unread
+        information is accurate and whether notifications are sent correctly.
+        """
         cat1, cat2 = fixtures['categories']
         one, two = fixtures['one'], fixtures['two']
         entries = fixtures['entries']
+        NotifyTrackerMixin.tracker = []
+
+        #: ensure this does not fail but passes silently
+        Subscription.accessed(one, object=entries[0])
 
         Subscription.subscribe(one, '__test_category', cat1)
         Subscription.subscribe(two, '__test_blog')
 
+        NotifyTrackerMixin.epoch = 1
         Subscription.new(entries[0], '__test_new_entry')
         Subscription.new(entries[1], '__test_new_entry')
         self._check_multiple_state(one, '__test_category', cat1.id,
@@ -149,6 +217,7 @@ class TestSubscriptions(TestSuite):
         self._check_multiple_state(two, '__test_blog', None,
                               set((entries[0].id, entries[1].id)), 2)
 
+        NotifyTrackerMixin.epoch = 2
         Subscription.new(entries[2], '__test_new_entry')
         Subscription.new(entries[3], '__test_new_entry')
         self._check_multiple_state(one, '__test_category', cat1.id,
@@ -157,33 +226,109 @@ class TestSubscriptions(TestSuite):
                               set((entries[0].id, entries[1].id,
                                    entries[2].id, entries[3].id)), 4)
 
-        # check for not well implemented subscription types
-        w1 = Wrapper()
-        db.session.commit()
-        assert_raises(NotImplementedError,
-            lambda: Subscription.new(Other(wrapper=w1), '__test_new_other'))
-
-        Subscription.accessed(two, entries[2])
-        Subscription.accessed(two, entries[1])
+        Subscription.accessed(two, object=entries[2])
+        Subscription.accessed(two, object=entries[1])
         self._check_multiple_state(two, '__test_blog', None,
                               set((entries[0].id, entries[3].id)), 2)
 
+        Subscription.accessed(one, subject=cat1)
+        Subscription.accessed(one, subject=cat1) # must work also if not unread
+        self._check_multiple_state(one, '__test_category', cat1.id,
+                              set(), 0)
+
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
-            ('__test_blog', two, entries[0], None),
-            ('__test_category', one, entries[0], cat1),
-            ('__test_blog', two, entries[1], None),
-            ('__test_category', one, entries[2], cat1),
-            ('__test_blog', two, entries[2], None),
-            ('__test_category', one, entries[3], cat1),
-            ('__test_blog', two, entries[3], None),
+            (1, '__test_new_entry', one, entries[0], {'__test_category': [cat1]}),
+            (1, '__test_new_entry', two, entries[0], {'__test_blog': [None]}),
+            (1, '__test_new_entry', two, entries[1], {'__test_blog': [None]}),
+            (2, '__test_new_entry', one, entries[2], {'__test_category': [cat1]}),
+            (2, '__test_new_entry', one, entries[3], {'__test_category': [cat1]}),
+            (2, '__test_new_entry', two, entries[2], {'__test_blog': [None]}),
+            (2, '__test_new_entry', two, entries[3], {'__test_blog': [None]}),
         ]))
 
-    @with_fixtures('three', 'four', 'categories', 'entries')
-    def test_multiple_subscriptions(self, fixtures):
+    @with_fixtures('three', 'four', 'entries', 'categories')
+    def test_multiple_multiple_subscriptions(self, fixtures):
+        """
+        Test (with multiple mode and a SubscriptionType where there is more
+        then one subject per object) whether the subscription count and the
+        unread information is accurate and whether notifications are sent
+        correctly.
+        """
+        entries = fixtures['entries']
         cat1, cat2 = fixtures['categories']
         three, four = fixtures['three'], fixtures['four']
+        #FIXME: use fixtures? and how?
+        t1 = Tag(entries=[entries[0]])
+        t2 = Tag(entries=[entries[0], entries[1], entries[3]])
+        t3 = Tag(entries=[entries[3]])
+        db.session.commit()
+        NotifyTrackerMixin.tracker = []
 
+        Subscription.subscribe(three, '__test_tag', t1)
+        Subscription.subscribe(three, '__test_tag', t2)
+        Subscription.subscribe(three, '__test_category', cat2)
+        Subscription.subscribe(four, '__test_tag', t3)
+
+        self._check_multiple_state(three, '__test_tag', t1.id,
+                                   set(), 0)
+        self._check_multiple_state(three, '__test_tag', t2.id,
+                                   set(), 0)
+        self._check_multiple_state(four, '__test_tag', t3.id,
+                                   set(), 0)
+
+        NotifyTrackerMixin.epoch = 1
+        Subscription.new(entries[0], '__test_new_entry')
+        NotifyTrackerMixin.epoch = 2
+        Subscription.new(entries[2], '__test_new_entry')
+        self._check_multiple_state(three, '__test_tag', t1.id,
+                                   set((entries[0].id,)), 1)
+        self._check_multiple_state(three, '__test_tag', t2.id,
+                                   set((entries[0].id,)), 1)
+
+        NotifyTrackerMixin.epoch = 3
+        Subscription.new(entries[1], '__test_new_entry')
+        self._check_multiple_state(three, '__test_tag', t2.id,
+                                   set((entries[0].id, entries[1].id)), 2)
+
+        self._check_multiple_state(three, '__test_category', cat2.id,
+                                   set((entries[1].id,)), 1)
+        Subscription.accessed(three, object=entries[1])
+        Subscription.accessed(three, object=entries[1])
+        self._check_multiple_state(three, '__test_category', cat2.id,
+                                   set(), 0)
+
+        NotifyTrackerMixin.epoch = 4
+        Subscription.new(entries[3], '__test_new_entry')
+        self._check_multiple_state(three, '__test_tag', t1.id,
+                                   set((entries[0].id,)), 1)
+        self._check_multiple_state(three, '__test_tag', t2.id,
+                                   set((entries[0].id, entries[3].id)), 2)
+        self._check_multiple_state(four, '__test_tag', t3.id,
+                                   set((entries[3].id,)), 1)
+
+
+
+        eq_(sorted(NotifyTrackerMixin.tracker), sorted([
+            (1, '__test_new_entry', three, entries[0], {'__test_tag': [t1, t2]}),
+            (3, '__test_new_entry', three, entries[1], {'__test_tag': [t2],
+                                                '__test_category': [cat2]}),
+            (4, '__test_new_entry', three, entries[3], {'__test_tag': [t2]}),
+            (4, '__test_new_entry', four, entries[3], {'__test_tag': [t3]}),
+        ]))
+
+
+
+
+    @with_fixtures('three', 'four', 'categories', 'entries')
+    def test_sequent_subscriptions(self, fixtures):
+        """
+        Test (with sequent mode) whether the subscription count and the unread
+        information is accurate and whether notifications are sent correctly.
+        """
+        cat1, cat2 = fixtures['categories']
+        three, four = fixtures['three'], fixtures['four']
         e1, e2 = fixtures['entries'][:2]
+        NotifyTrackerMixin.tracker = []
 
         Subscription.subscribe(three, '__test_comments', e1)
         Subscription.subscribe(three, '__test_comments', e2)
@@ -196,11 +341,11 @@ class TestSubscriptions(TestSuite):
         self._check_sequent_state(four, '__test_comments', e1.id,
                                   None, 0)
 
-        NotifyTrackerMixin.tracker = []
         comments = [Comment(entry=e1), Comment(entry=e2), Comment(entry=e1),
                     Comment(entry=e1), Comment(entry=e1), Comment(entry=e2)]
         db.session.commit()
 
+        NotifyTrackerMixin.epoch = 1
         Subscription.new(comments[0], '__test_new_comment') # e1
         Subscription.new(comments[1], '__test_new_comment') # e2
 
@@ -211,24 +356,27 @@ class TestSubscriptions(TestSuite):
         self._check_sequent_state(four, '__test_comments', e1.id,
                                   comments[0].id, 1)
 
-        Subscription.accessed(three, comments[0])
+        Subscription.accessed(three, subject=e1)
         self._check_sequent_state(three, '__test_comments', e1.id,
                                   None, 0)
 
+        NotifyTrackerMixin.epoch = 2
         Subscription.new(comments[2], '__test_new_comment') # e1
         self._check_sequent_state(three, '__test_comments', e1.id,
                              comments[2].id, 1)
 
+        NotifyTrackerMixin.epoch = 3
         Subscription.new(comments[3], '__test_new_comment') # e1
         self._check_sequent_state(three, '__test_comments', e1.id,
                              comments[2].id, 2)
         self._check_sequent_state(four, '__test_comments', e1.id,
                              comments[0].id, 3)
 
-        Subscription.accessed(four, comments[3])
+        Subscription.accessed(four, object=comments[3])
         self._check_sequent_state(four, '__test_comments', e1.id,
                              None, 0)
 
+        NotifyTrackerMixin.epoch = 4
         Subscription.new(comments[4], '__test_new_comment') # e1
         Subscription.new(comments[5], '__test_new_comment') # e2
         self._check_sequent_state(three, '__test_comments', e1.id,
@@ -239,11 +387,19 @@ class TestSubscriptions(TestSuite):
                              comments[4].id, 1)
 
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
-            ('__test_comments', three, comments[0], e1),
-            ('__test_comments', four, comments[0], e1),
-            ('__test_comments', three, comments[1], e2),
+            (1, '__test_new_comment', three, comments[0], {'__test_comments': [e1]}),
+            (1, '__test_new_comment', four, comments[0], {'__test_comments': [e1]}),
+            (1, '__test_new_comment', three, comments[1], {'__test_comments': [e2]}),
             # here three accesses entry 1
-            ('__test_comments', three, comments[2], e1),
+            (2, '__test_new_comment', three, comments[2], {'__test_comments': [e1]}),
             # here four accesses entry 1
-            ('__test_comments', four, comments[4], e1),
+            (4, '__test_new_comment', four, comments[4], {'__test_comments': [e1]}),
         ]))
+
+    def check_bad_implemented_type(self):
+        """check for not well implemented subscription types"""
+        w1 = Wrapper()
+        db.session.commit()
+        assert_raises(NotImplementedError,
+            lambda: Subscription.new(Other(wrapper=w1), '__test_new_other'))
+

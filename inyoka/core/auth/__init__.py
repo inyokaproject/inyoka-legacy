@@ -166,8 +166,8 @@ class AuthSystemBase(object):
         if request.method == 'POST' and form.validate(request.form):
             user = User(username=form['username'], email=form['email'],
                         password=form['password'])
-            r = self.after_register(request, user)
             db.session.commit()
+            r = self.after_register(request, user)
             if isinstance(r, Response):
                 return r
             return redirect_to('portal/index')
@@ -272,4 +272,7 @@ def activate_user(data):
         return redirect_to('portal/index')
     u.status = 'normal'
     db.session.commit()
+    request.flash(_(
+        u'Activation successfull, you can now login with you\'re credentials'
+    ))
     return redirect_to('portal/login')

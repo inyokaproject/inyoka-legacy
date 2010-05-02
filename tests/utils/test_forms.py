@@ -10,7 +10,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.test import *
-from inyoka.core.forms.utils import model_to_dict, update_model
+from inyoka.utils.forms import model_to_dict, update_model
 
 
 class DummyModel(db.Model):
@@ -77,7 +77,7 @@ class TestFormUtils(TestSuite):
         eq_(new.value, u'two')
 
     @with_fixtures('models')
-    def test_api_bureaucracy_compatibility(self, fixtures):
+    def test_api_compatibility(self, fixtures):
         old = fixtures['models'][0]
         update_model(old, DummyForm())
         new = DummyModel.query.one()

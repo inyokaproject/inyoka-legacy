@@ -9,7 +9,7 @@
       {{ article.rendered_intro }}
     </div>
     <div class="text">
-      {{ article.rendered_text }}
+      {{ article.rendered_text|safe }}
     </div>
     <p class="meta">
       {%- trans author_url=href(article.author.profile), author_name=article.author.username,
@@ -67,7 +67,7 @@
               {{ _('Written: ') }} {{ comment.pub_date|datetimeformat }}
             </div>
             <div class="text">
-              {{ comment.rendered_text }}
+              {{ comment.rendered_text|safe }}
             </div>
           </td>
         </tr>

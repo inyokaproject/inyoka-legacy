@@ -9,64 +9,63 @@
 import re
 from urlparse import urlparse
 from functools import partial
-from wtforms import widgets
+from wtforms.widgets import HTMLString, TextInput
 from wtforms.fields import Field
 from wtforms.validators import ValidationError
+from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.database import db
 from inyoka.core.context import local, ctx
 from inyoka.utils.datastructures import _missing
 
+from inyoka.core.models import Tag
+from inyoka.core.routing import href
+from inyoka.core.serializer import get_serializer, primitive
 
 
-#class Form(FormBase):
-#    """A somewhat extended base form to include our
-#    i18n mechanisms as well as other things like sessions and such stuff.
-#    """
-#
-#    # Until I resolved that redirect_tracking in bureaucracy
-#    redirect_tracking = False
-#
-#    recaptcha_public_key = ctx.cfg['recaptcha.public_key']
-#    recaptcha_private_key = ctx.cfg['recaptcha.private_key']
-#
-#    def _get_translations(self):
-#        """Return our translations"""
-#        return get_translations()
-#
-#    def _lookup_request_info(self):
-#        """Return our current request object"""
-#        if hasattr(local, 'request'):
-#            return local.request
-#
-#    def _get_wsgi_environ(self):
-#        """Return the WSGI environment from the request info if possible."""
-#        request = self._lookup_request_info()
-#        return request.environ if request is not None else None
-#
-#    def _get_request_url(self):
-#        """The absolute url of the current request"""
-#        request = self._lookup_request_info()
-#        return request.current_url if request is not None else ''
-#
-#    def _redirect_to_url(self, url):
-#        return redirect_(url)
-#
-#    def _resolve_url(self, args, kwargs):
-#        assert len(args) == 1
-#        return href(args[0], **kwargs)
-#
-#    def _get_session(self):
-#        request = self._lookup_request_info()
-#        return request.session if request is not None else {}
-#
-#    def _autodiscover_data(self):
-#        request = self._lookup_request_info()
-#        return request.form
+class ModelSelectField(QuerySelectField):
+    """
+    Similar to QuerySelectField, only for model classes.
+
+    Using this field is only meaningful when using scoped sessions in
+    SQLAlchemy, because otherwise model instances do not know how to make
+    queries of themselves. This field is simply a convenience for using
+    `Model.query` as the factory for QuerySelectMultipleField.
+
+    """
+    def __init__(self, label=u'', validators=None, model=None, **kwargs):
+        assert model is not None, "Must specify a model."
+        query_factory = lambda: model.query
+        super(ModelSelectField, self).__init__(label, validators,
+            query_factory=query_factory, **kwargs)
 
 
-class CommaSeperated(Field):
-    widget = widgets.TextInput()
+TOKEN_INPUT = '''
+<script type="text/javascript">
+$(document).ready(function () {
+  $("#%s").tokenInput("%s", {'prePopulate': %s});
+});
+</script>
+'''
+
+class TokenInput(TextInput):
+
+    def __call__(self, field, **kwargs):
+        input_html = super(TokenInput, self).__call__(field, **kwargs)
+        tags = field.data or []
+        serializer, mime = get_serializer('json')
+        ro = primitive(tags, config={
+            'show_type': False,
+            Tag.object_type: ('id', 'name')
+        })
+        tags_json = serializer(ro)
+        js =  TOKEN_INPUT % (field.id, href('api/core/get_tags', format='json'),
+                             tags_json)
+        return HTMLString(input_html + js)
+
+
+class CommaSeparated(Field):
+    widget = TextInput()
 
     def _value(self):
         if self.data:
@@ -81,66 +80,40 @@ class CommaSeperated(Field):
             self.data = []
 
 
-#class ModelField(Field):
-#    """A field that queries for a model.
-#
-#    The first argument is the name of the model, the second the named
-#    argument for `filter_by` (eg: `User` and ``'username'``).  If the
-#    key is not given (None) the primary key is assumed.
-#    """
-#    messages = dict(not_found=lazy_gettext(u'“%(value)s” does not exist'))
-#
-#    def __init__(self, model, key=None, label=None, help_text=None,
-#                 required=False, message=None, validators=None, widget=None,
-#                 messages=None, on_not_found=None):
-#        Field.__init__(self, label, help_text, validators, widget, messages)
-#        self.model = model
-#        self.key = key
-#        self.required = required
-#        self.message = message
-#        self.on_not_found = on_not_found
-#
-#    def convert(self, value):
-#        if isinstance(value, self.model):
-#            return value
-#        if not value:
-#            if self.required:
-#                raise exceptions.ValidationError(self.messages['required'])
-#            return None
-#
-#        q = self.model.query.autoflush(False)
-#
-#        if self.key is None:
-#            rv = q.get(value)
-#        else:
-#            rv = q.filter_by(**{self.key: value}).first()
-#
-#        if rv is None:
-#            if self.on_not_found is not None:
-#                return self.on_not_found(value)
-#            else:
-#                raise exceptions.ValidationError(self.messages['not_found'] %
-#                                  {'value': value})
-#        return rv
-#
-#    def to_primitive(self, value):
-#        if value is None:
-#            return u''
-#        elif isinstance(value, self.model):
-#            if self.key is None:
-#                value = db.class_mapper(self.model) \
-#                          .primary_key_from_instance(value)[0]
-#            else:
-#                value = getattr(value, self.key)
-#        return unicode(value)
-#
-#
-#class Autocomplete(CommaSeparated):
-#    widget = TokenInput
-#
-#
-#class BooleanField(BooleanField):
-#    widget = widgets.FixedCheckbox
+class AutocompleteField(QuerySelectMultipleField):
+    """A modified comma separated field that renders jQuery autocomplete"""
+    widget = TokenInput()
+
+    def _value(self):
+        if self.data:
+            return u', '.join(self.get_label(obj) for obj in self.data)
+        else:
+            return u''
+
+    def process_formdata(self, valuelist):
+        self._formdata = set(filter(None, [x.strip() for x in valuelist[0].split(',')]))
+
+    def _get_data(self):
+        formdata = self._formdata
+        if formdata is not None:
+            data = []
+            for pk, obj in self._get_object_list():
+                label = self.get_label(obj)
+                if not formdata:
+                    break
+                elif label in formdata:
+                    formdata.remove(label)
+                    data.append(obj)
+            if formdata:
+                self._invalid_formdata = True
+            self._set_data(data)
+        return self._data
+
+    def _set_data(self, data):
+        self._data = data
+        self._formdata = None
+
+    data = property(_get_data, _set_data)
 
 
 def _get_attrs(obj):
@@ -216,7 +189,6 @@ _mail_re = re.compile(r'''(?xi)
 #     Should we permit or deny? If we permit we need to validate the
 #     domain and resid!
 _jabber_re = re.compile(r'(?xi)(?:[a-z0-9!$\(\)*+,;=\[\\\]\^`{|}\-._~]+)@')
-
 
 
 def check(validator, value, *args, **kwargs):
@@ -308,25 +280,3 @@ def is_valid_jabber(message=None):
             raise ValidationError(message)
     return validator
 
-#
-#from inyoka.core.models import Tag
-#from inyoka.core.routing import href
-#from inyoka.core.serializer import get_serializer, primitive
-#
-#
-#class TokenInput(TextInput):
-#    def render(self, **attrs):
-#        input_html = super(TextInput, self).render(**attrs)
-#        tags = self._form.data[self.name]
-#        serializer, mime = get_serializer('json')
-#        ro = primitive(tags, config={
-#            'show_type': False,
-#            Tag.object_type: ('id', 'name')
-#        })
-#        tags_json = serializer(ro)
-#        js = """<script type="text/javascript">
-#$(document).ready(function () {
-#  $("#%s").tokenInput("%s", {'prePopulate': %s});
-#});
-#</script>""" % (self.id, href('api/core/get_tags', format='json'), tags_json)
-#        return input_html + js

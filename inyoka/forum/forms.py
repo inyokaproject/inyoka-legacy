@@ -10,6 +10,7 @@
 """
 from wtforms import Form, TextField, validators, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
+from inyoka.utils.forms import AutocompleteFieldField
 from inyoka.core.api import _, db
 from inyoka.i18n import _, lazy_gettext
 from inyoka.forum.models import Forum, Tag
@@ -21,10 +22,8 @@ class AskQuestionForm(Form):
         [validators.Length(max=160), validators.Required()])
     text = TextField(lazy_gettext(u'Text'), [validators.Required()],
                      widget=widgets.TextArea())
-#    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
-#                              label=_(u'Tags'), sep=',', min_size=1)
-    tags = QuerySelectMultipleField(lazy_gettext(u'Tags'), query_factory=lambda: Tag.query,
-                                    get_label='name')
+    tags = AutocompleteField(_(u'Tags'), query_factory=lambda: Tag.query, get_label='name',
+                        validators=[validators.Length(min=1)])
 
 
 class AnswerQuestionForm(Form):
@@ -43,5 +42,4 @@ class EditForumForm(Form):
                               get_label='name')
     description = TextField(lazy_gettext(u'Description'), [validators.Required()],
                             widget=widgets.TextArea())
-    tags = QuerySelectMultipleField(lazy_gettext(u'Tags'), query_factory=lambda: Tag.query,
-                                    get_label='name')
+    tags = AutocompleteField(lazy_gettext(u'Tags'), query_factory=lambda: Tag.query, get_label='name')

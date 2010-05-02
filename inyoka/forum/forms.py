@@ -10,7 +10,7 @@
 """
 from wtforms import Form, TextField, validators, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from inyoka.utils.forms import AutocompleteFieldField
+from inyoka.utils.forms import AutocompleteField
 from inyoka.core.api import _, db
 from inyoka.i18n import _, lazy_gettext
 from inyoka.forum.models import Forum, Tag

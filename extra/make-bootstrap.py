@@ -51,7 +51,7 @@ def babel_svn_repo_install(home_dir):
     cldr_folder = path.join(folder, 'cldr')
 
     # checkout babel and import/compile respective cldr
-    call_subprocess(['svn', 'co', 'http://svn.edgewall.org/repos/babel/branches/stable/0.9.x/', 'babel'], cwd=folder)
+    call_subprocess(['svn', 'co', 'http://svn.edgewall.org/repos/babel/trunk/', 'babel'], cwd=folder)
     babel_folder = path.join(folder, 'babel')
     cmd = [pypath]
     cmd.extend([path.join(os.getcwd(), babel_folder, 'scripts/import_cldr.py'),

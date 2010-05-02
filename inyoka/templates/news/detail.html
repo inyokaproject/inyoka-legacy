@@ -1,5 +1,5 @@
 {%- extends 'news/base.html' %}
-
+{% from 'utils/macros.html' import render_form %}
 {% set title_trace = [article.title] %}
 
 {% block content %}
@@ -74,7 +74,7 @@
         {%- endfor %}
         <tr id="new_comment">
           <td>
-            {{ form() }}
+            {{ render_form(form) }}
           </td>
         </tr>
       </table>

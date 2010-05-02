@@ -9,10 +9,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import _, view, templated, db, Rule, redirect_to, Response
-from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
 from inyoka.paste.forms import EditPasteForm
 from inyoka.paste.models import Entry
+from inyoka.utils.forms import model_to_dict, update_model
 
 
 class PasteAdminProvider(IAdminProvider):
@@ -34,10 +34,10 @@ class PasteAdminProvider(IAdminProvider):
     @templated('paste/admin/edit.html')
     def edit(self, request, id):
         entry = Entry.query.get(id)
-        form = EditPasteForm(model_to_dict(entry,
-            exclude=('rendered_text', 'id', 'author_id')
+        form = EditPasteForm(request.form, **model_to_dict(
+            entry, exclude=('rendered_text', 'id', 'author_id')
         ))
-        if request.method == 'POST' and form.validate(request.form):
+        if request.method == 'POST' and form.validate():
             entry = update_model(entry, form,
                 ('text', 'language', 'title', 'author', 'hidden'))
             db.session.update(entry)
@@ -45,5 +45,5 @@ class PasteAdminProvider(IAdminProvider):
             return redirect_to(entry)
 
         return {
-            'form': form.as_widget(),
+            'form': form,
         }

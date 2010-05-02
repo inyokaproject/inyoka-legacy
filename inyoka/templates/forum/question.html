@@ -1,5 +1,5 @@
 {%- extends 'forum/base.html' %}
-
+{% from 'utils/macros.html' import render_form %}
 {%- block content %}
 
 <div class="author">asked <strong>{{ question.date_created|timedelta }}</strong><br />
@@ -116,6 +116,6 @@
 {{ pagination }}
 
 <h2>Your Answer</h2>
-{{ form() }}
+{{ render_form(form) }}
 
 {%- endblock %}

@@ -129,10 +129,10 @@ def quote_value(value):
 
 def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
-    from inyoka.core.forms import exceptions as exc
+    from wtforms.validators import ValidationError
     try:
         return field(value)
-    except exc.ValidationError:
+    except ValidationError:
         return field.get_default()
 
 

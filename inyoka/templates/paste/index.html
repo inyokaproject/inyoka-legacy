@@ -1,7 +1,8 @@
 {%- extends 'paste/base.html' %}
+{% from 'utils/macros.html' import render_form %}
 {% set tab = 'new' %}
 {%- block paste_content %}
 
-{{ form() }}
+{{ render_form(form) }}
 
 {%- endblock %}

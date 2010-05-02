@@ -8,38 +8,40 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import _, db, forms
-from inyoka.i18n import _
+from wtforms import Form, TextField, validators, widgets
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
+from inyoka.core.api import _, db
+from inyoka.i18n import _, lazy_gettext
 from inyoka.forum.models import Forum, Tag
 
 
-class AskQuestionForm(forms.Form):
+class AskQuestionForm(Form):
 
-    title = forms.TextField(_(u'Title'), max_length=160, required=True)
-    text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
-        required=True)
-    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
-                              label=_(u'Tags'), sep=',', min_size=1)
-
-
-class AnswerQuestionForm(forms.Form):
-
-    text = forms.TextField(_(u'Text'), widget=forms.widgets.Textarea,
-        required=True)
+    title = TextField(lazy_gettext(u'Title'),
+        [validators.Length(max=160), validators.Required()])
+    text = TextField(lazy_gettext(u'Text'), [validators.Required()],
+                     widget=widgets.TextArea())
+#    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'),
+#                              label=_(u'Tags'), sep=',', min_size=1)
+    tags = QuerySelectMultipleField(lazy_gettext(u'Tags'), query_factory=lambda: Tag.query,
+                                    get_label='name')
 
 
-class EditForumForm(forms.Form):
+class AnswerQuestionForm(Form):
 
-    name = forms.TextField(_(u'Name'), max_length=160, required=True)
-    slug = forms.TextField(_(u'Slug'), max_length=160, required=True)
-    parent = forms.ModelField(Forum, 'id', _(u'Parent'),
-                                widget=forms.widgets.SelectBox)
-    description = forms.TextField(_(u'Description'), widget=forms.widgets.Textarea,
-            required=True)
-    tags = forms.Autocomplete(forms.ModelField(Tag, 'name'), label=_(u'Tags'), sep=',', min_size=1)
+    text = TextField(lazy_gettext(u'Text'), [validators.Required()],
+                     widget=widgets.TextArea())
 
-    def __init__(self, *args, **kwargs):
-        forms.Form.__init__(self, *args, **kwargs)
-        # setup the possible choices for the parent forum
-        self.parent.choices = ['']
-        self.parent.choices.extend([(f.id, f.name) for f in Forum.query.all()])
+
+class EditForumForm(Form):
+
+    name = TextField(lazy_gettext(u'Name'),
+                     [validators.Required(), validators.Length(max=160)])
+    slug = TextField(lazy_gettext(u'Slug'),
+                     [validators.Required(), validators.Length(max=160)])
+    parent = QuerySelectField(lazy_gettext(u'Parent'), query_factory=lambda: Forum.query,
+                              get_label='name')
+    description = TextField(lazy_gettext(u'Description'), [validators.Required()],
+                            widget=widgets.TextArea())
+    tags = QuerySelectMultipleField(lazy_gettext(u'Tags'), query_factory=lambda: Tag.query,
+                                    get_label='name')

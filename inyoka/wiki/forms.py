@@ -8,10 +8,10 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core import forms
+from wtforms import Form, TextField, widgets, validators
 from inyoka.i18n import _
 
-class EditPageForm(forms.Form):
-    text = forms.TextField(_(u'Text'), required=True,
-                           widget=forms.widgets.Textarea)
-    comment = forms.TextField(_(u'Edit comment'), max_length=512)
+
+class EditPageForm(Form):
+    text = TextField(_(u'Text'), [validators.Required()], widget=widgets.TextArea())
+    comment = TextField(_(u'Edit comment'), [validators.Length(512)])

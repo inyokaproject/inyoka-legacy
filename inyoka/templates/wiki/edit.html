@@ -1,7 +1,8 @@
 {%- extends 'wiki/base.html' %}
+{% from 'utils/macros.html' import render_form %}
 {%- set title_trace = [_('edit'), page.name] %}
 {%- set current_tab = 'edit' %}
 
 {%- block wiki_content %}
-{{ form() }}
+{{ render_form(form) }}
 {%- endblock %}

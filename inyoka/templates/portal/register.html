@@ -1,11 +1,5 @@
 {% extends "portal/base.html" %}
-
+{% from 'utils/macros.html' import render_form %}
 {% block content %}
-{% call form() %}
-    {{ form.as_dl() }}
-    {{ form.captcha }}
-    <div class="buttons">
-      <input type="submit" value="{{ _('Register') }}">
-    </div>
-{% endcall %}
+{{ render_form(form, submit_value=_('Register')) }}
 {% endblock content %}

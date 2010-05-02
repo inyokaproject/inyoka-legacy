@@ -8,10 +8,9 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-
 from operator import itemgetter
 from pygments.lexers import get_all_lexers
-from inyoka.core import forms
+from wtforms import Form, TextField, SelectField, BooleanField, validators, widgets
 from inyoka.i18n import _
 
 
@@ -26,13 +25,13 @@ def _get_pygments_lexers(add_empty=True):
     return r
 
 
-class AddPasteForm(forms.Form):
-    title = forms.TextField(_(u'Title (optional)'), max_length=50)
-    text = forms.TextField(_(u'Text'), required=True, widget=forms.widgets.Textarea)
-    language = forms.ChoiceField(_(u'Language'),
-                                 choices=list(_get_pygments_lexers()))
-    parent = forms.TextField(widget=forms.widgets.HiddenInput)
+class AddPasteForm(Form):
+    title = TextField(_(u'Title (optional)'), [validators.Length(max=50)])
+    text = TextField(_(u'Text'), [validators.Required()],
+                     widget=widgets.TextArea())
+    language = SelectField(_(u'Language'), choices=_get_pygments_lexers())
+    parent = TextField(widget=widgets.HiddenInput())
 
 
 class EditPasteForm(AddPasteForm):
-    hidden = forms.BooleanField(_(u'Hide Paste'))
+    hidden = BooleanField(_(u'Hide Paste'))

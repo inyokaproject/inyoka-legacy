@@ -58,17 +58,17 @@ class WikiController(IController):
             initial = {'text': page.current_revision.raw_text}
 
 
-        form = EditPageForm(initial=initial)
-        if request.method == 'POST' and form.validate(request.form):
+        form = EditPageForm(request.form, **initial)
+        if request.method == 'POST' and form.validate():
             created = page.current_revision is None
-            if not created and form['text'] == page.current_revision.raw_text:
+            if not created and form.text.data == page.current_revision.raw_text:
                 request.flash(_(u'Text didn\'t change!'))
                 return redirect_to(page)
 
             r = Revision(
                 page=page,
-                raw_text=form['text'],
-                change_comment=form['comment'],
+                raw_text=form.text.data,
+                change_comment=form.comment.data,
                 change_user=request.user,
             )
             db.session.add(r)
@@ -79,7 +79,7 @@ class WikiController(IController):
 
         return {
             'page': page,
-            'form': form.as_widget(),
+            'form': form,
         }
 
     @view

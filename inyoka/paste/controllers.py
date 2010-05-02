@@ -39,20 +39,20 @@ class PasteController(IController):
     @view
     @templated('paste/index.html', modifier=context_modifier)
     def index(self, request):
-        form = AddPasteForm()
-        if request.method == 'POST' and form.validate(request.form):
-            e = Entry(text=form.data['text'],
-                      language=form.data['language'] or None,
-                      title=form.data['title'],
+        form = AddPasteForm(request.form)
+        if request.method == 'POST' and form.validate():
+            e = Entry(text=form.text.data,
+                      language=form.language.data or None,
+                      title=form.title.data,
                       author=request.user,
-                      parent_id=form.data['parent'])
+                      parent_id=form.parent.data)
             db.session.commit()
             return redirect_to(e)
         else:
             parent_id = request.args.get('reply_to', None)
             if parent_id is not None:
                 parent = Entry.query.get(int(parent_id))
-                form = AddPasteForm({
+                form = AddPasteForm(**{
                     'title': parent.title,
                     'language': parent.language,
                     'text': parent.text,
@@ -60,7 +60,7 @@ class PasteController(IController):
                 })
 
         return {
-            'form': form.as_widget(),
+            'form': form,
         }
 
     @view('view')

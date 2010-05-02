@@ -1,10 +1,10 @@
 {%- extends 'forum/questions.html' %}
-
+{% from 'utils/macros.html' import render_form %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 {% set tab='ask' %}
 
 {%- block questions_body %}
 <h2>Ask a Question</h2>
-{{ form() }}
+{{ render_form(form) }}
 {%- endblock %}

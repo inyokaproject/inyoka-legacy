@@ -10,10 +10,10 @@
 """
 from inyoka.core.api import _, view, service, templated, db, Rule, \
     redirect_to, Response
-from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
 from inyoka.forum.forms import EditForumForm
 from inyoka.forum.models import Forum, Tag
+from inyoka.utils.forms import model_to_dict, update_model
 
 
 class ForumAdminProvider(IAdminProvider):
@@ -41,26 +41,28 @@ class ForumAdminProvider(IAdminProvider):
     def forum(self, request, id=None):
         if id:
             forum = Forum.query.get(id)
-            form = EditForumForm(model_to_dict(forum))
+            initial = model_to_dict(forum)
         else:
             forum = None
-            form = EditForumForm()
+            initial = {}
 
-        if request.method == 'POST' and form.validate(request.form):
+        form = EditForumForm(request.form, **initial)
+
+        if request.method == 'POST' and form.validate():
             if forum:
                 forum = update_model(forum, form,
                     ('name', 'slug', 'parent', 'description', 'tags'))
             else:
                 forum = Forum(
-                    name=form.data['name'],
-                    slug=form.data['slug'],
-                    parent=form.data['parent'],
-                    description=form.data['description'],
-                    tags=form.data['tags']
+                    name=form.name.data,
+                    slug=form.slug.data,
+                    parent=form.parent.data,
+                    description=form.description.data,
+                    tags=form.tags.data
                 )
             db.session.commit()
             return redirect_to('admin/forum/index')
 
         return {
-            'form': form.as_widget(),
+            'form': form,
         }

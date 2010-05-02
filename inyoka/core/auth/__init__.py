@@ -128,9 +128,10 @@ class AuthSystemBase(object):
     show_register_link = True
 
 
-    def get_login_form(self):
+    def get_login_form(self, request, default=None):
         """Returns the login form."""
-        return forms.StandardLoginForm(self)
+        default = {} if default is None else default
+        return forms.StandardLoginForm(self, request.form, **default)
 
     @property
     def can_reset_password(self):
@@ -162,16 +163,16 @@ class AuthSystemBase(object):
         if rv is not None:
             return rv
 
-        form = forms.RegistrationForm()
-        if request.method == 'POST' and form.validate(request.form):
-            user = User(username=form['username'], email=form['email'],
-                        password=form['password'])
+        form = forms.RegistrationForm(request.form)
+        if request.method == 'POST' and form.validate():
+            user = User(username=form.username.data, email=form.email.data,
+                        password=form.password.data)
             db.session.commit()
             r = self.after_register(request, user)
             if isinstance(r, Response):
                 return r
             return redirect_to('portal/index')
-        return {'form': form.as_widget()}
+        return {'form': form}
 
     def after_register(self, request, user):
         """
@@ -199,7 +200,7 @@ class AuthSystemBase(object):
 
     def login(self, request):
         """Like `register` just for login."""
-        form = self.get_login_form()
+        form = self.get_login_form(request)
 
         # some login systems require an external login URL.
         try:
@@ -212,7 +213,7 @@ class AuthSystemBase(object):
         # only validate if the before_login handler did not already cause
         # an error.  In that case there is not much win in validating
         # twice, it would clear the error added.
-        if request.method == 'POST' and form.validate(request.form):
+        if request.method == 'POST' and form.validate():
             try:
                 rv = self.perform_login(request, **form.data)
             except LoginUnsucessful, e:
@@ -235,7 +236,7 @@ class AuthSystemBase(object):
     @templated('portal/login.html')
     def render_login_template(self, request, form):
         """Renders the login template"""
-        return {'login_form': form.as_widget()}
+        return {'login_form': form}
 
     def logout(self, request):
         """This has to logout the user again.  This method must not fail.

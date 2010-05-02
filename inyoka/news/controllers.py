@@ -107,14 +107,14 @@ class NewsController(IController):
             return Forbidden()
 
         if article.comments_enabled and request.method == 'POST':
-            form = EditCommentForm()
-            if form.validate(request.form):
-                if form.data.get('comment_id'):
-                    comment = Comment.query.get(data['comment_id'])
-                    comment.text = form.data['text']
+            form = EditCommentForm(request.form)
+            if form.validate():
+                if form.data.get('comment_id', None):
+                    comment = Comment.query.get(form.comment_id.data)
+                    comment.text = form.text.data
                     request.flash(_(u'The comment was successfully edited'), True)
                 else:
-                    comment = Comment(text=form.data['text'], article=article,
+                    comment = Comment(text=form.text.data, article=article,
                                       author=request.user)
                     Subscription.new(comment, 'news.comment.new')
                     request.flash(_(u'Your comment was successfully created'), True)
@@ -132,7 +132,7 @@ class NewsController(IController):
         return {
             'article':  article,
             'comments': comments,
-            'form': form.as_widget(),
+            'form': form
         }
 
     @view('edit_comment')
@@ -148,17 +148,17 @@ class NewsController(IController):
 
         # action == 'edit'
         if request.method == 'POST':
-            form = EditCommentForm()
-            if form.validate(request.form):
-                comment.text = form.data['text']
+            form = EditCommentForm(request.form)
+            if form.validate():
+                comment.text = form.text.data
                 db.session.commit()
                 request.flash(_(u'The comment was saved'), True)
                 return redirect_to(comment)
         else:
-            form = EditCommentForm(initial={'text': comment.text})
+            form = EditCommentForm(text=comment.text)
         return {
             'comment':  comment,
-            'form':     form.as_widget(),
+            'form':     form,
         }
 
     @view('archive')

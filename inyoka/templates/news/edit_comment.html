@@ -1,8 +1,8 @@
 {%- extends 'news/base.html' %}
-
+{% from 'utils/macros.html' import render_form %}
 {% block content %}
 <div class="content_sidebar_bk">
   <h2>{{ _('Edit comment') }}</h2>
-  {{ form() }}
+  {{ render_form(form) }}
 </div>
 {% endblock %}

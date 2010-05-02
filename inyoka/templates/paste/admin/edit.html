@@ -1,4 +1,5 @@
 {%- extends 'admin/base.html' %}
+{% from 'utils/macros.html' import render_form %}
 {% set sidebar = false %}
 {% set title_trace = [_('Edit Paste')] %}
 
@@ -14,5 +15,5 @@
         <a href="{{ href('paste/browse', sort='active') }}">Browse</a></li>
 </ul>
 
-{{ form() }}
+{{ render_form(form) }}
 {%- endblock %}

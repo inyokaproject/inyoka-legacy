@@ -11,7 +11,7 @@
 from inyoka.i18n import _
 from inyoka.core.api import view, templated, redirect, redirect_to, db, Rule, \
     render_template
-from inyoka.core.forms.utils import model_to_dict, update_model
+from inyoka.utils.forms import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
 from inyoka.news.forms import EditArticleForm
 from inyoka.news.models import Article
@@ -57,17 +57,17 @@ class NewsAdminProvider(IAdminProvider):
             article = Article.query.filter_by(slug=slug).one()
             data = model_to_dict(article, exclude=('slug'))
 
-        form = EditArticleForm(data)
+        form = EditArticleForm(request.form, **data)
         if 'delete' in request.form:
             return redirect_to('admin/news/article_delete', slug=article.slug)
-        elif request.method == 'POST' and form.validate(request.form):
+        elif request.method == 'POST' and form.validate():
             article = update_model(article, form, ('pub_date', 'updated',
                 'title', 'intro', 'text', 'public', 'tags',
                 'author'))
             db.session.commit()
             request.flash(_(u'Updated article “%s”' % article.title), True)
         return {
-            'form': form.as_widget(),
+            'form': form,
             'article': article,
         }
 

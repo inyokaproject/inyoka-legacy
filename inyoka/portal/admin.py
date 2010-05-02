@@ -12,9 +12,9 @@ from inyoka.i18n import _
 from inyoka.core.api import db, view, templated, redirect, redirect_to, db, \
     Rule, render_template
 from inyoka.core.models import Tag
-from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
 from inyoka.portal.forms import EditTagForm
+from inyoka.utils.forms import model_to_dict, update_model
 
 
 class PortalAdminController(IAdminProvider):
@@ -55,18 +55,20 @@ class PortalAdminController(IAdminProvider):
             tag = Tag.query.filter_by(slug=slug).one()
             data = model_to_dict(tag, exclude=('slug'))
 
-        form = EditTagForm(data)
+        form = EditTagForm(request.form, **data)
+
         if 'delete' in request.form:
             return redirect_to('admin/portal/tag_delete', slug=tag.slug)
-        elif request.method == 'POST' and form.validate(request.form):
+        elif request.method == 'POST' and form.validate():
             tag = update_model(tag, form, ('name'))
             db.session.commit()
             if new:
                 request.flash(_(u'Created tag “%s”' % tag.name), True)
             else:
                 request.flash(_(u'Updated tag “%s”' % tag.name), True)
+
         return {
-            'form': form.as_widget(),
+            'form': form,
             'tag': tag,
         }
 

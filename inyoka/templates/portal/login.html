@@ -1,5 +1,5 @@
 {% extends "portal/base.html" %}
-
+{% from 'utils/macros.html' import render_form %}
 {% block content %}
-{{ login_form() }}
+{{ render_form(login_form) }}
 {% endblock content %}

@@ -52,13 +52,13 @@ class PortalController(IController):
     @templated('portal/profile_edit.html', modifier=context_modifier)
     def profile_edit(self, request):
         profile = UserProfile.query.filter_by(user_id=request.user.id).first()
-        form = get_profile_form()(profile=profile)
+        form = get_profile_form()(request.form, profile=profile)
 
-        if request.method == 'POST' and form.validate(request.form):
+        if request.method == 'POST' and form.validate():
             form.save()
             request.flash(_(u'Your profile was saved successfully'), True)
 
-        return {'form':form.as_widget()}
+        return {'form': form}
 
     @view
     @templated('portal/index.html', modifier=context_modifier)

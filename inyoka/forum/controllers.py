@@ -98,12 +98,12 @@ class ForumController(IController):
         answer_query = getattr(answer_query, sort)
         pagination = URLPagination(answer_query, page)
 
-        form = AnswerQuestionForm()
-        if request.method == 'POST' and form.validate(request.form):
+        form = AnswerQuestionForm(request.form)
+        if request.method == 'POST' and form.validate():
             answer = Answer(
                 author=request.user,
                 question=question,
-                text=form.data['text'],
+                text=form.text.data,
             )
             db.session.commit()
             return redirect(href(question))
@@ -123,7 +123,7 @@ class ForumController(IController):
             'sort': sort,
             'question': question,
             'answers': pagination.query,
-            'form': form.as_widget(),
+            'form': form,
             'pagination': pagination,
             'user_votes': user_votes
         }
@@ -139,14 +139,14 @@ class ForumController(IController):
             forum = Forum.query.filter_by(slug=forum).one()
             tags = forum.tags
 
-        form = AskQuestionForm(initial={'tags': tags})
+        form = AskQuestionForm(request.form, tags=tags)
 
-        if request.method == 'POST' and form.validate(request.form):
+        if request.method == 'POST' and form.validate():
             question = Question(
-                title=form.data['title'],
+                title=form.title.data,
                 author=request.user,
-                text=form.data['text'],
-                tags=form.data['tags']
+                text=form.text.data,
+                tags=form.tags.data
             )
             db.session.commit()
             return redirect_to(question)
@@ -154,7 +154,7 @@ class ForumController(IController):
         return {
             'forum': forum,
             'tags': tags,
-            'form': form.as_widget()
+            'form': form
         }
 
     @view

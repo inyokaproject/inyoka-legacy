@@ -8,36 +8,30 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core import forms
+from wtforms import Form, BooleanField, TextField, validators, widgets
 from inyoka.i18n import lazy_gettext
 
 
-class StandardLoginForm(forms.Form):
+class StandardLoginForm(Form):
     """Used to log in users."""
-    username = forms.TextField(lazy_gettext(u'Username'), required=True)
-    password = forms.TextField(lazy_gettext(u'Password'), required=True,
-                               widget=forms.widgets.PasswordInput)
-    permanent = forms.BooleanField(lazy_gettext(u'Remember me'))
+    username = TextField(lazy_gettext(u'Username'), [validators.Required()])
+    password = TextField(lazy_gettext(u'Password'), [validators.Required()],
+                         widget=widgets.PasswordInput())
+    permanent = BooleanField(lazy_gettext(u'Remember me'))
 
-    def __init__(self, auth_system, initial=None, action=None, request=None):
-        forms.Form.__init__(self, initial, action, request)
+    def __init__(self, auth_system, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
         self.auth_system = auth_system
         if self.auth_system.passwordless:
-            del self.fields['password']
+            del self.password
 
 
-class RegistrationForm(forms.Form):
-    captcha_protected = True
+class RegistrationForm(Form):
 
-    username = forms.TextField(lazy_gettext(u'Username'), required=True)
-    email = forms.TextField(lazy_gettext(u'Email'), required=True)
-    password = forms.TextField(lazy_gettext(u'Password'), required=True,
-                               widget=forms.widgets.PasswordInput)
-    password_again = forms.TextField(lazy_gettext(u'Password again'), required=True,
-                               widget=forms.widgets.PasswordInput)
-
-    def context_validate(self, data):
-        if data['password'] != data['password_again']:
-            raise forms.ValidationError(lazy_gettext(
-                u'The two passwords must be the same'
-            ))
+    username = TextField(lazy_gettext(u'Username'), [validators.Required()])
+    email = TextField(lazy_gettext(u'Email'), [validators.Required()])
+    password = TextField(lazy_gettext(u'Password'), [validators.Required(),
+        validators.EqualTo('confirm', message=lazy_gettext(u'Passwords must match'))],
+        widget=widgets.PasswordInput())
+    confirm = TextField(lazy_gettext(u'Repeat Passord'),
+        [validators.Required()], widget=widgets.PasswordInput())

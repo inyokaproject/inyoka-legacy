@@ -9,7 +9,6 @@
 
 # Imports for easy API access
 from inyoka import Interface
-from inyoka.core import forms
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 from inyoka.core.http import Request, Response, redirect_to, redirect

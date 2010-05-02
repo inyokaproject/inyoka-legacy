@@ -8,21 +8,21 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from wtforms import Form, TextField, validators
 from inyoka import Interface
-from inyoka.core import forms
 from inyoka.core.database import db
-from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.i18n import _
 from inyoka.core.auth.models import UserProfile, IUserProfileExtender
+from inyoka.utils.forms import model_to_dict, update_model
 
 
 def get_profile_form():
-    class ProfileForm(forms.Form):
+    class ProfileForm(Form):
         def __init__(self, *args, **kwargs):
             self.profile = profile = kwargs.pop('profile')
             if profile is not None:
                 profile_fields = IUserProfileExtender.get_profile_names()
-                kwargs['initial'] = model_to_dict(profile, fields=profile_fields)
+                kwargs.update(model_to_dict(profile, fields=profile_fields))
             super(ProfileForm, self).__init__(*args, **kwargs)
 
         def save(self, commit=True):
@@ -35,10 +35,10 @@ def get_profile_form():
 
 
     for name, field in IUserProfileExtender.get_profile_forms().iteritems():
-        ProfileForm.fields[name] = field
+        setattr(ProfileForm, name, field)
 
     return ProfileForm
 
 
-class EditTagForm(forms.Form):
-    name = forms.TextField(_(u'Name'), max_length=20)
+class EditTagForm(Form):
+    name = TextField(_(u'Name'), [validators.Length(max=20)])

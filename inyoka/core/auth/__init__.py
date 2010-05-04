@@ -9,22 +9,11 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import with_statement
-
 from threading import Lock
-
-from sqlalchemy.orm.exc import NoResultFound
 from werkzeug import import_string
 from inyoka import Interface
-from inyoka.i18n import _
-from inyoka.core.auth import forms, models
-from inyoka.core.auth.models import User
 from inyoka.core.context import ctx
-from inyoka.core.database import db
-from inyoka.core.http import redirect_to, Response
 from inyoka.core.middlewares import IMiddleware
-from inyoka.core.models import Confirm
-from inyoka.core.templating import templated
-from inyoka.utils.confirm import register_confirm
 
 
 _auth_system = None
@@ -32,7 +21,10 @@ _auth_system_lock = Lock()
 
 
 def get_auth_system():
-    """Return the auth system."""
+    """Return the auth system currently configured.
+
+    If you want to refresh the auth system call :func:`refresh_auth_system`.
+    """
     global _auth_system
     with _auth_system_lock:
         if _auth_system is None:
@@ -67,30 +59,8 @@ class AuthMiddleware(IMiddleware):
         return response
 
 
-class IPermissionChecker(Interface):
-
-    @classmethod
-    def has_perm(cls, user, perm, obj=None):
-        has_permission = False
-
-        for comp in ctx.get_implementations(cls, instances=True):
-            flag = comp.has_perm(user, perm, obj)
-            # The component doesn't care about the permission.
-            if flag is None:
-                continue
-            # The component vetoed, which counts stronger than any True found.
-            elif not flag:
-                return False
-            # We got an auth here, but we can't break out of the loop cause
-            # another component still might veto.
-            else:
-                has_permission = True
-
-        return has_permission
-
-
-class AuthSystemBase(object):
-    """The base auth system.
+class IAuthSystem(Interface):
+    """The base auth system interface.
 
     Most functionality is described in the methods and properties you have
     to override for subclasses.  A special notice applies for user
@@ -127,11 +97,12 @@ class AuthSystemBase(object):
     #: for this auth system, you can disable it here.
     show_register_link = True
 
-
     def get_login_form(self, request, default=None):
-        """Returns the login form."""
-        default = {} if default is None else default
-        return forms.StandardLoginForm(self, request.form, **default)
+        """Returns the login form.
+
+        :param request: The current request.
+        :param default: The initial form values.
+        """
 
     @property
     def can_reset_password(self):
@@ -150,42 +121,22 @@ class AuthSystemBase(object):
         handling.
         """
 
-    @templated('portal/register.html')
     def register(self, request):
         """Called like a view function with only the request.  Has to do the
-        register heavy-lifting.  Auth systems that only use the internal
-        database do not have to override this method.  Implementers that
-        override this function *have* to call `after_register` to finish
-        the registration of the new user.  If `before_register` is unnused
-        it does not have to be called, otherwise as documented.
-        """
-        rv = self.before_register(request)
-        if rv is not None:
-            return rv
+        register heavy-lifting.
 
-        form = forms.RegistrationForm(request.form)
-        if request.method == 'POST' and form.validate():
-            user = User(username=form.username.data, email=form.email.data,
-                        password=form.password.data)
-            db.session.commit()
-            r = self.after_register(request, user)
-            if isinstance(r, Response):
-                return r
-            return redirect_to('portal/index')
-        return {'form': form}
+        This method should, but must not call :meth:`before_register` and
+        :meth:`after_register` to either check if the register process is
+        not required or th finish the user registration.
+
+        :param request: The current request object.
+        """
 
     def after_register(self, request, user):
         """
         Tasks to be performed after the registration.
         Per default this sends an activation email.
         """
-        return self.send_activation_mail(request, user)
-
-    def send_activation_mail(self, request, user):
-        """Sends an activation mail."""
-        c = Confirm('activate_user', {'user': user.id}, 3)
-        db.session.commit()
-        return Response('activation link: %s' % c.url)
 
     def before_login(self, request):
         """If this login system uses an external login URL, this function
@@ -200,43 +151,12 @@ class AuthSystemBase(object):
 
     def login(self, request):
         """Like `register` just for login."""
-        form = self.get_login_form(request)
-
-        # some login systems require an external login URL.
-        try:
-            rv = self.before_login(request)
-            if rv is not None:
-                return rv
-        except LoginUnsucessful, e:
-            form.add_error(unicode(e))
-
-        # only validate if the before_login handler did not already cause
-        # an error.  In that case there is not much win in validating
-        # twice, it would clear the error added.
-        if request.method == 'POST' and form.validate():
-            try:
-                rv = self.perform_login(request, **form.data)
-            except LoginUnsucessful, e:
-                form.add_error(unicode(e))
-            else:
-                if rv is not None:
-                    return rv
-                request.flash(_(u'You are now logged in.'))
-                return form.redirect('portal/index')
-
-        return self.render_login_template(request, form)
 
     def perform_login(self, request, **form_data):
         """If `login` is not overridden, this is called with the submitted
         form data and might raise `LoginUnsucessful` so signal a login
         error.
         """
-        raise NotImplementedError()
-
-    @templated('portal/login.html')
-    def render_login_template(self, request, form):
-        """Renders the login template"""
-        return {'login_form': form}
 
     def logout(self, request):
         """This has to logout the user again.  This method must not fail.
@@ -248,32 +168,12 @@ class AuthSystemBase(object):
         Most auth systems do not have to implement this method.  The
         default one calls `set_user(request, None)`.
         """
-        self.set_user(request, None)
-        request.flash(_(u'You was successfully logged out'))
 
     def get_user(self, request):
-        raise NotImplementedError()
+        """Return the current user from the request object."""
 
     def set_user(self, request, user):
         """Can be used by the login function to set the user.  This function
         should only be used for auth systems internally if they are not using
         an external session.
         """
-        if user is None:
-            request.session.pop('user_id', None)
-        else:
-            request.session['user_id'] = user.id
-
-
-@register_confirm('activate_user')
-def activate_user(data):
-    try:
-        u = User.query.get(data['user'])
-    except NoResultFound:
-        return redirect_to('portal/index')
-    u.status = 'normal'
-    db.session.commit()
-    ctx.current_request.flash(_(
-        u'Activation successfull, you can now login with you\'re credentials'
-    ))
-    return redirect_to('portal/login')

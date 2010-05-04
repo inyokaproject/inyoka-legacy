@@ -11,7 +11,7 @@
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
 from inyoka.core.api import ctx, db, cache
-from inyoka.core.auth import User
+from inyoka.core.auth.models import User
 from inyoka.core.markup import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
 

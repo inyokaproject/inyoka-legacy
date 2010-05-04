@@ -279,4 +279,3 @@ def is_valid_jabber(message=None):
         if _jabber_re.match(value) is None:
             raise ValidationError(message)
     return validator
-

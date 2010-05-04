@@ -8,10 +8,10 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms import Form, TextField, validators
+from wtforms import Form, validators, widgets, BooleanField, TextField
 from inyoka import Interface
 from inyoka.core.database import db
-from inyoka.i18n import _
+from inyoka.i18n import _, lazy_gettext
 from inyoka.core.auth.models import UserProfile, IUserProfileExtender
 from inyoka.utils.forms import model_to_dict, update_model
 
@@ -40,5 +40,30 @@ def get_profile_form():
     return ProfileForm
 
 
+class LoginForm(Form):
+    """Used to log in users."""
+    username = TextField(lazy_gettext(u'Username'), [validators.Required()])
+    password = TextField(lazy_gettext(u'Password'), [validators.Required()],
+                         widget=widgets.PasswordInput())
+    permanent = BooleanField(lazy_gettext(u'Remember me'))
+
+    def __init__(self, auth_system, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        self.auth_system = auth_system
+        if self.auth_system.passwordless:
+            del self.password
+
+
+class RegistrationForm(Form):
+
+    username = TextField(lazy_gettext(u'Username'), [validators.Required()])
+    email = TextField(lazy_gettext(u'Email'), [validators.Required()])
+    password = TextField(lazy_gettext(u'Password'), [validators.Required(),
+        validators.EqualTo('confirm', message=lazy_gettext(u'Passwords must match'))],
+        widget=widgets.PasswordInput())
+    confirm = TextField(lazy_gettext(u'Repeat Passord'),
+        [validators.Required()], widget=widgets.PasswordInput())
+
+
 class EditTagForm(Form):
-    name = TextField(_(u'Name'), [validators.Length(max=20)])
+    name = TextField(lazy_gettext(u'Name'), [validators.Length(max=20)])

@@ -18,7 +18,7 @@ To get Inyoka work properly we need those dependencies:
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion
 
 Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::
 

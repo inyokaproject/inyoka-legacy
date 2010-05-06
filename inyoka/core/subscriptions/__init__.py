@@ -22,6 +22,8 @@ from inyoka.utils.datastructures import _missing
 
 def subscribed(type, user, subject_id=None):
     from inyoka.core.subscriptions.models import Subscription
+    if isinstance(type, SubscriptionType):
+        type = type.name
     return bool(Subscription.query.filter_by(user=user, type_name=type,
                                              subject_id=subject_id).count())
 

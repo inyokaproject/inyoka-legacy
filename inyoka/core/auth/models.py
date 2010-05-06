@@ -173,8 +173,8 @@ class User(db.Model, SerializableObject):
         name = ctx.cfg['anonymous_name']
         return self.username == name
 
-    def subscribed(self, name, subject_id=None):
-        return subscribed(name, self, subject_id)
+    def subscribed(self, type, subject_id=None):
+        return subscribed(type, self, subject_id)
 
     def __repr__(self):
         i = '#%d' % self.id if self.id else '[no id]'

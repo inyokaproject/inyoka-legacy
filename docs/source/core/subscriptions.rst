@@ -93,6 +93,6 @@ Managing Subscriptions
 Defining Subscription Types And Actions
 ---------------------------------------
 .. currentmodule:: inyoka.core.subscriptions
-.. autoclass:: SubscriptionType(Component)
-.. autoclass:: SubscriptionAction(Component)
+.. autoclass:: SubscriptionType
+.. autoclass:: SubscriptionAction
 

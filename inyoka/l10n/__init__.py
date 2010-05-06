@@ -88,7 +88,6 @@ _timezone_aware = ('format_datetime', 'format_time')
 
 def get_dummy(func):
     #: avoid failing doctest from the original docstring
-    #TODO: less ugly solution wanted
     if func.func_name in _timezone_aware:
         w = wraps(func, ('__module__', '__name__'))
     else:

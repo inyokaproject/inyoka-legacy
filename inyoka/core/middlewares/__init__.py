@@ -14,28 +14,31 @@ from inyoka.core.routing import UrlMixin
 
 
 class IMiddleware(Interface, UrlMixin):
-    # cache for imported middlewares
+    #: cache for imported middlewares
     _middlewares = []
 
-    # The higher the number the earlier the middleware will get called during
-    # request, for the response, the result is reversed
-    # TODO: document sensible priority values
+    #: The priority for this middleware.  The higher the number the earlier
+    #: the middleware will get called during request.  For response the result
+    #: is reversed.
+    #: Do never use priority numbers above 50 as those are used for internal usage!
+    #: Note also that as there is no dependency tracking you may have a look
+    #: at other applications/plugins what values they use to hook in yours.
     priority = 0
 
-    # A low level middleware will be handled just as ordinary wsgi
-    # middlewares.  They are used to include external wsgi middlewares
-    # into the inyoka core.  Note that you can still use the `UrlMixin`
-    # features and any other middleware features for low level middlewares.
-    # The only difference is that neither `process_request` nor
-    # `process_response` is called but `__call__` with environ
-    # and start_response as the arguments.
-    # Note that your middleware *must* call the `self.application`
-    # attribute if it does not return any data so that the request stack
-    # can be continued.
+    #: A low level middleware will be handled just as ordinary wsgi
+    #: middlewares.  They are used to include external wsgi middlewares
+    #: into the inyoka core.  Note that you can still use the `UrlMixin`
+    #: features and any other middleware features for low level middlewares.
+    #: The only difference is that neither `process_request` nor
+    #: `process_response` is called but `__call__` with environ
+    #: and start_response as the arguments.
+    #: Note that your middleware *must* call the `self.application`
+    #: attribute if it does not return any data so that the request stack
+    #: can be continued.
     low_level = False
 
-    # set `build_only` from `UrlMixin` to `True` 'cause middlewares should
-    # never ever build matching url rules
+    #: Set `build_only` from `UrlMixin` to `True` 'cause middlewares should
+    #: never ever build matching url rules
     build_only = True
 
     def __init__(self, ctx):

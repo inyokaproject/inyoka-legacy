@@ -31,7 +31,7 @@ class StaticMiddlewareBase(object):
     """
     low_level = True
 
-    priority = 99
+    priority = 75
 
     exports = None
 

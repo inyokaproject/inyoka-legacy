@@ -13,8 +13,9 @@
 import os
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
-from werkzeug import import_string, find_modules, cached_property
+from werkzeug import find_modules, cached_property
 from inyoka.core.context import LocalProperty
+from inyoka.utils import safe_import_string
 
 
 #: Inyoka revision present in the current mercurial working copy
@@ -94,17 +95,17 @@ def _import_modules(modules):
     for module in modules:
         # No star at the end means a package/module/class but nothing below.
         if module[-1] != '*':
-            yield import_string(module)
+            yield safe_import_string(module)
         else:
             try:
                 for mod in find_modules(module[:-2], True, True):
-                    yield import_string(mod)
+                    yield safe_import_string(mod)
                 # find_modules does import our package, but doesn't yield it
                 # hence we import it ourself.
-                yield import_string(module[:-2])
+                yield safe_import_string(module[:-2])
             except ValueError: #pragma: no cover
                 # module is a module and not a package
-                yield import_string(module[:-2])
+                yield safe_import_string(module[:-2])
 
 
 class ApplicationContext(object):

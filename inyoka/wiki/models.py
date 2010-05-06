@@ -27,7 +27,8 @@ class WikiLatestContentProvider(ILatestContentProvider):
     cache_key = 'wiki/latest_revisions'
 
     def get_query(self):
-        return Revision.query.order_by(Revision.change_date.desc())
+        return Revision.query.options(db.eagerload('page')) \
+                       .order_by(Revision.change_date.desc())
 
 
 class PageQuery(db.Query):

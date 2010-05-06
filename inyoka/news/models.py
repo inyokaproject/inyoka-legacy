@@ -10,7 +10,7 @@
 """
 from datetime import datetime, timedelta, date
 from werkzeug import cached_property
-from inyoka.core.api import ctx, db, cache
+from inyoka.core.api import _, ctx, db, cache
 from inyoka.core.auth.models import User
 from inyoka.core.markup import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
@@ -36,7 +36,8 @@ class LatestCommentsContentProvider(ILatestContentProvider):
     cache_key = 'news/latest_comments'
 
     def get_query(self):
-        return Comment.query.order_by(Comment.pub_date)
+        return Comment.query.options(db.eagerload('author')) \
+                      .order_by(Comment.pub_date)
 
 
 class ArticleMapperExtension(db.MapperExtension):
@@ -103,7 +104,7 @@ class Comment(db.Model):
         }
 
     def __unicode__(self):
-        return u'Comment by %s on %s' % (
+        return _(u'Comment by %s on %s') % (
                self.author.display_name, self.article.title
         )
 
@@ -171,7 +172,7 @@ class Article(db.Model):
         extension=TagCounterExtension())
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     author = db.relationship(User, backref=db.backref('articles', lazy='dynamic'))
-    comments = db.relationship(Comment, backref=db.backref('article', lazy='select'),
+    comments = db.relationship(Comment, backref=db.backref('article', lazy='joined'),
         primaryjoin=id==Comment.article_id,
         order_by=[db.asc(Comment.pub_date)],
         lazy='dynamic',

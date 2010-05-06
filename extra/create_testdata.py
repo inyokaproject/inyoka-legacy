@@ -288,7 +288,7 @@ def create_forum_test_data():
         tags=[hardware])
     db.session.commit()
 
-    tags = Tag.query.all()
+    tags = Tag.query.public().all()
     users = User.query.all()
     last_date = None
 
@@ -341,7 +341,7 @@ def create_news_test_data():
     from inyoka.core.auth.models import User
     from inyoka.news.models import Tag, Comment, Article
     users = User.query.all()
-    tags = Tag.query.all()
+    tags = Tag.query.public().all()
     num = {'small': 10, 'medium': 30, 'large': 100}[SIZE]
     used = set()
     for x in xrange(randrange(num - 5, num + 5)):

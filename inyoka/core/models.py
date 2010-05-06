@@ -59,6 +59,10 @@ class TagQuery(db.Query):
         to not write the cache key everywhere in the code"""
         return self.order_by(Tag.tagged.asc()).cached('core/tags')
 
+    def public(self):
+        """This method returns a query that shows only public tags."""
+        return self.filter(Tag.public == True)
+
     def get_cloud(self, max_visible=None, steps=4):
         """Get all informations required for a tag cloud
 
@@ -115,8 +119,12 @@ class Tag(db.Model, SerializableObject):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False, index=True)
     slug = db.Column(db.String(20), nullable=False, unique=True)
-    #: number of items tagged
+    #: Number of items tagged
     tagged = db.Column(db.Integer, nullable=False, default=0)
+    #: Flag if the tag is public or internal.  If a tag is not public
+    #: it's probably used by internal functions to ensure special
+    #: permission flags.  It's not shown in any public interface (e.g tag-cloud)
+    public = db.Column(db.Integer, nullable=False, default=True)
 
     def __unicode__(self):
         return self.name

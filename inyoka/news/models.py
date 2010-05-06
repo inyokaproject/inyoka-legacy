@@ -3,7 +3,7 @@
     inyoka.news.models
     ~~~~~~~~~~~~~~~~~~
 
-    Database models for the Inyoka News application-
+    Database models for the Inyoka News application.
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -14,12 +14,29 @@ from inyoka.core.api import ctx, db, cache
 from inyoka.core.auth.models import User
 from inyoka.core.markup import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
+from inyoka.portal.api import ILatestContentProvider
 
 
 article_tag = db.Table('news_article_tag', db.metadata,
     db.Column('article_id', db.Integer, db.ForeignKey('news_article.id')),
     db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id))
 )
+
+
+class LatestArticlesContentProvider(ILatestContentProvider):
+    name = 'news_articles'
+    cache_key = 'news/latest_articles'
+
+    def get_query(self):
+        return Article.query.order_by(Article.updated.desc())
+
+
+class LatestCommentsContentProvider(ILatestContentProvider):
+    name = 'news_comments'
+    cache_key = 'news/latest_comments'
+
+    def get_query(self):
+        return Comment.query.order_by(Comment.pub_date)
 
 
 class ArticleMapperExtension(db.MapperExtension):

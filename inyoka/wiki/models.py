@@ -17,6 +17,17 @@ from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.utils.html import escape
 from inyoka.wiki.utils import deurlify_page_name, urlify_page_name
+from inyoka.portal.api import ILatestContentProvider
+
+
+class WikiLatestContentProvider(ILatestContentProvider):
+
+    name = 'wiki_revisions'
+
+    cache_key = 'wiki/latest_revisions'
+
+    def get_query(self):
+        return Revision.query.order_by(Revision.change_date.desc())
 
 
 class PageQuery(db.Query):

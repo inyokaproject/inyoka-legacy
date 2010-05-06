@@ -21,6 +21,7 @@ from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
 from inyoka.portal.forms import get_profile_form
+from inyoka.portal.api import ILatestContentProvider
 from inyoka.wiki.models import Revision as WikiRevision
 from inyoka.forum.models import Question as ForumQuestion
 from inyoka.news.models import Article as NewsArticle, Comment as NewsComment
@@ -63,23 +64,13 @@ class PortalController(IController):
     @view
     @templated('portal/index.html', modifier=context_modifier)
     def index(self, request):
-        #TODO: get popular contents sorted by popularity, see
-        #      :func:`inyoka.forum.models.Question.popularity` for example.
-        items = []
-        for model, column in ((WikiRevision, WikiRevision.change_date),
-                      (ForumQuestion, ForumQuestion.date_active),
-                      (NewsArticle, NewsArticle.updated),
-                      (NewsComment, NewsComment.pub_date)):
-            app = model.__tablename__.split('_', 1)[0].lower()
-            value = [(app, obj) for obj in
-                     model.query.order_by(column.desc()).limit(2).all()]
-            items.extend(value)
-        cloud, more = Tag.query.get_cloud()
+        contents = ILatestContentProvider.get_cached_content(2)
+        cloud, more = Tag.query.public().get_cloud()
         return {
             'introduction': True,
             'tag_cloud': cloud,
             'more_tags': more,
-            'latest_content': items
+            'latest_content': contents
         }
 
     @view

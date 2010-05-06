@@ -45,7 +45,7 @@ def context_modifier(request, context):
         }
         cache.set(key, data)
 
-    tags = Tag.query.get_cached()
+    tags = Tag.query.public().get_cached()
     context.update(
         months=get_month_names(),
         tags=tags,
@@ -82,7 +82,7 @@ class NewsController(IController):
     def index(self, request, slug=None, page=1):
         tag = None
         if slug:
-            tag = Tag.query.filter_by(slug=slug).one()
+            tag = Tag.query.public().filter_by(slug=slug).one()
             articles = tag.articles
         else:
             articles = Article.query

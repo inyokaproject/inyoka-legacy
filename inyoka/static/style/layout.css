@@ -304,35 +304,33 @@ div.grouper:hover {
  *
  */
 
-.portal, .forum, .wiki, .news, .pastebin {
+.forum_questions, .wiki_revisions, .news_articles, .news_comments,
+.paste_entries {
   background-repeat: no-repeat;
   background-position: center left;
 }
 
-.portal a, .forum a, .wiki a, .news a, .pastebin a {
+.forum_questions a, .wiki_revisions a, .news_articles a, .news_comments a,
+.paste_entries a {
   padding-left: 20px;
 }
 
-.portal {
-  background-image: url('../img/icons/small/portal.png') !important;
-}
-
-.forum {
+.forum_questions {
   background-image: url('../img/icons/small/forum.png') !important;
 }
 
-.wiki {
+.wiki_revisions {
   background-image: url('../img/icons/small/wiki.png') !important;
 }
 
-.news {
+.news_articles {
   background-image: url('../img/icons/small/news.png') !important;
 }
 
-.comment {
+.news_comments {
   background-image: url('../img/icons/small/comment.png') !important;
 }
 
-.pastebin {
+.paste_entries {
   background-image: url('../img/icons/small/pastebin.png') !important;
 }

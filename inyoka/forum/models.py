@@ -15,6 +15,7 @@ from inyoka.core.api import ctx, db, cache, SerializableObject
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
+from inyoka.portal.api import ILatestContentProvider
 from inyoka.utils import confidence
 
 
@@ -28,6 +29,14 @@ forum_tag = db.Table('forum_forum_tag', db.metadata,
     db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id)),
     db.Column('propose', db.Boolean)
 )
+
+
+class LatestQuestionsContentProvider(ILatestContentProvider):
+    name = 'forum_questions'
+    cache_key = 'forum/latest_questions'
+
+    def get_query(self):
+        return Question.query.order_by(Question.date_active.desc())
 
 
 class Forum(db.Model, SerializableObject):

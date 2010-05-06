@@ -8,7 +8,8 @@
     :copyright: 2010 by the Project Name Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
-from inyoka.core.markup import Parser, nodes
+from inyoka.core.markup.parser import Parser
+from inyoka.core.markup import nodes
 
 
 def parse(code):

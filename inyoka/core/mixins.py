@@ -8,7 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.markup import parse, render
+from inyoka.core.markup.parser import parse, render
 from inyoka.core.database import db
 from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 

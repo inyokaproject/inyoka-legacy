@@ -8,7 +8,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.test import *
-from inyoka.core.markup import Parser, RenderContext
+from inyoka.core.markup.parser import Parser, RenderContext
 
 
 def render(source):

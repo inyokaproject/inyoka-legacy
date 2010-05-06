@@ -36,35 +36,50 @@ def escape_html(text):
 
 def process_file(store, filename):
     try:
-        f = open(filename, 'r')
+        fobj = open(filename, 'r')
     except (IOError, OSError):
         return False
     llmatch = 0
     try:
-        for lno, line in enumerate(f):
+        for lno, line in enumerate(fobj.readlines()):
             # just some random heuristics to filter out binary files
             if lno < 100 and binary_re.search(line):
                 return False
             m = tag_re.search(line)
-            if m:
+            if m and not llmatch:
+                what = None
+                _extractors = (
+                    lambda: m.group('what')[:m.group('what').index('#}')],
+                    lambda: m.group('what')[:m.group('what').index('*/')],
+                )
+                for extractor in _extractors:
+                    try:
+                        what = extractor()
+                    except ValueError:
+                        continue
+                if what is None:
+                    what = m.group('what')
+
                 store.setdefault(filename, []).append({
                     'lno':  lno+1,
                     'tag':  m.group('tag'),
                     'who':  m.group('who') or '',
-                    'what': escape_html(m.group('what')),
+                    'what': escape_html(what),
                 })
                 # 'what' cannot start at column 0
                 llmatch = m.start('what')
             elif llmatch:
                 # continuation lines
-                cont = line[llmatch:].strip()
-                if cont:
-                    store[filename][-1]['what'] += ' ' + cont
-                    continue
+                #XXX: Fix this for other file types than python!
+                if line[:llmatch].replace('#', '').isspace():
+                    cont = line[llmatch:].strip()
+                    if cont:
+                        store[filename][-1]['what'] += ' ' + escape_html(cont)
+                        continue
                 llmatch = 0
         return True
     finally:
-        f.close()
+        fobj.close()
 
 
 def main():

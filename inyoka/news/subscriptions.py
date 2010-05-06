@@ -24,14 +24,13 @@ class ArticleSubscriptionType(SubscriptionType):
     mode = 'multiple'
 
 
-class TagSubscriptionType():# SubscriptionType):
-    #XXX articles have only one tag atm.
+class TagSubscriptionType(SubscriptionType):
     name = 'news.article.by_tag'
 
     subject_type = Tag
     object_type = Article
 
-    actions = ['news.article.new']#, 'news.article.add_tag']
+    actions = ['news.article.new']
     mode = 'multiple'
 
     get_subjects = staticmethod(attrgetter('tags'))

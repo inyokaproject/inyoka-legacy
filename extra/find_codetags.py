@@ -95,6 +95,7 @@ def main():
     num = 0
 
     for path in args:
+        path = abspath(path)
         print "Searching for code tags in %s, please wait." % path
 
         if isfile(path):

@@ -95,6 +95,7 @@ def after_install(options, home_dir):
     easy_install('SQLAlchemy==0.6', home_dir)
     easy_install('http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz', home_dir)
     easy_install('lxml', home_dir)
+    easy_install('translitcodec', home_dir)
     pil_install(home_dir)
 
 

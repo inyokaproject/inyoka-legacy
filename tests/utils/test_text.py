@@ -21,7 +21,7 @@ def test_slugs():
 
     eq_(gen_unicode_slug(text), u'i-do-have-unicode-charz:-\xf6\xe4\xfc')
     eq_(gen_ascii_slug(text + ' at least I did'),
-        u'i-do-have-unicode-charz:-at-least-i-did')
+        u'i-do-have-unicode-charz:-oeaeue-at-least-i-did')
 
 
 def test_timestamped_slugs():

@@ -83,12 +83,9 @@ def templated(template_name, modifier=None, stream=False):
     def decorator(func):
         @functools.wraps(func)
         def templated_wrapper(request, *args, **kwargs):
-            try:
-                ret = func(request, *args, **kwargs)
-                if ret is None:
-                    ret = {}
-            except db.NoResultFound:
-                raise NotFound()
+            ret = func(request, *args, **kwargs)
+            if ret is None:
+                ret = {}
 
             # if we got no dictionary as response type we try to force
             # to return a proper Response object instead of any further process

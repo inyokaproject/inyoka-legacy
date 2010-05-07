@@ -66,7 +66,6 @@ class QueryMock(object):
         return []
 
 
-
 def test_pagination_general():
     query = PaginationTest1.query.filter_by(group=10)
     p = URLPagination(query, 1, '/entries/', per_page=15)

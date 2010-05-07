@@ -123,6 +123,11 @@ DEFAULTS = {
     'routing.urls.api':           DottedField(default=u'api:/',
         help_text=lazy_gettext(u'Url mapping used for the API')),
 
+    # Do never change that value!!!!
+    'routing.urls.test':             DottedField(default=u'_test_:/',
+        help_text=lazy_gettext(u'Url mapping used for the testing system.  '
+                               u'Do never chage that value!')),
+
 
     # values for static and media serving
     'routing.urls.static':          DottedField(default=u':/_static',

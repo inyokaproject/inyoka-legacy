@@ -18,14 +18,14 @@ import functools
 import nose
 from nose.plugins import cover, base, errorclass
 
-from werkzeug import Client
+from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
 from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.context import ctx
-from inyoka.core.http import Response
+from inyoka.core.http import Response, Request
 from inyoka.core.templating import TEMPLATE_CONTEXT
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
@@ -90,9 +90,10 @@ class ViewTestSuite(TestSuite):
 
     def _pre_setup(self):
         """Setup the test client and url and base domain values"""
-        self._client = Client(ctx.dispatcher, response_wrapper=TestResponse)
+        self._client = Client(ctx.dispatcher, response_wrapper=TestResponse,
+                              use_cookies=True)
         self.base_domain = ctx.cfg['base_domain_name']
-        name = self.controller.name
+        name = 'test' if self.controller is None else self.controller.name
         subdomain = ctx.cfg['routing.urls.' + name].split(':', 1)[0]
         self.base_url = make_full_domain(subdomain)
 
@@ -146,6 +147,13 @@ class ViewTestSuite(TestSuite):
         action = self.normalize_local_path(form.attrib['action'])
         return self.post(action, method=form.attrib['method'].upper(),
                                 data=data, follow_redirects=follow_redirects)
+
+    def get_new_request(self, *args, **kwargs):
+        """Creates a WSGI environment from the given values (see
+        :func:`werkzeug.create_environ` for more information, this
+        function accepts the same arguments).
+        """
+        return Request(create_environ(*args, **kwargs))
 
 
 class InyokaPlugin(cover.Coverage):
@@ -262,8 +270,10 @@ class InyokaPlugin(cover.Coverage):
             callback()
 
     def wantClass(self, cls):
-        if issubclass(cls, ViewTestSuite):
+        if issubclass(cls, ViewTestSuite) and not cls is ViewTestSuite:
             return True
+        if cls is ViewTestSuite:
+            return False
         return None
 
     def wantFile(self, file):

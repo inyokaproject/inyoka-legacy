@@ -9,6 +9,9 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from time import time
+from hashlib import md5
+from operator import itemgetter
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
@@ -16,12 +19,15 @@ from inyoka.core.context import ctx
 from inyoka.core.routing import href
 
 
-class FlashMessage(object):
+class FlashMessage(tuple):
+    __slots__ = ()
 
-    def __init__(self, text, success=None, id=None):
-        self.text = text
-        self.success = success
-        self.id = id
+    def __new__(self, text, success=None, id=None):
+        return tuple.__new__(self, (text, success, intern(str(id))))
+
+    text = property(itemgetter(0))
+    success = property(itemgetter(1))
+    id = property(itemgetter(2))
 
     def __repr__(self):
         return '<%s(%s:%s)>' % (
@@ -29,11 +35,6 @@ class FlashMessage(object):
             self.text,
             self.success
         )
-
-    def __reduce__(self):
-        items = (self.text, self.success, self.id)
-        dict_ = vars(self).copy()
-        return (self.__class__, items, dict_)
 
 
 class Request(BaseRequest):
@@ -71,20 +72,22 @@ class Request(BaseRequest):
         """Flash a message to the user."""
         if 'flash_buffer' not in self.session:
             self.session['flash_buffer'] = []
+        if id is None:
+            id = md5(str(time()) + ctx.cfg['cookie_secret'] + message).hexdigest()
         self.session['flash_buffer'].append(FlashMessage(message, success, id))
         self.session.modified = True
-        return True
+        return id
 
     def unflash(self, id):
         """Remove all messages with a given id from the flash buffer"""
         messages = [msg for msg in self.session.get('flash_buffer', ())
-                    if msg.id != id]
+                    if msg.id != str(id)]
         self.session['flash_buffer'] = messages
+        self.session.modified = True
 
     def clear_flash_buffer(self):
         """Clear the whole flash buffer."""
-        if 'flash_buffer' in self.session:
-            self.session.pop('flash_buffer', None)
+        return self.session.pop('flash_buffer', None)
 
     def has_flashed_messages(self):
         return bool(self.session.get('flash_buffer', None))

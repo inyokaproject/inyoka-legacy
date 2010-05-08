@@ -58,7 +58,7 @@ class Request(BaseRequest):
     def session(self):
         # hmac does not to support unicode values so we need to ensure
         # that we have a bytecode string here
-        secret = ctx.cfg['cookie_secret'].encode('utf-8')
+        secret = ctx.cfg['secret_key'].encode('utf-8')
         name = ctx.cfg['cookie_name']
         return SecureCookie.load_cookie(self, name, secret_key=secret)
 
@@ -73,7 +73,7 @@ class Request(BaseRequest):
         if 'flash_buffer' not in self.session:
             self.session['flash_buffer'] = []
         if id is None:
-            id = md5(str(time()) + ctx.cfg['cookie_secret'] + message).hexdigest()
+            id = md5(str(time()) + ctx.cfg['secret_key'] + message).hexdigest()
         self.session['flash_buffer'].append(FlashMessage(message, success, id))
         self.session.modified = True
         return id

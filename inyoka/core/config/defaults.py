@@ -23,8 +23,9 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Enable debug mode')),
     'media_root':                   TextField(default=_default_media_data_path,
         help_text=lazy_gettext(u'The path to the media folder')),
-    'cookie_secret':                TextField(default=u'CHANGEME',
-        help_text=lazy_gettext(u'The secret used for hashing the cookies')),
+    'secret_key':                TextField(default=u'CHANGEME',
+        help_text=lazy_gettext(u'The secret used for hashing the cookies and '
+                               u'other security salting')),
     'base_domain_name':             TextField(default=u'inyoka.local:5000',
         help_text=lazy_gettext(u'Base domain name')),
     'cookie_domain_name':           TextField(default=u'.inyoka.local',

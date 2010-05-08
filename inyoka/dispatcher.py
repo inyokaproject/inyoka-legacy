@@ -72,7 +72,7 @@ class RequestDispatcher(object):
         View providers must implement the `get_callable_for_endpoint`
         method.
 
-        Those are:
+        Those are (in execution-order):
 
             * `~inyoka.core.routing.IController`
             * `~inyoka.core.routing.IServiceProvider`

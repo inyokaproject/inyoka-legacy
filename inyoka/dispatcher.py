@@ -119,6 +119,8 @@ class RequestDispatcher(object):
 
             try:
                 response = self.get_view(rule.endpoint)(request, **args)
+                if response is None:
+                    raise ValueError('View function did not return a response')
             except db.NoResultFound:
                 raise NotFound()
 

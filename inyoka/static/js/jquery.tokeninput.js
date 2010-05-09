@@ -6,6 +6,8 @@
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
  *
+ * Integrated various bugfixes by the Inyoka Team, see AUTHORS for more details.
+ *
  */
 
 (function($) {

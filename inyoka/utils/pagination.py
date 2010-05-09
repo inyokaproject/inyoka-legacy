@@ -53,9 +53,9 @@ class Pagination(object):
         if self.page > self.pages or self.page < 1:
             raise NotFound()
 
-        index = (self.page - 1) * self.per_page
+        offset = (self.page - 1) * self.per_page
         #TODO: implement position_col
-        self.query = query[index:index + self.per_page]
+        self.query = query[offset:offset+self.per_page]
 
     def make_link(self, page):
         """

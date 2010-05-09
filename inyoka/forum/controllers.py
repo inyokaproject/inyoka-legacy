@@ -8,6 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from collections import defaultdict
 from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
          question_tag, forum_tag, Entry
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
@@ -93,9 +94,7 @@ class ForumController(IController):
     def question(self, request, slug, sort='votes', page=1):
         question = Question.query.options(db.joinedload('author')) \
                                  .filter_by(slug=slug).one()
-        answer_query = Answer.query.options(db.joinedload('votes')) \
-                                   .filter_by(question=question)
-        answer_query = getattr(answer_query, sort)
+        answer_query = Answer.query.filter_by(question=question)
         pagination = URLPagination(answer_query, page)
 
         form = AnswerQuestionForm(request.form)
@@ -113,11 +112,11 @@ class ForumController(IController):
 
         # precalculate user votes
         answers = pagination.query
-        user_votes = {question.id: question.get_vote(request.user)}
-        for answer in answers:
-            vote = [vote for vote in answer.votes
-                    if vote.user.id == request.user.id]
-            user_votes[answer.id] = vote and vote[0] or None
+        answer_ids = [a.id for a in answers]
+        user_votes = defaultdict(int, dict(
+            db.session.query(Vote.entry_id, Vote.score) \
+                      .filter(db.and_(Vote.user_id==request.user.id, Vote.entry_id.in_(answer_ids)))
+        ))
 
         return {
             'sort': sort,

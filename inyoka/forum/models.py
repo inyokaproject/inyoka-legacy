@@ -154,7 +154,7 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
 
     author = db.relationship(User, lazy='joined')
     votes = db.relationship('Vote', backref='entry',
-            extension=EntryVotesExtension())
+            extension=EntryVotesExtension(), lazy='subquery')
 
     __mapper_args__ = {'polymorphic_on': discriminator}
 
@@ -169,7 +169,6 @@ class QuestionAnswersExtension(db.AttributeExtension):
 
     def append(self, state, answer, initiator):
         question = state.obj()
-        question.date_active = max(question.date_active, answer.date_created)
         db.atomic_add(question, 'answer_count', 1, primary_key_field='id')
         return answer
 
@@ -219,8 +218,7 @@ class Question(Entry):
     answer_count = db.Column(db.Integer, default=0)
 
     tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-                           lazy='subquery',
-                           extension=TagCounterExtension())
+                           lazy='subquery', extension=TagCounterExtension())
 
     @cached_property
     def popularity(self):
@@ -260,8 +258,7 @@ class Answer(Entry):
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
 
     question = db.relationship(Question,
-            backref=db.backref('answers', extension=QuestionAnswersExtension(),
-                               lazy='dynamic'),
+            backref=db.backref('answers', extension=QuestionAnswersExtension()),
             primaryjoin=(question_id == Question.id))
 
     @cached_property

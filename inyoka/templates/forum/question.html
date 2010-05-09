@@ -12,7 +12,7 @@
 
 
   <div class="vote">
-    {% set vote = user_votes[question.id] %}
+    {% set vote = question.get_vote(request.user) %}
     {% if vote and vote.score > 0 %}
       <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
         <img src="{{ href('static', file='img/voted-up.png') }}" alt="vote revoke" />
@@ -79,7 +79,7 @@
 <div class="answer" id="answer-{{ answer.id }}">
   <div class="vote">
     {% set vote = user_votes[answer.id] %}
-    {% if vote and vote.score > 0 %}
+    {% if vote and vote > 0 %}
       <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
         <img src="{{ href('static', file='img/voted-up.png') }}" alt="vote revoke" />
       </a>
@@ -89,7 +89,7 @@
       </a>
     {% endif %}
     <strong>{{ answer.score }}</strong>
-    {% if vote and vote.score < 0 %}
+    {% if vote and vote < 0 %}
       <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
         <img src="{{ href('static', file='img/voted-down.png') }}" alt="vote revoke" />
       </a>

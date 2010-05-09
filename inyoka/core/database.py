@@ -460,7 +460,6 @@ class ModelBase(object):
 def _constructor(self, **kwargs):
     """A constructor that adds the model automatically to a session"""
     _declarative_constructor(self, **kwargs)
-    session.add(self)
 
 
 # configure the declarative base

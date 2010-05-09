@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import db, _
+from inyoka.core.api import db, _, ctx
 from inyoka.core.http import redirect_to, Response
 from inyoka.core.exceptions import abort
 from inyoka.core.auth import IAuthSystem, LoginUnsucessful

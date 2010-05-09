@@ -104,7 +104,7 @@ class NewsController(IController):
         article = Article.query.filter_by(slug=slug).one()
         if article.hidden or article.pub_date > datetime.utcnow():
             #TODO: ACL-Check
-            return Forbidden()
+            raise Forbidden()
 
         if article.comments_enabled and request.method == 'POST':
             form = EditCommentForm(request.form)

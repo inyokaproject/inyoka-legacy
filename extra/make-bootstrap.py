@@ -67,11 +67,18 @@ def babel_svn_repo_install(home_dir):
 def after_install(options, home_dir):
     global FETCH_CMD
     try:
+        call_subprocess(['which', 'wget'], show_stdout=False)
         FETCH_CMD = ['wget']
-        call_subprocess(['wget'])
     except OSError:
         # wget does not exist, try curl instead
-        FETCH_CMD = ['curl', '-L', '-O']
+        try:
+            call_subprocess(['which', 'curl'], show_stdout=False)
+            FETCH_CMD = ['curl', '-L', '-O']
+        except OSError:
+            import sys
+            sys.stderr.write('\\nERROR: need either wget or curl\\n')
+            sys.exit(1)
+
     easy_install('setuptools', home_dir)
     babel_svn_repo_install(home_dir)
     easy_install('Jinja2', home_dir)

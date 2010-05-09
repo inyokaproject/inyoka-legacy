@@ -28,7 +28,7 @@ class LatestArticlesContentProvider(ILatestContentProvider):
     cache_key = 'news/latest_articles'
 
     def get_query(self):
-        return Article.query.order_by(Article.updated.desc())
+        return Article.query.published().order_by(Article.updated.desc())
 
 
 class LatestCommentsContentProvider(ILatestContentProvider):

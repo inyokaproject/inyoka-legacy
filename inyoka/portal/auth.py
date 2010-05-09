@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import db, _, ctx
+from inyoka.core.api import db, _, ctx, lazy_gettext
 from inyoka.core.http import redirect_to, Response
 from inyoka.core.exceptions import abort
 from inyoka.core.auth import IAuthSystem, LoginUnsucessful
@@ -93,7 +93,7 @@ class EasyAuth(IAuthSystem):
             if rv is not None:
                 return rv
         except LoginUnsucessful, e:
-            form.add_error(unicode(e))
+            request.flash(lazy_gettext(unicode(e)), False)
 
         # only validate if the before_login handler did not already cause
         # an error.  In that case there is not much win in validating
@@ -102,11 +102,11 @@ class EasyAuth(IAuthSystem):
             try:
                 rv = self.perform_login(request, **form.data)
             except LoginUnsucessful, e:
-                form.add_error(unicode(e))
+                request.flash(lazy_gettext(unicode(e)), False)
             else:
                 if rv is not None:
                     return rv
-                request.flash(_(u'You are now logged in.'))
+                request.flash(_(u'You are now logged in.'), True)
                 return form.redirect('portal/index')
 
         return self.render_login_template(request, form)
@@ -127,7 +127,7 @@ class EasyAuth(IAuthSystem):
         default one calls `set_user(request, None)`.
         """
         self.set_user(request, None)
-        request.flash(_(u'You was successfully logged out'))
+        request.flash(_(u'You have been logged out successfully.'), True)
 
     def set_user(self, request, user):
         """Can be used by the login function to set the user.  This function

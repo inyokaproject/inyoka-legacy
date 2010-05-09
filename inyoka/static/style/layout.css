@@ -246,18 +246,12 @@ div.pagination span.comma {
 }
 
 div.flash_message {
-  border: red 1px solid;
-  background: #fff;
   width: 40%;
   position: absolute;
   top: 30%;
   left: 30%;
   padding: .5em;
   margin-bottom: 1.6em;
-  border: 2px solid #ddd;
-  background: #FFF6BF;
-  color: #514721;
-  border-color: #FFD324;
 }
 
 .tagcloud a.tag {

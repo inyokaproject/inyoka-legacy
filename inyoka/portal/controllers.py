@@ -47,6 +47,7 @@ class PortalController(IController):
         Rule('/usercp/profile/', endpoint='profile_edit'),
         Rule('/groups/', endpoint='groups'),
         Rule('/group/<name>/', endpoint='group'),
+        Rule('/tags/<slug>/', endpoint='tag'),
     ]
 
     @view
@@ -147,6 +148,21 @@ class PortalController(IController):
                                         ret[0]), mimetype='text/plain')
         return ret
 
+    @view
+    @templated('portal/tag.html', modifier=context_modifier)
+    def tag(self, request, slug):
+        tag = Tag.query.filter_by(slug=slug).one()
+        articles = {
+            'item_list':tag.articles.order_by('view_count').all(),
+            'list_class':'news_articles',
+            'name':_('Articles')
+        }
+        ## other tagable content should be added here
+
+        return {
+            'tag':tag,
+            'content':(articles,),
+        }
 
 
 class CalendarController(IController):

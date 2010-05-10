@@ -17,14 +17,14 @@ Inyoka is a portal software that integrates a complete News, Wiki and Bulletin B
         {% endfor %}
       </ul>
     {% else %}
-    <strong>There's no content yet!</strong>
+    <strong>{% trans %}There's no content yet!{% endtrans %}</strong>
     {% endif %}
     </div>
   </div>
   <div class="column tagcloud">
     <h2>Tags</h2>
     {%- for tag in tag_cloud %}
-      <a href="#" class="tag" style="font-size: {{ tag.size }}%"
+      <a href=" {{ href('portal/tag', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
                   title="{% trans count=tag.count, tag=(tag.name) %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} posts tagged {{ tag }}{% endtrans %}">
         {{ tag.name }}
       </a>

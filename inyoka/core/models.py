@@ -88,6 +88,7 @@ class TagQuery(db.Query):
             item = {
                 'id': tag.id,
                 'name': tag.name,
+                'slug': tag.slug,
                 'count': tag.tagged,
                 'size': 80
             }

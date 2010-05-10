@@ -157,7 +157,7 @@ class PortalController(IController):
             'list_class':'news_articles',
             'name':_('Articles')
         }
-        ## other tagable content should be added here
+        ## other taggable content should be added here
 
         return {
             'tag':tag,

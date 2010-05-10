@@ -2,13 +2,13 @@
 
 {% block content %}
 <h1>{{ tag.name }}</h1>
-  {% for tagable in content %}
+  {% for taggable in content %}
   <div class="column">
-    <h2>{{ tagable.name }}</h2>
+    <h2>{{ taggable.name }}</h2>
     <div class="content">
       <ul class="itemlist">
-        {% for item in tagable.item_list %}
-        <li class="{{ tagable.list_class }}"><a href="{{ href(item) }}">{{ item }}</a></li>
+        {% for item in taggable.item_list %}
+        <li class="{{ taggable.list_class }}"><a href="{{ href(item) }}">{{ item }}</a></li>
         {% endfor %}
       </ul>
     </div>

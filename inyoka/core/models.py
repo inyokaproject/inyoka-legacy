@@ -67,9 +67,9 @@ class TagQuery(db.Query):
         """Get all informations required for a tag cloud
 
         Returns a tuple containing the items and a boolean indicating
-        wheter there are more tags to show or not.
+        whether there are more tags to show or not.
         """
-        if max is None:
+        if max_visible is None:
             tags = self.get_cached()
             tag_count = len(tags)
         else:

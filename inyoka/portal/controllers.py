@@ -47,7 +47,7 @@ class PortalController(IController):
         Rule('/usercp/profile/', endpoint='profile_edit'),
         Rule('/groups/', endpoint='groups'),
         Rule('/group/<name>/', endpoint='group'),
-        Rule('/tags/<slug>/', endpoint='tag'),
+        Rule('/tag/<slug>/', endpoint='tag'),
     ]
 
     @view

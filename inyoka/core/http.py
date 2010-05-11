@@ -15,7 +15,7 @@ from operator import itemgetter
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
-from inyoka.core.context import ctx
+from inyoka.core.context import ctx, local
 from inyoka.core.routing import href
 
 
@@ -43,6 +43,13 @@ class Request(BaseRequest):
     :param environ: The WSGI environ.
 
     """
+
+    @staticmethod
+    def get_bound(environ):
+        request = object.__new__(Request)
+        local.request = request
+        request.__init__(environ)
+        return request
 
     def __init__(self, *args, **kwargs):
         BaseRequest.__init__(self, *args, **kwargs)

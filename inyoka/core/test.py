@@ -142,10 +142,10 @@ class ViewTestSuite(TestSuite):
             form = response.lxml.xpath('//form')[0]
         except IndexError:
             raise RuntimeError('no form on page')
-        csrf_token = form.xpath('//input[@name="_csrf_token"]')[0]
-        data['_csrf_token'] = csrf_token.attrib['value']
+        csrf_token = form.xpath('//input[@name="csrf_token"]')[0]
+        data.setdefault('csrf_token', csrf_token.attrib['value'])
         action = self.normalize_local_path(form.attrib['action'])
-        return self.post(action, method=form.attrib['method'].upper(),
+        return self.post(action or path, method=form.attrib['method'].upper(),
                                 data=data, follow_redirects=follow_redirects)
 
     def get_new_request(self, *args, **kwargs):
@@ -153,7 +153,9 @@ class ViewTestSuite(TestSuite):
         :func:`werkzeug.create_environ` for more information, this
         function accepts the same arguments).
         """
-        return Request(create_environ(*args, **kwargs))
+        kwargs['base_url'] = self.base_url
+        req = Request.get_bound(create_environ(*args, **kwargs))
+        return req
 
 
 class InyokaPlugin(cover.Coverage):

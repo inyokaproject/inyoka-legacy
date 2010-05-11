@@ -19,6 +19,7 @@ from inyoka.core.routing import href
 from inyoka.core.cache import cache as inyoka_cache
 from inyoka.core.exceptions import NotFound
 from inyoka.core.database import db
+from inyoka.utils.csrf import get_csrf_token
 
 try:
     import simplejson
@@ -33,7 +34,7 @@ def populate_context_defaults(context):
     try:
         context.update({
             'request': ctx.current_request,
-            'active': None
+            'active': None,
         })
     except AttributeError:
         # Don't raise an error if we don't have a request as it's
@@ -148,6 +149,7 @@ class InyokaEnvironment(Environment):
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             href=href,
+            get_csrf_token=get_csrf_token,
         )
         self.filters.update(
             jsonencode=simplejson.dumps,

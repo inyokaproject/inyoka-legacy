@@ -8,8 +8,9 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms import Form, TextField, widgets, validators
+from wtforms import TextField, widgets, validators
 from inyoka.i18n import _
+from inyoka.utils.forms import Form
 
 
 class EditPageForm(Form):

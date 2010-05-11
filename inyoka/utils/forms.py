@@ -9,18 +9,31 @@
 import re
 from urlparse import urlparse
 from functools import partial
-from wtforms.widgets import HTMLString, TextInput
+from wtforms import TextField, Form as BaseForm
+from wtforms.widgets import HTMLString, TextInput, HiddenInput
 from wtforms.fields import Field
-from wtforms.validators import ValidationError
+from wtforms.validators import ValidationError, Required
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.database import db
 from inyoka.core.context import local, ctx
+from inyoka.utils import classproperty
+from inyoka.utils.csrf import get_csrf_token, check_request
 from inyoka.utils.datastructures import _missing
 
 from inyoka.core.models import Tag
 from inyoka.core.routing import href
 from inyoka.core.serializer import get_serializer, primitive
+
+
+
+class Form(BaseForm):
+    """CSRF Protected form"""
+
+    def validate(self, extra_validators=None):
+        # raises BadRequest() if csrf does not match properly
+        check_request()
+        return BaseForm.validate(self)
 
 
 class ModelSelectField(QuerySelectField):

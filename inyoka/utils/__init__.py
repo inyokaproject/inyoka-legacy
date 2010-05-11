@@ -46,3 +46,38 @@ def safe_import_string(module_name):
             if not modname in already_imported:
                 del sys.modules[modname]
         raise
+
+
+class classproperty(object):
+    """
+    A mix out of the built-in `classmethod` and
+    `property` so that we can achieve a property
+    that is not bound to an instance.
+
+    Example::
+
+        >>> class Foo(object):
+        ...     bar = 'baz'
+        ...
+        ...     @classproperty
+        ...     def bars(cls):
+        ...         return [cls.bar]
+        ...
+        >>> Foo.bars
+        ['baz']
+    """
+
+    def __init__(self, func, name=None):
+        self.func = func
+        self.__name__ = name or func.__name__
+        self.__module__ = func.__module__
+        self.__doc__ = func.__doc__
+
+    def __get__(self, trash, type=None):
+        if type is None:
+            #TODO: I think we need to read some documentation what the
+            #      arguments really are…
+            raise RuntimeError('What happened?')
+        value = self.func(type)
+        setattr(type, self.__name__, value)
+        return value

@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from wtforms import TextField, widgets, validators
-from sqlalchemy.util import classproperty
 from inyoka import Interface
 from inyoka.core.api import _, db, ctx
 from inyoka.core.auth.models import User, IUserProfileExtender

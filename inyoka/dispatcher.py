@@ -157,9 +157,7 @@ class RequestDispatcher(object):
         # it afterwards.  We do this so that the request object can query
         # the database in the initialization method.
         self.ctx.bind()
-        request = object.__new__(Request)
-        local.request = request
-        request.__init__(environ, self)
+        request = Request.get_bound(environ)
 
         response = self.dispatch_request(request, environ)
 

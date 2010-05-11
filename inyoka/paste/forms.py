@@ -10,8 +10,9 @@
 """
 from operator import itemgetter
 from pygments.lexers import get_all_lexers
-from wtforms import Form, TextField, SelectField, BooleanField, validators, widgets
+from wtforms import TextField, SelectField, BooleanField, validators, widgets
 from inyoka.i18n import _
+from inyoka.utils.forms import Form
 
 
 # Hell, we need a shorter list ;)

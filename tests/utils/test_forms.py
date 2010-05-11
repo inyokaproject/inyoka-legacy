@@ -9,8 +9,13 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from werkzeug import MultiDict
 from inyoka.core.test import *
-from inyoka.utils.forms import model_to_dict, update_model
+from inyoka.core.exceptions import BadRequest
+from inyoka.utils.csrf import check_request, get_csrf_token
+from inyoka.utils.forms import model_to_dict, update_model, Form
+from inyoka.portal.controllers import PortalController
+from wtforms import TextField
 
 
 class DummyModel(db.Model):
@@ -23,6 +28,10 @@ class DummyModel(db.Model):
 
 class DummyForm(object):
     data = {'name': u'three', 'value': u'yea!'}
+
+
+class DummyForm2(Form):
+    name = TextField(u'name')
 
 
 class TestFormsSchemaController(db.ISchemaController):
@@ -83,3 +92,24 @@ class TestFormUtils(TestSuite):
         new = DummyModel.query.one()
         eq_(new.name, u'three')
         eq_(new.value, u'yea!')
+
+
+class CsrfTester(ViewTestSuite):
+
+    controller = PortalController
+
+    def test_csrf_protection_success(self):
+        request = self.get_new_request()
+        form = DummyForm2(request.form)
+        assert_true(form.validate())
+
+    @raises(BadRequest)
+    def test_csrf_protection_failure(self):
+        req = self.get_new_request(path='/login', method='POST', data={'csrf_token':'invalid'})
+        get_csrf_token(req)
+        check_request(req)
+
+    def check_token_set_on_session(self):
+        req = self.get_new_request()
+        token = get_csrf_token(req)
+        eq_(token, req.session['csrf_token'])

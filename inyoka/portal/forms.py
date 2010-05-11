@@ -8,12 +8,12 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms import Form, validators, widgets, BooleanField, TextField
+from wtforms import validators, widgets, BooleanField, TextField
 from inyoka import Interface
 from inyoka.core.database import db
 from inyoka.i18n import _, lazy_gettext
 from inyoka.core.auth.models import UserProfile, IUserProfileExtender
-from inyoka.utils.forms import model_to_dict, update_model
+from inyoka.utils.forms import Form, model_to_dict, update_model
 
 
 def get_profile_form():

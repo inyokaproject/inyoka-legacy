@@ -38,6 +38,7 @@
         {{ render_field(field) }}
       {% endfor %}
       </dl>
+      <input type="hidden" value="{{ get_csrf_token() }}" name="csrf_token">
       <p><input type="submit" value="{{ submit_value }}"></p>
     </form>
 {% endmacro %}

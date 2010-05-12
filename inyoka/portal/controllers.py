@@ -11,7 +11,7 @@
 import sys
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect_to, _
-from inyoka.core.auth import get_auth_system
+from inyoka.core.auth import get_auth_system, login_required
 from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
     Group
 from inyoka.core.models import Tag
@@ -50,6 +50,7 @@ class PortalController(IController):
         Rule('/tag/<slug>/', endpoint='tag'),
     ]
 
+    @login_required
     @view
     @templated('portal/profile_edit.html', modifier=context_modifier)
     def profile_edit(self, request):

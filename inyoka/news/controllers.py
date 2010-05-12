@@ -12,7 +12,7 @@ from datetime import date, datetime
 from inyoka.i18n import _
 from inyoka.l10n import get_month_names
 from inyoka.core.api import IController, Rule, cache, view, templated, href, \
-    redirect_to, db
+    redirect_to, db, login_required
 from inyoka.core.http import Response
 from inyoka.core.exceptions import Forbidden
 from inyoka.core.subscriptions.models import Subscription
@@ -135,6 +135,7 @@ class NewsController(IController):
             'form': form
         }
 
+    @login_required
     @view('edit_comment')
     @templated('news/edit_comment.html', modifier=context_modifier)
     def change_comment(self, request, id, action):
@@ -180,6 +181,7 @@ class NewsController(IController):
             pagination=pagination, articles=pagination.query)
         return ret
 
+    @login_required
     @view('subscribe_articles')
     def subscribe_articles(self, request, action):
         do = {
@@ -200,6 +202,7 @@ class NewsController(IController):
 
         return redirect_to('news/index')
 
+    @login_required
     @view('subscribe_comments')
     def subscribe_comments(self, request, action, slug):
         do = {

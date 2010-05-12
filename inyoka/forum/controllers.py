@@ -13,7 +13,7 @@ from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
          question_tag, forum_tag, Entry
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
 from inyoka.core.api import IController, Rule, view, service, templated, db, \
-         redirect, redirect_to, href
+         redirect, redirect_to, href, login_required
 from inyoka.utils.pagination import URLPagination
 from inyoka.core.http import Response
 
@@ -127,6 +127,7 @@ class ForumController(IController):
             'user_votes': user_votes
         }
 
+    @login_required
     @view('ask')
     @templated('forum/ask.html', modifier=context_modifier)
     def ask(self, request, forum=None):
@@ -156,6 +157,7 @@ class ForumController(IController):
             'form': form
         }
 
+    @login_required
     @view
     def vote(self, request, entry_id, action):
         entry = Entry.query.get(entry_id)

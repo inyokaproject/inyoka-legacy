@@ -82,12 +82,18 @@ leakfinder.__doc__ = u'Run a development server with activated leakfinder.'
 
 
 def runeventlet(hostname='localhost', port=5000):
+    """
+    Run development server with Eventlet.
+    """
     from eventlet import api, wsgi
     app = _make_app(debug=True)
     wsgi.server(api.tcp_listener((hostname, port)), app)
 
 
 def runcherrypy(hostname='localhost', port=5000):
+    """
+    Run development server with CherryPy.
+    """
     from cherrypy.wsgiserver import CherryPyWSGIServer
     from inyoka.core.api import ctx
     app = _make_app(debug=True)
@@ -123,6 +129,9 @@ def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
         interact(banner, local=namespace)
 
 def version():
+    """
+    Get Iynoka and Python version.
+    """
     from inyoka import INYOKA_REVISION
     print u'Inyoka revision %s on Python %s' % \
           (INYOKA_REVISION, u'.'.join(str(x) for x in sys.version_info[:3]))
@@ -141,6 +150,9 @@ def build_docs(clean='no', browse='no'):
 
 
 def build_test_venv(pyver=None):
+    """
+    Create a virtual environment for inyoka.
+    """
     if pyver is None:
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
@@ -150,6 +162,9 @@ def build_test_venv(pyver=None):
 
 
 def clean_files():
+    """
+    Cleanup some Backup files and many more.
+    """
     local("find . -name '*.pyc' -delete")
     local("find . -name '*.pyo' -delete")
     local("find . -name '*~' -delete")
@@ -159,6 +174,9 @@ def clean_files():
 
 
 def i18n():
+    """
+    Build i18n support.
+    """
     local("python %s" % _j("extra/extract-messages"), capture=False)
     local("python %s" % _j("extra/update-translations"), capture=False)
     local("python %s" % _j("extra/compile-translations"), capture=False)
@@ -190,12 +208,7 @@ def test(file='', clean='yes'):
 
 
 def reindent():
+    """
+    Reidents the sources.
+    """
     local(_j('extra/reindent.py -r -B %s' % _base_dir), capture=False)
-
-
-def help(command=None):
-    from fabric.main import list_commands, display_command
-    if command is not None:
-        display_command(command)
-    else:
-        list_commands()

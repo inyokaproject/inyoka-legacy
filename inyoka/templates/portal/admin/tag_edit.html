@@ -1,4 +1,5 @@
 {%- extends 'admin/base.html' %}
+{% from 'utils/macros.html' import render_fields %}
 
 {%- block admin_content %}
 {% if tag.name %}
@@ -8,9 +9,8 @@
 {% endif %}
 
 <form action="" method="post">
-{{ form.as_dl() }}
-{{ form.hidden_fields|safe }}
-<div class="actions">
+{{ render_fields(form) }}
+<p class="actions">
   <input type="submit" value="{{ _('Submit') }}">
   {% if tag.name %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
 </div>

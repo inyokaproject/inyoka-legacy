@@ -25,7 +25,8 @@ class EditArticleForm(Form):
     tags = AutocompleteField(_(u'Tags'), query_factory=lambda: Tag.query.autoflush(False),
                              get_label='name')
     author = QuerySelectField(_(u'Author'), [validators.Required()],
-                             User.query.autoflush(False), widget=widgets.Select())
+                             query_factory=lambda: User.query.autoflush(False),
+                             widget=widgets.Select())
 
 
 class EditCommentForm(Form):

@@ -7,6 +7,9 @@
 <html>
   <head>
     <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
+     <script type=text/javascript>
+       $SCRIPT_ROOT = {{ request.script_root|jsonencode|safe }};
+     </script>
     {%- for script in scripts %}
     <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}

@@ -17,7 +17,7 @@ import random
 from datetime import datetime
 from os.path import join
 from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
-     MemcachedCache, BaseCache
+     MemcachedCache, BaseCache, GAEMemcachedCache
 from inyoka.core.context import ctx
 from inyoka.core.database import db
 
@@ -161,6 +161,7 @@ CACHE_SYSTEMS = {
         threshold=500,
         default_timeout=ctx.cfg['caching.timeout']),
     'database': lambda: DatabaseCache(ctx.cfg['caching.timeout'])
+    'gaememcached': lambda: GAEMemcachedCache(ctx.cfg['caching.timeout'])
 }
 
 

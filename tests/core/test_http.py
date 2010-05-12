@@ -31,7 +31,7 @@ class TestRequest(ViewTestSuite):
         # test automatic id generation
         id = req.flash(u'Message5')
         assert_false(id is None)
-        assert_true(isinstance(id, str))
+        assert_true(isinstance(id, unicode))
 
     def test_current_url_property(self):
         req = self.get_new_request()

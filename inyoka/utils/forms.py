@@ -33,7 +33,7 @@ class Form(BaseForm):
     def validate(self, extra_validators=None):
         # raises BadRequest() if csrf does not match properly
         check_request()
-        return BaseForm.validate(self)
+        return super(Form, self).validate()
 
 
 class ModelSelectField(QuerySelectField):
@@ -204,6 +204,10 @@ _mail_re = re.compile(r'''(?xi)
 _jabber_re = re.compile(r'(?xi)(?:[a-z0-9!$\(\)*+,;=\[\\\]\^`{|}\-._~]+)@')
 
 
+class DummyField(object):
+    data = None
+
+
 def check(validator, value, *args, **kwargs):
     """Call a validator and return True if it's valid, False otherwise.
     The first argument is the validator, the second a value.  All other
@@ -216,8 +220,10 @@ def check(validator, value, *args, **kwargs):
 
         This function is for testing purposes only!
     """
+    field = DummyField()
+    field.data = value
     try:
-        validator(*args, **kwargs)(None, value)
+        validator(*args, **kwargs)(None, field)
     except ValidationError:
         return False
     return True
@@ -239,7 +245,8 @@ def is_valid_email(message=None):
     """
     if message is None:
         message = lazy_gettext(u'You have to enter a valid email address.')
-    def validator(form, value):
+    def validator(form, field):
+        value = field.data
         if len(value) > 250 or _mail_re.match(value) is None:
             raise ValidationError(message)
     return validator
@@ -260,8 +267,8 @@ def is_valid_url(message=None):
     """
     if message is None:
         message = lazy_gettext(u'You have to enter a valid URL.')
-    def validator(form, value):
-        protocol = urlparse(value)[0]
+    def validator(form, field):
+        protocol = urlparse(field.data)[0]
         if not protocol or protocol == 'javascript':
             raise ValidationError(message)
     return validator
@@ -288,7 +295,7 @@ def is_valid_jabber(message=None):
     """
     if message is None:
         message = lazy_gettext(u'You have to enter a valid Jabber ID')
-    def validator(form, value):
-        if _jabber_re.match(value) is None:
+    def validator(form, field):
+        if _jabber_re.match(field.data) is None:
             raise ValidationError(message)
     return validator

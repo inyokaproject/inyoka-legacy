@@ -1,4 +1,5 @@
 {%- extends 'admin/base.html' %}
+{% from 'utils/macros.html' import render_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 
@@ -9,13 +10,12 @@
   <h3>{{ _('New Article') }}</h3>
 {% endif %}
 
-<form action="" method="post">
-{{ form.as_dl() }}
-{{ form.hidden_fields|safe }}
-<div class="actions">
+<form method="post" action="">
+{{ render_fields(form) }}
+<p class="actions">
   <input type="submit" value="{{ _('Submit') }}">
   {% if article.slug %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
-</div>
+</p>
 </form>
 
 {%- endblock %}

@@ -9,6 +9,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from uuid import uuid4
 from time import time
 from hashlib import md5
 from operator import itemgetter
@@ -80,7 +81,7 @@ class Request(BaseRequest):
         if 'flash_buffer' not in self.session:
             self.session['flash_buffer'] = []
         if id is None:
-            id = md5(str(time()) + ctx.cfg['secret_key'] + message).hexdigest()
+            id = unicode(uuid4().get_hex())
         self.session['flash_buffer'].append(FlashMessage(message, success, id))
         self.session.modified = True
         return id

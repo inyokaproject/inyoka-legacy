@@ -12,7 +12,7 @@
 from __future__ import with_statement
 import os
 import sys
-from os import path as _path
+from os import path as _path, access, F_OK
 from functools import partial as _partial
 from fabric.api import *
 
@@ -151,14 +151,23 @@ def build_docs(clean='no', browse='no'):
 
 def build_test_venv(pyver=None):
     """
+    Create a virtual environment (for compatiblity).
+    """
+    create_virtualenv(pyver=pyver)
+
+
+def create_virtualenv(directory='../inyoka-testsuite',pyver=None):
+    """
     Create a virtual environment for inyoka.
+
+    :param directory: Where to create this virtual environment (folder must not exist).
+    :param pyver: Which Python Version to use (2.5 as default).
     """
     if pyver is None:
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
-          pyver, _j('../bootstrap.py')), capture=False)
-    with cd(_j('..')):
-        local('python ./bootstrap.py inyoka-testsuite', capture=False)
+          pyver, _j('bootstrap.py')), capture=False)
+    local('python ./bootstrap.py %s' % directory, capture=False)
 
 
 def clean_files():
@@ -171,6 +180,9 @@ def clean_files():
     local("find . -name '*.orig' -delete")
     local("find . -name '*.orig.*' -delete")
     local("find . -name '*.py.fej' -delete")
+    local("find . -name '*.egg' -delete")
+    if access('bootstrap.py', F_OK):
+        local("rm bootstrap.py")
 
 
 def i18n():

@@ -18,8 +18,8 @@ To get Inyoka work properly we need those dependencies:
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev
-    apt-get build-dep python-imaging python-lxml
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev
+    apt-get build-dep python-imaging
 
 Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::
 
@@ -39,7 +39,7 @@ Or use the current experimental branch::
 Now it's possible to install the virtual environment. This is done with a simple
 Python command::
 
-    # assumed that you are located in the inyoka source repository
+    # assumed that you are located in the root directory of the inyoka repository
     fab create_virtualenv
 
 Or create it under a user definied path::
@@ -55,14 +55,23 @@ for you own purposes.
 Database and other things
 =========================
 
-We are now ready to enter the virtual environment (assumed you are located in
-``inyoka-dev/inyoka``)::
+We are now ready to activate the virtual environment
+(``../inyoka-testsuite`` is the default installation folder)::
 
-    . ../bin/activate
+    . ../inyoka-testsuite/bin/activate
     
 Before starting we have to initialize the database::
 
     fab initdb
+
+And create some Test Data::
+
+    fab reset
+
+Last but not least make some DNS Setup in the ``/etc/hosts``::
+
+    # put the output at the end of the 127.0.0.1 line
+    fab lsdns
 
 Now start the development server::
 

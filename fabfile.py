@@ -224,3 +224,12 @@ def reindent():
     Reidents the sources.
     """
     local(_j('extra/reindent.py -r -B %s' % _base_dir), capture=False)
+
+def lsdns():
+    """
+    Get the required DNS settings.
+    """
+    from urllib2 import splitport
+    from inyoka.core.api import ctx
+    
+    print u' '.join((sub +'.' if sub else sub) + splitport(ctx.dispatcher.url_adapter.server_name)[0] for sub in sorted(set(rule.subdomain for rule in ctx.dispatcher.url_map.iter_rules())))

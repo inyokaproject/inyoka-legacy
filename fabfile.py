@@ -130,7 +130,7 @@ def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
 
 def version():
     """
-    Get Iynoka and Python version.
+    Get Inyoka and Python version.
     """
     from inyoka import INYOKA_REVISION
     print u'Inyoka revision %s on Python %s' % \

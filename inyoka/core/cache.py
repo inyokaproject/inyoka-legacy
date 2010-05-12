@@ -160,7 +160,7 @@ CACHE_SYSTEMS = {
         join(ctx.cfg['caching.filesystem_cache_path']),
         threshold=500,
         default_timeout=ctx.cfg['caching.timeout']),
-    'database': lambda: DatabaseCache(ctx.cfg['caching.timeout'])
+    'database': lambda: DatabaseCache(ctx.cfg['caching.timeout']),
     'gaememcached': lambda: GAEMemcachedCache(ctx.cfg['caching.timeout'])
 }
 

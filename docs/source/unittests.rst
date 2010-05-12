@@ -36,7 +36,7 @@ Run the unittests
 =================
 
 To run the unittests just go to the root inyoka folder (`inyoka-dev` as
-assumed in :doc:`installation`) and type in ``make test``.
+assumed in :doc:`installation`) and type in ``fab test``.
 
 
 How to write unittests

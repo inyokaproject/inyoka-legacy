@@ -18,7 +18,8 @@ To get Inyoka work properly we need those dependencies:
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev
+    apt-get build-dep python-imaging python-lxml
 
 Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::
 
@@ -35,22 +36,16 @@ Or use the current experimental branch::
 
     hg clone http://bitbucket.org/EnTeQuAk/inyoka-sandbox/ inyoka
 
-Right before we can initialize the virtual environment we need to install some
-development packages.
-
-For Ubuntu again ``aptitude`` (as root)::
-
-    sudo aptitude install libmemcache-dev build-essential zlib1g-dev
-    apt-get build-dep python-imaging python-lxml
-
 Now it's possible to install the virtual environment. This is done with a simple
 Python command::
 
-    # assumed that you are located in inyoka-dev/inyoka
-    python extra/make-bootstrap.py > ../bootstrap.py
-    cd ..
-    # make sure that the virtualenv is not activated. If yes, execute `deactivate`
-    python bootstrap.py .
+    # assumed that you are located in the inyoka source repository
+    fab create_virtualenv
+
+Or create it under a user definied path::
+
+    # it is not required to create the target directory before
+    fab create_virtualenv:directory=../where-ever-you-want
 
 We are ready to run now.  If you start inyoka the first time (see below) a
 default `inyoka.ini` will be created.  You can, of course, create and modify

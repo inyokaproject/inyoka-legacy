@@ -14,7 +14,7 @@ from inyoka.core.api import _, ctx, db, cache
 from inyoka.core.auth.models import User
 from inyoka.core.markup.parser import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
-from inyoka.portal.api import ILatestContentProvider
+from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
 article_tag = db.Table('news_article_tag', db.metadata,
@@ -23,19 +23,24 @@ article_tag = db.Table('news_article_tag', db.metadata,
 )
 
 
-class LatestArticlesContentProvider(ILatestContentProvider):
-    name = 'news_articles'
+class ArticlesContentProvider(ILatestContentProvider, ITaggableContentProvider):
+    type = 'news_articles'
     cache_key = 'news/latest_articles'
+    name = _('Articles')
 
-    def get_query(self):
+    def get_latest_content(self):
         return Article.query.published().order_by(Article.updated.desc())
+
+    def get_taggable_content(self, tag):
+        return tag.articles.order_by('view_count')
+
 
 
 class LatestCommentsContentProvider(ILatestContentProvider):
     name = 'news_comments'
     cache_key = 'news/latest_comments'
 
-    def get_query(self):
+    def get_latest_content(self):
         return Comment.query.options(db.eagerload('author')) \
                       .order_by(Comment.pub_date)
 

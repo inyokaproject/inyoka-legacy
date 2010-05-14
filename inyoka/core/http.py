@@ -13,6 +13,7 @@ from uuid import uuid4
 from time import time
 from hashlib import md5
 from operator import itemgetter
+from functools import update_wrapper
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
@@ -115,3 +116,19 @@ class Response(BaseResponse):
 def redirect_to(endpoint, **kwargs):
     """Temporarily redirect to an URL rule."""
     return redirect(href(endpoint, **kwargs))
+
+
+def allow_next_redirects(default='portal/index'):
+    """Use this decorator to ease the usage of the "next" url parameter
+    for redirecting after doing some important things."""
+
+    def decorated(func):
+        def _inner(*args, **kwargs):
+            req = ctx.current_request
+            target = req.args.get('_next') or href(default)
+            result = func(*args, **kwargs)
+            if not isinstance(result, BaseResponse):
+                return redirect(target)
+            return result
+        return update_wrapper(_inner, func)
+    return decorated

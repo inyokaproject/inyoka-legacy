@@ -10,6 +10,7 @@
 """
 from inyoka import Interface
 from inyoka.core.api import ctx, cache, db
+from inyoka.utils.decorators import abstract
 
 
 class ILatestContentProvider(Interface):
@@ -25,7 +26,7 @@ class ILatestContentProvider(Interface):
     #: The app or content name this content is from.  Take 'forum', 'wiki',
     #: 'news' for example.  To provide application-information use a underscore
     #: for seperation.
-    name = None
+    type = None
 
     #: The cache timeout in seconds.  This will be applied to the cache backend.
     cache_timeout = 120
@@ -33,7 +34,7 @@ class ILatestContentProvider(Interface):
     #: The cache key to search in the cache.
     cache_key = None
 
-    def get_query(self):
+    def get_latest_content(self):
         """Return a query that returns the proper latest content.  Note that
         we must work with a query object here but not with another iterable!
         """
@@ -47,12 +48,32 @@ class ILatestContentProvider(Interface):
             if provider.cache_key is not None:
                 objects = cache.get(provider.cache_key)
             if objects is None:
-                objects = provider.get_query().limit(max_per_impl).all()
+                objects = provider.get_latest_content().limit(max_per_impl).all()
 
             if provider.cache_key is not None:
                 cache.set(provider.cache_key, objects, provider.cache_timeout)
 
             merge = db.session.merge
-            objects = [(provider.name, merge(obj, load=False)) for obj in objects]
+            objects = [(provider.type, merge(obj, load=False)) for obj in objects]
             contents.extend(objects)
         return contents
+
+
+class ITaggableContentProvider(Interface):
+    """Interface to find all providers that provide taggable contents"""
+
+    #: The type of the content provider
+    type = None
+
+    #: The name of the content.  This is shown in the public view.
+    name = None
+
+    @abstract
+    def get_taggable_content(self, tag):
+        """Return a query that returns all contents for that provider.
+
+        Do never return a list but a query object!
+
+        :param tag: The tag object to specify the tag the content must
+                    relate to.
+        """

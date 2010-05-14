@@ -22,11 +22,10 @@ from inyoka.portal.api import ILatestContentProvider
 
 class WikiLatestContentProvider(ILatestContentProvider):
 
-    name = 'wiki_revisions'
-
+    type = 'wiki_revisions'
     cache_key = 'wiki/latest_revisions'
 
-    def get_query(self):
+    def get_latest_content(self):
         return Revision.query.options(db.eagerload('page')) \
                        .order_by(Revision.change_date.desc())
 

@@ -14,6 +14,7 @@ from inyoka.core.api import IController, Rule, view, Response, \
 from inyoka.core.auth import get_auth_system, login_required
 from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
     Group
+from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
 from inyoka.core.context import ctx
 from inyoka.core.database import db
@@ -21,7 +22,7 @@ from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
 from inyoka.portal.forms import get_profile_form
-from inyoka.portal.api import ILatestContentProvider
+from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 from inyoka.wiki.models import Revision as WikiRevision
 from inyoka.forum.models import Question as ForumQuestion
 from inyoka.news.models import Article as NewsArticle, Comment as NewsComment
@@ -69,7 +70,6 @@ class PortalController(IController):
         contents = ILatestContentProvider.get_cached_content(2)
         cloud, more = Tag.query.public().get_cloud()
         return {
-            'introduction': True,
             'tag_cloud': cloud,
             'more_tags': more,
             'latest_content': contents
@@ -123,15 +123,17 @@ class PortalController(IController):
 
     @view
     @templated('portal/login.html', modifier=context_modifier)
+    @allow_next_redirects('portal/index')
     def login(self, request):
         return get_auth_system().login(request)
 
     @view
+    @allow_next_redirects('portal/index')
     def logout(self, request):
-        get_auth_system().logout(request)
-        return redirect_to('portal/index')
+        return get_auth_system().logout(request)
 
     @view
+    @allow_next_redirects('portal/index')
     def register(self, request):
         return get_auth_system().register(request)
 
@@ -153,16 +155,18 @@ class PortalController(IController):
     @templated('portal/tag.html', modifier=context_modifier)
     def tag(self, request, slug):
         tag = Tag.query.filter_by(slug=slug).one()
-        articles = {
-            'item_list':tag.articles.order_by('view_count').all(),
-            'list_class':'news_articles',
-            'name':_('Articles')
-        }
-        ## other taggable content should be added here
+        providers = ctx.get_implementations(ITaggableContentProvider, instances=True)
+        content = []
+        for provider in providers:
+            content.append({
+                'item_list': provider.get_taggable_content(tag).all(),
+                'list_class': provider.type,
+                'name': provider.name
+            })
 
         return {
-            'tag':tag,
-            'content':(articles,),
+            'tag': tag,
+            'content': content,
         }
 
 

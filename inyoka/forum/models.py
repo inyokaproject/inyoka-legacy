@@ -11,11 +11,11 @@
 import re
 from datetime import datetime
 from werkzeug import cached_property
-from inyoka.core.api import ctx, db, cache, SerializableObject
+from inyoka.core.api import _, ctx, db, cache, SerializableObject
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
-from inyoka.portal.api import ILatestContentProvider
+from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 from inyoka.utils import confidence
 
 
@@ -31,12 +31,20 @@ forum_tag = db.Table('forum_forum_tag', db.metadata,
 )
 
 
-class LatestQuestionsContentProvider(ILatestContentProvider):
-    name = 'forum_questions'
+class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider):
+    type = 'forum_questions'
     cache_key = 'forum/latest_questions'
+    name = _('Questions')
 
-    def get_query(self):
+    def get_latest_content(self):
         return Question.query.order_by(Question.date_active.desc())
+
+    def get_taggable_content(self, tag):
+        return Question.query.order_by(Question.score, Question.view_count) \
+                             .filter(db.and_(
+            question_tag.c.tag_id == tag.id,
+            question_tag.c.question_id == Question.id
+        )).options(db.noload('votes'), db.noload('author'))
 
 
 class Forum(db.Model, SerializableObject):

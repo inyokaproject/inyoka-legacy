@@ -26,7 +26,6 @@ from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.context import ctx
 from inyoka.core.http import Response, Request
-from inyoka.core.templating import TEMPLATE_CONTEXT
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
@@ -100,8 +99,8 @@ class ViewTestSuite(TestSuite):
     def get_context(self, path, method='GET', **kwargs):
         """Return the template context from a view wrapped
         by :func:`templated`."""
-        self.open(path, method=method, **kwargs)
-        return TEMPLATE_CONTEXT
+        response = self.open(path, method=method, **kwargs)
+        return getattr(response, '_template_context', {})
 
     def open(self, path, *args, **kw):
         """Open a connection to `path` and return

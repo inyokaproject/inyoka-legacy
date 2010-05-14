@@ -79,7 +79,7 @@
       </table>
     {%- endif %}
     <p>
-      {% if not request.user.subscribed('news.comments', article.id) %}
+      {% if not request.user.subscribed('news.comments.by_entry', article.id) %}
       <a href="{{ href(article, action='subscribe') }}">subscribe</a>
       {% else %}
       <a href="{{ href(article, action='unsubscribe') }}">unsubscribe</a>

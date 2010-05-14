@@ -79,5 +79,4 @@ class classproperty(object):
             #      arguments really are…
             raise RuntimeError('What happened?')
         value = self.func(type)
-        setattr(type, self.__name__, value)
         return value

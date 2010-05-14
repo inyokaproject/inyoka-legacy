@@ -1,5 +1,8 @@
 {% extends "portal/base.html" %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import render_fields %}
 {% block content %}
-{{ render_form(form, submit_value=_('Register')) }}
+<form method="post" action="">
+{{ render_fields(form) }}
+<p class="actions"><input type="submit" value="{{ _('Register') }}"></p>
+</form>
 {% endblock content %}

@@ -50,6 +50,6 @@
 {% macro render_form(form) %}
   <form method="post" action="">
   {{ render_fields(form) }}
-  <p class="actions"><input type="submit" value="Submit"></p>
+  <p class="actions"><input type="submit" value="{{ _('Submit') }}"></p>
   </form>
 {% endmacro %}

@@ -54,6 +54,7 @@ p.meta .comments {
 a.show_comments {
   display: block;
   padding: 0.5em;
+  margin-top: 2em;
   text-align: center;
   background-color: #eee;
   letter-spacing: 0.2em;

@@ -140,7 +140,7 @@ class Tag(db.Model, SerializableObject):
 
     def get_url_values(self, action='view'):
         values = {
-            'view': 'portal/tags',
+            'view': 'portal/tag',
             'edit': 'admin/portal/tag_edit',
             'delete': 'admin/portal/tag_delete',
         }

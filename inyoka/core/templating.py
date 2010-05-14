@@ -150,6 +150,7 @@ class InyokaEnvironment(Environment):
             jsonencode=simplejson.dumps,
             datetimeformat=l10n.format_datetime,
             dateformat=l10n.format_date,
+            timeformat=l10n.format_time,
             timedelta=l10n.timedeltaformat,
             monthformat=l10n.format_month
         )

@@ -1,8 +1,14 @@
 {% macro render_article(article) -%}
   <div class="article {{ article.hidden and ' hidden' or '' }}">
     <h3 class="title"><a href="{{ href(article) }}">{{ article.title }}</a></h3>
+    <p class="meta">
+      <span class="published">{{ article.updated|dateformat }} {{ article.updated|timeformat('short') }}</span>
+      <span class="tags">{% for tag in article.tags %}<a href="{{ href(tag) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
+      <span class="comments"><a href="{{ href(article, _anchor='comments') }}">
+        {% if article.comment_count %}{{ article.comment_count }} {{ _('Comments') }}{% else %}{{ _('No Comments') }}{% endif %}
+      </a></span>
+    </p>
     {{ article.intro or article.text }}
     {% if article.intro -%}{{ _('…') }}{% endif %}
-    <p><a href="{{ href(article, _anchor='comments') }}">{{ article.comment_count }} {{ _('Comments') }}</a></p>
   </div>
 {%- endmacro %}

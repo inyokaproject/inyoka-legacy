@@ -5,25 +5,23 @@
 {% block content %}
   <div class="article">
     <h3 class="title"><a href="{{ href(article) }}">{{ article.title }}</a></h3>
-    <div class="intro">
-      {{ article.rendered_intro }}
-    </div>
-    <div class="text">
-      {{ article.rendered_text|safe }}
-    </div>
     <p class="meta">
-      {%- trans author_url=href(article.author.profile), author_name=article.author.username,
-                article_pubdate=article.pub_date|datetimeformat('short') -%}
-      written by <a href="{{ author_url }}">{{ author_name }}</a> {{ article_pubdate }}
-      {% endtrans %}
-      {{ _('Tags: ') }} {% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
-      {%- if article.was_updated %}
-      – {{ _('updated on') }} {{ article.updated|datetimeformat('short') }}
-      {%- endif %}
-      – {% trans count=article.view_count %}{{ count }} visit{% pluralize %}{{ count }} visits{% endtrans %}
+      <span class="published">
+        {%- trans author_url=href(article.author.profile), author_name=article.author.username,
+                article_pubdate=article.updated|dateformat, article_pubtime=article.updated|timeformat('short') -%}
+        written by <a href="{{ author_url }}">{{ author_name }}</a> on {{ article_pubdate }} {{ article_pubtime }}
+        {% endtrans %}
+      </span>
+      <span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
+      <span class="comments"><a href="{{ href(article, _anchor='comments') }}">
+        {% if article.comment_count %}{{ article.comment_count }} {{ _('Comments') }}{% else %}{{ _('No Comments') }}{% endif %}
+      </a></span>
       {# TODO: ACL check #}
-      – <a href="{{ href(article, action='edit') }}" class="adminlink">{{ _('edit') }}</a>
+      <span class="visits">{% trans count=article.view_count %}{{ count }} visit{% pluralize %}{{ count }} visits{% endtrans %}</span>
+      <span class="admin"><a href="{{ href(article, action='edit') }}" class="adminlink">{{ _('edit') }}</a></span>
     </p>
+    <div class="intro">{{ article.rendered_intro|safe }}</div>
+    <div class="text">{{ article.rendered_text|safe }}</div>
     {%- if article.comments_enabled %}
       <table id="comments" class="comments">
         <script type="text/javascript">

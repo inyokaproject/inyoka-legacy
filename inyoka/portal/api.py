@@ -54,7 +54,7 @@ class ILatestContentProvider(Interface):
                 cache.set(provider.cache_key, objects, provider.cache_timeout)
 
             merge = db.session.merge
-            objects = [(provider.name, merge(obj, load=False)) for obj in objects]
+            objects = [(provider.type, merge(obj, load=False)) for obj in objects]
             contents.extend(objects)
         return contents
 

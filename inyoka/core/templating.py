@@ -86,14 +86,14 @@ def templated(template_name, modifier=None, stream=False):
 
             # if we got no dictionary as response type we try to force
             # to return a proper Response object instead of any further process
-            if not isinstance(ret, dict):
-                return Response.force_type(ret)
+            if not isinstance(context, dict):
+                return Response.force_type(context)
 
             data = render_template(template_name, context, modifier=modifier,
                                    request=request, stream=stream)
             response = Response(data)
             if ctx.cfg['debug']:
-                response._template_context = ret
+                response._template_context = context
             return response
         return templated_wrapper
     return decorator

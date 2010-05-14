@@ -139,6 +139,7 @@ class SubscriptionAction(Interface):
         It is called by :meth:`Subscription.new` once for every user
         and passes the new object and the matching (only those!) subjects,
         grouped by type name, e.g::
+
             NewQuestionSubscriptionAction.notify(user23, entry1,
                 {'blog.entry.tag': [tag1, tag2],
                  'blog.entry.author': [user42]})

@@ -32,7 +32,7 @@ def get_endpoint_map(map, providers):
     for provider in providers:
         members = tuple(x[1] for x in getmembers(provider, _predicate))
         map.update(dict((join(provider.name, m.endpoint), m)
-                                  for m in members))
+                         for m in members))
     return map
 
 

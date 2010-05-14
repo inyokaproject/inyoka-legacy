@@ -64,7 +64,7 @@ def test_component_is_activated():
 
 @with_setup(_teardown_components, _setup_components)
 def test_load_components():
-    loaded = ctx.load_components(set([Implementation1, Implementation2, Implementation4]))
+    loaded = ctx.load_components([Implementation1, Implementation2, Implementation4])
     eq_(len(loaded), 3)
 
     assert_true(Implementation1 in loaded)

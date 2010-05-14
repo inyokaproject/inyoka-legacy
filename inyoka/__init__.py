@@ -13,6 +13,7 @@
 import os
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
+from operator import methodcaller
 from werkzeug import find_modules, cached_property
 from inyoka.core.context import LocalProperty
 from inyoka.utils import safe_import_string
@@ -54,16 +55,13 @@ class InterfaceMeta(type):
             InterfaceMeta._registry.append(uniquename)
         else:
             # A Interface
-            obj._interfaces = interfaces = set()
             obj._isinterface = False
-            possible_interfaces = set()
+            # store all unique interfaces
+            obj._interfaces = interfaces = set(
+                cls for cls in sum(map(methodcaller('mro'), bases), [])
+                    if '_isinterface' in cls.__dict__
+            )
 
-            for base in bases:
-                possible_interfaces.update(base.mro())
-
-            for cls in possible_interfaces:
-                if '_isinterface' in cls.__dict__:
-                    interfaces.add(cls)
         return obj
 
 
@@ -175,11 +173,11 @@ class ApplicationContext(object):
         """Load various components, see
         :meth:`~ApplicationContext.load_component` for more details.
         """
-        ret = []
-        for component in components:
+        ret = set()
+        for component in set(components):
             loaded = self.load_component(component)
             if loaded:
-                ret.append(loaded)
+                ret.add(loaded)
         return ret
 
     def unload_components(self, components):
@@ -187,11 +185,10 @@ class ApplicationContext(object):
 
         :param components:  A list of components to unload.
         """
-        unloaded = []
-        for component in components:
+        for component in set(components):
             try:
                 if getattr(component, '_isinterface', False):
-                    unloaded.append(self._components.pop(component))
+                    self._components.pop(component)
             except:
                 # fail silently if component is not loaded
                 continue
@@ -223,8 +220,8 @@ class ApplicationContext(object):
         """
         if not instances:
             return self._components.get(interface, ())
-        return [self.get_instance(impl) for impl in
-                self._components.get(interface, ())]
+        return set([self.get_instance(impl) for impl in
+                    self._components.get(interface, ())])
 
     def get_instance(self, compcls):
         """Return the instance of a component class.

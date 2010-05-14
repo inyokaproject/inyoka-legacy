@@ -3,7 +3,7 @@ Hacking on Inyoka
 =================
 
 Inyoka is written in Python and based on popular libraries.  The dynamic parts
-in the user interface are created using HTML5 and jQuery.
+in the user interface are created using a subset HTML5 and jQuery.
 
 This file should give you a brief overview how the code works and what
 you should keep in mind working on it.
@@ -23,8 +23,8 @@ All filenames have to be lowercase and ASCII only.
 Python
 ------
 
-Inyoka follows the PEP 8 for Python code.  The rule you should follow
-is “adapt the code style used in the file”.  And that also means, put
+Inyoka follows the PEP 8 for Python code.  Next to that you should follow
+“adapt the code style used in the file”.  And that also means, put
 whitespace where the original author put it and so on.
 
 Indent with 4 *spaces* only.
@@ -52,11 +52,16 @@ HTML code is also indented with 2 spaces.
 
 **Every** page has to be valid `HTML 5 <http://www.whatwg.org/html5>`_
 
+If possible use a supported subset so do not use features not widely supported
+by browsers.
+
 CSS
 ---
 
 Indent your CSS 2.1 valid code with 4 spaces and adapt common formatting
 styles.
+
+If widely supported you can use css3 features.
 
 
 Naming Guide
@@ -97,6 +102,10 @@ the help of “providers”.  A small example::
         name = None
 
 
+    class ForumAdminProvider(IAdminProvider):
+        # concrete implementation here...
+
+
     class IAdminController(IController):
         def get_endpoint_map(self):
             providers = ctx.get_component_instances(IAdminProvider)
@@ -108,12 +117,13 @@ naming guides.
 Controllers
 -----------
 
-As seen in the examples above we have “providers“ and those implementations
+As seen in the examples above we have “providers“ whose implementations
 are wrapped.  These wrappers are commonly called “controllers” because they
 control other provides and control the concrete flow.
 
 A controll interface inherits from :class:`inyoka.Interface` and follows it's
-naming guides.
+naming guides.  Besides that it should contain the name ``Controller`` to
+specify that this is a special kind of interfaces.
 
 
 URLs
@@ -142,11 +152,16 @@ There must only be things implemented in JavaScript that could ease
 some use-cases or shorten some workflow.  But everything else *must* work
 without JavaScript.
 
+We are using extensively jQuery so use it wherever possible to ease the
+development.  Note also that you should use only widely supported JavaScript
+features, such as coroutines, workers and others are only supported in very
+few browsers so do not use them!
+
 
 Templates
 ~~~~~~~~~
 
-Templates may not contain any CSS information besides classes.
+Templates may not contain any CSS information besides classes and identifiers.
 Use classes as appropriate, and use as many of them as you like.
 Keep them easy to read.
 
@@ -157,7 +172,7 @@ classes for the same widget (tags, users, badges etc.)
 Unit Tests
 ~~~~~~~~~~
 
-Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/0.11.1/>`_ for all
+Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/>`_ for all
 tests.  If you don't use functions or doctests you must inherit either
 :class:`~inyoka.core.test.TestCase` for common unittests or
 :class:`~inyoka.core.test.ViewTestCase` to test view functions.  See the 
@@ -166,6 +181,14 @@ tests.  If you don't use functions or doctests you must inherit either
 Well, try to write the tests first, but we don't thrash you if you don't.
 TDD is cool but not easy to use everywhere.  So our development cycle depends
 on the hackers not on some kind of protocol nobody likes to use :)
+
+But keep in mind that changing a lot of code is very much easier if you have
+working unittests.  So please also check and debug your unittests if you're
+not sure that they test what they should test.
+
+As unittests often can be used as a reference about what's possible (as they
+test all edge-cases) try to make them easy to read and document them as much
+as possible.
 
 
 Documentation

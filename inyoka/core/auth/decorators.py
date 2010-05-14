@@ -24,6 +24,6 @@ def login_required(func):
     def decorated(*args, **kwargs):
         if ctx.current_request.user.is_anonymous:
             ctx.current_request.flash(_(u'You must login to view this!'))
-            return redirect_to('portal/login', next=ctx.current_request.url)
+            return redirect_to('portal/login', _next=ctx.current_request.url)
         return func(*args, **kwargs)
     return decorated

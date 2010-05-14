@@ -14,6 +14,7 @@ from inyoka.core.api import IController, Rule, view, Response, \
 from inyoka.core.auth import get_auth_system, login_required
 from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
     Group
+from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
 from inyoka.core.context import ctx
 from inyoka.core.database import db
@@ -122,15 +123,17 @@ class PortalController(IController):
 
     @view
     @templated('portal/login.html', modifier=context_modifier)
+    @allow_next_redirects('portal/index')
     def login(self, request):
         return get_auth_system().login(request)
 
     @view
+    @allow_next_redirects('portal/index')
     def logout(self, request):
-        get_auth_system().logout(request)
-        return redirect_to('portal/index')
+        return get_auth_system().logout(request)
 
     @view
+    @allow_next_redirects('portal/index')
     def register(self, request):
         return get_auth_system().register(request)
 

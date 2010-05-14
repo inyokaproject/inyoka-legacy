@@ -44,9 +44,8 @@ def abstract(func):
     """
 
     @wraps(func)
-    def wrapper(*__args, **__kw):
-        raise NotImplementedError('Missing required %s() method' %\
-                                  func.__name__)
+    def wrapper(*args, **kwargs):
+        raise NotImplementedError('Missing required %s() method' % func.__name__)
 
     return wrapper
 

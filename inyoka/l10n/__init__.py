@@ -145,21 +145,10 @@ def humanize_number(number):
     unfortunately, this cannot be done with Babel.
     """
 
-    strings = {
-        0:_('zero'),
-        1:_('one'),
-        2:_('two'),
-        3:_('three'),
-        4:_('four'),
-        5:_('five'),
-        6:_('six'),
-        7:_('seven'),
-        8:_('eight'),
-        9:_('nine'),
-        10:_('ten'),
-        11:_('eleven'),
-        12:_('twelve'),
-    }
+    strings = [_('zero'), _('one'), _('two'), _('three'), _('four'),
+               _('five'), _('six'), _('seven'), _('eight'),
+               _('nine'), _('ten'), _('eleven'), _('twelve')
+              ]
     if number in strings:
         return strings[number]
     else:

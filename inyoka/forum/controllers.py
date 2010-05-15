@@ -34,20 +34,34 @@ class ForumController(IController):
         Rule('/questions/<int:page>/', endpoint='questions'),
         Rule('/questions/<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
-        Rule('/questions/any(latest, active, unanswered, votes):sort>/<int:page>/',
-            endpoint='questions'),
+        Rule('/questions/<any(latest, active, unanswered, votes):sort>/' \
+             '<int:page>/', endpoint='questions'),
+
         Rule('/tagged/<string:tags>/', endpoint='questions'),
-        Rule('/tagged/<string:tags>/<any(latest, active, unanswered, votes):sort>/',
+        Rule('/tagged/<string:tags>/<int:page>/', endpoint='questions'),
+        Rule('/tagged/<string:tags>/' \
+             '<any(latest, active, unanswered, votes):sort>/',
              endpoint='questions'),
+        Rule('/tagged/<string:tags>/' \
+             '<any(latest, active, unanswered, votes):sort>/<int:page>/',
+             endpoint='questions'),
+
         Rule('/forum/<string:forum>/', endpoint='questions'),
-        Rule('/forum/<string:forum>/<any(latest, active, unanswered, votes):sort>/',
+        Rule('/forum/<string:forum>/<int:page>/', endpoint='questions'),
+        Rule('/forum/<string:forum>/' \
+             '<any(latest, active, unanswered, votes):sort>/',
+             endpoint='questions'),
+        Rule('/forum/<string:forum>/' \
+             '<any(latest, active, unanswered, votes):sort>/<int:page>/',
              endpoint='questions'),
 
         Rule('/question/<string:slug>/', endpoint='question'),
+        Rule('/question/<string:slug>/<int:page>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
+        Rule('/question/<string:slug>/<string:sort>/<int:page>/',
+             endpoint='question'),
 
-        Rule('/vote/<int:entry_id>/<string:action>/',
-            endpoint='vote'),
+        Rule('/vote/<int:entry_id>/<string:action>/', endpoint='vote'),
 
         Rule('/ask/', endpoint='ask'),
         Rule('/forum/<string:forum>/ask/', endpoint='ask'),

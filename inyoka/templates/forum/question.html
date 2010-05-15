@@ -103,7 +103,7 @@
   <div class="summary">
     <div class="author">
       answered <strong>{{ answer.date_created|timedelta }}</strong><br />
-      <a href="{{ href(question.author.profile) }}">{{ answer.author }}</a>
+      <a href="{{ href(answer.author.profile) }}">{{ answer.author }}</a>
     </div>
     <p>{{ answer.rendered_text|safe }}</p>
   </div>

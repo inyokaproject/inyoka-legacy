@@ -149,7 +149,7 @@ def humanize_number(number):
                _('five'), _('six'), _('seven'), _('eight'),
                _('nine'), _('ten'), _('eleven'), _('twelve')
               ]
-    if number in strings:
+    if number in xrange(13):
         return strings[number]
     else:
         return number

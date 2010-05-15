@@ -37,7 +37,7 @@ class ArticlesContentProvider(ILatestContentProvider, ITaggableContentProvider):
 
 
 class LatestCommentsContentProvider(ILatestContentProvider):
-    name = 'news_comments'
+    type = 'news_comments'
     cache_key = 'news/latest_comments'
 
     def get_latest_content(self):

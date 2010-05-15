@@ -23,7 +23,7 @@
     <div class="intro">{{ article.rendered_intro|safe }}</div>
     <div class="text">{{ article.rendered_text|safe }}</div>
     {%- if article.comments_enabled %}
-    <span class="description">{{ article.comment_count }} {{ _('Comments') }}</span>
+    <span class="description">{% trans count=article.comment_count %} {{ count }} Comment{% pluralize %}{{ count }} Comments{% endtrans %}</span>
     <ol class="comments">
     {%- for comment in comments %}
     <li id="comment_{{ loop.index }}"

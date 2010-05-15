@@ -51,7 +51,7 @@ p.meta .comments {
   background: url(../img/comments.gif) left center no-repeat;
 }
 
-a.show_comments {
+span.description {
   display: block;
   padding: 0.5em;
   margin-top: 2em;
@@ -62,9 +62,47 @@ a.show_comments {
   color: #444;
   border-top: 1px solid #ccc;
   font-weight: bold;
-  cursor: pointer;
 }
 
-a.show_comments:hover, a.show_comments:focus {
-  text-decoration: underline;
+
+div.article .comments {
+  padding-bottom: 18px;
+  list-style: none;
+  margin: 0;
+}
+
+div.article .comments h2 {
+  color: #999;
+}
+
+div.article .comments li {
+  border-bottom: 1px dotted #ccc;
+  padding: 14px 0 12px 98px;
+  margin-bottom: 6px;
+  min-height: 94px;
+  position: relative;
+}
+
+div.article .comments img.avatar {
+  background: #ccc;
+  border: 1px solid #444;
+  left: 0;
+  padding: 8px;
+  position: absolute;
+  top: 16px;
+  width: 60px; height: 60px;
+}
+
+div.article .comments .comment_author {
+  color: #999;
+  font-size: 1.3em;
+  margin-bottom: 2px;
+  text-decoration: none;
+}
+
+div.article .comments .meta {
+  color: #6f6f6f;
+  font-size: .8em;
+  margin-bottom: 6px;
+  display: block;
 }

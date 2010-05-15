@@ -20,7 +20,7 @@ from functools import wraps
 from datetime import date, time, datetime, timedelta
 import pytz
 from babel import dates
-from inyoka.i18n import get_locale, lazy_gettext
+from inyoka.i18n import get_locale, lazy_gettext, _
 from inyoka.core.context import ctx
 
 
@@ -139,3 +139,28 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
 def format_month(date=None):
     """Format month and year of a date."""
     return format_date(date, 'MMMM YYYY')
+
+def humanize_number(number):
+    """Format numbers from 0 to 12 to strings.
+    unfortunately, this cannot be done with Babel.
+    """
+
+    strings = {
+        0:_('zero'),
+        1:_('one'),
+        2:_('two'),
+        3:_('three'),
+        4:_('four'),
+        5:_('five'),
+        6:_('six'),
+        7:_('seven'),
+        8:_('eight'),
+        9:_('nine'),
+        10:_('ten'),
+        11:_('eleven'),
+        12:_('twelve'),
+    }
+    if number in strings:
+        return strings[number]
+    else:
+        return number

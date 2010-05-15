@@ -59,11 +59,9 @@
 <br style="clear: both" />
 
 <h2>
-{%- trans count=question.answer_count -%}
-{{ count }} answer
-{%- pluralize -%}
-{{ count }} answers
-{%- endtrans -%}
+{% trans count=question.answer_count, human_count=question.answer_count|humanize|capitalize %}
+{{ human_count }} Answer{% pluralize %}{{ human_count }} Answers
+{% endtrans %}
 </h2>
 {% set tab = sort or 'votes' %}
 <ul class="pagetabs">

@@ -14,7 +14,13 @@
       </span>
       <span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
       <span class="comments"><a href="{{ href(article, _anchor='comments') }}">
-        {% if article.comment_count %}{% trans count=article.comment_count %} {{ count }} Comment{% pluralize %}{{ count }} Comments{% endtrans %}{% else %}{{ _('No Comments') }}{% endif %}
+        {% if article.comment_count %}
+        {% trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize %}
+        {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
+        {% endtrans %}
+        {% else %}
+        {{ _('No Comments') }}
+        {% endif %}
       </a></span>
       {# TODO: ACL check #}
       <span class="visits">{% trans count=article.view_count %}{{ count }} visit{% pluralize %}{{ count }} visits{% endtrans %}</span>
@@ -23,7 +29,13 @@
     <div class="intro">{{ article.rendered_intro|safe }}</div>
     <div class="text">{{ article.rendered_text|safe }}</div>
     {%- if article.comments_enabled %}
-    <span class="description">{% trans count=article.comment_count %} {{ count }} Comment{% pluralize %}{{ count }} Comments{% endtrans %}</span>
+    <span class="description">{% if article.comment_count %}
+                              {% trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize %}
+                              {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
+                              {% endtrans %}
+                              {% else %}
+                              {{ _('No Comments') }}
+                              {% endif %}</span>
     <ol class="comments">
     {%- for comment in comments %}
     <li id="comment_{{ loop.index }}"

@@ -152,7 +152,8 @@ class InyokaEnvironment(Environment):
             dateformat=l10n.format_date,
             timeformat=l10n.format_time,
             timedelta=l10n.timedeltaformat,
-            monthformat=l10n.format_month
+            monthformat=l10n.format_month,
+            humanize=l10n.humanize_number,
         )
         self.install_gettext_translations(
             i18n.get_translations()

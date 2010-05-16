@@ -40,10 +40,12 @@ l10n API
 
 .. autofunction:: to_datetime
 
-.. autofunction:: timedeltaformat
-
 .. autofunction:: format_month
 
 .. autofunction:: humanize_number
+
+.. autofunction:: humanize_number_and_text
+
+.. autofunction:: timedeltaformat
 
 .. todo: Add autodocs from wrapped babel functions

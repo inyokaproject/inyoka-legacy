@@ -116,6 +116,49 @@ _additional_all = ['get_month_names', 'get_day_names', 'get_era_names',
 for func in dates.__all__ + _additional_all:
     dict_[func] = get_dummy(getattr(dates, func))
 
+def format_month(date=None):
+    """Format month and year of a date."""
+    return format_date(date, 'MMMM YYYY')
+
+def humanize_number(number):
+    """Format numbers from 0 to 12 to strings.
+    unfortunately, this cannot be done with Babel.
+
+    Usage Example::
+
+        >>> humanize_number(6)
+        u'six'
+        >>> humanize_number(13)
+        u'13'
+        >>> humanize_number('some_string')
+        u'some_string'
+
+    """
+    strings = [_('zero'), _('one'), _('two'), _('three'), _('four'),
+               _('five'), _('six'), _('seven'), _('eight'),
+               _('nine'), _('ten'), _('eleven'), _('twelve')
+              ]
+    return strings[number] if number in xrange(13) else unicode(number)
+
+def humanize_number_and_text(string):
+    """Humanize a string starting with a 0-12 number
+
+    Usage Example::
+        >>> humanize_number_and_text('8 hours')
+        u'eight hours'
+        >>> humanize_number_and_text('13 seconds')
+        u'13 seconds'
+        >>> humanize_number_and_text('just now')
+        u'just now'
+
+    """
+    number, text = string.split(None, 1)
+    try:
+        human_number = humanize_number(int(number))
+    except ValueError:
+        return unicode(string)
+
+    return u'%s %s' % (human_number, text)
 
 # our locale aware special format methods
 def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
@@ -132,35 +175,8 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     """
     if isinstance(datetime_or_timedelta, datetime):
         datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
-    return lazy_gettext(u'%(timedelta)s ago') % {
-        'timedelta': format_timedelta(datetime_or_timedelta, granularity,
-                                      threshold=threshold)}
 
+    timedelta = humanize_number_and_text(format_timedelta(datetime_or_timedelta,
+                                        granularity, threshold=threshold))
+    return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta}
 
-def format_month(date=None):
-    """Format month and year of a date."""
-    return format_date(date, 'MMMM YYYY')
-
-def humanize_number(number):
-    """Format numbers from 0 to 12 to strings.
-    unfortunately, this cannot be done with Babel.
-
-    Usage Example::
-
-        >>> humanize_number(6)
-        u'six'
-        >>> humanize_number(13)
-        13
-        >>> humanize_number('some_string')
-        'some_string'
-
-    """
-
-    strings = [_('zero'), _('one'), _('two'), _('three'), _('four'),
-               _('five'), _('six'), _('seven'), _('eight'),
-               _('nine'), _('ten'), _('eleven'), _('twelve')
-              ]
-    if number in xrange(13):
-        return strings[number]
-    else:
-        return number

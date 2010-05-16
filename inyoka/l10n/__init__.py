@@ -23,6 +23,7 @@ from babel import dates
 from inyoka.i18n import get_locale, lazy_gettext, _
 from inyoka.core.context import ctx
 
+locale='de-DE'
 
 UTC = pytz.timezone('UTC')
 
@@ -143,6 +144,16 @@ def format_month(date=None):
 def humanize_number(number):
     """Format numbers from 0 to 12 to strings.
     unfortunately, this cannot be done with Babel.
+
+    Usage Example::
+
+        >>> humanize_number(6)
+        u'six'
+        >>> humanize_number(13)
+        13
+        >>> humanize_number('some_string')
+        'some_string'
+
     """
 
     strings = [_('zero'), _('one'), _('two'), _('three'), _('four'),

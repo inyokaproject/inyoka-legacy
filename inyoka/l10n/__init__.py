@@ -16,17 +16,19 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from __future__ import division
 from functools import wraps
 from datetime import date, time, datetime, timedelta
 import pytz
 from babel import dates
+from babel.core import default_locale, get_global, Locale
+from babel.dates import TIMEDELTA_UNITS
+
 from inyoka.i18n import get_locale, lazy_gettext, _
 from inyoka.core.context import ctx
 
-locale='de-DE'
-
+locale='en'
 UTC = pytz.timezone('UTC')
-
 
 def get_timezone(name=None):
     """Return the timezone for the given identifier or the timezone
@@ -116,27 +118,6 @@ _additional_all = ['get_month_names', 'get_day_names', 'get_era_names',
 for func in dates.__all__ + _additional_all:
     dict_[func] = get_dummy(getattr(dates, func))
 
-
-# our locale aware special format methods
-def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
-    """Special locale aware timedelta format function
-
-    :param datetime_or_timedelta: Either a datetime or timedelta object.
-                                  If it's a datetime object we caclculate the
-                                  timedelta from this object to now (using UTC)
-    :param threshold: factor that determines at which point the presentation
-                      switches to the next higher unit
-    :param granularity: determines the smallest unit that should be displayed,
-                        the value can be one of "year", "month", "week", "day",
-                        "hour", "minute" or "second"
-    """
-    if isinstance(datetime_or_timedelta, datetime):
-        datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
-    return lazy_gettext(u'%(timedelta)s ago') % {
-        'timedelta': format_timedelta(datetime_or_timedelta, granularity,
-                                      threshold=threshold)}
-
-
 def format_month(date=None):
     """Format month and year of a date."""
     return format_date(date, 'MMMM YYYY')
@@ -150,17 +131,88 @@ def humanize_number(number):
         >>> humanize_number(6)
         u'six'
         >>> humanize_number(13)
-        13
+        u'13'
         >>> humanize_number('some_string')
-        'some_string'
+        u'some_string'
 
     """
-
     strings = [_('zero'), _('one'), _('two'), _('three'), _('four'),
                _('five'), _('six'), _('seven'), _('eight'),
                _('nine'), _('ten'), _('eleven'), _('twelve')
               ]
-    if number in xrange(13):
-        return strings[number]
+    return strings[number] if number in xrange(13) else unicode(number)
+
+def _format_timedelta(delta, granularity='second', threshold=.85, locale=locale):
+    """Return a time delta according to the rules of the given locale.
+
+    function copied and slightly modified from babel.dates.format_timedelta
+    see babel package information for details and
+    http://babel.edgewall.org/wiki/License for the license
+
+    """
+    if isinstance(delta, timedelta):
+        seconds = int((delta.days * 86400) + delta.seconds)
     else:
-        return number
+        seconds = delta
+    locale = Locale.parse(locale)
+
+    for unit, secs_per_unit in TIMEDELTA_UNITS:
+        value = abs(seconds) / secs_per_unit
+        if value >= threshold or unit == granularity:
+            if unit == granularity and value > 0:
+                value = max(1, value)
+            value = int(round(value))
+            plural_form = locale.plural_form(value)
+            pattern = locale._data['unit_patterns'][unit][plural_form]
+            return pattern.replace('{0}', humanize_number(value))
+
+    return u''
+
+# our locale aware special format methods
+def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
+    """Special locale aware timedelta format function
+
+    Usage Example::
+
+        >>> timedeltaformat(timedelta(weeks=12))
+        u'three months ago'
+        >>> timedeltaformat(timedelta(seconds=30))
+        u'30 seconds ago'
+        >>> timedeltaformat(timedelta(seconds=0))
+        u'just now'
+
+        The granularity parameter can be provided to alter the lowest unit
+        presented, which defaults to a second.
+
+        >>> timedeltaformat(timedelta(hours=3), granularity='day')
+        u'one day ago'
+
+        The threshold parameter can be used to determine at which value the
+        presentation switches to the next higher unit. A higher threshold factor
+        means the presentation will switch later. For example:
+
+        >>> timedeltaformat(timedelta(hours=23), threshold=0.9)
+        u'one day ago'
+        >>> timedeltaformat(timedelta(hours=23), threshold=1.1)
+        u'23 hours ago'
+
+    :param datetime_or_timedelta: Either a datetime or timedelta object.
+                                  If it's a datetime object we caclculate the
+                                  timedelta from this object to now (using UTC)
+    :param threshold: factor that determines at which point the presentation
+                      switches to the next higher unit
+    :param granularity: determines the smallest unit that should be displayed,
+                        the value can be one of "year", "month", "week", "day",
+                        "hour", "minute" or "second"
+
+    """
+    if isinstance(datetime_or_timedelta, datetime):
+        datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
+
+    if datetime_or_timedelta <= timedelta(seconds=3):
+        return _('just now')
+
+    timedelta_ = _format_timedelta(datetime_or_timedelta, granularity,
+                                  threshold=threshold)
+    return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta_}
+

@@ -22,6 +22,7 @@ from inyoka.core.markup.machine import NodeCompiler, NodeRenderer, \
     NodeQueryInterface
 from inyoka.core.routing import href
 from inyoka.core.templating import render_template
+from inyoka.core.context import ctx
 from inyoka.utils.html import build_html_tag, escape
 from inyoka.utils.debug import debug_repr
 from inyoka.utils.text import gen_slug
@@ -321,8 +322,8 @@ class Link(Element):
             yield escape(self.caption)
             return
         rel = style = title = None
-        if not self.netloc or self.netloc == settings.BASE_DOMAIN_NAME or \
-           self.netloc.endswith('.' + settings.BASE_DOMAIN_NAME):
+        if not self.netloc or self.netloc == ctx.cfg['base_domain_name'] or \
+           self.netloc.endswith('.' + ctx.cfg['base_domain_name']):
             class_ = 'crosslink'
         else:
             class_ = 'external'

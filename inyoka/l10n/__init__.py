@@ -16,17 +16,19 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from __future__ import division
 from functools import wraps
 from datetime import date, time, datetime, timedelta
 import pytz
 from babel import dates
+from babel.core import default_locale, get_global, Locale
+from babel.dates import TIMEDELTA_UNITS
+
 from inyoka.i18n import get_locale, lazy_gettext, _
 from inyoka.core.context import ctx
 
-locale='de-DE'
-
+locale='en'
 UTC = pytz.timezone('UTC')
-
 
 def get_timezone(name=None):
     """Return the timezone for the given identifier or the timezone
@@ -140,29 +142,59 @@ def humanize_number(number):
               ]
     return strings[number] if number in xrange(13) else unicode(number)
 
-def humanize_number_and_text(string):
-    """Humanize a string starting with a 0-12 number
+def _format_timedelta(delta, granularity='second', threshold=.85, locale=locale):
+    """Return a time delta according to the rules of the given locale.
 
-    Usage Example::
-        >>> humanize_number_and_text('8 hours')
-        u'eight hours'
-        >>> humanize_number_and_text('13 seconds')
-        u'13 seconds'
-        >>> humanize_number_and_text('just now')
-        u'just now'
+    function copied and slightly modified from babel.dates.format_timedelta
+    see babel package information for details and
+    http://babel.edgewall.org/wiki/License for the license
 
     """
-    number, text = string.split(None, 1)
-    try:
-        human_number = humanize_number(int(number))
-    except ValueError:
-        return unicode(string)
+    if isinstance(delta, timedelta):
+        seconds = int((delta.days * 86400) + delta.seconds)
+    else:
+        seconds = delta
+    locale = Locale.parse(locale)
 
-    return u'%s %s' % (human_number, text)
+    for unit, secs_per_unit in TIMEDELTA_UNITS:
+        value = abs(seconds) / secs_per_unit
+        if value >= threshold or unit == granularity:
+            if unit == granularity and value > 0:
+                value = max(1, value)
+            value = int(round(value))
+            plural_form = locale.plural_form(value)
+            pattern = locale._data['unit_patterns'][unit][plural_form]
+            return pattern.replace('{0}', humanize_number(value))
+
+    return u''
 
 # our locale aware special format methods
 def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     """Special locale aware timedelta format function
+
+    Usage Example::
+
+        >>> timedeltaformat(timedelta(weeks=12))
+        u'three months ago'
+        >>> timedeltaformat(timedelta(seconds=30))
+        u'30 seconds ago'
+        >>> timedeltaformat(timedelta(seconds=0))
+        u'just now'
+
+        The granularity parameter can be provided to alter the lowest unit
+        presented, which defaults to a second.
+
+        >>> timedeltaformat(timedelta(hours=3), granularity='day')
+        u'one day ago'
+
+        The threshold parameter can be used to determine at which value the
+        presentation switches to the next higher unit. A higher threshold factor
+        means the presentation will switch later. For example:
+
+        >>> timedeltaformat(timedelta(hours=23), threshold=0.9)
+        u'one day ago'
+        >>> timedeltaformat(timedelta(hours=23), threshold=1.1)
+        u'23 hours ago'
 
     :param datetime_or_timedelta: Either a datetime or timedelta object.
                                   If it's a datetime object we caclculate the
@@ -172,11 +204,15 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     :param granularity: determines the smallest unit that should be displayed,
                         the value can be one of "year", "month", "week", "day",
                         "hour", "minute" or "second"
+
     """
     if isinstance(datetime_or_timedelta, datetime):
         datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
 
-    timedelta = humanize_number_and_text(format_timedelta(datetime_or_timedelta,
-                                        granularity, threshold=threshold))
-    return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta}
+    if datetime_or_timedelta <= timedelta(seconds=3):
+        return _('just now')
+
+    timedelta_ = _format_timedelta(datetime_or_timedelta, granularity,
+                                  threshold=threshold)
+    return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta_}
 

@@ -44,8 +44,6 @@ l10n API
 
 .. autofunction:: humanize_number
 
-.. autofunction:: humanize_number_and_text
-
 .. autofunction:: timedeltaformat
 
 .. todo: Add autodocs from wrapped babel functions

@@ -77,4 +77,7 @@ Now start the development server::
 
     fab runserver
 
+Inyoka should accessible at http://inyoka.local:5000. Otherwise comment out the
+IPv6 lines in your ``/etc/hosts`` and try again.
+
 Ready!

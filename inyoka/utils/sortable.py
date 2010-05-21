@@ -19,12 +19,9 @@ class Sortable(object):
 
     A working example of a box would look like this::
 
-        from inyoka.core.auth.models import User
-        from inyoka.utils.sortable import Sortable
-
         @templated('portal/users.html')
         def users(request):
-            table = Sortable(User.query, request, 'id', ('id', 'username', 'posts'))
+            table = Sortable(User.query, request, 'id', ('id', 'username'))
             return {
                 'users': table.get_sorted().all(),
                 'table': table
@@ -87,6 +84,7 @@ class Sortable(object):
         return Markup(u'<a href="?order=%s">%s</a>%s' % (new_order, value, img))
 
     def get_sorted(self):
+        """Return a query object with the proper ordering applied."""
         ocol = self.order_by.lstrip('-')
         if ocol not in self.columns.keys():
             # safes us from some bad usage that raises an exception

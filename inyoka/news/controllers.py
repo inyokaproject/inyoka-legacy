@@ -56,9 +56,6 @@ def context_modifier(request, context):
     )
 
 
-
-
-
 class NewsController(IController):
     name = 'news'
 

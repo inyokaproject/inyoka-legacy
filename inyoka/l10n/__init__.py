@@ -222,4 +222,3 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     timedelta_ = _format_timedelta(datetime_or_timedelta, granularity,
                                   threshold=threshold)
     return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta_}
-

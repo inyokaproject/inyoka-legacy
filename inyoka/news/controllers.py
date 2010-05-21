@@ -8,7 +8,9 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from os import path
 from datetime import date, datetime
+from werkzeug import cached_property
 from inyoka.i18n import _
 from inyoka.l10n import get_month_names
 from inyoka.core.api import IController, Rule, cache, view, templated, href, \
@@ -54,28 +56,38 @@ def context_modifier(request, context):
     )
 
 
+
+
+
 class NewsController(IController):
     name = 'news'
 
-    url_rules = [
-        Rule('/', endpoint='index'),
-        Rule('/+<any(subscribe, unsubscribe):action>',
-             endpoint='subscribe_articles'),
-        Rule('/<int:page>/', endpoint='index'),
-        Rule('/tag/<slug>/', endpoint='index'),
-        Rule('/tag/<slug>/<int:page>/', endpoint='index'),
-        Rule('/<slug>/', endpoint='detail'),
-        Rule('/<slug>/+<any(subscribe, unsubscribe):action>',
-             endpoint='subscribe_comments'),
-        Rule('/archive/', endpoint='archive'),
-        Rule('/archive/<int(fixed_digits=4):year>/', endpoint='archive'),
-        Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/',
-             endpoint='archive'),
-        Rule('/archive/<int(fixed_digits=4):year>/<int(fixed_digits=2):month>/'
-             '<int(fixed_digits=2):day>/', endpoint='archive'),
-        Rule('/comment/<int:id>/<any(hide, restore, edit):action>',
-             endpoint='edit_comment')
-    ]
+    @cached_property
+    def url_rules(self):
+        url_rules = [
+            Rule('/', endpoint='index'),
+            Rule('/+<any(subscribe, unsubscribe):action>',
+                 endpoint='subscribe_articles'),
+            Rule('/<int:page>/', endpoint='index'),
+            Rule('/tag/<slug>/', endpoint='index'),
+            Rule('/tag/<slug>/<int:page>/', endpoint='index'),
+            Rule('/<slug>/', endpoint='detail'),
+            Rule('/<slug>/+<any(subscribe, unsubscribe):action>',
+                 endpoint='subscribe_comments'),
+            Rule('/comment/<int:id>/<any(hide, restore, edit):action>',
+                 endpoint='edit_comment'),
+            Rule('/archive/', endpoint='archive'),
+        ]
+
+        # add the more complex url rule for archive and show post
+        tmp = '/archive/'
+        for digits, part in zip((4, 2, 2), ('year', 'month', 'day')):
+            tmp += '<int(fixed_digits=%d):%s>/' % (digits, part)
+            url_rules.extend([
+                Rule(tmp, defaults={'page': 1}, endpoint='archive'),
+                Rule(tmp + 'page/<int:page>/', endpoint='archive'),
+            ])
+        return url_rules
 
     @view('index')
     @templated('news/index.html', modifier=context_modifier)
@@ -174,11 +186,19 @@ class NewsController(IController):
 
         url_args = dict(year=year, month=month, day=day)
         query = Article.query.published().by_date(year, month, day)
-        pagination = URLPagination(query, page=page, per_page=15)
+        def _link_generator():
+            p = request.path
+            _path = '/page/' in p and p[:p.index('/page/')] or p
+            return path.join(_path, 'page') + '/'
+
+        pagination = URLPagination(query, page=page, per_page=5,
+            link=_link_generator, force_page_num=True)
 
         ret = dict(year=year, month=month, day=day,
-            date=date(year, month or 1, day or 1), month_list=False,
-            pagination=pagination, articles=pagination.query)
+            date=date(year, month or 1, day or 1),
+            month_list=False,
+            pagination=pagination,
+            articles=pagination.query)
         return ret
 
     @login_required

@@ -25,6 +25,7 @@ class Pagination(object):
     :param args: URL parameters, that, if given, are included in the generated
                  urls.
     :param per_page: Number of entries displayed on one page.
+    :param force_page_num: Force the displaying of the page number in the url.
     """
 
     _comma = '<span class="comma">, </span>'
@@ -37,9 +38,12 @@ class Pagination(object):
     right_threshold = 1
     per_page = 15
 
-    def __init__(self, query, page=None, link=None, args=None, per_page=None):
+    def __init__(self, query, page=None, link=None, args=None, per_page=None,
+                 force_page_num=False):
         self.base_query = query
         self.page = 1 if page is None else page
+        if link is not None and not isinstance(link, basestring):
+            link = link()
         self.link = link
         self.args = {} if args is None else args
         if per_page is not None:
@@ -56,6 +60,7 @@ class Pagination(object):
         offset = (self.page - 1) * self.per_page
         #TODO: implement position_col
         self.query = query[offset:offset+self.per_page]
+        self.force_page_num = force_page_num
 
     def make_link(self, page):
         """
@@ -221,9 +226,9 @@ class URLPagination(Pagination):
         else:
             href = Href(self.link)
 
-        if page == 1:
-            return href(self.args)
-        return href(u'%d/' % page, self.args)
+        if page == 1 and not self.force_page_num:
+            return href(**self.args)
+        return href(u'%d/' % page, **self.args)
 
 
     def make_template(self):

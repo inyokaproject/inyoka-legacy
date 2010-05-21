@@ -27,8 +27,9 @@ from babel.dates import TIMEDELTA_UNITS
 from inyoka.i18n import get_locale, lazy_gettext, _
 from inyoka.core.context import ctx
 
-locale='en'
+
 UTC = pytz.timezone('UTC')
+
 
 def get_timezone(name=None):
     """Return the timezone for the given identifier or the timezone
@@ -118,9 +119,11 @@ _additional_all = ['get_month_names', 'get_day_names', 'get_era_names',
 for func in dates.__all__ + _additional_all:
     dict_[func] = get_dummy(getattr(dates, func))
 
+
 def format_month(date=None):
     """Format month and year of a date."""
     return format_date(date, 'MMMM YYYY')
+
 
 def humanize_number(number):
     """Format numbers from 0 to 12 to strings.
@@ -142,7 +145,8 @@ def humanize_number(number):
               ]
     return strings[number] if number in xrange(13) else unicode(number)
 
-def _format_timedelta(delta, granularity='second', threshold=.85, locale=locale):
+
+def _format_timedelta(delta, granularity='second', threshold=.85, locale=None):
     """Return a time delta according to the rules of the given locale.
 
     function copied and slightly modified from babel.dates.format_timedelta
@@ -154,7 +158,9 @@ def _format_timedelta(delta, granularity='second', threshold=.85, locale=locale)
         seconds = int((delta.days * 86400) + delta.seconds)
     else:
         seconds = delta
-    locale = Locale.parse(locale)
+
+    if locale is None:
+        locale = get_locale()
 
     for unit, secs_per_unit in TIMEDELTA_UNITS:
         value = abs(seconds) / secs_per_unit
@@ -167,6 +173,7 @@ def _format_timedelta(delta, granularity='second', threshold=.85, locale=locale)
             return pattern.replace('{0}', humanize_number(value))
 
     return u''
+
 
 # our locale aware special format methods
 def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):

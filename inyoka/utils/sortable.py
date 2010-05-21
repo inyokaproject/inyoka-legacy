@@ -70,9 +70,10 @@ class Sortable(object):
         :param nolink: Don't make this column sortable but display a cool link.
         """
         ocol = self.order_by.lstrip('-')
+        order = self.order_by.startswith('-')
         if key == ocol:
-            new_order = '%s%s' % (('-', '')[self.order_by.startswith('-')], ocol)
-            button = ('down', 'up')[self.order_by.startswith('-')]
+            new_order = '%s%s' % (('-', '')[order], ocol)
+            button = ('down', 'up')[order]
             src = href('static', file='img/%s.png' % button)
             img = build_html_tag('img', src=src)
         else:

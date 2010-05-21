@@ -68,3 +68,11 @@ def test_serializable_object():
         '_test.class': ('id', 'get_value', ('aliased', 'value'))
     }), {'id': 1, '#type': u'_test.class', 'get_value': u'got value',
          'aliased': u'some value'})
+
+@raises(AssertionError)
+def test_doomed_serializable_object():
+    class SerializableClass(SerializableObject):
+        object_type = u'_test.class'
+        public_fields = None
+
+    primitive(SerializableClass())

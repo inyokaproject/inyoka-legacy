@@ -77,7 +77,7 @@ class SerializableObject(object):
                     else {'#type': self.object_type}
         fields = config.get(self.object_type) or self.public_fields
         assert isinstance(fields, _iterables), \
-               u'`fields` must be iterable`' #pragma: no cover
+               u'`fields` must be iterable`'
         for key in fields:
             if isinstance(key, tuple):
                 alias, key = key

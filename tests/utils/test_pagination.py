@@ -229,7 +229,7 @@ def test_urlpagination_links():
 def test_getpagination_links():
     q = QueryMock()
     eq_(GETPagination(q, 1).make_link(1), '?')
-    eq_(GETPagination(q, 1, link='/Example').make_link(1), '/Example')
+    eq_(GETPagination(q, 1, link=lambda: '/Example').make_link(1), '/Example')
     eq_(GETPagination(q, 1).make_link(2), '?page=2')
     eq_(GETPagination(q, 1).make_template(), '?page=!')
     eq_(GETPagination(q, 2).make_link(1), '?')

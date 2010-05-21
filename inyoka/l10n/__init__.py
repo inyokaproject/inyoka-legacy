@@ -182,9 +182,9 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     Usage Example::
 
         >>> timedeltaformat(timedelta(weeks=12))
-        u'three months ago'
+        u'three mths ago'
         >>> timedeltaformat(timedelta(seconds=30))
-        u'30 seconds ago'
+        u'30 secs ago'
         >>> timedeltaformat(timedelta(seconds=0))
         u'just now'
 
@@ -201,7 +201,7 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
         >>> timedeltaformat(timedelta(hours=23), threshold=0.9)
         u'one day ago'
         >>> timedeltaformat(timedelta(hours=23), threshold=1.1)
-        u'23 hours ago'
+        u'23 hrs ago'
 
     :param datetime_or_timedelta: Either a datetime or timedelta object.
                                   If it's a datetime object we caclculate the
@@ -222,4 +222,3 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     timedelta_ = _format_timedelta(datetime_or_timedelta, granularity,
                                   threshold=threshold)
     return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta_}
-

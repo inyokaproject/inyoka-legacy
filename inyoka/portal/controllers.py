@@ -44,6 +44,7 @@ class PortalController(IController):
         Rule('/register/', endpoint='register'),
         Rule('/confirm/<key>/', endpoint='confirm'),
         Rule('/users/', endpoint='users'),
+        Rule('/users/<int:page>/', endpoint='users'),
         Rule('/user/<username>/', endpoint='profile'),
         Rule('/usercp/profile/', endpoint='profile_edit'),
         Rule('/groups/', endpoint='groups'),

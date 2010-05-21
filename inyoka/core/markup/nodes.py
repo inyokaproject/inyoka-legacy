@@ -543,7 +543,7 @@ class Headline(Element):
         Element.__init__(self, children, id, style, class_)
         self.level = level
         if id is None:
-            self.id = slugify(self.text, convert_lowercase=False)
+            self.id = gen_slug(self.text)
 
     def generate_markup(self, w):
         w.markup(u'= ')

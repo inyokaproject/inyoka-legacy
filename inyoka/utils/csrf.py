@@ -14,10 +14,13 @@ from inyoka.core.exceptions import BadRequest
 
 
 def check_request(request=None):
+    """
+    Verfifies that request has a valid CSRF token.
+    """
     request = request or ctx.current_request
     if request.method == 'POST' and ctx.cfg['enable_csrf_checks']:
         if request.is_xhr:
-            # we do not check if if the request is issued by one of our
+            # we do not check if the request is issued by one of our
             # javascript libs.  This saves some performance and don't
             # requires them to send the whole form including the csrf_token.
             # The browser checks anyway for cross-domain-issues in javascript
@@ -30,10 +33,17 @@ def check_request(request=None):
 
 
 def generate_csrf_token():
+    """
+    Generate the CSRF token.
+    """
     return unicode(uuid4())
 
 
 def get_csrf_token(request=None):
+    """
+    Append the CSRF token to the current session. This is only done
+    if Inyoka is configured to do so.
+    """
     req = request or ctx.current_request
     if not ctx.cfg['enable_csrf_checks']:
         return u''

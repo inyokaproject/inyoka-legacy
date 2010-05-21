@@ -60,6 +60,7 @@ This section covers all utilities inyoka implements.
 
     utils/confirm
     utils/crypt
+    utils/csrf
     utils/datastructures
     utils/decorators
     utils/imaging

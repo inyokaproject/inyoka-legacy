@@ -33,9 +33,9 @@ def test_page_name_conversion_and_get_by_name():
 
 def test_text_raw_and_rendered():
     text1 = 'This\nis my first wiki page.'
-    text1r = 'This\nis my first wiki page.'
+    text1r = '<p>This\nis my first wiki page.</p>'
     text2 = 'Now\nthere is something else.'
-    text2r = 'Now\nthere is something else.'
+    text2r = '<p>Now\nthere is something else.</p>'
     u = User.query.first()
 
     r = Revision(page=Page('foo'), change_user=u)

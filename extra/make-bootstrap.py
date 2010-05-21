@@ -19,7 +19,7 @@ import tempfile, shutil
 from os import path
 
 pil_version = '1.1.7'
-cldr_version = '1.6.1'
+cldr_version = '1.7.2'
 
 def pil_install(home_dir):
     folder = tempfile.mkdtemp(prefix='virtualenv')
@@ -48,7 +48,7 @@ def babel_svn_repo_install(home_dir):
     # checkout cldr
     call_subprocess(FETCH_CMD + ['http://unicode.org/Public/cldr/%s/core.zip' % cldr_version], cwd=folder)
     call_subprocess(['unzip', '-d', 'cldr', 'core.zip'], cwd=folder)
-    cldr_folder = path.join(folder, 'cldr')
+    cldr_folder = path.join(folder, 'cldr', 'common')
 
     # checkout babel and import/compile respective cldr
     call_subprocess(['svn', 'co', 'http://svn.edgewall.org/repos/babel/trunk/', 'babel'], cwd=folder)

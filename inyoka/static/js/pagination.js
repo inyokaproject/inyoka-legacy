@@ -55,6 +55,11 @@ $(function () {
           return false;
         })
         .children('input').focus();
+
+      // Hide the input box by clicking the rest of the document
+      $(document).click(function() {
+        restore_ellipsis(ellipsis);
+      });
       return false;
     });
   });

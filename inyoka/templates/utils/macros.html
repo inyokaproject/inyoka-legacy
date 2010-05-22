@@ -44,7 +44,9 @@
     {{ render_field(field) }}
   {% endfor %}
   </dl>
-  {{ csrf_token() }}
+  {# We just include the csrf token if we can assume that render_fields
+     is only called once.  Else we get quite a couple of csrf token fields #}
+  {% if not include %}{{ csrf_token() }}{% endif %}
 {% endmacro %}
 
 {% macro render_form(form) %}

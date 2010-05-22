@@ -17,7 +17,6 @@ from inyoka.news.models import Tag
 
 
 class EditArticleForm(Form):
-
     title = TextField(_(u'Title'), [validators.Required(), validators.Length(max=200)])
     intro = TextField(_(u'Intro'), [validators.Required()], widget=widgets.TextArea())
     text = TextField(_(u'Text'), [validators.Required()], widget=widgets.TextArea())

@@ -217,11 +217,14 @@ def create_test_users():
     supporter = Group(name=u'Supporter', parents=set([team]), users=user_instances[4:-2])
     multimedia = Group(name=u'Supporter Multimedia', parents=set([supporter]),
         users=user_instances[-2:])
+    wikiteam = Group(name=u'Wikiteam', parents=set([team]))
+    ikhayateam = Group(name=u'Ikhayateam', parents=set([team]))
     db.session.commit()
 
     # create some stub and dummy users...
     num = {'small': 15, 'medium': 30, 'large': 50}[SIZE]
     used = set()
+    groups = [team, webteam, supporter, multimedia]
     for x in xrange(num):
         while 1:
             username = choice(USERNAMES)
@@ -230,6 +233,8 @@ def create_test_users():
                 break
         u = User(username, '%s@example.com' % username, 'default')
         UserProfile(user=u)
+        if random() > 0.6:
+            u.groups = [choice(groups)]
     db.session.commit()
 
 
@@ -289,7 +294,7 @@ def create_forum_test_data():
     db.session.commit()
 
     tags = Tag.query.public().all()
-    users = User.query.all()
+    users = User.query.options(db.eagerload('groups')).all()
     last_date = None
 
     num, var = {'small': (50, 10), 'medium': (200, 20),
@@ -321,20 +326,22 @@ def create_forum_test_data():
 
     db.session.commit()
 
-    voted_map = set([])
+    voted_map = []
     objects = answers + questions
-    for obj in objects:
-        for x in xrange(randrange(replies * 4)):
+    for obj in objects[:randrange(len(objects))]:
+        for x in xrange(randrange(2, replies * 4)):
             entry = choice(objects)
             user = choice(users)
             if (user.id, entry.entry_id) not in voted_map:
-                if random() >= 0.02:
+                if random() >= 0.2:
                     v = Vote(score=+1, user=user)
-                elif random() >= 0.05:
+                elif random() >= 0.5:
                     v = Vote(score=-1, user=user)
-                v.entry = Entry.query.get(entry.entry_id)
-                voted_map.add((user.id, entry.entry_id))
-    db.session.commit()
+                else:
+                    break
+                v.entry_id = entry.entry_id
+                voted_map.append((user.id, entry.entry_id))
+        db.session.commit()
 
 
 def create_news_test_data():

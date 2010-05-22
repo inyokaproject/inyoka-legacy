@@ -164,7 +164,7 @@ def chomsky(times=1, line_length=72):
 
 def get_date(last=None):
     global _highest_date
-    secs = randrange(10, 120)
+    secs = randrange(10, (2 * 60 * 60))
     d = (last or EPOCH) + timedelta(seconds=secs)
     if _highest_date is None or d > _highest_date:
         _highest_date = d
@@ -294,12 +294,12 @@ def create_forum_test_data():
     db.session.commit()
 
     tags = Tag.query.public().all()
-    users = User.query.options(db.eagerload('groups')).all()
+    users = tuple(User.query.options(db.eagerload('groups')).all())
     last_date = None
+    questions = []
 
     num, var = {'small': (50, 10), 'medium': (200, 20),
                 'large': (1000, 200)}[SIZE]
-    count = 0
     for x in xrange(randrange(num - var, num + var)):
         these_tags = list(tags)
         shuffle(these_tags)
@@ -308,10 +308,10 @@ def create_forum_test_data():
                             author=choice(users), date_created=get_date(last_date),
                             tags=these_tags[:randrange(1, 6)])
         last_date = question.date_created
+        questions.append(question)
     db.session.commit()
 
     # answers
-    questions = Question.query.all()
     replies = {'small': 4, 'medium': 8, 'large': 12}[SIZE]
     answers = []
     last_date = questions[-1].date_created
@@ -340,6 +340,8 @@ def create_forum_test_data():
                 else:
                     break
                 v.entry_id = entry.entry_id
+                v.favorite = random() > 0.9
+                entry.votes.append(v)
                 voted_map.append((user.id, entry.entry_id))
         db.session.commit()
 
@@ -421,8 +423,9 @@ def rebase_dates():
 
 
 def main():
-    funcs = (create_test_users, create_stub_tags, create_forum_test_data, create_news_test_data,
-             create_pastebin_test_data, create_wiki_test_data, rebase_dates)
+    funcs = (create_test_users, create_stub_tags, create_news_test_data,
+             create_pastebin_test_data, create_wiki_test_data, create_forum_test_data,
+             rebase_dates)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

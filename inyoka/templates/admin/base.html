@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% set styles = ['portal.css'] %}
+{% set styles = ['portal.css'] + styles|default([]) %}
 {% set title_trace = title_trace|default([]) + [_('Admin')] %}
 
 {% block content %}

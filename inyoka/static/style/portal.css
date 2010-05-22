@@ -44,6 +44,11 @@
   list-style: none;
 }
 
+.tagcloud {
+  white-space: normal;
+  text-align: justify;
+}
+
 .tagcloud a.tag {
   color: #777;
   text-decoration: none;

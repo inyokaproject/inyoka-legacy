@@ -1,13 +1,22 @@
 {% extends 'admin/base.html' %}
 
 {% block admin_content %}
-  {{ _('All tags') }}
-  <ul>
-  {% for tag in tags %}
-    <li><a href="{{ href(tag, action='edit') }}">{{ tag.name }}</a></li>
-  {% endfor %}
-  </ul>
+  <h2>{{ _('Choose Tag') }}</h2>
+  <form action="" method="post">
+  <input type="text" name="tag">
+  </form>
+  <h2>{{ _('All tags') }}</h2>
+  <div class="tagcloud">
+  {% for tag  in tag_cloud %}
+    <a href="{{ href('admin/portal/tag_edit', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
+                title="{% trans count=tag.count, tag=tag.name %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} posts tagged {{ tag }}{% endtrans %}">
+      {{ tag.name }}
+    </a>
+  {%- endfor %}
+  </div>
+  <p>
   {%- trans link=href('admin/portal/tag_edit') -%}
   …or <a href="{{ link }}">create a new tag</a>
   {%- endtrans -%}
+  </p>
 {% endblock %}

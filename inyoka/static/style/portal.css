@@ -44,11 +44,11 @@
   list-style: none;
 }
 
-#portal .tagcloud a.tag {
+.tagcloud a.tag {
   color: #777;
   text-decoration: none;
 }
 
-#portal .tagcloud a:hover {
+.tagcloud a:hover {
   color: #000;
 }

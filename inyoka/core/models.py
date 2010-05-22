@@ -34,7 +34,7 @@ tag_re = re.compile(r'[\w-]{2,20}')
 
 def _calculate_thresholds(min_weight, max_weight, steps):
     delta = (max_weight - min_weight) / float(steps)
-    return [min_weight + i * delta for i in range(1, steps + 1)]
+    return [min_weight + i * delta for i in xrange(1, steps + 1)]
 
 
 def _calculate_tag_weight(weight, max_weight):
@@ -99,7 +99,7 @@ class TagQuery(db.Query):
                 for idx in xrange(steps):
                     tag_weight = _calculate_tag_weight(item['count'] or 1, max_weight)
                     if not font_set and tag_weight <= thresholds[idx]:
-                        item['size'] += tag_weight * idx
+                        item['size'] = 100 + (tag_weight * math.log(idx))
                         font_set = True
                 item['size'] = int(item['size'])
             items.append(item)

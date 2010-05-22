@@ -6,6 +6,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.test import *
+from inyoka.core.models import Tag
 from inyoka.core.auth.models import User
 from inyoka.forum.models import Question, Answer, Forum, Vote
 

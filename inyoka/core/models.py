@@ -39,7 +39,7 @@ def _calculate_thresholds(min_weight, max_weight, steps):
 
 def _calculate_tag_weight(weight, max_weight):
     """Lograithmic tag weight calculation"""
-    return math.log(weight) * max_weight / math.log(max_weight)
+    return math.log(weight or 1) * max_weight / math.log(max_weight or 1)
 
 
 class TagCounterExtension(db.AttributeExtension):
@@ -99,7 +99,7 @@ class TagQuery(db.Query):
                 for idx in xrange(steps):
                     tag_weight = _calculate_tag_weight(item['count'] or 1, max_weight)
                     if not font_set and tag_weight <= thresholds[idx]:
-                        item['size'] = 100 + (tag_weight * math.log(idx))
+                        item['size'] = 80 + (tag_weight * idx / math.log(tag_weight or 1))
                         font_set = True
                 item['size'] = int(item['size'])
             items.append(item)

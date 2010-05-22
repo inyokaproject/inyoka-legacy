@@ -269,6 +269,8 @@ def create_forum_test_data():
     audio = Tag(name=u'Audio')
     db.session.commit()
 
+    main_tags = [gnome, gtk, kde, qt, window_manager, hardware, inyoka, audio]
+
     # forums
     inyoka_forum = Forum(
         name=u'Inyoka Project',
@@ -301,7 +303,12 @@ def create_forum_test_data():
     num, var = {'small': (50, 10), 'medium': (200, 20),
                 'large': (1000, 200)}[SIZE]
     for x in xrange(randrange(num - var, num + var)):
-        these_tags = list(tags)
+        if random() >= 0.8:
+            # we use them a bit more than others, to get a more realistic
+            # tag usage.
+            these_tags = main_tags
+        else:
+            these_tags = list(tags)
         shuffle(these_tags)
         question = Question(title=generate_lorem_ipsum(1, False, 3, 9),
                             text=chomsky(randint(0, 10) or 40),

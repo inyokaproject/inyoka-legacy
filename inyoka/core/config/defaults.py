@@ -54,8 +54,11 @@ DEFAULTS = {
     'database.debug':               BooleanField(default=False,
         help_text=lazy_gettext(u'If enabled the database will collect '
             u'the SQL statements and add them to the bottom of the page '
-            u'for easier debugging.  Beside that the sqlalchemy log is '
-            u'written to a `db.log` file.')),
+            u'for easier debugging.')),
+    'database.echo':                BooleanField(default=False,
+        help_text=lazy_gettext(u'If enabled the database will echo '
+            u'all submitted statements to the default logger.  That defaults '
+            u'to stdout.')),
     'database.pool_recycle':        IntegerField(default=-1, min_value=-1,
         help_text=lazy_gettext(u'If set to non -1, number of seconds between '
             u'connection recycling. If this timeout is surpassed the '

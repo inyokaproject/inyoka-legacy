@@ -228,7 +228,7 @@ def select_blocks(query, column, block_size=1000, start_with=0, max_fails=10):
 
 @contextmanager
 def no_autoflush(scoped_session):
-    """Disable the autoflush feature temporary
+    """Disable the autoflush feature temporarily.
 
     Use it in conjunction with the `with` statement;
     it returns a session with disabled autoflush and safely

@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.context import ctx
+from inyoka.utils.decorators import abstract
 
 
 def string_to_xy(string):
@@ -43,6 +44,7 @@ class BaseImage(object):
     def __init__(self, filename):
         raise NotImplementedError
 
+    @abstract
     def resize(self, x, y):
         """
         Resizes this image object, you should overwrite this method in
@@ -51,7 +53,6 @@ class BaseImage(object):
         :param x: Destination X resolution
         :param y: Destination Y resolution
         """
-        raise NotImplementedError
 
     def thumbnail(self):
         """
@@ -65,6 +66,7 @@ class BaseImage(object):
         """
         self.resize(*string_to_xy(ctx.cfg["imaging.avatarsize"]))
 
+    @abstract
     def size(self):
         """
         Get the size of this image.
@@ -73,8 +75,8 @@ class BaseImage(object):
 
         :return: Imagesize as tuple (width, height)
         """
-        raise NotImplementedError
 
+    @abstract
     def save(self, filename, format=None):
         """
         Saves this image object to a new file named `filename`.
@@ -93,9 +95,9 @@ class PilImage(BaseImage):
     """
 
     def __init__(self, filename):
-        from PIL import Image as PILImage
-        self.__antialias = PILImage.ANTIALIAS
-        self.image = PILImage.open(filename)
+        from PIL import Image
+        self.__antialias = Image.ANTIALIAS
+        self.image = Image.open(filename)
 
     def resize(self, x, y):
         """Returns a resized copy of an image."""
@@ -128,27 +130,11 @@ class PilImage(BaseImage):
             self.image.save(filename)
 
 
-class GdkImage(BaseImage):
-    """
-    Gdk based backend.
-    """
-
-    def __init__(self, filename):
-        pass
-
-    def resize(self, x, y):
-        pass
-
-    def size(self):
-        pass
-
-    def save(self, filename):
-        pass
-
 
 # Setup Backend
 _backend = ctx.cfg["imaging.backend"]
-if _backend == "gdk":
-    Image = GdkImage
-else:
-    Image = PilImage
+supported_backends = {
+    'pil': PilImage,
+}
+# shortcut for easy module usage.
+Image = supported_backends[_backend]

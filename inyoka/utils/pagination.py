@@ -13,6 +13,7 @@ from werkzeug import Href, url_encode
 from jinja2.utils import Markup
 from inyoka.core.exceptions import NotFound
 from inyoka.utils.html import escape
+from inyoka.utils.decorators import abstract
 from inyoka.i18n import _
 
 
@@ -62,13 +63,13 @@ class Pagination(object):
         self.query = query[offset:offset+self.per_page]
         self.force_page_num = force_page_num
 
+    @abstract
     def make_link(self, page):
         """
         Create a link to the given page.
 
         Subclasses must implement this.
         """
-        raise NotImplementedError()
 
     def make_template(self):
         """

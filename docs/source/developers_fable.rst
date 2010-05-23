@@ -132,7 +132,7 @@ URLs
 Rules for URLs are simple.  Use “speaking” names, use slugs to reference
 contents instead of ids.  Services, e.g Ajax calls go to a special api
 subdomain.  This will be done automatically if you use the
-:cls:`IServiceProvider` interface.
+:class:`IServiceProvider` interface.
 
 Examples:
 

@@ -137,14 +137,24 @@ def version():
           (INYOKA_REVISION, u'.'.join(str(x) for x in sys.version_info[:3]))
 
 
-def build_docs(clean='no', browse='no'):
+def build_docs(clean='no', browse='no', builder='html'):
     """
-    Generate the Sphinx documentation.
+    Generate the Sphinx documentation.  Possible builders:
+    html, singlehtml, text, man, htmlhelp, qthelp, epub, changes.
+
+    Use 'doctest' to run our doctests included in our documentation.
+
+    This supports theoretically all builders supported by sphinx.
     """
     if clean.lower() in ['yes', 'y']:
         local('rm -r -f docs/_build/')
     with cd(_j('docs')):
-        local('sphinx-build -d _build/doctrees -c . source _build/html', capture=False)
+        source, out = _j('docs/source'), _j('docs/_build/%s' % builder)
+        cmd = ('sphinx-build -b %s -c %s -d %s %s %s' % (
+            builder, _j('docs'), _j('docs/_build/doctrees'), source, out
+        ))
+        local(cmd, capture=False)
+	print 'Build finished. The %s pages are in output/%s.' % (builder, builder)
     if browse.lower() in ['yes', 'y']:
         local('open docs/_build/html/index.html')
 

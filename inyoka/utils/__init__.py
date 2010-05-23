@@ -73,10 +73,6 @@ class classproperty(object):
         self.__module__ = func.__module__
         self.__doc__ = func.__doc__
 
-    def __get__(self, trash, type=None):
-        if type is None:
-            #TODO: I think we need to read some documentation what the
-            #      arguments really are…
-            raise RuntimeError('What happened?')
-        value = self.func(type)
+    def __get__(self, desc, cls):
+        value = self.func(cls)
         return value

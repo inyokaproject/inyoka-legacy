@@ -17,6 +17,7 @@ def make_full_domain(subdomain=''):
     """Return the full domain based on :attr:`subdomain`
 
     >>> from inyoka.core.api import ctx
+    >>> from inyoka.utils.urls import make_full_domain
     >>> ctx.cfg['base_domain_name'] = 'example.com'
     >>> make_full_domain()
     u'http://example.com/'

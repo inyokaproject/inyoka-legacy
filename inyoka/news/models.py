@@ -167,7 +167,7 @@ class Article(db.Model):
     slug = db.Column(db.String(100), unique=True)
     intro = db.Column(db.Text)
     text = db.Column(db.Text)
-    public = db.Column(db.Boolean)
+    public = db.Column(db.Boolean, default=False, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)

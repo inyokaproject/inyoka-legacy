@@ -1,5 +1,5 @@
 {%- extends 'admin/base.html' %}
-{% from 'utils/macros.html' import render_fields %}
+{% from 'utils/macros.html' import render_field, csrf_token %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 
@@ -11,7 +11,15 @@
 {% endif %}
 
 <form method="post" action="">
-{{ render_fields(form) }}
+<dl>
+{{ render_field(form.title, cols=100) }}
+{{ render_field(form.intro, cols=100, rows=5) }}
+{{ render_field(form.text, cols=100, rows=10) }}
+{{ render_field(form.public) }}
+{{ render_field(form.tags) }}
+{{ render_field(form.author) }}
+</dl>
+{{ csrf_token() }}
 <p class="actions">
   <input type="submit" value="{{ _('Submit') }}">
   {% if article.slug %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}

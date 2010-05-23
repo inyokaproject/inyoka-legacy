@@ -44,11 +44,16 @@
   list-style: none;
 }
 
-#portal .tagcloud a.tag {
+.tagcloud {
+  white-space: normal;
+  text-align: justify;
+}
+
+.tagcloud a.tag {
   color: #777;
   text-decoration: none;
 }
 
-#portal .tagcloud a:hover {
+.tagcloud a:hover {
   color: #000;
 }

@@ -40,15 +40,15 @@ p.meta .visits, p.meta .admin {
 }
 
 p.meta .published {
-  background: url(../img/calendar.gif) left center no-repeat;
+  background: url(../img/calendar.gif) left top no-repeat;
 }
 
 p.meta .tags {
-  background: url(../img/tag.gif) left center no-repeat;
+  background: url(../img/tag.gif) left top no-repeat;
 }
 
 p.meta .comments {
-  background: url(../img/comments.gif) left center no-repeat;
+  background: url(../img/comments.gif) left top no-repeat;
 }
 
 span.description {

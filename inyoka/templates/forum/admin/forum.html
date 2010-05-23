@@ -1,7 +1,7 @@
 {% extends 'admin/base.html' %}
 {% from 'utils/macros.html' import render_form %}
-{%- set scripts = ['jquery.tokeninput.js'] + scripts|default([]) %}
-{%- set styles = ['widgets.css'] + styles|default([]) %}
+{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
+{%- set styles = styles|default([]) + ['widgets.css'] %}
 
 {% block admin_content %}
 <h1>Create new Forum</h1>

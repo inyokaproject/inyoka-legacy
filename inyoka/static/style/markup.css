@@ -1,0 +1,113 @@
+:link.missing, :visited.missing {
+  color: #999 !important;
+  /* !important is needed to overwrite default :visited style */
+}
+
+span.underline {
+  text-decoration: underline;
+}
+
+.image-left, .image-right, .image-center {
+  margin: 1em;
+}
+
+.image-right {
+  float: right;
+}
+
+.image-left {
+  float: left;
+}
+
+.image-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.bash {
+  color: white;
+  font-family: monospace;
+  background-color: #454545;
+  border: 1px solid #666;
+  margin: 0.3em 1em;
+  clear: none;
+  overflow: auto;
+}
+
+div.bash pre {
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0 0.3em;
+}
+
+/* Boxes of page templates */
+
+div.box {
+  clear: both;
+  margin: 0.5em 0em;
+  border: 1px solid #bbb;
+  -moz-border-radius: 5px;
+  clear: none;
+  overflow: auto;
+}
+
+div.box div.contents {
+  padding: 0.5em 1em;
+}
+
+div.box h3 {
+  margin: 0;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: white;
+  background-color: #bbb;
+  padding: 0 1em;
+  -moz-border-radius: 3px 3px 0px 0px;
+}
+
+div.left {
+  border: 1px solid #3E6E58;
+}
+
+div.left h3 {
+  background-color: #3E6E58;
+}
+
+
+h1:hover *, h2:hover *, h3:hover *, h4:hover *, h5:hover *, h6:hover * {
+  display: inline;
+}
+
+.highlighted {
+  background-color: #ffee33;
+}
+
+div.edited {
+  border: 1px solid #597A00;
+  padding: 0.4em;
+  font-size: 0.8em;
+}
+
+div.moderated {
+  border: 1px solid #cc7777;
+  padding: 0.4em;
+  font-size: 0.8em;
+}
+
+div.moderated p, div.edited p {
+  margin: 0;
+}
+
+div.moderated strong {
+  color: #aa3333;
+}
+
+div.edited strong {
+  color: #597A00;
+}
+
+pre {
+  padding: 0.5em;
+}

@@ -164,7 +164,7 @@ def chomsky(times=1, line_length=72):
 
 def get_date(last=None):
     global _highest_date
-    secs = randrange(10, 120)
+    secs = randrange(10, (2 * 60 * 60))
     d = (last or EPOCH) + timedelta(seconds=secs)
     if _highest_date is None or d > _highest_date:
         _highest_date = d
@@ -217,11 +217,14 @@ def create_test_users():
     supporter = Group(name=u'Supporter', parents=set([team]), users=user_instances[4:-2])
     multimedia = Group(name=u'Supporter Multimedia', parents=set([supporter]),
         users=user_instances[-2:])
+    wikiteam = Group(name=u'Wikiteam', parents=set([team]))
+    ikhayateam = Group(name=u'Ikhayateam', parents=set([team]))
     db.session.commit()
 
     # create some stub and dummy users...
     num = {'small': 15, 'medium': 30, 'large': 50}[SIZE]
     used = set()
+    groups = [team, webteam, supporter, multimedia]
     for x in xrange(num):
         while 1:
             username = choice(USERNAMES)
@@ -230,6 +233,8 @@ def create_test_users():
                 break
         u = User(username, '%s@example.com' % username, 'default')
         UserProfile(user=u)
+        if random() > 0.6:
+            u.groups = [choice(groups)]
     db.session.commit()
 
 
@@ -264,6 +269,8 @@ def create_forum_test_data():
     audio = Tag(name=u'Audio')
     db.session.commit()
 
+    main_tags = [gnome, gtk, kde, qt, window_manager, hardware, inyoka, audio]
+
     # forums
     inyoka_forum = Forum(
         name=u'Inyoka Project',
@@ -289,24 +296,29 @@ def create_forum_test_data():
     db.session.commit()
 
     tags = Tag.query.public().all()
-    users = User.query.all()
+    users = tuple(User.query.options(db.eagerload('groups')).all())
     last_date = None
+    questions = []
 
     num, var = {'small': (50, 10), 'medium': (200, 20),
                 'large': (1000, 200)}[SIZE]
-    count = 0
     for x in xrange(randrange(num - var, num + var)):
-        these_tags = list(tags)
+        if random() >= 0.8:
+            # we use them a bit more than others, to get a more realistic
+            # tag usage.
+            these_tags = main_tags
+        else:
+            these_tags = list(tags)
         shuffle(these_tags)
         question = Question(title=generate_lorem_ipsum(1, False, 3, 9),
                             text=chomsky(randint(0, 10) or 40),
                             author=choice(users), date_created=get_date(last_date),
                             tags=these_tags[:randrange(1, 6)])
         last_date = question.date_created
+        questions.append(question)
     db.session.commit()
 
     # answers
-    questions = Question.query.all()
     replies = {'small': 4, 'medium': 8, 'large': 12}[SIZE]
     answers = []
     last_date = questions[-1].date_created
@@ -321,20 +333,24 @@ def create_forum_test_data():
 
     db.session.commit()
 
-    voted_map = set([])
+    voted_map = []
     objects = answers + questions
-    for obj in objects:
-        for x in xrange(randrange(replies * 4)):
+    for obj in objects[:randrange(len(objects))]:
+        for x in xrange(randrange(2, replies * 4)):
             entry = choice(objects)
             user = choice(users)
             if (user.id, entry.entry_id) not in voted_map:
-                if random() >= 0.02:
+                if random() >= 0.2:
                     v = Vote(score=+1, user=user)
-                elif random() >= 0.05:
+                elif random() >= 0.5:
                     v = Vote(score=-1, user=user)
-                v.entry = Entry.query.get(entry.entry_id)
-                voted_map.add((user.id, entry.entry_id))
-    db.session.commit()
+                else:
+                    break
+                v.entry_id = entry.entry_id
+                v.favorite = random() > 0.9
+                entry.votes.append(v)
+                voted_map.append((user.id, entry.entry_id))
+        db.session.commit()
 
 
 def create_news_test_data():
@@ -414,8 +430,9 @@ def rebase_dates():
 
 
 def main():
-    funcs = (create_test_users, create_stub_tags, create_forum_test_data, create_news_test_data,
-             create_pastebin_test_data, create_wiki_test_data, rebase_dates)
+    funcs = (create_test_users, create_stub_tags, create_news_test_data,
+             create_pastebin_test_data, create_wiki_test_data, create_forum_test_data,
+             rebase_dates)
     for func in funcs:
         print "execute %s" % func.func_name
         func()

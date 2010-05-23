@@ -22,7 +22,8 @@ class AskQuestionForm(Form):
         [validators.Length(max=160), validators.Required()])
     text = TextField(lazy_gettext(u'Text'), [validators.Required()],
                      widget=widgets.TextArea())
-    tags = AutocompleteField(_(u'Tags'), query_factory=lambda: Tag.query, get_label='name',
+    tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
+                        query_factory=lambda: Tag.query,
                         validators=[validators.Length(min=1)])
 
 
@@ -42,4 +43,6 @@ class EditForumForm(Form):
                               get_label='name')
     description = TextField(lazy_gettext(u'Description'), [validators.Required()],
                             widget=widgets.TextArea())
-    tags = AutocompleteField(lazy_gettext(u'Tags'), query_factory=lambda: Tag.query, get_label='name')
+    tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
+                             query_factory=lambda: Tag.query,
+                             validators=[validators.Length(min=1)])

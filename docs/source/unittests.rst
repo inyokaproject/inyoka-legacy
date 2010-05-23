@@ -4,14 +4,14 @@
 Unittests in Inyoka
 ===================
 
-This document describes how the unittests work in Inyoka, how to write them
-and how to use them.
+This document describes how unittests work in Inyoka, how to write them
+and how to use them more effectively.
 
 
 What are unittests?
 ===================
 
-…But first let's clearify what unittests are.  Unittests are some code pieces
+First let's clearify what unittests are.  Unittests are some code pieces
 that are used to create automated tests.  They ensure API and ABI stability and
 provide some easy to use test experience.
 

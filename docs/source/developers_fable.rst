@@ -117,31 +117,33 @@ naming guides.
 Controllers
 -----------
 
-As seen in the examples above we have “providers“ whose implementations
+As seen in the examples above we have “providers” whose implementations
 are wrapped.  These wrappers are commonly called “controllers” because they
 control other provides and control the concrete flow.
 
 A controll interface inherits from :class:`inyoka.Interface` and follows it's
 naming guides.  Besides that it should contain the name ``Controller`` to
-specify that this is a special kind of interfaces.
+specify that this is a special kind of interface.
 
 
 URLs
 ~~~~
 
-Rules for URLs are simple.  Services, e.g Ajax calls are prefixed with a underscore.
-Use as less ids as possible and try to use "speeking" urls as much as possible.
+Rules for URLs are simple.  Use “speaking” names, use slugs to reference
+contents instead of ids.  Services, e.g Ajax calls go to a special api
+subdomain.  This will be done automatically if you use the
+:cls:`IServiceProvider` interface.
 
 Examples:
 
-    /topic/new
-    /topic/what-the-hack/edit
-    /topic/what-the-hack/reply
+    http://forum.inyoka.local/topic/new
+    http://forum.inyoka.local/topic/what-the-hack/edit
+    http://forum.inyoka.local/topic/what-the-hack/reply
 
     Ajax calls:
 
-    /topic/_subscribe/what-the-hack
-    /topic/_unsubscribe/what-the-hack
+    http://api.inyoka.local/forum/topic/subscribe/what-the-hack
+    http://api.inyoka.local/forum/topic/unsubscribe/what-the-hack
 
 
 JavaScript Scripting
@@ -174,8 +176,8 @@ Unit Tests
 
 Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/>`_ for all
 tests.  If you don't use functions or doctests you must inherit either
-:class:`~inyoka.core.test.TestCase` for common unittests or
-:class:`~inyoka.core.test.ViewTestCase` to test view functions.  See the 
+:class:`~inyoka.core.test.TestSuite` for common unittests or
+:class:`~inyoka.core.test.ViewTestSuite` to test view functions.  See the 
 :doc:`unittests` documentation for more details
 
 Well, try to write the tests first, but we don't thrash you if you don't.

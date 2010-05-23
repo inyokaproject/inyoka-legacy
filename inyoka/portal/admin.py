@@ -40,9 +40,18 @@ class PortalAdminController(IAdminProvider):
     @view('tags')
     @templated('portal/admin/tags.html')
     def tags(self, request):
-        tags = Tag.query.all()
+        cloud, more = Tag.query.public().get_cloud()
+        if request.method == 'POST':
+            # the user choosed a tag by manually entered name
+            name = request.form.get('tag')
+            tag = Tag.query.filter_by(name=name).first()
+            if tag is not None:
+                return redirect_to('admin/portal/tag_edit', slug=tag.slug)
+            request.flash(_(u'The tag “%s” does not exist'), False)
+
         return {
-            'tags': tags
+            'tag_cloud': cloud,
+            'tag_names': [t['name'] for t in cloud]
         }
 
     @view('tag_edit')
@@ -82,7 +91,7 @@ class PortalAdminController(IAdminProvider):
             db.session.commit()
             request.flash(_(u'The tag “%s” was deleted successfully.'
                           % tag.name))
-            return redirect_to('admin/news/tags')
+            return redirect_to('admin/portal/tags')
         else:
             request.flash(render_template('portal/admin/tag_delete.html', {
                 'tag': tag

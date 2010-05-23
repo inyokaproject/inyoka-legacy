@@ -106,8 +106,7 @@ class ForumController(IController):
     @view('question')
     @templated('forum/question.html', modifier=context_modifier)
     def question(self, request, slug, sort='votes', page=1):
-        question = Question.query.options(db.joinedload('author')) \
-                                 .filter_by(slug=slug).one()
+        question = Question.query.filter_by(slug=slug).one()
         answer_query = Answer.query.filter_by(question=question)
         pagination = URLPagination(answer_query, page)
 

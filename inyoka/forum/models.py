@@ -68,8 +68,9 @@ class Forum(db.Model, SerializableObject):
     subforums = db.relationship('Forum',
             backref=db.backref('parent',remote_side=id),
             lazy='joined', join_depth=1)
-    tags = db.relationship(Tag, secondary=forum_tag, backref='forums',
-                           lazy='joined', extension=TagCounterExtension())
+    tags = db.relationship(Tag, secondary=forum_tag, lazy='joined',
+                           backref=db.backref('forums', lazy='dynamic'),
+                           extension=TagCounterExtension())
 
     @cached_property
     def all_tags(self):
@@ -225,8 +226,9 @@ class Question(Entry):
     slug = db.Column(db.String(160), nullable=False, index=True)
     answer_count = db.Column(db.Integer, default=0)
 
-    tags = db.relationship(Tag, secondary=question_tag, backref='questions',
-                           lazy='subquery', extension=TagCounterExtension())
+    tags = db.relationship(Tag, secondary=question_tag, lazy='subquery',
+                           backref=db.backref('questions', lazy='dynamic'),
+                           extension=TagCounterExtension())
 
     @cached_property
     def popularity(self):

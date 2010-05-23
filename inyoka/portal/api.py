@@ -34,11 +34,11 @@ class ILatestContentProvider(Interface):
     #: The cache key to search in the cache.
     cache_key = None
 
+    @abstract
     def get_latest_content(self):
         """Return a query that returns the proper latest content.  Note that
         we must work with a query object here but not with another iterable!
         """
-        raise NotImplementedError('Subclasses must implement this.')
 
     @staticmethod
     def get_cached_content(max_per_impl=4):

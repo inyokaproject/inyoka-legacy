@@ -39,13 +39,13 @@ def abstract(func):
         >>> obj.push_me()
         Traceback (most recent call last):
         ...
-        NotImplementedError: Missing required push_me() method
+        NotImplementedError: Missing required push_me() method.
 
     """
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        raise NotImplementedError('Missing required %s() method' % func.__name__)
+        raise NotImplementedError('Missing required %s() method.' % func.__name__)
 
     return wrapper
 

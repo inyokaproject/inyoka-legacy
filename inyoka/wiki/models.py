@@ -41,23 +41,9 @@ class PageQuery(db.Query):
         return super(PageQuery, self).get(pk)
 
 
-class PageMapperExtension(db.MapperExtension):
-    """
-    * Updates current_revision.
-    """
-    def after_insert(self, mapper, connection, instance):
-        instance._update_current_revision()
-
-    def after_update(self, mapper, connection, instance):
-        instance._update_current_revision()
-
-
 class Page(db.Model):
     __tablename__ = 'wiki_page'
     query = db.session.query_property(PageQuery)
-    __mapper_args__ = {
-        'extension': PageMapperExtension(),
-    }
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), index=True, nullable=False)
@@ -65,11 +51,12 @@ class Page(db.Model):
         db.ForeignKey('wiki_revision.id', name='current_revision_id',
                       use_alter=True)) # avoid circular dependency
 
-    current_revision = db.relation('Revision',
+    current_revision = db.relationship('Revision', post_update=True,
         primaryjoin='Page.current_revision_id == Revision.id')
 
-    def __init__(self, name):
+    def __init__(self, name, **kwargs):
         self.name = deurlify_page_name(name)
+        super(Page, self).__init__(**kwargs)
 
     def __repr__(self):
         return '<Page %r>' % self.name
@@ -83,14 +70,6 @@ class Page(db.Model):
             return 'wiki/show', {'page': self.url_name, 'revision': revision}
         elif action in ('history', 'edit'):
             return 'wiki/%s' % action, {'page': self.url_name}
-
-    def _update_current_revision(self):
-        """
-        Set ``current_revision`` to the newest revision for this page.
-        """
-        self.current_revision_id = db.session.execute(
-                db.select([db.func.max(Revision.id)], Revision.page_id == self.id)
-            ).scalar()
 
 
 class Text(db.Model, TextRendererMixin):
@@ -119,14 +98,26 @@ class Revision(db.Model):
     change_comment = db.Column(db.String(512))
     text_id = db.Column(db.ForeignKey(Text.id))
 
-    page = db.relation(Page, primaryjoin='Revision.page_id == Page.id',
-                       backref=db.backref('revisions', lazy='dynamic'))
-    text = db.relation(Text)
-    change_user = db.relation(User)
+    _page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
+                            backref=db.backref('revisions', lazy='dynamic'))
+    text = db.relationship(Text)
+    change_user = db.relationship(User)
 
     raw_text = association_proxy('text', 'text', creator=_create_text)
     rendered_text = association_proxy('text', 'rendered_text')
-    #TODO: rendered_text should be readonly.
+
+    def __init__(self, *args, **kwargs):
+        print 'init called on %r' % self
+        super(Revision, self).__init__(*args, **kwargs)
+
+    def _set_page(self, page):
+        print '_set_page called on %r' % self
+        if page is not None:
+            page.current_revision = self
+        self._page = page
+    page = db.synonym('_page',
+                      descriptor=property(attrgetter('_page'), _set_page))
+    del _set_page
 
     def __repr__(self):
         pn = repr(self.page.name) if self.page else None

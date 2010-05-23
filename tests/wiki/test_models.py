@@ -19,12 +19,14 @@ def test_page_name_conversion_and_get_by_name():
     eq_(p.name, u'some name')
     eq_(p.url_name, u'some_name')
 
+    db.session.rollback()
+    u = User.query.first()
+
     p = Page(u'some name')
     eq_(p.name, u'some name')
     eq_(p.url_name, u'some_name')
 
-    db.session.rollback()
-    db.session.add(p)
+    r = Revision(page=p, change_user=u)
     db.session.commit()
 
     eq_(p, Page.query.get('some_name'))
@@ -58,7 +60,6 @@ def test_text_raw_and_rendered():
     assert_false(tracker.check('Called Text._render()'))
 
 
-@future
 def test_update_current_revision():
     u = User('somebody', 'some@body.invalid')
     p1 = Page('one')
@@ -72,6 +73,7 @@ def test_update_current_revision():
 
     p1 = Page.query.get(p1.id)
     p2 = Page.query.get(p2.id)
+
     eq_(p1.current_revision_id, r3.id)
     eq_(p1.current_revision, r3)
     eq_(p2.current_revision_id, r4.id)

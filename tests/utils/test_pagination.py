@@ -11,7 +11,8 @@
 import random
 from inyoka.core.test import *
 from inyoka.core.exceptions import NotFound
-from inyoka.utils.pagination import URLPagination, GETPagination
+from inyoka.utils.pagination import URLPagination, GETPagination, \
+    PageURLPagination
 
 
 GROUP_COUNTS = [0, 1, 3, 14, 15, 16, 30, 31, 50, 70, 80]
@@ -224,6 +225,24 @@ def test_urlpagination_links():
         '/entries/!/?a=b')
     eq_(URLPagination(q, 2, link='/entries/', args={"a":"b"}).make_template(),
         '/entries/!/?a=b')
+
+def test_pageurlpagination_links():
+    q = QueryMock()
+    eq_(PageURLPagination(q, 1).make_link(1), './')
+    eq_(PageURLPagination(q, 1).make_link(2), 'page/2/')
+    eq_(PageURLPagination(q, 1).make_template(), 'page/!/')
+    eq_(PageURLPagination(q, 2).make_link(1), '../../')
+    assert_true(PageURLPagination(q, 2).make_link(2) in ('../2/', '../../page/2/'))
+    assert_true(PageURLPagination(q, 2).make_template() in ('../!/',
+                                                       '../../page/!/'))
+    eq_(PageURLPagination(q, 1, link='/e/').make_link(1), '/e/')
+    eq_(PageURLPagination(q, 2, link='/e/').make_link(1), '/e/')
+    eq_(PageURLPagination(q, 1, link='/e/').make_link(2), '/e/page/2/')
+    eq_(PageURLPagination(q, 2, link='/e/').make_link(2), '/e/page/2/')
+    eq_(PageURLPagination(q, 1, link='/e/').make_template(), '/e/page/!/')
+    eq_(PageURLPagination(q, 2, args={"a":"b"}).make_link(1), '../../?a=b')
+    eq_(PageURLPagination(q, 2, link='/e/', args={"a":"b"}).make_link(2),
+        '/e/page/2/?a=b')
 
 
 def test_getpagination_links():

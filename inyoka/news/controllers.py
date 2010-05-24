@@ -23,7 +23,7 @@ from inyoka.news.forms import EditCommentForm
 from inyoka.news.subscriptions import ArticleSubscriptionType, \
     CommentSubscriptionType
 from inyoka.utils.feeds import atom_feed, AtomFeed
-from inyoka.utils.pagination import URLPagination
+from inyoka.utils.pagination import URLPagination, PageURLPagination
 
 
 def context_modifier(request, context):
@@ -187,13 +187,8 @@ class NewsController(IController):
 
         url_args = dict(year=year, month=month, day=day)
         query = Article.query.published().by_date(year, month, day)
-        def _link_generator():
-            p = request.path
-            _path = '/page/' in p and p[:p.index('/page/')] or p
-            return path.join(_path, 'page') + '/'
 
-        pagination = URLPagination(query, page=page, per_page=5,
-            link=_link_generator, force_page_num=True)
+        pagination = PageURLPagination(query, page=page, per_page=5)
 
         ret = dict(year=year, month=month, day=day,
             date=date(year, month or 1, day or 1),

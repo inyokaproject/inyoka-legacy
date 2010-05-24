@@ -26,7 +26,6 @@ class Pagination(object):
     :param args: URL parameters, that, if given, are included in the generated
                  urls.
     :param per_page: Number of entries displayed on one page.
-    :param force_page_num: Force the displaying of the page number in the url.
     """
 
     _comma = '<span class="comma">, </span>'
@@ -39,8 +38,7 @@ class Pagination(object):
     right_threshold = 1
     per_page = 15
 
-    def __init__(self, query, page=None, link=None, args=None, per_page=None,
-                 force_page_num=False):
+    def __init__(self, query, page=None, link=None, args=None, per_page=None):
         self.base_query = query
         self.page = 1 if page is None else page
         if link is not None and not isinstance(link, basestring):
@@ -61,7 +59,6 @@ class Pagination(object):
         offset = (self.page - 1) * self.per_page
         #TODO: implement position_col
         self.query = query[offset:offset+self.per_page]
-        self.force_page_num = force_page_num
 
     @abstract
     def make_link(self, page):
@@ -217,6 +214,7 @@ class Pagination(object):
 class URLPagination(Pagination):
     """
     A Pagination that appends the page number to the URL.
+    For example: ``/``, ``/2/``, ``/3/``.
     """
     def make_link(self, page):
         if self.link is None:
@@ -227,7 +225,7 @@ class URLPagination(Pagination):
         else:
             href = Href(self.link)
 
-        if page == 1 and not self.force_page_num:
+        if page == 1:
             return href(**self.args)
         return href(u'%d/' % page, **self.args)
 
@@ -243,10 +241,41 @@ class URLPagination(Pagination):
 
         return Href(base)(**self.args)
 
+class PageURLPagination(Pagination):
+    """
+    A Pagination that appends `/page/` andthe page number to the URL.
+    For example: ``/``, ``/page/2/``, ``/page/3/``.
+    """
+    def make_link(self, page):
+        if self.link is None:
+            if self.page == 1:
+                href = Href()
+            else:
+                href = Href('../../')
+        else:
+            href = Href(self.link)
+
+        if page == 1:
+            return href(**self.args)
+        return href(u'page/%d/' % page, **self.args)
+
+
+    def make_template(self):
+        if self.link is None:
+            if self.page == 1:
+                base = u'page/!/'
+            else:
+                base = u'../!/'
+        else:
+            base = u'%spage/!/' % self.link
+
+        return Href(base)(**self.args)
+
 
 class GETPagination(Pagination):
     """
     A Pagination that passes the page number in the query string.
+    For example: ``/``, ``/?page=2``, ``/?page=3``.
     """
     def make_template(self):
         args = self.args.copy()

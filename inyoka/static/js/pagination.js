@@ -42,7 +42,7 @@ $(function () {
             /* we cannot always use the template here, but since there is
              * always a link to the first page we use that.  */
             page1 = $(this).parent().siblings('.page1');
-            if ( page1.hasClass('current') )
+            if ( !page1.is('a') )
               return restore_ellipsis(ellipsis);
             else
               window.location.href = page1[0].href;

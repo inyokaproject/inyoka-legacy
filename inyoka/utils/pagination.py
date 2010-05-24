@@ -242,7 +242,7 @@ class URLPagination(Pagination):
 
 class PageURLPagination(Pagination):
     """
-    A Pagination that appends `/page/` andthe page number to the URL.
+    A Pagination that appends `/page/` and the page number to the URL.
     For example: ``/``, ``/page/2/``, ``/page/3/``.
     """
     def make_link(self, page):

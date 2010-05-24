@@ -20,7 +20,7 @@ from inyoka.core.api import db
 
 
 # one of small, medium or large
-SIZE = 'medium'
+SIZE = 'small'
 
 USERNAMES = '''
     asanuma bando chiba ekiguchi erizawa fukuyama inouye ise jo kanada
@@ -274,7 +274,7 @@ def create_forum_test_data():
     # forums
     inyoka_forum = Forum(
         name=u'Inyoka Project',
-        description=u'Please tell us our opinion about the new Inyoka!',
+        description=u'Please tell us your opinion about the new Inyoka!',
         tags=[inyoka])
     gnome_forum = Forum(
         name=u'The GNOME Desktop (Ubuntu)',

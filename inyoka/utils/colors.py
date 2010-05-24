@@ -4,17 +4,17 @@
     inyoka.utils.colors
     ~~~~~~~~~~~~~~~~~~~
 
-    Add Support for colorized Command Line Output
+    Add support for colorized Command Line Output
 
     This script is based on the pocoo ones (www.pocoo.org)
-    witch was taken from Gentoo.
+    which was taken from Gentoo.
 
-    You can use a color in the following format::
+    You can use a color in the following way::
 
         bold('This Text is Bold-Formatted')
 
-    Please note, that Windows doesn't support this colors.
-    So if you work at Windows use the `nocolor` function, to disable
+    Please note that Windows doesn't support these colors.
+    So if you work at Windows use the `nocolor` function to disable
     the command line colors.
 
     :copyright: 1998-2004 by the Gentoo Foundation.

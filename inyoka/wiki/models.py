@@ -106,9 +106,6 @@ class Revision(db.Model):
     raw_text = association_proxy('text', 'text', creator=_create_text)
     rendered_text = association_proxy('text', 'rendered_text')
 
-    def __init__(self, *args, **kwargs):
-        super(Revision, self).__init__(*args, **kwargs)
-
     def _set_page(self, page):
         if page is not None:
             page.current_revision = self

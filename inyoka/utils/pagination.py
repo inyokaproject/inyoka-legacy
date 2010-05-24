@@ -161,7 +161,6 @@ class Pagination(object):
         if self.pages == 1 and not force:
             return u''
 
-
         ret = []
         add = ret.append
         add(u'<div class="%s">' % class_)
@@ -229,7 +228,6 @@ class URLPagination(Pagination):
             return href(**self.args)
         return href(u'%d/' % page, **self.args)
 
-
     def make_template(self):
         if self.link is None:
             if self.page == 1:
@@ -240,6 +238,7 @@ class URLPagination(Pagination):
             base = u'%s!/' % self.link
 
         return Href(base)(**self.args)
+
 
 class PageURLPagination(Pagination):
     """
@@ -258,7 +257,6 @@ class PageURLPagination(Pagination):
         if page == 1:
             return href(**self.args)
         return href(u'page/%d/' % page, **self.args)
-
 
     def make_template(self):
         if self.link is None:

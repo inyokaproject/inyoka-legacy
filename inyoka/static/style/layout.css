@@ -258,17 +258,6 @@ div.flash_message {
   text-decoration: none;
 }
 
-div.grouper {
-  font-size: 2em;
-  text-align: center;
-  border-top: 1px solid #000;
-  border-bottom: 1px dotted #ccc;
-}
-
-div.grouper:hover {
-  background-color: #ccc;
-}
-
 .zealots {
   width: 350px;
   height: 100px;

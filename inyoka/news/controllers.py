@@ -14,7 +14,7 @@ from werkzeug import cached_property
 from inyoka.i18n import _
 from inyoka.l10n import get_month_names
 from inyoka.core.api import IController, Rule, cache, view, templated, href, \
-    redirect_to, db, login_required
+    redirect_to, db, login_required, ctx
 from inyoka.core.http import Response
 from inyoka.core.exceptions import Forbidden
 from inyoka.core.subscriptions.models import Subscription
@@ -22,6 +22,7 @@ from inyoka.news.models import Article, Tag, Comment
 from inyoka.news.forms import EditCommentForm
 from inyoka.news.subscriptions import ArticleSubscriptionType, \
     CommentSubscriptionType
+from inyoka.utils.feeds import atom_feed, AtomFeed
 from inyoka.utils.pagination import URLPagination
 
 
@@ -63,14 +64,17 @@ class NewsController(IController):
     def url_rules(self):
         url_rules = [
             Rule('/', endpoint='index'),
+            Rule('/feed.atom', endpoint='article_feed', defaults={'slug': None}),
             Rule('/+<any(subscribe, unsubscribe):action>',
                  endpoint='subscribe_articles'),
             Rule('/<int:page>/', endpoint='index'),
             Rule('/tag/<slug>/', endpoint='index'),
             Rule('/tag/<slug>/<int:page>/', endpoint='index'),
+            Rule('/tag/<slug>/feed.atom', endpoint='article_feed'),
             Rule('/<slug>/', endpoint='detail'),
             Rule('/<slug>/+<any(subscribe, unsubscribe):action>',
                  endpoint='subscribe_comments'),
+            Rule('/<slug>/feed.atom', endpoint='comment_feed'),
             Rule('/comment/<int:id>/<any(hide, restore, edit):action>',
                  endpoint='edit_comment'),
             Rule('/archive/', endpoint='archive'),
@@ -239,3 +243,38 @@ class NewsController(IController):
         }
         request.flash(msg[action][existed], True if not existed else None)
         return redirect_to(article)
+
+    @atom_feed('news/feeds/articles/%(slug)s', 'article_feed')
+    def article_feed(self, request, slug=None):
+        """
+        Shows all news entries that match the given criteria in an atom feed.
+        """
+        query = Article.query
+        title = u'News'
+        url = href('news/index')
+
+        if slug:
+            # filter the articles matching a defined tag
+            tag = Tag.query.public().filter_by(slug=slug).one()
+            query = tag.articles
+            title = _(u'News for %s' % slug)
+            url = href('news/index', slug=slug)
+
+        query = query.options(db.eagerload('author')) \
+                     .order_by(Article.updated.desc()).limit(20)
+
+        feed = AtomFeed(_(u'%s – %s' % (title, ctx.cfg['website_title'])),
+            feed_url=request.url, url=request.url_root,
+            icon=href('static', file='img/favicon.ico'))
+
+        for article in query.all():
+            feed.add(article.title,
+                u'%s\n%s' % (article.rendered_intro, article.rendered_text),
+                content_type='html', url=href(article, _external=True),
+                author={
+                    'name': article.author.display_name,
+                    'uri': href(article.author.profile)
+                },
+                id=article.id, updated=article.updated, published=article.pub_date)
+
+        return feed

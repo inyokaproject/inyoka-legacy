@@ -18,6 +18,8 @@
     {%- endfor %}
     <link rel="stylesheet" href="{{ href('static', file='style/print.css') }}" media="print" />
     <link rel="shortcut icon" type="image/icon" href="{{ href('static', file='img/favicon.ico') }}" />
+    {% block html_head %}
+    {% endblock %}
   </head>
   <body>
 

@@ -3,7 +3,7 @@
     <h3 class="title"><a href="{{ href(article) }}">{{ article.title }}</a></h3>
     <p class="meta">
       <span class="published">{{ article.updated|dateformat }} {{ article.updated|timeformat('short') }}</span>
-      <span class="tags">{% for tag in article.tags %}<a href="{{ href(tag) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
+      <span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
       <span class="comments"><a href="{{ href(article, _anchor='comments') }}">
         {% if article.comment_count %}
         {% trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize %}

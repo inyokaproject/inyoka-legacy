@@ -1,5 +1,13 @@
 {%- extends 'news/base.html' %}
 {%- from "news/_article.html" import render_article %}
+{% block html_head %}
+{{- super() -}}
+{% if tag %}
+<link rel="alternate" href="{{ href('news/article_feed', slug=tag.slug, _external=True) }}" type="application/atom+xml">
+{% else %}
+<link rel="alternate" href="{{ href('news/article_feed', _external=True) }}" type="application/atom+xml">
+{% endif %}
+{%- endblock %}
 
 {% block content %}
   {%- if tag %}

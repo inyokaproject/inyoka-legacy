@@ -20,7 +20,7 @@ from inyoka.core.api import db
 
 
 # one of small, medium or large
-SIZE = 'small'
+SIZE = 'medium'
 
 USERNAMES = '''
     asanuma bando chiba ekiguchi erizawa fukuyama inouye ise jo kanada
@@ -240,7 +240,7 @@ def create_test_users():
 
 def create_stub_tags():
     from inyoka.core.models import Tag
-    num = {'small': 10, 'medium': 20, 'large': 50}[SIZE]
+    num = {'small': 10, 'medium': 25, 'large': 50}[SIZE]
     used = set()
     for x in xrange(randrange(num - 5, num + 5)):
         while 1:
@@ -300,7 +300,7 @@ def create_forum_test_data():
     last_date = None
     questions = []
 
-    num, var = {'small': (50, 10), 'medium': (200, 20),
+    num, var = {'small': (50, 10), 'medium': (250, 50),
                 'large': (1000, 200)}[SIZE]
     for x in xrange(randrange(num - var, num + var)):
         if random() >= 0.8:
@@ -358,7 +358,7 @@ def create_news_test_data():
     from inyoka.news.models import Tag, Comment, Article
     users = User.query.all()
     tags = Tag.query.public().all()
-    num = {'small': 10, 'medium': 30, 'large': 100}[SIZE]
+    num = {'small': 10, 'medium': 50, 'large': 100}[SIZE]
     used = set()
     for x in xrange(randrange(num - 5, num + 5)):
         while 1:

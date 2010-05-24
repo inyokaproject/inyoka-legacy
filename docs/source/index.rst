@@ -59,6 +59,7 @@ This section covers all utilities inyoka implements.
     :maxdepth: 2
 
     utils/confirm
+    utils/colors
     utils/crypt
     utils/csrf
     utils/datastructures

@@ -74,7 +74,6 @@ class NewsController(IController):
             Rule('/<slug>/', endpoint='detail'),
             Rule('/<slug>/+<any(subscribe, unsubscribe):action>',
                  endpoint='subscribe_comments'),
-            Rule('/<slug>/feed.atom', endpoint='comment_feed'),
             Rule('/comment/<int:id>/<any(hide, restore, edit):action>',
                  endpoint='edit_comment'),
             Rule('/archive/', endpoint='archive'),

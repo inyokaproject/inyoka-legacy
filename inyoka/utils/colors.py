@@ -101,7 +101,7 @@ functions_colors = [
     "bold", "white", "teal", "turquoise", "darkteal",
     "fuscia", "fuchsia", "purple", "blue", "darkblue",
     "green", "darkgreen", "yellow", "brown",
-    "darkyellow", "red", "darkred"
+    "darkyellow", "red", "darkred", "underline"
 ]
 
 def create_color_func(color_key):

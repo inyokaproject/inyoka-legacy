@@ -8,6 +8,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import cPickle as pickle
+from operator import itemgetter
 from inyoka.core.test import *
 from inyoka.utils.datastructures import BidiMap, OrderedDict, TokenStream, \
     TokenStreamIterator, Token
@@ -186,3 +187,21 @@ def test_ordereddict():
     nd = OrderedDict.fromkeys(('a', 'b', 'c', 'd'), 5)
     assert_equals({'a': 5, 'b': 5, 'c': 5, 'd': 5}, nd)
     assert_equals(d, dict(items))
+
+    # index
+    assert_equals(d.index('b'), 1)
+
+    # sort
+    nd.reverse()
+    nd.sort()
+    assert_equals(nd.items(), [('a', 5), ('b', 5), ('c', 5), ('d', 5)])
+
+    d = OrderedDict([('a', 1), ('b', 2), ('c', 3), ('d', 4)])
+    d.sort(key=itemgetter(1))
+    assert_equals(d.items(), [('a', 1), ('b', 2), ('c', 3), ('d', 4)])
+    d.sort(cmp=lambda a, b: cmp(b[1], a[1]))
+    assert_equals(d.items(), [('d', 4), ('c', 3), ('b', 2), ('a', 1)])
+    # sort does first sort and afterwards reverse the stuff, that's why we
+    # get the same return value here.
+    d.sort(reverse=True)
+    assert_equals(d.items(), [('d', 4), ('c', 3), ('b', 2), ('a', 1)])

@@ -51,6 +51,10 @@ def abstract(func):
 
 
 def update_wrapper(proxy, original):
+    """Update `proxy` to look like `original`.
+    Uses :func:`functools.update_wrapper` internally and adds the function
+    signature to the new created proxy function.
+    """
     func = _update_wrapper(proxy, original)
     func.signature = getargspec(original)
     return func

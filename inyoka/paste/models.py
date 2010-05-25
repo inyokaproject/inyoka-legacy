@@ -35,7 +35,7 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
     id = db.Column(db.Integer, primary_key=True)
     _text = db.Column(db.Text, nullable=False)
 
-    title =  db.Column(db.String(50), nullable=True)
+    title = db.Column(db.String(50), nullable=True)
     rendered_text = db.Column(db.Text, nullable=False)
 
     _language = db.Column('language', db.String(30))

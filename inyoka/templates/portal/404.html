@@ -4,8 +4,8 @@
 {% block content %}
 <div class="not_found">
   <p>
-    {% trans %}The requested page could not be found. {% endtrans %}
+    {% trans %}The requested page could not be found.{% endtrans %}
   </p>
-  <img alt="not found" src="/_static/img/not_found.png">
+  <img src={{ href('static', file="/img/not_found.png") }} alt="">
 </div>
 {% endblock %}

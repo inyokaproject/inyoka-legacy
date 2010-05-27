@@ -11,6 +11,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
+import re
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from werkzeug import find_modules, import_string, cached_property
@@ -247,21 +248,17 @@ def _bootstrap():
     from subprocess import Popen, PIPE
 
     # get Inyoka revision
-    hg = Popen(['hg', 'tip'], stdout=PIPE, stderr=PIPE, stdin=PIPE,
-               cwd=os.path.dirname(__file__))
+    hg = Popen(['hg', 'id', '-i', '-n'], stdout=PIPE, stderr=PIPE,
+               stdin=PIPE, cwd=os.path.dirname(__file__))
     hg.stdin.close()
     hg.stderr.close()
-    rev = hg.stdout.read()
+    rev = hg.stdout.readline()
     hg.stdout.close()
-    hg.wait()
-    hg_node = None
     if hg.wait() == 0:
-        for line in rev.splitlines():
-            bucket = line.split(':', 1)
-            if len(bucket) == 2 and bucket[0].lower().strip() == 'changeset':
-                hg_node = bucket[1].strip()
-                break
-    INYOKA_REVISION = hg_node
+        m = re.match('^(?P<id>[0-9a-z]+)(?P<mod>\+?) (?P<num>[0-9]+)\+?$',
+                     rev)
+        if m:
+            INYOKA_REVISION = '%(num)s:%(id)s%(mod)s' % m.groupdict()
 
     # the path to the contents of the Inyoka module
     os.environ.setdefault('INYOKA_MODULE', realpath(join(dirname(__file__))))

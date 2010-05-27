@@ -24,7 +24,12 @@ def gen_slug(text, delim=u'-', ascii=False):
     """Generates a proper slug for the given text.
 
     It calls either :func:`gen_ascii_slug` or :func:`gen_unicode_slug`
-    depending on the application configuration.  The slug is always lowercased.
+    depending on the application configuration.
+
+    .. note::
+
+        The slug is always lowercased and transliterated with translit/long codec.
+
     """
     if ascii:
         return gen_ascii_slug(text, delim)

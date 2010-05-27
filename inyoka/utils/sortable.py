@@ -3,6 +3,9 @@
     inyoka.utils.sortable
     ~~~~~~~~~~~~~~~~~~~~~
 
+    This module implements a class that makes it easy to handle various
+    sortable data.  It automates this process as much as possible.
+
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
@@ -50,7 +53,9 @@ class Sortable(object):
         Returns a HTML link for sorting the table.
         This function is usually called inside the template.
 
-        Usage example in the template file::
+        Usage example in the template file:
+
+        .. sourcecode:: html+jinja
 
             <tr>
               <th>

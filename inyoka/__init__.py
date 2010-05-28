@@ -28,7 +28,7 @@ class InterfaceMeta(type):
     It touches interfaces and components.  If it registers a new interface it
     will add a new key to :attr:`~inyoka.InterfaceMeta._registry`.
 
-    If an class is an :class:`Interface` it will set an :attr:`Interface._isinterface`
+    If an class is an iterface it will set an :attr:`Interface._isinterface`
     attribute to `True` if it's a component to `False`.
 
     A component has an attribute called :attr:`_interfaces` with all interfaces

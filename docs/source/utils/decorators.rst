@@ -8,4 +8,8 @@ Inyoka Decorators
 Component-System Decorators
 ===========================
 
-.. autofunction:: abstract(func)
+.. autofunction:: abstract
+
+.. autofunction:: update_wrapper
+
+.. autofunction:: make_decorator

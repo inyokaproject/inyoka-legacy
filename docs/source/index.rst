@@ -64,7 +64,9 @@ This section covers all utilities inyoka implements.
     utils/csrf
     utils/datastructures
     utils/decorators
+    utils/diff3
     utils/imaging
+    utils/sortable
     utils/text
     utils/urls
 

@@ -180,6 +180,8 @@ class HttpBasicAuth(EasyAuth):
             return User.query.get_anonymous()
 
     def login(self, request):
+        _message, _code = _(u'Please log in.'), 401
+
         # Try to get an already logged in user
         if request.session.get('user_id', None):
             return redirect_to('portal/index')
@@ -190,12 +192,14 @@ class HttpBasicAuth(EasyAuth):
                 user = User.query.get(auth.username)
                 if user.check_password(request.authorization.password):
                     self.set_user(request, user)
-                    request.flash(_(u'You are now logged in.'))
+                    request.flash(_(u'You are now logged in.'), True)
                     return redirect_to('portal/index')
+                else:
+                    _message, _code = _(u'Invalid login.'), 403
             except db.NoResultFound:
-                pass
+                _message, _code = _(u'Invalid login'), 403
 
         # ask for login
-        response = Response(_(u'Please log in.'), 401,
+        response = Response(_message, _code,
             {'WWW-Authenticate': 'Basic realm="%s' % self.realm})
         abort(response)

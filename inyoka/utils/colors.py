@@ -25,9 +25,9 @@
 esc_seq = '\x1b['
 
 codes = {}
-codes['reset']     = esc_seq + '39;49;00m'
+codes['reset'] = esc_seq + '39;49;00m'
 
-codes['bold']      = esc_seq + '01m'
+codes['bold'] = esc_seq + '01m'
 codes['underline'] = esc_seq + '04m'
 
 ansi_color_codes = []

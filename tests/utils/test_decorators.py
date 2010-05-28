@@ -3,12 +3,13 @@
     test_decorators
     ~~~~~~~~~~~~~~~
 
+    Unittests for our decorator utilities.
+
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.test import *
-from inyoka.utils.decorators import abstract, make_decorator
-
+from inyoka.utils.decorators import abstract, make_decorator, update_wrapper
 
 
 def test_abstract_raises():
@@ -53,3 +54,16 @@ def test_make_decorator():
 
     eq_(some_func.alias, 'other_alias')
     eq_(some_func(), 5)
+
+
+def test_update_wrapper():
+    def proxy(func):
+        return func
+
+    def func():
+        """doc"""
+        print "bar"
+
+    new = update_wrapper(proxy, func)
+    assert_equals(new.signature._asdict(), {'args': [], 'defaults': None, 'keywords': None, 'varargs': None})
+    assert_equals(new.__doc__, 'doc')

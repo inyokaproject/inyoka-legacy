@@ -10,7 +10,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import sys
+from copy import copy, deepcopy
 from operator import itemgetter
+from itertools import imap, izip
+
 
 class _Missing(object):
 
@@ -20,6 +23,7 @@ class _Missing(object):
     def __reduce__(self):
         return '_missing'
 
+#: A singleton that represents missing values per thread
 _missing = _Missing()
 del _Missing
 
@@ -117,6 +121,7 @@ class TokenStream(object):
 
     @classmethod
     def from_tuple_iter(cls, tupleiter):
+        """Create a new token stream fromo `tupleiter`"""
         return cls(Token(*a) for a in tupleiter)
 
     def __iter__(self):
@@ -198,10 +203,81 @@ class TokenStream(object):
         self.next()
 
 
-# Based on the patch for insertion to py3k with some compatibility
-# modifications
-
 class OrderedDict(dict):
+    """Simple ordered dict implementation.
+
+    This implementation is based on the patch for insertion to py3k with some
+    modifications based on other ordered dict implementations.
+    Those do not change the py3k like interface.
+    The OrderedDict got some more list-like functions as sort, index, byindex
+    and such stuff.
+
+    The constructor and `update()` both accept iterables of tuples as well as
+    mappings:
+
+    >>> d = OrderedDict([('a', 'b'), ('c', 'd')])
+    >>> d.update({'foo': 'bar'})
+    >>> d
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar')])
+
+    Keep in mind that when updating from dict-literals the order is not
+    preserved as these dicts are unsorted!
+
+    You can copy an OrderedDict like a dict by using the constructor, `copy.copy`
+    or the `copy` method and make deep copies with `copy.deepcopy`:
+
+    >>> from copy import copy, deepcopy
+    >>> copy(d)
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar')])
+    >>> d.copy()
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar')])
+    >>> OrderedDict(d)
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar')])
+    >>> d['spam'] = []
+    >>> d2 = deepcopy(d)
+    >>> d2['spam'].append('eggs')
+    >>> d
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', [])])
+    >>> d2
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', ['eggs'])])
+
+    All iteration methods as well as `keys`, `values` and `items` return
+    the values ordered by the the time the key-value pair is inserted:
+
+    >>> d.keys()
+    ['a', 'c', 'foo', 'spam']
+    >>> d.values()
+    ['b', 'd', 'bar', []]
+    >>> d.items()
+    [('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', [])]
+    >>> list(d.iterkeys())
+    ['a', 'c', 'foo', 'spam']
+    >>> list(d.itervalues())
+    ['b', 'd', 'bar', []]
+    >>> list(d.iteritems())
+    [('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', [])]
+
+    Index based lookup is supported too by `byindex` which returns the
+    key/value pair for an index:
+
+    >>> d.byindex(2)
+    ('foo', 'bar')
+
+    You can reverse the OrderedDict as well:
+
+    >>> d.reverse()
+    >>> d
+    OrderedDict([('spam', []), ('foo', 'bar'), ('c', 'd'), ('a', 'b')])
+
+    And sort it like a list:
+
+    >>> d.sort(key=lambda x: x[0].lower())
+    >>> d
+    OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', [])])
+
+    For performance reasons the ordering is not taken into account when
+    comparing two ordered dicts.
+    """
 
     def __init__(self, *args, **kwds):
         if len(args) > 1:
@@ -211,6 +287,7 @@ class OrderedDict(dict):
         self.update(*args, **kwds)
 
     def clear(self):
+        """Clear the dictionary.  It's empty afterwards."""
         del self._keys[:]
         dict.clear(self)
 
@@ -224,34 +301,73 @@ class OrderedDict(dict):
         self._keys.remove(key)
 
     def __iter__(self):
+        """Iterate over all keys"""
         return iter(self._keys)
+    iterkeys = __iter__
 
     def __reversed__(self):
         return reversed(self._keys)
 
+    def reverse(self):
+        """Reverse the keys in-place."""
+        self._keys.reverse()
+
+    def __deepcopy__(self, memo):
+        d = memo.get(id(self), _missing)
+        memo[id(self)] = d = self.__class__()
+        dict.__init__(d, deepcopy(self.items(), memo))
+        d._keys = self._keys[:]
+        return d
+
+    def copy(self):
+        """Return a copy.
+        The copy is no deepcopy, use :meth:`deepcopy` for that purpose.
+        """
+        return self.__class__(self)
+    __copy__ = copy
+
+    def __getstate__(self):
+        return {'items': dict(self), 'keys': self._keys}
+
+    def __setstate__(self, d):
+        self._keys = d['keys']
+        dict.update(self, d['items'])
+
     def popitem(self):
+        """Return the most revent key-value pair."""
         if not self:
             raise KeyError('dictionary is empty')
         key = self._keys.pop()
         value = dict.pop(self, key)
         return key, value
 
-    def __reduce__(self):
-        items = [[k, self[k]] for k in self]
-        inst_dict = vars(self).copy()
-        inst_dict.pop('_keys', None)
-        return (self.__class__, (items,), inst_dict)
-
     def keys(self):
+        """Return all keys"""
         return self._keys
 
     def values(self):
+        """Return all values"""
         return map(self.get, self._keys)
 
     def items(self):
+        """Return key-value pairs"""
         return zip(self._keys, self.values())
 
+    def itervalues(self):
+        """Return an iterator that iterates over all values"""
+        return imap(self.get, self._keys)
+
+    def index(self, item):
+        """Return the index used for `item`"""
+        return self._keys.index(item)
+
+    def byindex(self, index):
+        """Access an item by index"""
+        key = self._keys[index]
+        return (key, dict.__getitem__(self, key))
+
     def pop(self, key, default=_missing):
+        """Pop the value for `key` or raise :exc:`KeyError` if it's missing."""
         try:
             value = self[key]
         except KeyError:
@@ -263,6 +379,9 @@ class OrderedDict(dict):
             return value
 
     def update(self, other=(), **kwds):
+        """Update the ordered dict.
+        This can be either another dict, OrderedDict or iterables of tuples.
+        """
         if isinstance(other, (dict, OrderedDict)):
             for key in other:
                 self[key] = other[key]
@@ -276,6 +395,7 @@ class OrderedDict(dict):
             self[key] = value
 
     def setdefault(self, key, default=None):
+        """Set a default value for `key`"""
         try:
             return self[key]
         except KeyError:
@@ -287,18 +407,21 @@ class OrderedDict(dict):
             return '%s()' % (self.__class__.__name__,)
         return '%s(%r)' % (self.__class__.__name__, list(self.items()))
 
-    def copy(self):
-        return self.__class__(self)
-
     @classmethod
     def fromkeys(cls, iterable, value=None):
+        """Create a new ordered dict from `iterable` with default `value`"""
         d = cls()
         for key in iterable:
             d[key] = value
         return d
 
-    def __eq__(self, other):
-        if isinstance(other, OrderedDict):
-            return len(self)==len(other) and \
-                   all(p==q for p, q in zip(self.items(), other.items()))
-        return dict.__eq__(self, other)
+    def sort(self, cmp=None, key=None, reverse=False):
+        """Sort the ordered dict in-place"""
+        if key is not None:
+            self._keys.sort(key=lambda k: key((k, self[k])))
+        elif cmp is not None:
+            self._keys.sort(lambda a, b: cmp((a, self[a]), (b, self[b])))
+        else:
+            self._keys.sort()
+        if reverse:
+            self._keys.reverse()

@@ -154,7 +154,7 @@ def build_docs(clean='no', browse='no', builder='html'):
             builder, _j('docs'), _j('docs/_build/doctrees'), source, out
         ))
         local(cmd, capture=False)
-        print 'Build finished. The %s pages are in output/%s.' % (builder, builder)
+        print 'Build finished. The %s pages are in %s.' % (builder, out)
     if browse.lower() in ['yes', 'y']:
         local('open docs/_build/html/index.html')
 

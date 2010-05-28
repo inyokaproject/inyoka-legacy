@@ -25,4 +25,6 @@ Text Modifiers
 
 .. autofunction:: increment_string
 
+.. autofunction:: get_next_increment
+
 .. autofunction:: wrap

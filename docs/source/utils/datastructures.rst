@@ -9,3 +9,14 @@ Hash Maps
 =========
 
 .. autoclass:: BidiMap(items=None)
+
+.. autoclass:: Token
+   :members:
+
+.. autoclass:: TokenStream
+    :members:
+
+.. autoclass:: TokenStreamIterator
+
+.. autoclass:: OrderedDict
+   :members:

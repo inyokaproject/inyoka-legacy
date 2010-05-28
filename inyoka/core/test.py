@@ -123,6 +123,10 @@ class ViewTestSuite(TestSuite):
         return self.open(*args, **kw)
 
     def normalize_local_path(self, path):
+        """Simple local path normalizing.
+
+        This checks for absolute uris and makes them local.
+        """
         if path in ('', '.'):
             path = path
         elif path.startswith(self.base_url):
@@ -196,6 +200,7 @@ class InyokaPlugin(cover.Coverage):
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
     def finalize(self, result):
+        """Finally drop all database tables."""
         database.metadata.drop_all(bind=self._engine)
 
     def configure(self, options, conf):
@@ -211,7 +216,7 @@ class InyokaPlugin(cover.Coverage):
 
     def startTest(self, test):
         """Called before each test seperately to support our
-        own fixture system.
+        own fixture system and call special initialisation methods.
 
         Note that this is called for *each* test *method* not
         every TestCase.
@@ -253,6 +258,14 @@ class InyokaPlugin(cover.Coverage):
             t.test = functools.partial(t.test, loaded)
 
     def stopTest(self, test):
+        """Called after each test seperately to clear up fixtures as
+        well as mock objects.
+
+        This also calls all cleanup callbacks for the WSGI Dispatcher.
+        """
+
+        Note that this is called for *each* test *method* not
+        every TestCase.
         if self._started:
             self._started = False
             if isinstance(test.test, nose.case.MethodTestCase):
@@ -271,6 +284,8 @@ class InyokaPlugin(cover.Coverage):
             callback()
 
     def wantClass(self, cls):
+        """Check if we can use a `cls` for unittest purposes.  This adds
+        `ViewTestSuite` to the list of possible unittest interfaces."""
         if issubclass(cls, ViewTestSuite) and not cls is ViewTestSuite:
             return True
         if cls is ViewTestSuite:
@@ -278,6 +293,7 @@ class InyokaPlugin(cover.Coverage):
         return None
 
     def wantFile(self, file):
+        """Exclude `fabfile.py` explicitly from unittests"""
         if 'fabfile.py' in file:
             return False
         return cover.Coverage.wantFile(self, file)
@@ -313,6 +329,18 @@ def fixture(model, _callback=None, **kwargs):
 
 
 def with_fixtures(*names):
+    """Mark this function to work with some fixture.
+
+    Example usage::
+
+        class MyTest(TestSuite):
+            fixtures = {'fix1': fixture(Entry, **some_data)}
+
+            @with_fixtures('fix1')
+            def test_my_feature(self, fixtures):
+                # ...
+
+    """
     def proxy(func):
         func._required_fixtures = names
         return func
@@ -328,6 +356,7 @@ class UnexpectedSuccess(Exception):
 
 
 class FuturePlugin(errorclass.ErrorClassPlugin):
+    """Hooks our `future` decorator into the nose plugin system"""
     enabled = True
     name = "future"
 

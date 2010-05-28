@@ -130,7 +130,6 @@ class PilImage(BaseImage):
             self.image.save(filename)
 
 
-
 # Setup Backend
 _backend = ctx.cfg["imaging.backend"]
 supported_backends = {

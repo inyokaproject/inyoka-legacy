@@ -175,8 +175,10 @@ class InyokaPlugin(cover.Coverage):
 
     def __init__(self):
         super(InyokaPlugin, self).__init__()
-        # make sure our tests package is imported
-        sys.path.insert(0, '.')
+        # Force our `tests` module to be the first `tests` module in the path.
+        # Otherwise load_packages might try to load `test` from celery if
+        # installed via setup.py develop (same goes for other packages)
+        sys.path.insert(0, os.path.dirname(os.environ['INYOKA_MODULE']))
         ctx.load_packages(['tests.*'])
 
     def options(self, parser, env):

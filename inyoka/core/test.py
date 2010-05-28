@@ -175,6 +175,8 @@ class InyokaPlugin(cover.Coverage):
 
     def __init__(self):
         super(InyokaPlugin, self).__init__()
+        # make sure our tests package is imported
+        sys.path.insert(0, '.')
         ctx.load_packages(['tests.*'])
 
     def options(self, parser, env):
@@ -262,10 +264,10 @@ class InyokaPlugin(cover.Coverage):
         well as mock objects.
 
         This also calls all cleanup callbacks for the WSGI Dispatcher.
-        """
 
         Note that this is called for *each* test *method* not
         every TestCase.
+        """
         if self._started:
             self._started = False
             if isinstance(test.test, nose.case.MethodTestCase):

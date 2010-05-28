@@ -1,0 +1,11 @@
+{% extends "portal/base.html" %}
+{% set title_trace=[_('Page does not exist')] %}
+
+{% block content %}
+<div class="not_found">
+  <p>
+    {% trans %}The requested page could not be found.{% endtrans %}
+  </p>
+  <img src={{ href('static', file="/img/not_found.png") }} alt="">
+</div>
+{% endblock %}

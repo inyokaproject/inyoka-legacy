@@ -23,7 +23,7 @@ from inyoka.core.api import db, ctx, logger, IController, Request, \
 from inyoka.core.context import local, local_manager
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
-from inyoka.utils.http import notfound_with_debug
+from inyoka.utils.http import notfound, notfound_with_debug
 
 
 
@@ -113,7 +113,7 @@ class RequestDispatcher(object):
                 if ctx.cfg['debug']:
                     raise notfound_with_debug(urls)
                 else:
-                    raise
+                    return notfound(request)
 
             request.endpoint = rule.endpoint
 

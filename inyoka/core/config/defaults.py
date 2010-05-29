@@ -161,4 +161,13 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Files with lines greater than this number '
                                u'will not have syntax highlighting. '
                                u'Enter 0 for no limit.')),
+
+    # celery settings
+    'celery.result_backend':    TextField(u'amqp',''),
+    # ampq broker settings
+    'broker.host': TextField(u'localhost', ''),
+    'broker.port': IntegerField(5672, ''),
+    'broker.user': TextField(u'inyoka', ''),
+    'broker.password': TextField(u'inyoka', ''),
+    'broker.vhost': TextField(u'inyoka', ''),
 }

@@ -261,10 +261,12 @@ def _bootstrap():
             INYOKA_REVISION = '%(num)s:%(id)s%(mod)s' % m.groupdict()
 
     # the path to the contents of the Inyoka module
-    os.environ.setdefault('INYOKA_MODULE', realpath(join(dirname(__file__))))
-    conts = os.environ['INYOKA_MODULE']
+    conts = os.environ.setdefault('INYOKA_MODULE',
+                realpath(join(dirname(__file__))))
     # the path to the Inyoka instance folder
-    os.environ.setdefault('INYOKA_INSTANCE', realpath(join(conts, pardir)))
+    os.environ['INYOKA_INSTANCE'] = realpath(join(conts, pardir))
+    # the python path to our celery loader
+    os.environ['CELERY_LOADER'] = 'inyoka.core.celery_support.CeleryLoader'
 
     #: bind the context
     ctx = ApplicationContext()

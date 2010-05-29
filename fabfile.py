@@ -136,6 +136,12 @@ def version():
     print u'Inyoka revision %s on Python %s' % \
           (INYOKA_REVISION, u'.'.join(str(x) for x in sys.version_info[:3]))
 
+def celeryd():
+    """
+    Start a celery worker, using our config.
+    """
+    local('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" celeryd --loglevel=INFO', capture=False)
+
 
 def build_docs(clean='no', browse='no', builder='html'):
     """

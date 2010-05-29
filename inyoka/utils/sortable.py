@@ -14,7 +14,7 @@ from inyoka.i18n import _
 from inyoka.core.database import db
 from inyoka.core.routing import href
 from inyoka.core.context import ctx
-from inyoka.utils.html import build_html_tag
+from inyoka.utils.html import build_html_tag, escape
 
 
 class Sortable(object):
@@ -91,13 +91,12 @@ class Sortable(object):
 
     def get_sorted(self):
         """Return a query object with the proper ordering applied."""
-        ocol = self.order_by.lstrip('-')
+        ocol = escape(self.order_by.lstrip('-'))
         if ocol not in self.columns.keys():
             # safes us from some bad usage that raises an exception
             ctx.current_request.flash(
                 _(u'The selected criterium “%s” is not available, '
-                  u'falling back to default ordering') % ocol
-            )
+                  u'falling back to default ordering') % ocol, html=True)
             self.order_by = self.default_col
             ocol = self.order_by.lstrip('-')
 

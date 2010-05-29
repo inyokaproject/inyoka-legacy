@@ -95,5 +95,5 @@ class PortalAdminController(IAdminProvider):
         else:
             request.flash(render_template('portal/admin/tag_delete.html', {
                 'tag': tag
-            }))
+            }), html=True)
         return redirect_to(tag, action='edit')

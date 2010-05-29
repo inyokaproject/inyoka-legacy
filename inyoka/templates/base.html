@@ -25,7 +25,7 @@
 
     {%- for message in request.flash_messages %}
     <div class="flash_message{% if message.success == true %} success{% elif message.success == false %} error{% else %} notice{% endif %}">
-      {{ message.text|safe }}
+      {{ message|safe }}
     </div>
     {%- endfor %}
 

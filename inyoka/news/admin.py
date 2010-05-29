@@ -75,7 +75,7 @@ class NewsAdminProvider(IAdminProvider):
     def articles_delete(self, request, slug):
         article = Article.query.filter_by(slug=slug).one()
         if 'cancel' in request.form:
-            flash(_(u'Action canceled'))
+            request.flash(_(u'Action canceled'))
         elif request.method == 'POST' and 'confirm' in request.form:
             db.session.delete(article)
             db.session.commit()
@@ -85,5 +85,5 @@ class NewsAdminProvider(IAdminProvider):
         else:
             request.flash(render_template('news/admin/article_delete.html', {
                 'article': article
-            }))
+            }), html=True)
         return redirect_to(article, action='edit')

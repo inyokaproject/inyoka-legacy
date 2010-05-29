@@ -19,17 +19,24 @@ from werkzeug import Request as BaseRequest, Response as BaseResponse, \
 from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.core.context import ctx, local
 from inyoka.core.routing import href
+from inyoka.utils.html import escape, Markup
 
 
 class FlashMessage(tuple):
     __slots__ = ()
 
-    def __new__(self, text, success=None, id=None):
-        return tuple.__new__(self, (text, success, intern(str(id))))
+    def __new__(self, text, success=None, id=None, html=False):
+        return tuple.__new__(self, (text, success, intern(str(id)), html))
 
     text = property(itemgetter(0))
     success = property(itemgetter(1))
     id = property(itemgetter(2))
+    html = property(itemgetter(3))
+
+    def __unicode__(self):
+        if not self.html:
+            return escape(self.text)
+        return self.text
 
     def __repr__(self):
         return '<%s(%s:%s)>' % (
@@ -77,13 +84,13 @@ class Request(BaseRequest):
         self.clear_flash_buffer()
         return buffer
 
-    def flash(self, message, success=None, id=None):
+    def flash(self, message, success=None, id=None, html=False):
         """Flash a message to the user."""
         if 'flash_buffer' not in self.session:
             self.session['flash_buffer'] = []
         if id is None:
             id = unicode(uuid4().get_hex())
-        self.session['flash_buffer'].append(FlashMessage(message, success, id))
+        self.session['flash_buffer'].append(FlashMessage(message, success, id, html))
         self.session.modified = True
         return id
 

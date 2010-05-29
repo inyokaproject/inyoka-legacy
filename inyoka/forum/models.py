@@ -211,7 +211,7 @@ class Question(Entry):
     __tablename__ = 'forum_question'
     __mapper_args__ = {
         'extension': db.SlugGenerator('slug', 'title'),
-        'polymorphic_identity': 'question'
+        'polymorphic_identity': u'question'
     }
     query = db.session.query_property(QuestionQuery)
 
@@ -256,7 +256,7 @@ class Question(Entry):
 class Answer(Entry):
     __tablename__ = 'forum_answer'
     __mapper_args__ = {
-        'polymorphic_identity': 'answer'
+        'polymorphic_identity': u'answer'
     }
 
     #: Serializer attributes

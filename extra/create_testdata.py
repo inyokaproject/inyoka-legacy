@@ -24,7 +24,7 @@ _link_file = None
 # one of small, medium or large
 SIZE = 'small'
 
-USERNAMES = '''
+USERNAMES = u'''
     asanuma bando chiba ekiguchi erizawa fukuyama inouye ise jo kanada
     kaneko kasahara kasuse kazuyoshi koyama kumasaka matsushina
     matsuzawa mazaki miwa momotami morri moto nakamoto nakazawa obinata
@@ -36,7 +36,7 @@ USERNAMES = '''
     oinnan ondar orirran oudin paenael
 '''.split()
 
-LEADINS = """To characterize a linguistic level L,
+LEADINS = u'''To characterize a linguistic level L,
     On the other hand,
     This suggests that
     It appears that
@@ -70,9 +70,9 @@ LEADINS = """To characterize a linguistic level L,
     It may be, then, that
     It must be emphasized, once again, that
     Let us continue to suppose that
-    Notice, incidentally, that """
+    Notice, incidentally, that '''
 
-SUBJECTS = """ the notion of level of grammaticalness
+SUBJECTS = u''' the notion of level of grammaticalness
     a case of semigrammaticalness of a different sort
     most of the methodological work in modern linguistics
     a subset of English sentences interesting on quite independent grounds
@@ -89,9 +89,9 @@ SUBJECTS = """ the notion of level of grammaticalness
     the fundamental error of regarding functional notions as categorial
     relational information
     the systematic use of complex symbols
-    the theory of syntactic features developed earlier"""
+    the theory of syntactic features developed earlier'''
 
-VERBS = """can be defined in such a way as to impose
+VERBS = u'''can be defined in such a way as to impose
     delimits
     suffices to account for
     cannot be arbitrary in
@@ -107,9 +107,9 @@ VERBS = """can be defined in such a way as to impose
     is, apparently, determined by
     is necessary to impose an interpretation on
     appears to correlate rather closely with
-    is rather different from"""
+    is rather different from'''
 
-OBJECTS = """ problems of phonemic and morphological analysis.
+OBJECTS = u''' problems of phonemic and morphological analysis.
     a corpus of tokens upon which conformity has been defined by the utterance test.
     the traditional practice of grammarians.
     the levels of acceptability from fairly high (e.g. (99a)) to virtual gibberish.
@@ -125,9 +125,9 @@ OBJECTS = """ problems of phonemic and morphological analysis.
     an abstract underlying order of <blink>blinking quarks</blink>.
     an important distinction in language use.
     the requirement that branching is tolerated within the dominance scope of a symbol.
-    the strong generative capacity of the theory."""
+    the strong generative capacity of the theory.'''
 
-TAGLIST = """
+TAGLIST = u'''
     africa   amsterdam   animals   architecture   art   august   australia   autumn
     baby   barcelona  beach   berlin   birthday   black   blackandwhite   blue   boston
     bw   california   cameraphone   camping   canada   canon   car   cat   cats
@@ -144,7 +144,7 @@ TAGLIST = """
     spring   street   summer   sun   sunset   sydney   taiwan   texas   thailand
     tokyo   toronto   travel   tree   trees   trip   uk   urban   usa   vacation
     vancouver   washington   water   wedding   white   winter   yellow   york   zoo
-""".split()
+'''.split()
 
 
 EPOCH = datetime(1930, 1, 1)
@@ -155,7 +155,7 @@ _highest_date = EPOCH
 def chomsky(times=1, line_length=72):
     parts = []
     for part in (LEADINS, SUBJECTS, VERBS, OBJECTS):
-        phraselist = map(str.strip, part.splitlines())
+        phraselist = map(unicode.strip, part.splitlines())
         shuffle(phraselist)
         parts.append(phraselist)
         if randint(0, 3) == 0:
@@ -189,13 +189,13 @@ def create_test_users():
         u'tux der große':   (u'tuxi@grossi.de', u'pinguin',
             {'real_name': u'Tuxorius', 'location': u'Österreich'}),
         u'quaki':           (u'ente@teich.zo', u'fluss',
-            {'real_name': u'Quaki der ganz ganz Große', 'location': 'Germany'}),
+            {'real_name': u'Quaki der ganz ganz Große', 'location': u'Germany'}),
         u'maxarian':        (u'maix@noprogramming.com', u'damn!',
             {'real_name': u'Marian Florianus', 'location': u'Berlin/Germany'}),
         u'dummuser':        (u'dumm@user.co', u'dumm?',
             {'real_name': u'Dummorius', 'location': u'/dev/zero'}),
         u'FedoraFlo':       (u'fed@f.lo', u'default',
-            {'real_name': u'Florius Maximus', 'location': 'Frankfurt/Germany'}),
+            {'real_name': u'Florius Maximus', 'location': u'Frankfurt/Germany'}),
         u'lidnele':         (u'elen@d.il', u'default',
             {'real_name': u'Andreas Lilende', 'location': u'ubuntuusers.de'}),
         u'Kami':            (u'kam@i.xy', u'default',
@@ -271,8 +271,8 @@ def create_forum_test_data():
 
     links = []
 
-    u1 = User.query.filter_by(username='dummuser').first()
-    u2 = User.query.filter_by(username='quaki').first()
+    u1 = User.query.filter_by(username=u'dummuser').first()
+    u2 = User.query.filter_by(username=u'quaki').first()
 
     # tags
     gnome = Tag(name=u'GNOME')
@@ -414,10 +414,10 @@ def create_news_test_data():
 def create_pastebin_test_data():
     from inyoka.core.auth.models import User
     from inyoka.paste.models import Entry
-    u = User.query.get('admin')
-    e1 = Entry(text=u'print "Hello World"', author=u, language='python')
+    u = User.query.get(u'admin')
+    e1 = Entry(text=u'print "Hello World"', author=u, language=u'python')
     db.session.commit()
-    e1.children.append(Entry(text=u'print "hello world"', author=u, language='python'))
+    e1.children.append(Entry(text=u'print "hello world"', author=u, language=u'python'))
     db.session.commit()
 
 

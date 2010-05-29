@@ -60,10 +60,10 @@ def test_update_wrapper():
     def proxy(func):
         return func
 
-    def func():
+    def func(foo='bar'):
         """doc"""
-        print "bar"
+        print foo
 
     new = update_wrapper(proxy, func)
-    assert_equals(new.signature._asdict(), {'args': [], 'defaults': None, 'keywords': None, 'varargs': None})
+    assert_equals(new.signature, (['foo'], None, None, ('bar',)))
     assert_equals(new.__doc__, 'doc')

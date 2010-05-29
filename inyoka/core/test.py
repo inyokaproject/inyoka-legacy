@@ -262,10 +262,10 @@ class InyokaPlugin(cover.Coverage):
         well as mock objects.
 
         This also calls all cleanup callbacks for the WSGI Dispatcher.
-        """
 
         Note that this is called for *each* test *method* not
         every TestCase.
+        """
         if self._started:
             self._started = False
             if isinstance(test.test, nose.case.MethodTestCase):

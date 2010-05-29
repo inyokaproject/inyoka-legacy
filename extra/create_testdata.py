@@ -16,7 +16,9 @@ from random import randrange, choice, random, shuffle, randint
 from itertools import chain, islice, izip
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
 from jinja2.utils import generate_lorem_ipsum
-from inyoka.core.api import db
+from inyoka.core.api import db, href
+
+_link_file = None
 
 
 # one of small, medium or large
@@ -172,6 +174,7 @@ def get_date(last=None):
 
 
 def create_test_users():
+    global _link_file
     from inyoka.core.auth.models import User, UserProfile, Group
 
     # admin user
@@ -224,7 +227,7 @@ def create_test_users():
     # create some stub and dummy users...
     num = {'small': 15, 'medium': 30, 'large': 50}[SIZE]
     used = set()
-    groups = [team, webteam, supporter, multimedia]
+    groups = [team, webteam, supporter, multimedia, wikiteam, ikhayateam]
     for x in xrange(num):
         while 1:
             username = choice(USERNAMES)
@@ -237,8 +240,14 @@ def create_test_users():
             u.groups = [choice(groups)]
     db.session.commit()
 
+    # store links for benchmark tests
+    links = [href(u.profile, _external=True) for u in User.query.all()]
+    links.extend([href(g, _external=True) for g in groups])
+    _link_file.write(u'\n'.join(links))
+
 
 def create_stub_tags():
+    global _link_file
     from inyoka.core.models import Tag
     num = {'small': 10, 'medium': 25, 'large': 50}[SIZE]
     used = set()
@@ -251,10 +260,17 @@ def create_stub_tags():
                 break
     db.session.commit()
 
+    links = [href(tag, _external=True) for tag in Tag.query.all()]
+    _link_file.write(u'\n'.join(links))
+
 
 def create_forum_test_data():
+    global _link_file
     from inyoka.forum.models import Tag, Forum, Question, Answer, Vote, Entry
     from inyoka.core.auth.models import User
+
+    links = []
+
     u1 = User.query.filter_by(username='dummuser').first()
     u2 = User.query.filter_by(username='quaki').first()
 
@@ -318,6 +334,8 @@ def create_forum_test_data():
         questions.append(question)
     db.session.commit()
 
+    links.extend([href(q, _external=True) for q in questions])
+
     # answers
     replies = {'small': 4, 'medium': 8, 'large': 12}[SIZE]
     answers = []
@@ -352,8 +370,11 @@ def create_forum_test_data():
                 voted_map.append((user.id, entry.entry_id))
         db.session.commit()
 
+    _link_file.write(u'\n'.join(links))
+
 
 def create_news_test_data():
+    global _link_file
     from inyoka.core.auth.models import User
     from inyoka.news.models import Tag, Comment, Article
     users = User.query.all()
@@ -375,6 +396,8 @@ def create_news_test_data():
                 used.add(title)
                 break
     db.session.commit()
+
+    _link_file.write(u'\n'.join([href(a, _external=True) for a in Article.query.all()]))
 
     # comments
     replies = {'small': 4, 'medium': 8, 'large': 12}[SIZE]
@@ -430,12 +453,15 @@ def rebase_dates():
 
 
 def main():
+    global _link_file
+    _link_file = open('links.txt', 'w')
     funcs = (create_test_users, create_stub_tags, create_news_test_data,
              create_pastebin_test_data, create_wiki_test_data, create_forum_test_data,
              rebase_dates)
     for func in funcs:
         print "execute %s" % func.func_name
         func()
+    _link_file.close()
     print "successfully created test data"
 
 

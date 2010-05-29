@@ -15,41 +15,41 @@ from inyoka.news.models import Article, Comment
 
 
 class ArticleSubscriptionType(SubscriptionType):
-    name = 'news.article.all'
+    name = u'news.article.all'
 
     subject_type = None
     object_type = Article
 
-    actions = ['news.article.new']
+    actions = [u'news.article.new']
     mode = 'multiple'
 
 
 class TagSubscriptionType(SubscriptionType):
-    name = 'news.article.by_tag'
+    name = u'news.article.by_tag'
 
     subject_type = Tag
     object_type = Article
 
-    actions = ['news.article.new']
+    actions = [u'news.article.new']
     mode = 'multiple'
 
     get_subjects = staticmethod(attrgetter('tags'))
 
 
 class CommentSubscriptionType(SubscriptionType):
-    name = 'news.comments.by_entry'
+    name = u'news.comments.by_entry'
 
     subject_type = Article
     object_type = Comment
 
-    actions = ['news.comment.new']
+    actions = [u'news.comment.new']
     mode = 'sequent'
 
     get_subject = staticmethod(attrgetter('article'))
 
 
 class NewArticleSubscriptionAction(SubscriptionAction):
-    name = 'news.article.new'
+    name = u'news.article.new'
 
     @classmethod
     def notify(cls, user, object, subjects):
@@ -58,7 +58,7 @@ class NewArticleSubscriptionAction(SubscriptionAction):
 
 
 class NewCommentSubscriptionAction(SubscriptionAction):
-    name = 'news.comment.new'
+    name = u'news.comment.new'
 
     @classmethod
     def notify(cls, user, object, subjects):

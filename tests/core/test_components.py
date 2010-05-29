@@ -28,16 +28,12 @@ class Implementation1(Interface1):
 class Implementation2(Interface1, Interface2):
     pass
 
-class Implementation3(Interface2, Interface):
-    pass
-
-class Implementation4(Interface3):
+class Implementation3(Interface3):
     pass
 
 
 _test_components = [Interface1, Interface2, Interface3,
-                    Implementation1, Implementation2, Implementation3,
-                    Implementation4]
+                    Implementation1, Implementation2, Implementation3]
 
 
 def _teardown_components():
@@ -48,28 +44,31 @@ def _setup_components():
     ctx.unload_components(_test_components)
 
 
-@future
+@with_setup(_teardown_components, _setup_components)
 def test_component_is_activated():
-    #TODO: components are for now alway activated if loaded.  We need to implement
-    #      that feature again.
-    _activated = set([Implementation1, Implementation2])
+    assert_false(ctx.component_is_activated(Implementation1, ['tests.core.*']))
+    assert_false(ctx.component_is_activated(Implementation1,
+                                ['tests.core.test_components.Implementation1']))
 
-    assert_true(component_is_activated(Implementation1, _activated))
-    assert_false(component_is_activated(Implementation3, _activated))
+    assert_true(ctx.component_is_activated(Implementation2,
+                                ['tests.core.test_components.Implementation1']))
 
-    _activated = ['tests.core.test_components.*', 'tests.foo.bar.*']
-    assert_true(component_is_activated(Implementation1, _activated))
-    assert_true(component_is_activated(Implementation3, _activated))
+    eq_(ctx.load_packages(['tests.core.test_components.*'], ['tests.core.*']),
+                          set([]))
+
+    eq_(ctx.load_packages(['tests.core.test_components.*'],
+                          ['tests.core.test_components.Implementation1']),
+                          set([Implementation2,Implementation3]))
 
 
 @with_setup(_teardown_components, _setup_components)
 def test_load_components():
-    loaded = ctx.load_components([Implementation1, Implementation2, Implementation4])
+    loaded = ctx.load_components([Implementation1, Implementation2, Implementation3])
     eq_(len(loaded), 3)
 
     assert_true(Implementation1 in loaded)
     assert_true(Implementation2 in loaded)
-    assert_true(Implementation4 in loaded)
+    assert_true(Implementation3 in loaded)
     assert_false(Interface1 in loaded)
     assert_false(Interface2 in loaded)
     assert_false(Interface3 in loaded)

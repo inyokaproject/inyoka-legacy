@@ -157,8 +157,28 @@ class ApplicationContext(object):
     #: The current request in the thread-local
     current_request = LocalProperty('request')
 
+    def component_is_activated(self, component, deactivated_packages=[]):
+        """Checks whether a component should be added to the registry or not.
+
+        :param component: The component to check.
+        :param deactivated_packages: List of packages to not load components from.
+        """
+        component_path = component.__module__ + '.' + component.__name__
+        for path in deactivated_packages:
+            if path[-1] == '*':
+                if component_path.startswith(path[:-2]):
+                    return False
+            else:
+                if path == component_path:
+                    return False
+
+        return True
+
     def load_component(self, component):
-        """Load a component.
+        """Load a component. This method doesn't care whether the component is
+        activated or not. If you manually load a component it will always load,
+        use :meth:`~ApplicationContext.load_packages` if you don't want this
+        behaviour.
 
         :param component: A component object.  This must be an
                           an implementation not an interface to get loaded.
@@ -198,7 +218,7 @@ class ApplicationContext(object):
                 # fail silently if component is not loaded
                 continue
 
-    def load_packages(self, packages):
+    def load_packages(self, packages, deactivated_packages=None):
         """Load all components from a known python package.
 
         Example::
@@ -208,11 +228,16 @@ class ApplicationContext(object):
         This loads recursivly all packages found in :mod:`inyoka.core`.
 
         :param packages:  A list of strings of import paths.
+        :param deactivated_packages: Packages to ignore when doing a recursive
+                                    import.
         :returns: A list of loaded component classes.
         """
+        deactivated_packages = (deactivated_packages or
+                                self.cfg['deactivated_components'])
         modules = _import_modules(packages)
         components = list(m[1] for m in
             sum((getmembers(mod, _is_interface) for mod in modules), [])
+            if self.component_is_activated(m[1], deactivated_packages)
         )
         return self.load_components(components)
 
@@ -273,16 +298,7 @@ def _bootstrap():
     ctx.bind()
 
     # setup components
-    # TODO: make it configurable
-    ctx.load_packages([
-        'inyoka.core.*',
-        'inyoka.admin.*',
-        'inyoka.portal.*',
-        'inyoka.news.*',
-        'inyoka.forum.*',
-        'inyoka.paste.*',
-        'inyoka.wiki.*',
-    ])
+    ctx.load_packages(ctx.cfg['activated_components'])
 
     # setup model property providers
     from inyoka.core.database import (IModelPropertyProvider, DeclarativeMeta,

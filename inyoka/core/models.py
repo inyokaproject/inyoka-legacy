@@ -127,7 +127,7 @@ class Tag(db.Model, SerializableObject):
     #: Flag if the tag is public or internal.  If a tag is not public
     #: it's probably used by internal functions to ensure special
     #: permission flags.  It's not shown in any public interface (e.g tag-cloud)
-    public = db.Column(db.Integer, nullable=False, default=True)
+    public = db.Column(db.Boolean, nullable=False, default=True)
 
     def __unicode__(self):
         return self.name

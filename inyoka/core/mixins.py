@@ -40,7 +40,7 @@ class TextRendererMixin(object):
     def _render(self):
         """Render the entries text and save it to `rendered_text`."""
         if self._text is not None:
-            self.rendered_text = self.text_renderer(self._text)
+            self.rendered_text = unicode(self.text_renderer(self._text))
 
     text = property(_get_text, _set_text)
     del _get_text, _set_text

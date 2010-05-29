@@ -95,9 +95,11 @@ class Sortable(object):
         if ocol not in self.columns.keys():
             # safes us from some bad usage that raises an exception
             ctx.current_request.flash(
-                _(u'The selected criterium “%s” is not available') % ocol
+                _(u'The selected criterium “%s” is not available, '
+                  u'falling back to default ordering') % ocol
             )
             self.order_by = self.default_col
+            ocol = self.order_by.lstrip('-')
 
         if self.order_by is None:
             return self.query

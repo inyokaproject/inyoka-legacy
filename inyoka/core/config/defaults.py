@@ -10,7 +10,8 @@
 """
 import os
 from os.path import join
-from inyoka.core.config import BooleanField, TextField, IntegerField, DottedField
+from inyoka.core.config import BooleanField, TextField, IntegerField,\
+                               DottedField, ListField
 from inyoka.i18n import lazy_gettext
 
 
@@ -163,11 +164,12 @@ DEFAULTS = {
                                u'Enter 0 for no limit.')),
 
     # celery settings
-    'celery.result_backend':    TextField(u'amqp',''),
+    'celery.result_backend':        TextField(u'amqp',''),
+    'celery.imports':               ListField(['tasks'],''),
     # ampq broker settings
-    'broker.host': TextField(u'localhost', ''),
-    'broker.port': IntegerField(5672, ''),
-    'broker.user': TextField(u'inyoka', ''),
-    'broker.password': TextField(u'inyoka', ''),
-    'broker.vhost': TextField(u'inyoka', ''),
+    'broker.host':                  TextField(u'localhost', ''),
+    'broker.port':                  IntegerField(5672, ''),
+    'broker.user':                  TextField(u'inyoka', ''),
+    'broker.password':              TextField(u'inyoka', ''),
+    'broker.vhost':                 TextField(u'inyoka', ''),
 }

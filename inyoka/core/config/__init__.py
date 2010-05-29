@@ -77,6 +77,27 @@ class DottedField(ConfigField):
         return value
 
 
+class ListField(ConfigField):
+    """A field representing a list. The list can contain any other supported
+    data type. `:` is used as a separator character between the items.
+    """
+
+    conversion_field = TextField('','')
+
+    def __init__(self, default, help_text, field=None):
+        ConfigField.__init__(self, default, help_text)
+        if field is not None:
+            self.conversion_field = field
+
+    def converter(self, value=[]):
+        if not isinstance(value, basestring):
+            return value
+        erg = []
+        for value in value.split(':'):
+            erg.append(self.conversion_field(value))
+        return erg
+
+
 class BooleanField(ConfigField):
     """A field representing boolean values"""
 

@@ -11,7 +11,7 @@
 import os
 from inyoka.core.test import *
 from inyoka.core.config import Configuration, IntegerField, TextField, \
-    DottedField, BooleanField, ConfigField
+    DottedField, BooleanField, ConfigField, ListField
 
 
 _config = None
@@ -48,6 +48,13 @@ def test_base_config_field():
     eq_(field.help_text, 'Help')
     eq_(field.converter(), 'value')
     eq_(field(), 'value')
+
+
+def test_list_config_field():
+    field = ListField([1,2,3],'Help', IntegerField(0,''))
+    eq_(field.get_default(), [1,2,3])
+    eq_(field('2:3:4'), [2,3,4])
+    eq_(field([99,99]), [99,99])
 
 
 def test_integer_config_field():

@@ -24,11 +24,7 @@ class CeleryLoader(BaseLoader):
         settings = map(conv, celeryd_vars + celery_vars + broker_vars)
         settings.append(('DEBUG', ctx.cfg['debug']))
 
-        s = Settings(settings)
-        # FIXME: just an ugly way for now to add some extra settings
-        s['CELERY_IMPORTS'] = ('tasks',)
-        return s
-
+        return Settings(settings)
 
     def on_worker_init(self):
         """Imports modules at worker init so tasks can be registered

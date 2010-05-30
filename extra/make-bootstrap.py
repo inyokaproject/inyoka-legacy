@@ -81,7 +81,7 @@ def after_install(options, home_dir):
 
     easy_install('setuptools', home_dir)
     babel_svn_repo_install(home_dir)
-    easy_install('Jinja2', home_dir)
+    easy_install('Jinja2==2.5', home_dir)
     easy_install('Werkzeug', home_dir)
     easy_install('Pygments', home_dir)
     easy_install('simplejson', home_dir)

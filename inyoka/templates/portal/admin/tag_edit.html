@@ -3,7 +3,7 @@
 
 {%- block admin_content %}
 {% if tag.name %}
-  <h3>{% trans tag=tag.name %}Edit “{{ tag }}”{% endtrans %}</h3>
+  <h3>{{ _('Edit “%(tag)s”', tag=tag.name) }}</h3>
 {% else %}
   <h3>{{ _('New Tag') }}</h3>
 {% endif %}

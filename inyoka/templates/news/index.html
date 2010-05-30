@@ -11,9 +11,9 @@
 
 {% block content %}
   {%- if tag %}
-    <h3>{% trans tag=tag %}Articles for “{{ tag }}”{% endtrans %}</h3>
+    <h3>{{ _('Articles for “%(tag)s”', tag=tag) }}</h3>
   {% else %}
-    <h3>{% trans %}Latest News{% endtrans %}</h3>
+    <h3>{{ _('Latest News') }}</h3>
   {%- endif %}
   {%- if articles %}
   {%- for article in articles %}
@@ -27,9 +27,9 @@
 
   <p>
     {% if not request.user.subscribed('news.article.all') %}
-    <a href="{{ href('news/subscribe_articles', action='subscribe') }}">subscribe</a>
+    <a href="{{ href('news/subscribe_articles', action='subscribe') }}">{{ _('subscribe') }}</a>
     {% else %}
-    <a href="{{ href('news/subscribe_articles', action='unsubscribe') }}">unsubscribe</a>
+    <a href="{{ href('news/subscribe_articles', action='unsubscribe') }}">{{ _('unsubscribe') }}</a>
     {% endif %}
   </p>
 {% endblock %}

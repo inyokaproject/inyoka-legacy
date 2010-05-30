@@ -4,7 +4,7 @@
 {% from "news/_article.html" import render_article %}
 {% block content %}
   {%- if month_list %}
-    <h2>{% trans %}Archive{% endtrans %}</h2>
+    <h2>{{ _('Archive') }}</h2>
     <ul>
     {%- for item in articles %}
       <li><a href="{{ href('news/archive', year=item.year, month=item.month) }}">
@@ -16,11 +16,11 @@
     </ul>
   {%- else -%}
     {%- if not month %}
-      <h2>{% trans year %}Archive for {{ year }}{% endtrans %}</h2>
+      <h2>{{ _('Archive for %(year)s', year=year) }}</h2>
     {%- elif not day %}
-      <h2>{% trans month=date|monthformat %}Archive for {{ month }}{% endtrans %}</h2>
+      <h2>{{ _('Archive for %(month)s', month=date|monthformat) }}</h2>
     {%- else %}
-      <h2>{% trans day=date|dateformat('full') %}Archive for {{ day }}{% endtrans %}</h2>
+      <h2>{{ _('Archive for %(day)s', day=date|dateformat('full')) }}</h2>
     {%- endif %}
     {%- for article in articles %}
       {{ render_article(article) }}

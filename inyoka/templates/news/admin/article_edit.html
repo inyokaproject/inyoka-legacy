@@ -5,7 +5,7 @@
 
 {%- block admin_content %}
 {% if article.slug %}
-  <h3>{% trans article=article.title %}Edit “{{ article }}”{% endtrans %}</h3>
+  <h3>{{ _('Edit “%(article)s”', article=article.title) }}</h3>
 {% else %}
   <h3>{{ _('New Article') }}</h3>
 {% endif %}

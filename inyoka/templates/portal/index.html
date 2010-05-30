@@ -1,8 +1,8 @@
 {% extends "portal/base.html" %}
 
 {% block introduction %}
-<h1>Welcome to Inyoka</h1>
-Inyoka is a portal software that integrates a complete News, Wiki and Bulletin Board system next to a calendar and a pastebin application.  It's written in <a href="http://python.org">Python</a> and uses various opensource technologies.
+<h1>{{ _('Welcome to Inyoka') }}</h1>
+{{ _('Inyoka is a portal software that integrates a complete News, Wiki and Bulletin Board system next to a calendar and a pastebin application.  It\'s written in <a href="%(python_link)s">Python</a> and uses various opensource technologies.', python_link='http://python.org') }}
 {% endblock %}
 
 {% block content %}
@@ -17,12 +17,12 @@ Inyoka is a portal software that integrates a complete News, Wiki and Bulletin B
         {% endfor %}
       </ul>
     {% else %}
-    <strong>{% trans %}There's no content yet!{% endtrans %}</strong>
+    <strong>{{ _('There\'s no content yet!') }}</strong>
     {% endif %}
     </div>
   </div>
   <div class="column tagcloud">
-    <h2>Tags</h2>
+    <h2>{{ _('Tags') }}</h2>
     {%- for tag in tag_cloud %}
       <a href="{{ href('portal/tag', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
                   title="{% trans count=tag.count, tag=tag.name %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} items tagged {{ tag }}{% endtrans %}">
@@ -31,7 +31,7 @@ Inyoka is a portal software that integrates a complete News, Wiki and Bulletin B
     {%- endfor %}
     {% if more_tags %}
     <br />
-    <a href="#">more Tags</a>
+    <a href="#">{{ _('more Tags') }}</a>
     {% endif %}
   </div>
 </div>

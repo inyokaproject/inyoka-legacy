@@ -3,12 +3,12 @@
 {%- block content %}
 
 {% if forum %}
-  <h1>Forum “{{ forum.name }}”</h1>
+  <h1>{{ _('Forum “%(forum)s”', forum=forum.name) }}</h1>
 
   <p>{{ forum.description }}</p>
 
   {% if forum.subforums %}
-    <p><strong>Subforums:</strong>
+    <p><strong>{{ _('Subforums:') }}</strong>
     {% for subforum in forum.subforums %}
       <a href="{{ href(subforum) }}">{{ subforum.name }}</a>
       {%- if not loop.last %}, {% endif %}
@@ -25,7 +25,7 @@
   {% set url_values = {'forum': forum.slug} %}
 
 {% elif tags %}
-  <h1>Tagged Questions</h1>
+  <h1>{{ _('Tagged Questions') }}</h1>
 
   <p class="tags">
   {% for tag in tags %}
@@ -36,7 +36,7 @@
   {% set url_values = {'tags': tags|join(' ')} %}
 
 {% else %}
-  <h1>All Questions</h1>
+  <h1>{{ _('All Questions') }}</h1>
 
   {% set url_values = {} %}
 {% endif %}
@@ -46,15 +46,15 @@
         {% set tab = sort or 'latest' %}
     {% endif %}
     <li{% if tab == 'latest' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', **url_values) }}">Latest</a></li>
+        <a href="{{ href('forum/questions', **url_values) }}">{{ _('Latest') }}</a></li>
     <li{% if tab == 'active' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='active', **url_values) }}">Active</a></li>
+        <a href="{{ href('forum/questions', sort='active', **url_values) }}">{{ _('Active') }}</a></li>
     <li{% if tab == 'unanswered' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='unanswered', **url_values) }}">Unanswered</a></li>
+        <a href="{{ href('forum/questions', sort='unanswered', **url_values) }}">{{ _('Unanswered') }}</a></li>
     <li{% if tab == 'votes' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='votes', **url_values) }}">Votes</a></li>
+        <a href="{{ href('forum/questions', sort='votes', **url_values) }}">{{ _('Votes') }}</a></li>
     <li{% if tab == 'ask' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/ask', **url_values) }}">Ask Question</a></li>
+        <a href="{{ href('forum/ask', **url_values) }}">{{ _('Ask Question') }}</a></li>
 </ul>
 
 {% block questions_body %}
@@ -80,8 +80,8 @@
   </div>
 
   <div class="author">
-    asked <strong>{{ question.date_created|timedelta }}</strong>
-    by <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
+    {{ _('asked <strong>%(date)s</strong>', date=question.date_created|timedelta) }}
+    {{ _('by') }} <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
   </div>
 
   <div class="summary">
@@ -96,7 +96,7 @@
   </div>
 </div>
 {% else %}
-<p>No questions found.</p>
+<p>{{ _('No questions found.') }}</p>
 {% endfor %}
 {{ pagination }}
 

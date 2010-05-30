@@ -3,13 +3,16 @@
 {% set title_trace = [_('Compare Pastes')] %}
 {% block paste_content %}
   <p>
-    Differences between the pastes
-    <a href="{{ href(old) }}">{{ old.display_title }}</a> ({{ old.pub_date|datetimeformat }})
-    and <a href="{{ href(new) }}">{{ new.display_title }}</a> ({{ new.pub_date|datetimeformat }}). Download as <a href="/unidiff/{{ old.id }}/{{ new.id }}/">unified diff</a>.
+    {%- trans old_title=old.display_title, old_date=old.pub_date|datetimeformat,
+              new_title=new.display_title, new_date=new.pub_date|datetimeformat,
+              udiff_link=href('paste/unidiff_paste', old_id=old.id, new_id=new.id),
+              old_link=href(old), new_link=href(new) %}
+    Differences between the pastes <a href="{{ old_link }}">{{ old_title }}</a> ({{ old_date }})
+    and <a href="{{ new_link }}">{{ new_title }}</a> ({{ new_date }}). Download as <a href="{{ udiff_link }}">unified diff</a>.
   </p>
   {% if diff.chunks %}
     {{ render_diff_part(diff) }}
   {% else %}
-    <p>The two pastes are identical.</p>
+    <p>{{ _('The two pastes are identical.') }}</p>
   {% endif %}
 {% endblock %}

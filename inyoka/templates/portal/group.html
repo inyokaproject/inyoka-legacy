@@ -1,11 +1,11 @@
 {%- extends 'portal/base.html' %}
 
 {% block introduction %}
-{%- trans group=group.name -%}On this page you can see all members of “{{ group }}”.{% endtrans %}
+{{ _('On this page you can see all members of “%(group)s”.', group=group.name) }}
 {% endblock %}
 
 {%- block content %}
-<h1>{% trans group=group.name %}Group “{{ group }}”{% endtrans %}</h1>
+<h1>{{ _('Group “%(group)s”', group=group.name) }}</h1>
 
 {% for user in users %}
 <div class="zealots {{ loop.cycle('zealot-left', 'zealot-right') }}">
@@ -16,7 +16,7 @@
   </span>
 </div>
 {% else %}
-<span>There are no users in this group yet!</span>
+<span>{{ _('There are no users in this group yet!') }}</span>
 {% endfor %}
 <br style="clear: both;">
 </div>

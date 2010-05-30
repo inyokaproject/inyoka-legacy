@@ -4,6 +4,6 @@
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 
 {% block admin_content %}
-<h1>Create new Forum</h1>
+<h1>{{ _('Create new Forum') }}</h1>
 {{ render_form(form) }}
 {% endblock %}

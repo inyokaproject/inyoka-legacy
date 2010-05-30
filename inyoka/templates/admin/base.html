@@ -3,7 +3,7 @@
 {% set title_trace = title_trace|default([]) + [_('Admin')] %}
 
 {% block content %}
-  <h2>{% trans %}Welcome on the Inyoka Admin Center!{% endtrans %}</h2>
+  <h2>{{ _('Welcome on the Inyoka Admin Center!') }}</h2>
   {% block admin_content %}
   {% endblock %}
 {% endblock %}

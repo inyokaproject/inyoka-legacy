@@ -1,6 +1,6 @@
 .highlighted .hll , .code .hll { background-color: #ffffcc }
-.code  {
-  background: #f8f8f8;
+.code {
+  background-color: #f8f8f8;
   word-wrap: break-word;
   overflow-x: auto;
 }
@@ -67,8 +67,7 @@
 
 
 .highlighted pre a:target + span {
-  display: inline-block;
-  background: #ffffbe !important;
+  background-color: #ffffbe !important;
 	height: 15px;
 	width: 100%;
   margin: 0 auto;

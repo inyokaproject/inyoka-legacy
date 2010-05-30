@@ -4,15 +4,15 @@
 {% set sidebar = false %}
 
 {% block content %}
-<h1>{% block paste_header %}Pastebin{% endblock %}</h1>
+<h1>{% block paste_header %}{{ _('Pastebin') }}{% endblock %}</h1>
 <ul class="pagetabs">
     {% if tab is undefined %}
         {% set tab = 'new' %}
     {% endif %}
     <li{% if tab == 'new' %} class="selected"{% endif %}>
-        <a href="{{ href('paste/index') }}">New</a></li>
+        <a href="{{ href('paste/index') }}">{{ _('New') }}</a></li>
     <li{% if tab == 'browse' %} class="selected"{% endif %}>
-        <a href="{{ href('paste/browse') }}">Browse</a></li>
+        <a href="{{ href('paste/browse') }}">{{ _('Browse') }}</a></li>
     {% block pagetabs %}
     {% endblock %}
 </ul>

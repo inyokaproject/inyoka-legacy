@@ -6,9 +6,9 @@
       <span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>
       <span class="comments"><a href="{{ href(article, _anchor='comments') }}">
         {% if article.comment_count %}
-        {% trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize %}
+        {%- trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize -%}
         {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
-        {% endtrans %}
+        {%- endtrans -%}
         {% else %}
         {{ _('No Comments') }}
         {% endif %}

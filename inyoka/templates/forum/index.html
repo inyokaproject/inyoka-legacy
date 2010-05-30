@@ -1,9 +1,9 @@
 {%- extends 'forum/base.html' %}
 
 {%- block content %}
-<h1>Forum</h1>
+<h1>{{ _('Forum') }}</h1>
 
-<p>Welcome to the forum app!</p>
+<p>{{ _('Welcome to our bulletin board!') }}</p>
 
 <ul>
 {% for forum in forums %}
@@ -11,6 +11,6 @@
     {{ forum.description }}</li>
 {% endfor %}
 </ul>
-<p><a href="{{ href('forum/questions') }}">All Questions</a></p>
+<p><a href="{{ href('forum/questions') }}">{{ _('All Questions') }}</a></p>
 
 {%- endblock %}

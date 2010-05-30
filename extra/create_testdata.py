@@ -179,6 +179,7 @@ def create_test_users():
 
     # admin user
     admin = User(u'admin', u'root@localhost', u'default')
+    admin.status = 'normal'
     admin_profile = UserProfile(user=admin)
 
     # some crazy users
@@ -210,6 +211,7 @@ def create_test_users():
     }
     for user in users:
         u = User(user, *users[user][:-1])
+        u.status = 'normal'
         p = UserProfile(user=u, **users[user][-1])
         user_instances.append(u)
 

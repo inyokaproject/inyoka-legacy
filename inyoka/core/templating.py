@@ -156,7 +156,8 @@ class InyokaEnvironment(Environment):
             humanize=l10n.humanize_number,
         )
         self.install_gettext_translations(
-            i18n.get_translations()
+            i18n.get_translations(),
+            newstyle=True
         )
 
 

@@ -15,4 +15,4 @@ from inyoka.utils.forms import Form
 
 class EditPageForm(Form):
     text = TextField(_(u'Text'), [validators.Required()], widget=widgets.TextArea())
-    comment = TextField(_(u'Edit comment'), [validators.Length(512)])
+    comment = TextField(_(u'Edit comment'), [validators.Length(max=512)])

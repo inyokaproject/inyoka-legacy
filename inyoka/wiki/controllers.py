@@ -13,7 +13,7 @@ from inyoka.core.api import IController, Rule, view, templated, redirect_to, \
 from inyoka.core.exceptions import NotFound
 from inyoka.wiki.forms import EditPageForm
 from inyoka.wiki.models import Page, Revision, Text
-from inyoka.wiki.utils import deurlify_page_name
+from inyoka.wiki.utils import find_page, deurlify_page_name, urlify_page_name
 
 
 class WikiController(IController):
@@ -29,30 +29,41 @@ class WikiController(IController):
 
     @view
     def index(self, request):
-        index = Page.query.get(ctx.cfg['wiki.index.name'])
-        if index is None:
-            raise NotFound()
-        return redirect_to(index)
+        return redirect_to('wiki/show',
+            page=urlify_page_name(ctx.cfg['wiki.index.name']))
 
 
     @view
     @templated('wiki/show.html')
     def show(self, request, page, revision=None):
-        page = Page.query.get(page)
-        if page is None:
-            raise NotFound()
+        page = find_page(page, redirect_view='wiki/show',
+                         redirect_params={'revision':revision})
+
+        if revision is not None:
+            revision = Revision.query.get(revision)
+            if revision is None or revision.page != page:
+                raise NotFound(_(u'Invalid revision specified.'))
+            if not revision.in_current_epoch: #TODO: allow for mods
+                raise NotFound(_(u'Invalid revision specified.'))
+
+        else:
+            revision = page.current_revision
 
         return {
             'page': page,
+            'revision': revision,
         }
 
     @view
     @templated('wiki/edit.html')
     def edit(self, request, page):
-        page_name = page
-        page = Page.query.get(page_name)
-        if page is None:
-            page = Page(name=page_name)
+        try:
+            page = find_page(url_name=page, redirect_view='wiki/edit')
+        except NotFound:
+            page_name = page
+            page = Page(name=deurlify_page_name(page_name))
+            if page.url_name != page_name:
+                return redirect_to('wiki/edit', page=page.url_name)
             initial = {}
         else:
             initial = {'text': page.current_revision.raw_text}
@@ -62,7 +73,7 @@ class WikiController(IController):
         if request.method == 'POST' and form.validate():
             created = page.current_revision is None
             if not created and form.text.data == page.current_revision.raw_text:
-                request.flash(_(u'Text didn\'t change!'))
+                request.flash(_(u"Text didn't change."))
                 return redirect_to(page)
 
             r = Revision(
@@ -70,11 +81,11 @@ class WikiController(IController):
                 raw_text=form.text.data,
                 change_comment=form.comment.data,
                 change_user=request.user,
+                epoch=1, #TODO: we definitely need a Page.edit method.
             )
-            db.session.add(r)
             db.session.commit()
 
-            request.flash(_(u'The page has been saved'), True)
+            request.flash(_(u'The page has been saved.'), True)
             return redirect_to(page)
 
         return {
@@ -85,9 +96,7 @@ class WikiController(IController):
     @view
     @templated('wiki/history.html')
     def history(self, request, page):
-        page = Page.query.get(page)
-        if page is None:
-            raise NotFound()
+        page = find_page(url_name=page, redirect_view='wiki/history')
 
         revisions = page.revisions.order_by(Revision.id.desc()) \
                         .options(db.joinedload(Revision.change_user)).all()

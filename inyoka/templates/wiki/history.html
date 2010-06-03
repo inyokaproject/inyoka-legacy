@@ -16,8 +16,8 @@
   <tbody>
 {%- for rev in revisions %}
     <tr>
-      <td>{{ rev.change_date|datetimeformat }}</td>
-      <td>{{ rev.change_user.username }}</td>
+      <td><a href="{{ href(rev) }}">{{ rev.change_date|datetimeformat }}</td>
+      <td><a href="{{ href(rev.change_user) }}">{{ rev.change_user.username }}</a></td>
       <td>{{ rev.change_comment }}</td>
     </tr>
 {%- endfor %}

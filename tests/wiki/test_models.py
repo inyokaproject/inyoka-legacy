@@ -15,22 +15,17 @@ from inyoka.wiki.models import Page, Revision, Text
 
 
 def test_page_name_conversion_and_get_by_name():
-    p = Page(u'some_name')
-    eq_(p.name, u'some name')
-    eq_(p.url_name, u'some_name')
-
-    db.session.rollback()
-    u = User.query.first()
-
     p = Page(u'some name')
     eq_(p.name, u'some name')
     eq_(p.url_name, u'some_name')
 
-    r = Revision(page=p, change_user=u)
+    u = User.query.first()
+    r = Revision(page=p, change_user=u, epoch=1)
     db.session.commit()
 
-    eq_(p, Page.query.get('some_name'))
+    eq_(None, Page.query.get('some_name'))
     eq_(p, Page.query.get('some name'))
+    eq_(p, Page.query.get('sOmE nAmE'))
 
 
 def test_text_raw_and_rendered():
@@ -40,7 +35,7 @@ def test_text_raw_and_rendered():
     text2r = '<p>Now\nthere is something else.</p>'
     u = User.query.first()
 
-    r = Revision(page=Page('foo'), change_user=u)
+    r = Revision(page=Page('foo'), change_user=u, epoch=1)
     r.raw_text = text1
     eq_(r.raw_text, text1)
     eq_(r.rendered_text, text1r)
@@ -65,10 +60,10 @@ def test_update_current_revision():
     p1 = Page('one')
     p2 = Page('two')
 
-    r1 = Revision(raw_text='rev 1', change_user=u, page=p1)
-    r2 = Revision(raw_text='rev 2', change_user=u, page=p2)
-    r3 = Revision(raw_text='rev 3', change_user=u, page=p1)
-    r4 = Revision(raw_text='rev 4', change_user=u, page=p2)
+    r1 = Revision(raw_text='rev 1', change_user=u, epoch=1, page=p1)
+    r2 = Revision(raw_text='rev 2', change_user=u, epoch=1, page=p2)
+    r3 = Revision(raw_text='rev 3', change_user=u, epoch=1, page=p1)
+    r4 = Revision(raw_text='rev 4', change_user=u, epoch=1, page=p2)
     db.session.commit()
 
     p1 = Page.query.get(p1.id)
@@ -79,11 +74,39 @@ def test_update_current_revision():
     eq_(p2.current_revision_id, r4.id)
     eq_(p2.current_revision, r4)
 
-    r5 = Revision(raw_text='rev 5', change_user=u, page=p2)
-    r6 = Revision(raw_text='rev 6', change_user=u, page=p2)
+    r5 = Revision(raw_text='rev 5', change_user=u, epoch=1, page=p2)
+    r6 = Revision(raw_text='rev 6', change_user=u, epoch=1, page=p2)
     db.session.commit()
 
     p1 = Page.query.get(p1.id)
     p2 = Page.query.get(p2.id)
     eq_(p1.current_revision, r3)
     eq_(p2.current_revision, r6)
+
+def test_epoch_behavior():
+    u = User.query.first()
+    p = Page('foo', current_epoch=3)
+    r1 = Revision(page=p, change_user=u, epoch=1)
+    r2 = Revision(page=p, change_user=u, epoch=2)
+    r3 = Revision(page=p, change_user=u, epoch=2)
+    r4 = Revision(page=p, change_user=u, epoch=3)
+    r5 = Revision(page=p, change_user=u, epoch=3)
+    db.session.commit()
+
+    eq_(p.all_revisions.all(), [r1, r2, r3, r4, r5])
+    eq_(p.revisions.all(), [r4, r5])
+
+
+def test_url_generation():
+    p = Page('Page Name')
+    r = Revision(page=p, change_user_id=1, epoch=1)
+    db.session.commit()
+
+    eq_(href(p), href('wiki/show', page=p.url_name))
+    eq_(href(p, action='edit'), href('wiki/edit', page=p.url_name))
+    eq_(href(p, action='history'), href('wiki/history', page=p.url_name))
+    eq_(href(p, revision=r), href('wiki/show', page=p.url_name, revision=r.id))
+    eq_(href(p, revision=r.id), href('wiki/show', page=p.url_name,
+                                            revision=r.id))
+    eq_(href(r), href('wiki/show', page=p.url_name, revision=r.id))
+

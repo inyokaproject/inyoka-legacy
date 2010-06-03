@@ -97,14 +97,19 @@ class ViewTestSuite(TestSuite):
         self.base_url = make_full_domain(subdomain)
 
     def get_context(self, path, method='GET', **kwargs):
-        """Return the template context from a view wrapped
-        by :func:`templated`."""
+        """
+        Return the template context from a view wrapped by :func:`templated`.
+        """
         response = self.open(path, method=method, **kwargs)
         return getattr(response, '_template_context', {})
 
     def open(self, path, *args, **kw):
-        """Open a connection to `path` and return
-        the proper response object"""
+        """
+        Open a connection to `path` and return the proper response object.
+
+        If the @templated decorator was used, the template context is stored
+        in the response objects's `_template_context` property.
+        """
         if 'follow_redirects' not in kw:
             kw['follow_redirects'] = True
         kw['base_url'] = self.base_url

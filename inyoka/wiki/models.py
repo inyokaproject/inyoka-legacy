@@ -31,11 +31,13 @@ class WikiLatestContentProvider(ILatestContentProvider):
 
 
 class PageQuery(db.Query):
+    def filter_name(self, name):
+        return self.filter(db.func.lower(Page.name)==name.lower())
+
     def get(self, pk):
         if isinstance(pk, basestring):
             try:
-                #TODO: select case-insensitively
-                return Page.query.filter_by(name=deurlify_page_name(pk)).one()
+                return Page.query.filter_name(pk).one()
             except db.NoResultFound:
                 return
         return super(PageQuery, self).get(pk)
@@ -50,12 +52,14 @@ class Page(db.Model):
     current_revision_id = db.Column(db.Integer,
         db.ForeignKey('wiki_revision.id', name='current_revision_id',
                       use_alter=True)) # avoid circular dependency
+    current_epoch = db.Column(db.Integer, default=1, nullable=False)
+    deleted = db.Column(db.Boolean, nullable=False, default=False)
 
     current_revision = db.relationship('Revision', post_update=True,
         primaryjoin='Page.current_revision_id == Revision.id')
 
     def __init__(self, name, **kwargs):
-        self.name = deurlify_page_name(name)
+        self.name = name
         super(Page, self).__init__(**kwargs)
 
     def __repr__(self):
@@ -67,7 +71,10 @@ class Page(db.Model):
 
     def get_url_values(self, action='show', revision=None):
         if action == 'show':
-            return 'wiki/show', {'page': self.url_name, 'revision': revision}
+            return 'wiki/show', {
+                'page': self.url_name,
+                'revision': getattr(revision, 'id', revision)
+            }
         elif action in ('history', 'edit'):
             return 'wiki/%s' % action, {'page': self.url_name}
 
@@ -97,9 +104,10 @@ class Revision(db.Model):
                             default=datetime.utcnow)
     change_comment = db.Column(db.String(512))
     text_id = db.Column(db.ForeignKey(Text.id))
+    epoch = db.Column(db.Integer, nullable=False)
 
     _page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
-                            backref=db.backref('revisions', lazy='dynamic'))
+        backref=db.backref('all_revisions', lazy='dynamic'))
     text = db.relationship(Text)
     change_user = db.relationship(User)
 
@@ -121,9 +129,22 @@ class Revision(db.Model):
     def __unicode__(self):
         return self.page.name
 
-    def get_url_values(self, action='show', revision=None):
-        if action == 'show':
-            return 'wiki/show', {'page': self.page.url_name, 'revision': revision}
+    def get_url_values(self, action='show'):
+        return 'wiki/show', {'page': self.page.url_name, 'revision': self.id}
+
+    @property
+    def in_current_epoch(self):
+        return self.epoch == self.page.current_epoch
+
+
+# doesn't work for whatever reason if defined inside the page object.
+Page.revisions = db.relationship(Revision, lazy='dynamic',
+    primaryjoin=db.and_(
+        Page.id == Revision.page_id,
+        Page.current_epoch == Revision.epoch,
+    ),
+    foreign_keys=[Page.id, Page.current_epoch]
+)
 
 
 class WikiSchemaController(db.ISchemaController):

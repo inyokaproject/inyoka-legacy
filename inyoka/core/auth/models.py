@@ -125,9 +125,9 @@ class User(db.Model, SerializableObject):
     # the OpenID auth for example does not use it at all.  But also
     # external auth systems might not store the password here.
     pw_hash = db.Column(db.String(60))
-    # The day the user registered itself
+    # When the user registered himself
     date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    # The day the user recently joined the webpage
+    # When the user recently joined the webpage
     last_login = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
@@ -174,6 +174,10 @@ class User(db.Model, SerializableObject):
 
     def subscribed(self, type, subject_id=None):
         return subscribed(type, self, subject_id)
+
+    def get_url_values(self, action='profile'):
+        if action == 'profile':
+            return 'portal/profile', {'username': self.username}
 
     def __repr__(self):
         i = '#%d' % self.id if self.id else '[no id]'

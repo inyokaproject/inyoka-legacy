@@ -3,5 +3,5 @@
 {%- set current_tab = 'show' %}
 
 {%- block wiki_content %}
-{{ page.current_revision.rendered_text|default(page.current_revision_id)|safe }}
+{{ revision.rendered_text|default(revision.id)|safe }}
 {%- endblock %}

@@ -13,7 +13,6 @@ from __future__ import with_statement
 import os
 import sys
 from os import path as _path, access, F_OK
-from functools import partial as _partial
 from fabric.api import *
 
 
@@ -25,7 +24,7 @@ os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 #: partial function that is used for easy absolute path usage
 #: to make the fabfile more usefull if you're not in the root folder
 #: but need to do a `fab runserver` or something else.
-_j = _partial(lambda *a: _path.join(_base_dir, *a))
+_j = lambda *a: _path.join(_base_dir, *a)
 
 
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
@@ -237,7 +236,7 @@ def test(file='', clean='yes'):
 
 def reindent():
     """
-    Reidents the sources.
+    Reindents the sources.
     """
     local(_j('extra/reindent.py -r -B %s' % _base_dir), capture=False)
 

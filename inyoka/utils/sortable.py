@@ -24,7 +24,7 @@ class Sortable(object):
 
         @templated('portal/users.html')
         def users(request):
-            table = Sortable(User.query, request, 'id', ('id', 'username'))
+            table = Sortable(User.query, 'id', request, ('id', 'username'))
             return {
                 'users': table.get_sorted().all(),
                 'table': table

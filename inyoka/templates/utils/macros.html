@@ -19,34 +19,34 @@
   {% endautoescape %}
 {% endmacro %}
 
-{% macro render_field(field) %}
+{% macro render_field(field) -%}
   {# TODO: remove __class__.__name__ hack! #}
-  {% if field.label and not field.widget.__class__.__name__ == 'HiddenInput' %}
+  {%- if field.label and not field.widget.__class__.__name__ == 'HiddenInput' %}
   <dt>{{ field.label }}</dt>
-  {% endif %}
+  {%- endif %}
   <dd>{{ field(**kwargs) }}
-  {% if field.errors %}
+  {%- if field.errors %}
     <ul class="errors">
     {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
     </ul>
-  {% endif %}
+  {%- endif %}
   </dd>
-{% endmacro %}
+{%- endmacro %}
 
 {% macro csrf_token() %}
   <input type="hidden" value="{{ get_csrf_token() }}" name="csrf_token">
 {% endmacro %}
 
 {% macro render_fields(form, include=none) %}
-{% set fields = include or form %}
+{%- set fields = include or form %}
   <dl>
-  {% for field in form %}
+  {%- for field in form %}
     {{ render_field(field) }}
-  {% endfor %}
+  {%- endfor %}
   </dl>
-  {# We just include the csrf token if we can assume that render_fields
+  {#- We just include the csrf token if we can assume that render_fields
      is only called once.  Else we get quite a couple of csrf token fields #}
-  {% if not include %}{{ csrf_token() }}{% endif %}
+  {%- if not include %}{{ csrf_token() }}{% endif %}
 {% endmacro %}
 
 {% macro render_form(form) %}

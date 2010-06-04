@@ -12,3 +12,4 @@
 \.mo$
 \.pida-metadata/
 ^\.coverage_html/
+\.patch

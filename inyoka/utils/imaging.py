@@ -108,7 +108,7 @@ class PilImage(BaseImage):
         """
         Resize image to thumbnail size, as definied in inyoka.ini.
         """
-        self.image = self.image.thumbnail(string_to_xy(
+        self.image.thumbnail(string_to_xy(
             ctx.cfg['imaging.thumbnailsize']), self.__antialias)
         return self.image
 
@@ -116,7 +116,7 @@ class PilImage(BaseImage):
         """
         Resize image to avatar size, as definied in inoka.ini.
         """
-        self.image = self.image.thumbnail(string_to_xy(
+        self.image.thumbnail(string_to_xy(
             ctx.cfg['imaging.avatarsize']), self.__antialias)
         return self.image
 

@@ -13,6 +13,7 @@ from __future__ import with_statement
 import os
 import sys
 from os import path as _path, access, F_OK
+from functools import partial as _partial
 from fabric.api import *
 
 

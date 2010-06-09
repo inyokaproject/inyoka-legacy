@@ -56,10 +56,11 @@ Database and other things
 =========================
 
 We are now ready to activate the virtual environment
-(``../inyoka-testsuite`` is the default installation folder)::
+(``../inyoka-testsuite`` is the default installation folder, may be replaced).
+Do not forget the "." at the beginning!:
 
     . ../inyoka-testsuite/bin/activate
-    
+
 Before starting we have to initialize the database::
 
     fab initdb

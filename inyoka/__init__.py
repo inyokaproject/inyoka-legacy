@@ -273,17 +273,21 @@ def _bootstrap():
     from subprocess import Popen, PIPE
 
     # get Inyoka revision
-    hg = Popen(['hg', 'id', '-i', '-n'], stdout=PIPE, stderr=PIPE,
-               stdin=PIPE, cwd=os.path.dirname(__file__))
-    hg.stdin.close()
-    hg.stderr.close()
-    rev = hg.stdout.readline()
-    hg.stdout.close()
-    if hg.wait() == 0:
-        m = re.match('^(?P<id>[0-9a-z]+)(?P<mod>\+?) (?P<num>[0-9]+)\+?$',
-                     rev)
-        if m:
-            INYOKA_REVISION = '%(num)s:%(id)s%(mod)s' % m.groupdict()
+    try:
+        hg = Popen(['hg', 'id', '-i', '-n'], stdout=PIPE, stderr=PIPE,
+                   stdin=PIPE, cwd=os.path.dirname(__file__))
+    except OSError:
+        pass
+    else:
+        hg.stdin.close()
+        hg.stderr.close()
+        rev = hg.stdout.readline()
+        hg.stdout.close()
+        if hg.wait() == 0:
+            m = re.match('^(?P<id>[0-9a-z]+)(?P<mod>\+?) (?P<num>[0-9]+)\+?$',
+                         rev)
+            if m:
+                INYOKA_REVISION = '%(num)s:%(id)s%(mod)s' % m.groupdict()
 
     # the path to the contents of the Inyoka module
     conts = os.environ.setdefault('INYOKA_MODULE',

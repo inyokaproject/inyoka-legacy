@@ -278,7 +278,7 @@ def is_valid_jabber(message=None):
     """Check if the string passed is a valid Jabber ID.
 
     This does neither check the domain nor the ressource id because we
-    require an adress similar to a email adress with a nodeid set.
+    require an address similar to a email address with a nodeid set.
 
     Since that nodeid is optional in the real-world we'd have to check
     the domain and ressource id if it's not specified.  To avoid that

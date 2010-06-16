@@ -66,7 +66,7 @@ class TagQuery(db.Query):
         return self.filter(Tag.public == True)
 
     def get_cloud(self, max_visible=None, steps=4):
-        """Get all informations required for a tag cloud
+        """Get all information required for a tag cloud
 
         Returns a tuple containing the items and a boolean indicating
         whether there are more tags to show or not.

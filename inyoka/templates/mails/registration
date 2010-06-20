@@ -1,0 +1,11 @@
+Hello {{ user.username }},
+
+Welcome to {{ website_title }}!
+
+Please use this link to activate your new account:
+
+    {{ activation_url }} 
+
+Thank you for your registration,
+
+{{ website_title }}

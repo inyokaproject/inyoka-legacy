@@ -8,6 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from celery.execute import send_task
 from inyoka.core.api import db, _, ctx, lazy_gettext
 from inyoka.core.http import redirect_to, Response
 from inyoka.core.exceptions import abort
@@ -81,7 +82,7 @@ class EasyAuth(IAuthSystem):
         # send the activation email.
         c = Confirm('activate_user', {'user': user.id}, 3)
         db.session.commit()
-        return Response('activation link: %s' % c.url)
+        send_task('inyoka.core.tasks.send_activation_mail', [user.id, c.url])
 
     def login(self, request):
         """Like `register` just for login."""

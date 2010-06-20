@@ -61,12 +61,17 @@ def reset():
 
 
 def _action(*args, **kwargs):
-    def _inner(app_factory, hostname='localhost', port=5000,
+    def _inner(app_factory, hostname=None, port=None,
                threaded=False, processes=1):
         from werkzeug.serving import run_simple
         from inyoka.core.api import ctx
+
         parts = ctx.cfg['base_domain_name'].split(':')
-        port = int(parts[1]) if len(parts) == 2 else port
+        if hostname is None:
+            hostname = parts[0]
+        if port is None:
+            port = int(parts[1])
+
         app = app_factory()
         run_simple(hostname, port, app, threaded=threaded,
             processes=processes, use_reloader=True, use_debugger=False)
@@ -177,7 +182,7 @@ def create_virtualenv(directory='../inyoka-testsuite',pyver=None):
     Create a virtual environment for inyoka.
 
     :param directory: Where to create this virtual environment (folder must not exist).
-    :param pyver: Which Python Version to use (2.5 as default).
+    :param pyver: Which Python Version to use.
     """
     if pyver is None:
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])

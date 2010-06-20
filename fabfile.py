@@ -23,7 +23,7 @@ sys.path.append(_base_dir)
 _python_path = os.environ.get('PYTHONPATH', '')
 os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 #: partial function that is used for easy absolute path usage
-#: to make the fabfile more usefull if you're not in the root folder
+#: to make the fabfile more useful if you're not in the root folder
 #: but need to do a `fab runserver` or something else.
 _j = lambda *a: _path.join(_base_dir, *a)
 

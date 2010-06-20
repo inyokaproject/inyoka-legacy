@@ -15,6 +15,7 @@ import getopt
 import cStringIO
 from os.path import join, splitext, abspath
 
+BAD_DIRS = ['.hg', '.coverage_html', '_build', '_static']
 
 checkers = {}
 
@@ -183,8 +184,9 @@ def main(argv):
     out = cStringIO.StringIO()
 
     for root, dirs, files in os.walk(path):
-        if '.svn' in dirs:
-            dirs.remove('.svn')
+        for dir in BAD_DIRS:
+            if dir in dirs:
+                dirs.remove(dir)
         if '-i' in opts and abspath(root) in opts['-i']:
             del dirs[:]
             continue

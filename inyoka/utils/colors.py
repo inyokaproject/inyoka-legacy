@@ -17,8 +17,8 @@
     So if you work at Windows use the `nocolor` function to disable
     the command line colors.
 
-    :copyright: 1998-2004 by the Gentoo Foundation.
-    :copyright: 2006-2007 by Georg Brandl and Christopher Grebs
+    :copyright: 1998-2004 by the Gentoo Foundation,
+                2006-2007 by Georg Brandl and Christopher Grebs
     :license: GNU GPL, see LICENSE for more details.
 """
 

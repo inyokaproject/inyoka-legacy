@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     inyoka.wiki.forms
-    ~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~
 
     Forms for the wiki app.
 

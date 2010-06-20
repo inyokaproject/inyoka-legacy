@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.core.celery
-    ~~~~~~~~~~~~~~~~~~
+    inyoka.core.celery_support
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Support module for celery.
 

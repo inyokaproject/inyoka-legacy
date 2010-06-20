@@ -17,7 +17,7 @@ from inyoka.core.context import ctx
 
 @task
 def send_activation_mail(user_id, activation_url):
-    user = User.query.get(id)
+    user = User.query.get(user_id)
     website_title = ctx.cfg['website_title']
     send_mail(_(u'Registration at %s') % website_title, render_template('mails/registration', {
         'user':             user,

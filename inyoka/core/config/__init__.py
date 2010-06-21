@@ -135,6 +135,8 @@ def quote_value(value):
         value = u'1' if value else u'0'
     if isinstance(value, (int, long)):
         value = unicode(value)
+    if isinstance(value, list):
+        value = u':'.join(value)
 
     if not value:
         return ''

@@ -59,8 +59,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Recaptcha private key')),
     'website_title':                 TextField(default=u'Inyoka Portal',
         help_text=lazy_gettext(u'The website title to show in various places')),
-    'mail_address':                  TextField(default=u'mail@inyokaproject.org',
-        help_text=lazy_gettext(u'The mail adress used for sending mails')),
+    'mail_address':                  TextField(default=u'system@inyoka.local',
+        help_text=lazy_gettext(u'The mail address used for sending mails')),
 
     # database specific values
     'database.url':                 TextField(default=u'sqlite:///dev.db',

@@ -78,7 +78,8 @@ class WikiController(IController):
 
         form = EditPageForm(request.form, **initial)
         if request.method == 'POST' and form.validate():
-            page = Page(page)
+            if type(page) == unicode:
+                page = Page(page)
             created = page.current_revision is None
             if not created and form.text.data == page.current_revision.raw_text:
                 request.flash(_(u"Text didn't change."))

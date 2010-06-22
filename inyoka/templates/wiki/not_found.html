@@ -1,0 +1,14 @@
+{%- extends 'wiki/base.html' %}
+{%- set title_trace = [page] %}
+{%- set current_tab = 'show' %}
+
+{%- block wiki_content %}
+<p>
+  {{ _('The requested page was not found.') }}
+</p>
+<p>
+  <a href="{{ href('wiki/edit', page=page) }}">
+    {{ _('If you want, you can create it') }}
+  </a>
+</p>
+{%- endblock %}

@@ -1,17 +1,18 @@
 {%- extends 'base.html' %}
 {%- set title_trace = title_trace|default([]) + [_('Wiki')] %}
 {%- set sidebar = false %}
+{%- set page_name = page is string and page or page.name %}
 
 {%- macro show_tab(id, name, title=none) %}
   <li{% if current_tab|default() == id %} class="selected"{% endif %}>
-    <a href="{{ href('wiki/'+id, page=page.name) }}"{% if title %} title="{{ title }}"{% endif %}>
+    <a href="{{ href('wiki/'+id, page=page_name) }}"{% if title %} title="{{ title }}"{% endif %}>
       {{ name }}
     </a>
   </li>
 {%- endmacro %}
 
 {%- block content %}
-<h1>{{ page.name }}</h1>
+<h1>{{ page_name }}</h1>
 <ul class="pagetabs">
   {{ show_tab('show', _('Show')) }}
   {{ show_tab('edit', _('Edit')) }}

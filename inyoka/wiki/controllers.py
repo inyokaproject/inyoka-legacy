@@ -10,6 +10,8 @@
 """
 from inyoka.core.api import IController, Rule, view, templated, redirect_to, \
     ctx, db, _
+from inyoka.core.http import Response
+from inyoka.core.templating import render_template
 from inyoka.core.exceptions import NotFound
 from inyoka.wiki.forms import EditPageForm
 from inyoka.wiki.models import Page, Revision, Text
@@ -36,8 +38,13 @@ class WikiController(IController):
     @view
     @templated('wiki/show.html')
     def show(self, request, page, revision=None):
-        page = find_page(page, redirect_view='wiki/show',
-                         redirect_params={'revision':revision})
+        try:
+            page = find_page(page, redirect_view='wiki/show',
+                             redirect_params={'revision':revision})
+        except NotFound:
+            return Response(render_template('wiki/not_found.html', {
+                'page':    page,
+            }), status=404)
 
         if revision is not None:
             revision = Revision.query.get(revision)
@@ -60,10 +67,10 @@ class WikiController(IController):
         try:
             page = find_page(url_name=page, redirect_view='wiki/edit')
         except NotFound:
-            page_name = page
-            page = Page(name=deurlify_page_name(page_name))
-            if page.url_name != page_name:
-                return redirect_to('wiki/edit', page=page.url_name)
+            page = deurlify_page_name(page)
+            url_name = urlify_page_name(page)
+            if url_name != page:
+                return redirect_to('wiki/edit', page=url_name)
             initial = {}
         else:
             initial = {'text': page.current_revision.raw_text}
@@ -71,6 +78,7 @@ class WikiController(IController):
 
         form = EditPageForm(request.form, **initial)
         if request.method == 'POST' and form.validate():
+            page = Page(page)
             created = page.current_revision is None
             if not created and form.text.data == page.current_revision.raw_text:
                 request.flash(_(u"Text didn't change."))

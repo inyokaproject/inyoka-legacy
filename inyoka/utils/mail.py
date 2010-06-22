@@ -32,7 +32,6 @@ def send_mail(subject, message_, from_, to):
     message = u'From: %s\nTo: %s' % (from_ , to)
     message += '\nSubject: ' + Header(subject, 'utf-8', header_name='Subject').encode() + '\n'
     message += MIMEText(message_.encode('utf-8'), _charset='utf-8').as_string()
-    print message
     proc = Popen(['/usr/sbin/sendmail', '-t'], stdin=PIPE)
     proc.stdin.write(message)
     proc.stdin.close()

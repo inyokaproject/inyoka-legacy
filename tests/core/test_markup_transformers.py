@@ -11,7 +11,17 @@
 from inyoka.core.test import *
 from inyoka.core.markup import nodes
 from inyoka.core.markup.parser import render
-from inyoka.core.markup.transformers import AutomaticParagraphs, HeadlineProcessor
+from inyoka.core.markup.transformers import AutomaticParagraphs, HeadlineProcessor, \
+    ITransformer
+
+
+def test_default_itransformer():
+    """Test that the default ITransformer implementation returns
+    the tree unchanged"""
+    transformer = ITransformer()
+    tree = nodes.Document([nodes.Text('\nYea'), nodes.Strong([nodes.Text('foo')])])
+    transformed = transformer.transform(tree)
+    eq_(render(transformed, None, 'html'), '\nYea<strong>foo</strong>')
 
 
 def test_automatic_paragraphs_transformer():

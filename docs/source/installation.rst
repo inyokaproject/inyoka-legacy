@@ -6,6 +6,9 @@ Inyoka requires at least Python 2.5 to work correctly. Next to this Inyoka has
 a lot of dependencies as well as a nice bootstrap process. This is documentated
 on the following slides.
 
+.. todo:
+
+   This documentation is a bit distribution dependend, try to abstract it.
 
 Dependencies and virtual environment
 ====================================

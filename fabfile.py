@@ -191,7 +191,8 @@ def create_virtualenv(directory='../inyoka-testsuite',pyver=None):
         pyver = u'.'.join(str(x) for x in sys.version_info[:2])
     local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
           pyver, _j('bootstrap.py')), capture=False)
-    local('python ./bootstrap.py %s' % directory, capture=False)
+    local('python ./bootstrap.py -r %s %s' % (
+        _j('requirements.txt'), directory), capture=False)
 
 
 def clean_files():

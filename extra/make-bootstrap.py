@@ -21,6 +21,16 @@ from os import path
 pil_version = '1.1.7'
 cldr_version = '1.7.2'
 
+
+def install_requirements(home_dir, requirements):
+    if not requirements:
+        return
+    home_dir = os.path.abspath(home_dir)
+    cmd = [os.path.join(home_dir, 'bin', 'pip')]
+    cmd.extend(['install', '-r', os.path.join(home_dir, requirements)])
+    call_subprocess(cmd)
+
+
 def pil_install(home_dir):
     folder = tempfile.mkdtemp(prefix='virtualenv')
 
@@ -81,24 +91,7 @@ def after_install(options, home_dir):
 
     easy_install('setuptools', home_dir)
     babel_svn_repo_install(home_dir)
-    easy_install('Jinja2==2.5', home_dir)
-    easy_install('Werkzeug', home_dir)
-    easy_install('Pygments', home_dir)
-    easy_install('simplejson', home_dir)
-    easy_install('pytz', home_dir)
-    easy_install('nose', home_dir)
-    easy_install('Sphinx', home_dir)
-    easy_install('html5lib', home_dir)
-    easy_install('coverage', home_dir)
-    easy_install('minimock', home_dir)
-    easy_install('Fabric', home_dir)
-    easy_install('wtforms', home_dir)
-    easy_install('SQLAlchemy==0.6', home_dir)
-    easy_install('http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz', home_dir)
-    easy_install('translitcodec', home_dir)
-    easy_install('http://github.com/ask/billiard/tarball/master', home_dir)
-    easy_install('http://github.com/ask/celery/tarball/master', home_dir)
-    easy_install('lxml', home_dir)
+    install_requirements(home_dir, options.requirements)
     pil_install(home_dir)
 
 
@@ -111,6 +104,13 @@ def easy_install(package, home_dir, optional_args=None):
     cmd.append('-O2')
     cmd.append(package)
     call_subprocess(cmd)
+
+
+def extend_parser(parser):
+    parser.add_option('-r', '--requirements', dest='requirements',
+                      default='',
+                      help='Path to a requirements file usable with pip')
+
 """
 
 
@@ -122,4 +122,4 @@ cmdlineparser.add_option('-p', '--python', dest='python',
 
 if __name__ == '__main__':
     (options, args) = cmdlineparser.parse_args()
-    print create_bootstrap_script(EXTRA_TEXT,python_version=options.python)
+    print create_bootstrap_script(EXTRA_TEXT, python_version=options.python)

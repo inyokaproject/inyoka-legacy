@@ -33,3 +33,5 @@ wsgiref==0.1.2
 # We currently use the celery trunk because it relies on sqlalchemy rather on
 # Django
 http://github.com/ask/celery/tarball/master
+# We use the flickzeug trunk as there's no official release yet
+http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz

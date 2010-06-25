@@ -68,6 +68,11 @@
         </div>
       </div>
       <div id="footer">
+        <span class="poweredby">
+          {%- trans revision=INYOKA_REVISION, python=PYTHON_VERSION -%}
+          Powered by Inyoka {{ revision }} on Python {{ python }}
+          {%- endtrans -%}
+        </span>
       </div>
     </div>
   </body>

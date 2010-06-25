@@ -141,7 +141,36 @@ body {
 }
 
 #footer {
+  background-color: #fff;
+  border-top: 1px solid #aba393;
   clear: both;
+  color: #555;
+  font-size: 0.8em;
+  padding: 8px 10px 8px 10px;
+  height: 3em;
+}
+
+#footer ul {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#footer li {
+  vertical-align: middle;
+  float: left;
+  width: 33%;
+}
+
+#footer a {
+  color: #555;
+  text-decoration: underline;
+}
+
+#footer .poweredby {
+  text-align: left;
+  width: 25%;
 }
 
 /* clearing */

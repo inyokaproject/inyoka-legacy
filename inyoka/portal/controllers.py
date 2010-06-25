@@ -74,7 +74,6 @@ class PortalController(IController):
             'tag_cloud': cloud,
             'more_tags': more,
             'latest_content': contents,
-            'python_version': '%d.%d.%d' % sys.version_info[:3],
         }
 
     @view

@@ -50,12 +50,12 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True)
 
-    children = db.relationship('Group', secondary=group_group,
-        backref=db.backref('parents', collection_class=set, lazy='subquery'),
-        primaryjoin=id == group_group.c.group_id,
-        secondaryjoin=group_group.c.parent_id == id,
+    parents = db.relationship('Group', secondary=group_group,
+        backref=db.backref('children', collection_class=set, lazy='subquery'),
+        primaryjoin=(id == group_group.c.group_id),
+        secondaryjoin=(group_group.c.parent_id == id),
         foreign_keys=[group_group.c.group_id, group_group.c.parent_id],
-        collection_class=set, lazy='joined', join_depth=2)
+        collection_class=set)
 
     def get_parents(self):
         if not self.parents:

@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
+import sys
 import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
@@ -143,6 +144,7 @@ class InyokaEnvironment(Environment):
 
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
+            PYTHON_VERSION='%d.%d.%d' % sys.version_info[:3],
             href=href,
             get_csrf_token=get_csrf_token,
         )

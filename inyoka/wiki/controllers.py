@@ -67,7 +67,7 @@ class WikiController(IController):
         try:
             page = find_page(url_name=page, redirect_view='wiki/edit')
         except NotFound:
-            page = deurlify_page_name(page)
+            page = urlify_page_name(page)
             url_name = urlify_page_name(page)
             if url_name != page:
                 return redirect_to('wiki/edit', page=url_name)

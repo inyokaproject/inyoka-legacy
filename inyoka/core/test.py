@@ -25,7 +25,7 @@ from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 from inyoka.context import ctx
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.http import Response, Request
+from inyoka.core.http import Response, Request, get_bound_request
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain
 
@@ -162,7 +162,8 @@ class ViewTestSuite(TestSuite):
         function accepts the same arguments).
         """
         kwargs['base_url'] = self.base_url
-        req = Request.get_bound(create_environ(*args, **kwargs))
+        req = get_bound_request(ctx.dispatcher.request_class,
+                                create_environ(*args, **kwargs))
         return req
 
 

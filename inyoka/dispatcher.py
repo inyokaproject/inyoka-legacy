@@ -20,7 +20,7 @@ from werkzeug.exceptions import NotFound
 
 from inyoka.context import ctx, local_manager
 from inyoka.core.api import db, IController, Request, Response, \
-    IMiddleware, IServiceProvider
+    IMiddleware, IServiceProvider, get_bound_request
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 from inyoka.utils.http import notfound, notfound_with_debug
@@ -29,6 +29,11 @@ from inyoka.utils.http import notfound, notfound_with_debug
 
 class RequestDispatcher(object):
     """The main dispatcher that handles all the dispatching and routing stuff."""
+
+    #: Default class for requests.
+    request_class = Request
+    #: Default class for responses.
+    response_class = Response
 
     def __init__(self, ctx):
         self.ctx = ctx
@@ -59,9 +64,8 @@ class RequestDispatcher(object):
         """
         domain = self.ctx.cfg['base_domain_name']
         try:
-            adapter = self.url_map.bind_to_environ(
-                ctx.current_request.environ,
-                server_name=domain)
+            env = ctx.current_request.environ
+            adapter = self.url_map.bind_to_environ(env, server_name=domain)
         except AttributeError:
             adapter = self.url_map.bind(domain)
         return adapter
@@ -127,8 +131,7 @@ class RequestDispatcher(object):
         except HTTPException, err:
             response = err.get_response(request.environ)
 
-        if not isinstance(response, Response):
-            response = Response.force_type(response, environ)
+        response = self.make_response(request, response)
 
         # Let middlewares process the response.  Note that we *only*
         # process the response object, if it's returned from some view.
@@ -157,7 +160,7 @@ class RequestDispatcher(object):
         # it afterwards.  We do this so that the request object can query
         # the database in the initialization method.
         self.ctx.bind()
-        request = Request.get_bound(environ)
+        request = get_bound_request(self.request_class, environ)
 
         response = self.dispatch_request(request, environ)
 
@@ -178,6 +181,57 @@ class RequestDispatcher(object):
             response = response.make_conditional(request)
 
         return response(environ, start_response)
+
+    def make_response(self, request, rv):
+        """Converts the return value from a handler to a real response
+        object that is an instance of :attr:`response_class`.
+
+        The following types are allowd for `rv`:
+
+        ======================= ===========================================
+        :attr:`response_class`  the object is returned unchanged
+        :class:`str`            a response object is created with the
+                                string as body
+        :class:`unicode`        a response object is created with the
+                                string encoded to utf-8 as body
+        :class:`tuple`          the response object is created with the
+                                contents of the tuple as arguments
+        a WSGI function         the function is called as WSGI application
+                                and buffered as response object
+        ======================= ===========================================
+
+        This method comes from `Flask`_.
+
+        :param request:
+            A :class:`Request` instance.
+        :param rv:
+            The return value from the handler.
+        :return:
+            A :class:`Response` instance.
+        """
+        if isinstance(rv, self.response_class):
+            return rv
+
+        if isinstance(rv, basestring):
+            return self.response_class(rv)
+
+        if isinstance(rv, tuple):
+            return self.response_class(*rv)
+
+        if rv is None:
+            raise ValueError('Handler did not return a response.')
+
+        return self.response_class.force_type(rv, request.environ)
+
+    def get_test_client(self):
+        """Creates a test client for this application.
+
+        :return:
+            A `werkzeug.Client`, which is a :class:`Tipfy` wrapped
+            for tests.
+        """
+        from werkzeug import Client
+        return Client(self, self.response_class, use_cookies=True)
 
     def __call__(self, environ, start_response):
         """The main dispatching interface of the Inyoka WSGI application.

@@ -53,4 +53,3 @@ class TokenInput(TextInput):
 class FileInput(Input):
     """A file input field."""
     type = 'file'
-

@@ -15,7 +15,13 @@ from inyoka.context import ctx
 
 
 class CeleryLoader(BaseLoader):
+    """A customized celery configuration loader that implements a bridge
+    between :mod:`inyoka.core.config` and the celery configuration system.
+    """
+
     def read_configuration(self):
+        """Read the configuration from configuration file and convert values
+        to celery processable values."""
         celeryd_vars = list(ctx.cfg.itersection('celeryd'))
         celery_vars = list(ctx.cfg.itersection('celery'))
         broker_vars = list(ctx.cfg.itersection('broker'))

@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, db, redirect_to
+    templated, db, redirect_to, NotFound
 from inyoka.utils.pagination import URLPagination
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry

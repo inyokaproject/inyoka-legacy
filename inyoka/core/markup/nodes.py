@@ -21,12 +21,9 @@ from urlparse import urlparse, urlunparse
 from inyoka.context import ctx
 from inyoka.core.markup.machine import NodeCompiler, NodeRenderer, \
     NodeQueryInterface
-from inyoka.core.routing import href
-from inyoka.core.templating import render_template
 from inyoka.utils.html import build_html_tag, escape
 from inyoka.utils.debug import debug_repr
 from inyoka.utils.text import gen_slug
-from inyoka.utils.urls import url_quote_plus
 
 
 class BaseNode(object):
@@ -321,7 +318,7 @@ class Link(Element):
         if self.scheme == 'javascript':
             yield escape(self.caption)
             return
-        rel = style = title = None
+        rel = None
         if not self.netloc or self.netloc == ctx.cfg['base_domain_name'] or \
            self.netloc.endswith('.' + ctx.cfg['base_domain_name']):
             class_ = 'crosslink'

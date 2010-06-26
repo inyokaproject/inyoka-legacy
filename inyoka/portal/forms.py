@@ -11,9 +11,8 @@
 from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField, \
     RecaptchaField
 from inyoka.core.forms.utils import model_to_dict, update_model
-from inyoka import Interface
 from inyoka.core.database import db
-from inyoka.i18n import _, lazy_gettext
+from inyoka.i18n import lazy_gettext
 from inyoka.core.auth.models import UserProfile, IUserProfileExtender
 
 

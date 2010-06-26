@@ -18,10 +18,9 @@
 """
 from __future__ import division
 from functools import wraps
-from datetime import date, time, datetime, timedelta
+from datetime import date, datetime, timedelta
 import pytz
 from babel import dates
-from babel.core import default_locale, get_global, Locale
 from babel.dates import TIMEDELTA_UNITS
 
 from inyoka.i18n import get_locale, lazy_gettext, _
@@ -43,7 +42,7 @@ def get_timezone(name=None):
     return pytz.timezone(name)
 
 
-def rebase_to_timezone(datetime, force_utc=False):
+def rebase_to_timezone(dtobj, force_utc=False):
     """Convert a datetime object to the users timezone.
 
     Note: Use this only for presentation never for calculations!
@@ -51,10 +50,10 @@ def rebase_to_timezone(datetime, force_utc=False):
     :param datetime: The datetime object to convert.
     :param force_utc: Set to `True` if we have to force using UTC.
     """
-    if datetime.tzinfo is None:
-        datetime = datetime.replace(tzinfo=UTC)
+    if dtobj.tzinfo is None:
+        dtobj = dtobj.replace(tzinfo=UTC)
     tzinfo = UTC if force_utc else get_timezone()
-    return tzinfo.normalize(datetime.astimezone(tzinfo))
+    return tzinfo.normalize(dtobj.astimezone(tzinfo))
 
 
 def to_datetime(obj):
@@ -122,7 +121,7 @@ for func in dates.__all__ + _additional_all:
 
 def format_month(date=None):
     """Format month and year of a date."""
-    return format_date(date, 'MMMM YYYY')
+    return dates.format_date(date, 'MMMM YYYY')
 
 
 def humanize_number(number):

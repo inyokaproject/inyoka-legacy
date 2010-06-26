@@ -8,28 +8,15 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import re
-from urlparse import urlparse
-from functools import partial
 from wtforms.fields import BooleanField, DecimalField, DateField, \
-    DateTimeField, Field, FieldList, FloatField, FormField, HiddenField, \
+    DateTimeField, FieldList, FloatField, FormField, HiddenField, \
     IntegerField, PasswordField, RadioField, SelectField, SelectMultipleField, \
     SubmitField, TextField, TextAreaField
 from wtforms.fields import Field
-from wtforms.validators import ValidationError, Required
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 
-from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.forms import widgets
 from inyoka.core.forms import validators
-from inyoka.core.database import db
-from inyoka.context import local, ctx
-from inyoka.utils import classproperty
-from inyoka.utils.csrf import get_csrf_token, check_request
-from inyoka.utils.datastructures import _missing
-from inyoka.core.models import Tag
-from inyoka.core.routing import href
-from inyoka.core.serializer import get_serializer, primitive
 
 
 class FileField(TextField):

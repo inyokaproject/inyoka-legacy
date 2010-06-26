@@ -24,7 +24,7 @@ from inyoka.utils.confirm import register_confirm
 def activate_user(data):
     try:
         u = User.query.get(data['user'])
-    except NoResultFound:
+    except db.NoResultFound:
         return redirect_to('portal/index')
     u.status = 'normal'
     db.session.commit()
@@ -129,16 +129,6 @@ class EasyAuth(IAuthSystem):
         """
         self.set_user(request, None)
         request.flash(_(u'You have been logged out successfully.'), True)
-
-    def set_user(self, request, user):
-        """Can be used by the login function to set the user.  This function
-        should only be used for auth systems internally if they are not using
-        an external session.
-        """
-        if user is None:
-            request.session.pop('user_id', None)
-        else:
-            request.session['user_id'] = user.id
 
     def perform_login(self, request, username, password, permanent=False):
         try:

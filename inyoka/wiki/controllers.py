@@ -14,8 +14,8 @@ from inyoka.core.http import Response
 from inyoka.core.templating import render_template
 from inyoka.core.exceptions import NotFound
 from inyoka.wiki.forms import EditPageForm
-from inyoka.wiki.models import Page, Revision, Text
-from inyoka.wiki.utils import find_page, deurlify_page_name, urlify_page_name
+from inyoka.wiki.models import Page, Revision
+from inyoka.wiki.utils import find_page, urlify_page_name
 
 
 class WikiController(IController):
@@ -85,13 +85,12 @@ class WikiController(IController):
                 request.flash(_(u"Text didn't change."))
                 return redirect_to(page)
 
-            r = Revision(
-                page=page,
-                raw_text=form.text.data,
-                change_comment=form.comment.data,
-                change_user=request.user,
-                epoch=1, #TODO: we definitely need a Page.edit method.
-            )
+            #TODO: we definietly need a Page.edit method.
+            Revision(page=page,
+                     raw_text=form.text.data,
+                     change_comment=form.comment.data,
+                     change_user=request.user,
+                     epoch=1)
             db.session.commit()
 
             request.flash(_(u'The page has been saved.'), True)

@@ -9,10 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.forms import Form, TextField, validators, widgets
-from inyoka.core.forms.fields import QuerySelectField, QuerySelectMultipleField, \
-    AutocompleteField
-from inyoka.core.api import _, db
-from inyoka.i18n import _, lazy_gettext
+from inyoka.core.forms.fields import QuerySelectField, AutocompleteField
+from inyoka.i18n import lazy_gettext
 from inyoka.forum.models import Forum, Tag
 
 

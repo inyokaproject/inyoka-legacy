@@ -9,8 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
-from inyoka.core.api import view, templated, redirect, redirect_to, db, Rule, \
-    render_template
+from inyoka.core.api import view, templated, redirect_to, db, Rule, render_template
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
 from inyoka.news.forms import EditArticleForm

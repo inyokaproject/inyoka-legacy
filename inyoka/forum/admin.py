@@ -8,12 +8,11 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import _, view, service, templated, db, Rule, \
-    redirect_to, Response
+from inyoka.core.api import _, view, templated, db, Rule, redirect_to
 from inyoka.core.forms.utils import model_to_dict, update_model
-from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
+from inyoka.admin.api import IAdminProvider
 from inyoka.forum.forms import EditForumForm
-from inyoka.forum.models import Forum, Tag
+from inyoka.forum.models import Forum
 
 
 class ForumAdminProvider(IAdminProvider):

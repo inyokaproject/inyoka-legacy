@@ -10,7 +10,6 @@
 """
 from jinja2.utils import Markup
 from pygments import highlight
-from pygments.formatters.html import HtmlFormatter, escape_html
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name, get_lexer_for_filename, \
     get_lexer_for_mimetype, TextLexer

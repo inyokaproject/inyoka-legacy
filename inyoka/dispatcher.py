@@ -18,9 +18,9 @@ from time import time
 from werkzeug import redirect, cached_property
 from werkzeug.exceptions import NotFound
 
-from inyoka.context import ctx, local, local_manager
-from inyoka.core.api import db, logger, IController, Request, \
-    Response, IMiddleware, IServiceProvider
+from inyoka.context import ctx, local_manager
+from inyoka.core.api import db, IController, Request, Response, \
+    IMiddleware, IServiceProvider
 from inyoka.core.exceptions import HTTPException
 from inyoka.core.routing import Map
 from inyoka.utils.http import notfound, notfound_with_debug

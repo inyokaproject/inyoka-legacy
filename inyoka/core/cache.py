@@ -104,7 +104,7 @@ class DatabaseCache(BaseCache):
                 })
         else:
             # insert new key if key not present
-            obj = Cache(key=key, value=value, expires=expires)
+            Cache(key=key, value=value, expires=expires)
             db.session.commit()
 
     def add(self, key, value, timeout=None):

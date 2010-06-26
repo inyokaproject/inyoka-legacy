@@ -8,9 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import sys
 from math import sqrt
-from werkzeug import import_string
 
 
 def flatten_iterator(iter):

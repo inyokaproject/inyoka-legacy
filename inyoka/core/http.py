@@ -10,8 +10,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from uuid import uuid4
-from time import time
-from hashlib import md5
 from operator import itemgetter
 from functools import update_wrapper
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
@@ -19,7 +17,7 @@ from werkzeug import Request as BaseRequest, Response as BaseResponse, \
 from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.context import ctx, local
 from inyoka.core.routing import href
-from inyoka.utils.html import escape, Markup
+from inyoka.utils.html import escape
 
 
 class FlashMessage(tuple):

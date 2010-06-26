@@ -12,7 +12,6 @@ from functools import wraps
 from werkzeug.contrib.atom import AtomFeed
 from inyoka.core.cache import cache
 from inyoka.core.http import Response
-from inyoka.core.exceptions import NotFound
 
 
 def atom_feed(cache_key=None, endpoint=None, cache_timeout=600):

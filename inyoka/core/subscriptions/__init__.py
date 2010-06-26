@@ -15,9 +15,8 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Interface, InterfaceMeta
+from inyoka import Interface
 from inyoka.core.api import ctx
-from inyoka.utils.datastructures import _missing
 
 
 def subscribed(type, user, subject_id=None):

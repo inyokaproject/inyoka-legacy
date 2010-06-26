@@ -8,9 +8,8 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import sys
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, href, redirect_to, _
+    templated, _
 from inyoka.core.auth import get_auth_system, login_required
 from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
     Group
@@ -23,9 +22,6 @@ from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
 from inyoka.portal.forms import get_profile_form
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
-from inyoka.wiki.models import Revision as WikiRevision
-from inyoka.forum.models import Question as ForumQuestion
-from inyoka.news.models import Article as NewsArticle, Comment as NewsComment
 
 
 def context_modifier(request, context):

@@ -10,7 +10,6 @@
 """
 import re
 from urlparse import urlparse
-from werkzeug import url_encode
 from wtforms.validators import *
 from wtforms.validators import ValidationError
 from inyoka.i18n import lazy_gettext

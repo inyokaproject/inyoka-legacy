@@ -10,12 +10,11 @@
 """
 from collections import defaultdict
 from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
-         question_tag, forum_tag, Entry
+         Entry
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
-from inyoka.core.api import IController, Rule, view, service, templated, db, \
+from inyoka.core.api import IController, Rule, view, templated, db, \
          redirect, redirect_to, href, login_required
 from inyoka.utils.pagination import URLPagination
-from inyoka.core.http import Response
 
 
 def context_modifier(request, context):
@@ -112,11 +111,9 @@ class ForumController(IController):
 
         form = AnswerQuestionForm(request.form)
         if request.method == 'POST' and form.validate():
-            answer = Answer(
-                author=request.user,
-                question=question,
-                text=form.text.data,
-            )
+            answer = Answer(author=request.user,
+                            question=question,
+                            text=form.text.data)
             db.session.commit()
             return redirect(href(question))
 

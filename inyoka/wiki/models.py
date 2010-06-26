@@ -11,12 +11,10 @@
 from datetime import datetime
 from operator import attrgetter
 from sqlalchemy.ext.associationproxy import association_proxy
-from sqlalchemy.orm import synonym
 from inyoka.core.api import db
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
-from inyoka.utils.html import escape
-from inyoka.wiki.utils import deurlify_page_name, urlify_page_name
+from inyoka.wiki.utils import urlify_page_name
 from inyoka.portal.api import ILatestContentProvider
 
 

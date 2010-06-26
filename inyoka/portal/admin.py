@@ -9,8 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
-from inyoka.core.api import db, view, templated, redirect, redirect_to, db, \
-    Rule, render_template
+from inyoka.core.api import db, view, templated, redirect_to, Rule, render_template
 from inyoka.core.models import Tag
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
@@ -85,7 +84,7 @@ class PortalAdminController(IAdminProvider):
     def tags_delete(self, request, slug):
         tag = Tag.query.filter_by(slug=slug).one()
         if 'cancel' in request.form:
-            flash(_(u'Action canceled'))
+            request.flash(_(u'Action canceled'))
         elif request.method == 'POST' and 'confirm' in request.form:
             db.session.delete(tag)
             db.session.commit()

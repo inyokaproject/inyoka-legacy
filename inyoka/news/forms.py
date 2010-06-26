@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.forms import Form, widgets, validators, TextField, \
-    BooleanField, QuerySelectField, QuerySelectMultipleField, AutocompleteField
+    BooleanField, QuerySelectField, AutocompleteField
 from inyoka.core.auth.models import User
 from inyoka.i18n import _
 from inyoka.news.models import Tag

@@ -8,20 +8,13 @@
     :copyright: Copyright 2008 by Armin Ronacher.
     :license: GNU GPL.
 """
-import re, os
 from email.mime.text import MIMEText
 from email.header import Header
 from subprocess import Popen, PIPE
-#from dns.resolver import query as dns_query
-#from dns.exception import DNSException
+from dns.resolver import query as dns_query
+from dns.exception import DNSException
+from inyoka.core.forms.validators import _mail_re
 
-
-_mail_re = re.compile(r'''(?xi)
-    (?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+
-        (?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|
-        "(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|
-          \\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@
-''')
 
 def send_mail(subject, message_, from_, to):
     """

@@ -18,14 +18,12 @@ from inyoka.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 from inyoka.core.cache import cache as inyoka_cache
-from inyoka.core.exceptions import NotFound
-from inyoka.core.database import db
 from inyoka.utils.csrf import get_csrf_token
 
 try:
-    import simplejson
+    import simplejson as json
 except:
-    import json as simplejson
+    import json
 
 
 def populate_context_defaults(context):
@@ -149,7 +147,7 @@ class InyokaEnvironment(Environment):
             get_csrf_token=get_csrf_token,
         )
         self.filters.update(
-            jsonencode=simplejson.dumps,
+            jsonencode=json.dumps,
             datetimeformat=l10n.format_datetime,
             dateformat=l10n.format_date,
             timeformat=l10n.format_time,

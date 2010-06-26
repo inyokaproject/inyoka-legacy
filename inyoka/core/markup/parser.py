@@ -9,7 +9,6 @@
 import re
 from inyoka.i18n import _
 from inyoka.context import ctx
-from inyoka.core.routing import href
 from inyoka.core.markup.lexer import escape, Lexer
 from inyoka.core.markup.machine import Renderer, RenderContext
 from inyoka.core.markup.transformers import ITransformer
@@ -631,11 +630,14 @@ class Parser(object):
         if not wiki:
             return nodes.InternalLink(page, children, anchor=anchor,
                                       force_existing=self.wiki_force_existing)
-        elif wiki in STANDARD_WIKI_MAP:
-            if not children:
-                children = [nodes.Text(page)]
-            return nodes.Link(STANDARD_WIKI_MAP[wiki](page), children,
-                              class_=wiki)
+        #TODO: Find a way to create that interwiki map automatically
+        #      by using some kind of providers.
+
+#        elif wiki in STANDARD_WIKI_MAP:
+#            if not children:
+#                children = [nodes.Text(page)]
+#            return nodes.Link(STANDARD_WIKI_MAP[wiki](page), children,
+#                              class_=wiki)
         return nodes.InterWikiLink(wiki, page, children, anchor=anchor)
 
     def parse_external_link(self, stream):
@@ -667,7 +669,7 @@ class Parser(object):
 
         Returns a `Ruler` node.
         """
-        token = stream.expect('ruler')
+        stream.expect('ruler')
         return nodes.Ruler()
 
     def parse_source_link(self, stream):

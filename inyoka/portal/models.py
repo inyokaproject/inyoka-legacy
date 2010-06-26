@@ -9,9 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.forms import TextField, widgets, validators
-from inyoka import Interface
-from inyoka.core.api import _, db, ctx
-from inyoka.core.auth.models import User, IUserProfileExtender
+from inyoka.core.api import _, db
+from inyoka.core.auth.models import IUserProfileExtender
 
 
 class BasicProfile(IUserProfileExtender):

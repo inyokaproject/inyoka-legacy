@@ -23,8 +23,7 @@ class AskQuestionForm(Form):
     text = TextField(lazy_gettext(u'Text'), [validators.Required()],
                      widget=widgets.TextArea())
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
-                        query_factory=lambda: Tag.query,
-                        validators=[validators.Length(min=1)])
+                        query_factory=lambda: Tag.query)
 
 
 class AnswerQuestionForm(Form):

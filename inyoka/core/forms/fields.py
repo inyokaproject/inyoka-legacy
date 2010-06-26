@@ -110,4 +110,3 @@ class AutocompleteField(QuerySelectMultipleField):
         self._formdata = None
 
     data = property(_get_data, _set_data)
-

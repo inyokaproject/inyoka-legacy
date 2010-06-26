@@ -44,19 +44,24 @@ class FlashMessage(tuple):
         )
 
 
+def get_bound_request(cls, environ):
+    """Initialize the request right after it was bound to the thread local.
+
+    This makes it possible that the requests __init__ method can access
+    thread local objects.
+    """
+    request = object.__new__(cls)
+    local.request = request
+    request.__init__(environ)
+    return request
+
+
 class Request(BaseRequest):
     """Our Request object with some special attributes and methods.
 
     :param environ: The WSGI environ.
 
     """
-
-    @staticmethod
-    def get_bound(environ):
-        request = object.__new__(Request)
-        local.request = request
-        request.__init__(environ)
-        return request
 
     def __init__(self, *args, **kwargs):
         BaseRequest.__init__(self, *args, **kwargs)

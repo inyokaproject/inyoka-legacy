@@ -109,4 +109,3 @@ def test_url_generation():
     eq_(href(p, revision=r.id), href('wiki/show', page=p.url_name,
                                             revision=r.id))
     eq_(href(r), href('wiki/show', page=p.url_name, revision=r.id))
-

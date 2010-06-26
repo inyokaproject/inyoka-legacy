@@ -69,4 +69,3 @@ def update_model(instance, form, includes=None):
 
         setattr(instance, key, value)
     return instance
-

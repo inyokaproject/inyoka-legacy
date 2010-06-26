@@ -107,6 +107,21 @@ def runcherrypy(hostname='localhost', port=5000):
     server.start()
 
 
+def runtornado(hostname='localhost', port=5000):
+    """Run development server with tornado"""
+    import tornado.httpserver
+    import tornado.ioloop
+    import tornado.wsgi
+    from inyoka.core.api import ctx
+
+    app = _make_app(debug=True)
+
+    container = tornado.wsgi.WSGIContainer(app)
+    http_server = tornado.httpserver.HTTPServer(container)
+    http_server.listen(port, hostname)
+    tornado.ioloop.IOLoop.instance().start()
+
+
 def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
     """Spawn a new interactive python shell
 

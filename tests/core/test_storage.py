@@ -10,17 +10,30 @@
 """
 from inyoka.core.api import db, ctx
 from inyoka.core.test import *
-from inyoka.core.cache import CACHE_SYSTEMS
+from inyoka.core.cache import cache, set_cache
 from inyoka.core.storage import storage
 
-cache = CACHE_SYSTEMS['simple']()
 
 ITEMS1 = [u'foobar', 1, 1.5, ['asd', u'ümlauts'], {'foo': 'bar'}]
 ITEMS2 = [u'barfoo', 2, 5.1, [u'ümlauts', 'asd'], {'bar': 'foo'}]
 DICT_1 = dict((u'key_%d' % i, v) for i, v in enumerate(ITEMS1))
 DICT_2 = dict((u'key_%d' % i, v) for i, v in enumerate(ITEMS2))
 
+_configured_cache = None
 
+
+def setup():
+    global _configured_cache
+    _configured_cache = ctx.cfg['caching.system']
+    ctx.cfg['caching.system'] = 'simple'
+    set_cache()
+
+
+def shutdown():
+    ctx.cfg['caching.system'] = _configured_cache
+
+
+@with_setup(setup, shutdown)
 def test():
     def test_get(d):
         for k, v in d.iteritems():

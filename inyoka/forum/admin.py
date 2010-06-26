@@ -10,10 +10,10 @@
 """
 from inyoka.core.api import _, view, service, templated, db, Rule, \
     redirect_to, Response
+from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
 from inyoka.forum.forms import EditForumForm
 from inyoka.forum.models import Forum, Tag
-from inyoka.utils.forms import model_to_dict, update_model
 
 
 class ForumAdminProvider(IAdminProvider):

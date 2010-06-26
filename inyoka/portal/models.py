@@ -8,11 +8,10 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms import TextField, widgets, validators
+from inyoka.core.forms import TextField, widgets, validators
 from inyoka import Interface
 from inyoka.core.api import _, db, ctx
 from inyoka.core.auth.models import User, IUserProfileExtender
-from inyoka.utils.forms import is_valid_url, is_valid_jabber
 
 
 class BasicProfile(IUserProfileExtender):
@@ -26,7 +25,7 @@ class BasicProfile(IUserProfileExtender):
         },
         'website': {
             'column': db.Column(db.String(200)),
-            'form': TextField(_(u'Website'), validators=[is_valid_url()])
+            'form': TextField(_(u'Website'), validators=[validators.is_valid_url()])
         },
         'location': {
             'column': db.Column(db.String(200)),
@@ -46,7 +45,7 @@ class BasicProfile(IUserProfileExtender):
         },
         'jabber': {
             'column': db.Column(db.String(200)),
-            'form': TextField(_(u'Jabber ID'), validators=[is_valid_jabber()]),
+            'form': TextField(_(u'Jabber ID'), validators=[validators.is_valid_jabber()]),
         },
         'skype': {
             'column': db.Column(db.String(200)),

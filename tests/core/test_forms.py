@@ -13,9 +13,9 @@ from werkzeug import MultiDict
 from inyoka.core.test import *
 from inyoka.core.exceptions import BadRequest
 from inyoka.utils.csrf import check_request, get_csrf_token
-from inyoka.utils.forms import model_to_dict, update_model, Form
+from inyoka.core.forms import Form, TextField
+from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.portal.controllers import PortalController
-from wtforms import TextField
 
 
 class DummyModel(db.Model):

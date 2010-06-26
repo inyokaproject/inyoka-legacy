@@ -51,6 +51,8 @@ DEFAULTS = {
         help_text=lazy_gettext(u'The name of the anonymous user.')),
     'enable_csrf_checks':           BooleanField(default=True,
         help_text=lazy_gettext(u'Enable or disable CSRF Protection.')),
+    'recaptcha.use_ssl':            BooleanField(default=True,
+        help_text=lazy_gettext(u'Use SSL for ReCaptcha requests, defaults to True')),
     'recaptcha.public_key':         TextField(
         default=u'6Lc1LwsAAAAAAPSQ4FcfLKJVcwzicnZl8v-RmeLj',
         help_text=lazy_gettext(u'Recaptcha public key')),

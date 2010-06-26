@@ -9,10 +9,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import _, view, templated, db, Rule, redirect_to, Response
+from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.admin.api import IAdminProvider
 from inyoka.paste.forms import EditPasteForm
 from inyoka.paste.models import Entry
-from inyoka.utils.forms import model_to_dict, update_model
 
 
 class PasteAdminProvider(IAdminProvider):

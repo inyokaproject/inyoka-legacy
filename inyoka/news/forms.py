@@ -8,9 +8,8 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms import TextField, BooleanField, widgets, validators
-from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from inyoka.utils.forms import AutocompleteField, Form
+from inyoka.core.forms import Form, widgets, validators, TextField, \
+    BooleanField, QuerySelectField, QuerySelectMultipleField, AutocompleteField
 from inyoka.core.auth.models import User
 from inyoka.i18n import _
 from inyoka.news.models import Tag

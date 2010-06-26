@@ -22,12 +22,11 @@ from inyoka.i18n import _
 from inyoka.context import ctx
 from inyoka.core.exceptions import BadRequest
 from inyoka.utils.html import escape
-from inyoka.utils.urls import make_full_domain
 
 try:
-    import simplejson
+    import simplejson as json
 except: #pragma: no cover
-    import json as simplejson
+    import json
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
 
@@ -93,7 +92,7 @@ class SerializableObject(object):
 def debug_dump(obj):
     """Dumps the data into a HTML page for debugging."""
     from inyoka.core.templating import render_template
-    dump = simplejson.dumps(obj, ensure_ascii=False, indent=2)
+    dump = json.dumps(obj, ensure_ascii=False, indent=2)
     escaped = _escaped_newline_re.sub('\n', dump)
     return render_template('_debug_dump.html', dict(dump=escaped))
 
@@ -226,7 +225,7 @@ _serializer_for_mimetypes = {
     'text/html':            'debug',
 }
 _serializer_map = {
-    'json':     (simplejson.dumps, 'application/json'),
+    'json':     (json.dumps, 'application/json'),
     'xml':      (dump_xml, 'application/xml'),
     'debug':    (debug_dump, 'text/html'),
 }

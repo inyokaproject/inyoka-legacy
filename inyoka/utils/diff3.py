@@ -457,7 +457,6 @@ class DiffRenderer(object):
         for file in files:
             for chunk in chunks:
                 lineiter = iter(chunk)
-                first = True
                 try:
                     while True:
                         line = lineiter.next()

@@ -238,7 +238,7 @@ class InyokaPlugin(cover.Coverage):
 
         # setup the new transaction context so that we can revert
         # it to get a clean and nice database
-        self._transaction = trans = self._connection.begin()
+        self._transaction = self._connection.begin()
 
         if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
             self._started = True
@@ -330,8 +330,6 @@ def fixture(model, _callback=None, **kwargs):
         if _callback is not None:
             data = _callback if isinstance(_callback, dict) else _callback()
         kwargs.update(data)
-        table = model.__table__
-        names = [col for col in kwargs.keys()]
         m = model(**kwargs)
         return m
     return onload

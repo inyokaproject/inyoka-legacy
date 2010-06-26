@@ -185,7 +185,7 @@ class Subscription(db.Model):
         if Subscription.query.filter_by(**args).count():
             return False
 
-        sub = Subscription(**args)
+        Subscription(**args)
         db.session.commit()
         return True
 

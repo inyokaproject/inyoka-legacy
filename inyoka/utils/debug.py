@@ -11,7 +11,6 @@
 import re
 import sys
 from werkzeug import escape, html
-from inyoka.core.routing import href
 
 
 _body_end_re = re.compile(r'</\s*(body|html)(?i)')
@@ -56,7 +55,6 @@ def find_calling_context(skip=2):
 def render_query_table(queries):
     """Renders a nice table of all queries in the page."""
     total = 0
-    stylesheet = href('static', file='style/debug.css')
 
     qresult = []
     for statement, parameters, start, end, calling_context in queries:

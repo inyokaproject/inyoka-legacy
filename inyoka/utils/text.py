@@ -67,7 +67,6 @@ def gen_timestamped_slug(slug, content_type, pub_date=None, prefix='',
 
     if content_type == 'entry':
         def handle_match(match):
-            name = match.group()
             handler = _slug_parts.get(match.group(1))
             if handler is None:
                 return match.group(0)

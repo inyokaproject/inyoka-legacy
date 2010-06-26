@@ -8,10 +8,9 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import re
 from datetime import datetime
 from werkzeug import cached_property
-from inyoka.core.api import _, ctx, db, cache, SerializableObject
+from inyoka.core.api import _, db, SerializableObject
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User

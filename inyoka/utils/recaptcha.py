@@ -12,15 +12,9 @@ from jinja2.utils import Markup
 from urllib import urlencode
 import urllib2
 try:
-    from simplejson import dumps
-except ImportError:
-    try:
-        from json import dumps
-    except ImportError:
-
-        def dumps(x):
-            raise RuntimeError('for captcha support, simplejson has to '
-                               'be installed.')
+    import simplejson as json
+except: #pragma: no cover
+    import json
 
 
 API_SERVER = 'http://api.recaptcha.net/'
@@ -50,7 +44,7 @@ def get_recaptcha_html(public_key=None, use_ssl=True, error=None,
     ''' % dict(
         script_url='%schallenge?%s' % (server, query),
         frame_url='%snoscript?%s' % (server, query),
-        options=dumps({
+        options=json.dumps({
             'theme':    'clean',
             'custom_translations': {
                 'visual_challenge': _("Get a visual challenge"),

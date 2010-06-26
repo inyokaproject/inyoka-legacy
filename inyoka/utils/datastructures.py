@@ -10,9 +10,9 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import sys
-from copy import copy, deepcopy
+from copy import deepcopy
 from operator import itemgetter
-from itertools import imap, izip
+from itertools import imap
 
 
 class _Missing(object):

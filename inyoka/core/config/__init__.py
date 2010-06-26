@@ -295,7 +295,7 @@ class Configuration(object):
 
     def itervalues(self, section=None):
         """Iterate over all values."""
-        for key in keys:
+        for key in self.iterkeys():
             yield self[key]
 
     def iteritems(self):

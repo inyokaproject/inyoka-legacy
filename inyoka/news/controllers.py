@@ -8,15 +8,12 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from os import path
 from datetime import date, datetime
 from werkzeug import cached_property
 from inyoka.i18n import _
 from inyoka.l10n import get_month_names
 from inyoka.core.api import IController, Rule, cache, view, templated, href, \
     redirect_to, db, login_required, ctx
-from inyoka.core.http import Response
-from inyoka.core.exceptions import Forbidden
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.news.models import Article, Tag, Comment
 from inyoka.news.forms import EditCommentForm
@@ -184,7 +181,6 @@ class NewsController(IController):
             }
             return ret
 
-        url_args = dict(year=year, month=month, day=day)
         query = Article.query.published().by_date(year, month, day)
 
         pagination = PageURLPagination(query, page=page, per_page=5)
@@ -245,14 +241,12 @@ class NewsController(IController):
         """
         query = Article.query
         title = u'News'
-        url = href('news/index')
 
         if slug:
             # filter the articles matching a defined tag
             tag = Tag.query.public().filter_by(slug=slug).one()
             query = tag.articles
             title = _(u'News for %s' % slug)
-            url = href('news/index', slug=slug)
 
         query = query.options(db.eagerload('author')) \
                      .order_by(Article.updated.desc()).limit(20)

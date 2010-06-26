@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from werkzeug import cached_property
 from inyoka.core.api import _, ctx, db, cache
 from inyoka.core.auth.models import User

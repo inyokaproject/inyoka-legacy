@@ -40,6 +40,11 @@ class PageQuery(db.Query):
                 return
         return super(PageQuery, self).get(pk)
 
+    def exists(self, name):
+        return bool(db.session.execute(
+            db.select([Page.id]).where(Page.name == name)
+        ).fetchone())
+
 
 class Page(db.Model):
     __tablename__ = 'wiki_page'

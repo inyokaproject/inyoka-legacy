@@ -18,7 +18,9 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from urlparse import urlparse, urlunparse
+from werkzeug import url_quote_plus
 from inyoka.context import ctx
+from inyoka.core.api import href
 from inyoka.core.markup.machine import NodeCompiler, NodeRenderer, \
     NodeQueryInterface
 from inyoka.utils.html import build_html_tag, escape
@@ -340,6 +342,53 @@ class Link(Element):
 
     def prepare_docbook(self):
         yield u'<ulink url="%s">' % self.href
+        for item in Element.prepare_docbook(self):
+            yield item
+        yield u'</ulink>'
+
+
+class InternalLink(Element):
+    """
+    Internal link.
+    """
+
+    allowed_in_signatures = True
+
+    def __init__(self, page, children=None, anchor=None, id=None, style=None,
+                 class_=None):
+        from inyoka.wiki.utils import deurlify_page_name
+        if not children:
+            children = [Text(deurlify_page_name(page))]
+        Element.__init__(self, children, id, style, class_)
+        self.page = page
+        self.anchor = anchor
+
+    def generate_markup(self, w):
+        w.markup(u'[:%s:' % self.href)
+        w.start_escaping(']')
+        Element.generate_markup(self, w)
+        w.stop_escaping()
+        w.markup(u']')
+
+    def prepare_html(self):
+        from inyoka.wiki.models import Page
+        missing = not Page.query.exists(self.page)
+        url = href('wiki/show', page=self.page)
+        if self.anchor:
+            url += '#' + url_quote_plus(self.anchor)
+
+        yield build_html_tag(u'a',
+            href=url,
+            id=self.id,
+            style=self.style,
+            classes=('internal', missing and u'missing' or u'', self.class_),
+        )
+        for item in Element.prepare_html(self):
+            yield item
+        yield u'</a>'
+
+    def prepare_docbook(self):
+        yield u'<ulink url="/%s">' % self.page
         for item in Element.prepare_docbook(self):
             yield item
         yield u'</ulink>'

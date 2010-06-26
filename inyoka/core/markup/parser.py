@@ -231,6 +231,7 @@ class Parser(object):
             'definition_begin':     self.parse_definition,
             'external_link_begin':  self.parse_external_link,
             'free_link':            self.parse_free_link,
+            'wiki_link_begin':      self.parse_wiki_link,
             'ruler':                self.parse_ruler,
             'pre_begin':            self.parse_pre_block,
             'table_row_begin':      self.parse_table,
@@ -628,8 +629,7 @@ class Parser(object):
             children.append(self.parse_node(stream))
         stream.expect('wiki_link_end')
         if not wiki:
-            return nodes.InternalLink(page, children, anchor=anchor,
-                                      force_existing=self.wiki_force_existing)
+            return nodes.InternalLink(page, children, anchor=anchor)
         #TODO: Find a way to create that interwiki map automatically
         #      by using some kind of providers.
 

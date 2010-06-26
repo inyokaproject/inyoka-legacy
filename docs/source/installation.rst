@@ -84,4 +84,43 @@ Now start the development server::
 Inyoka should accessible at http://inyoka.local:5000. Otherwise comment out the
 IPv6 lines in your ``/etc/hosts`` and try again.
 
-Ready!
+Almost ready!
+
+AMQP Messaging and Celery
+=========================
+
+We're using celery to support cron like tasks and delayed execution.  This
+gives us the opportunity to implement more features like never before and this
+much easier.  See delayed "hotness" calculation for example that calculates
+the hotness factor of various contents.
+
+In order to use celery you need to setup a AMQP Server, we're using RabbitMQ
+here for demonstration reasons.
+
+Install RabbitMQ::
+
+    sudo apt-get rabbitmq-server
+
+And now setup the server::
+
+    sudo /etc/init.d/rabbitmq-server start
+
+The server now runs fine and only needs to be configured to create a new
+namespace for inyoka to not disturb other services.
+
+First we add a new user named ``inyoka`` with password ``default``::
+
+    sudo rabbitmqctl add_user inyoka default
+
+Right after that we add a new virtual host for inyoka::
+
+    sudo rabbitmqctl add_vhost inyoka
+
+Now we're more or less able to use that server.  But for development reasons
+we need unlimited powers, as always.  So give the inyoka user all permissions
+on the inyoka virtual host domain::
+
+    sudo rabbitmqctl set_permissions -p inyoka inyoka "" ".*" ".*"
+
+
+Now you can use ``fab celeryd`` to start you're celery server.

@@ -60,7 +60,7 @@ Database and other things
 
 We are now ready to activate the virtual environment
 (``../inyoka-testsuite`` is the default installation folder, may be replaced).
-Do not forget the "." at the beginning!:
+Do not forget the "." at the beginning!::
 
     . ../inyoka-testsuite/bin/activate
 
@@ -121,6 +121,5 @@ we need unlimited powers, as always.  So give the inyoka user all permissions
 on the inyoka virtual host domain::
 
     sudo rabbitmqctl set_permissions -p inyoka inyoka "" ".*" ".*"
-
 
 Now you can use ``fab celeryd`` to start you're celery server.

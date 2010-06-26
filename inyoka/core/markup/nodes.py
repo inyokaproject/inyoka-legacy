@@ -364,7 +364,10 @@ class InternalLink(Element):
         self.anchor = anchor
 
     def generate_markup(self, w):
-        w.markup(u'[:%s:' % self.href)
+        target = self.page
+        if self.anchor:
+            target += '#' + self.anchor
+        w.markup(u'[:%s:' % target.replace(':', '::'))
         w.start_escaping(']')
         Element.generate_markup(self, w)
         w.stop_escaping()

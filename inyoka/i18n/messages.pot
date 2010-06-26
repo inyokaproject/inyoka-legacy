@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-06-04 00:14+0200\n"
+"POT-Creation-Date: 2010-06-26 15:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.0dev-r482\n"
+"Generated-By: Babel 1.0dev-r546\n"
 
 #: inyoka/core/serializer.py:143
 msgid ""
@@ -26,6 +26,11 @@ msgstr ""
 #: inyoka/core/serializer.py:161
 #, python-format
 msgid "Unknown format \"%s\""
+msgstr ""
+
+#: inyoka/core/tasks.py:23
+#, python-format
+msgid "Registration at %s"
 msgstr ""
 
 #: inyoka/core/auth/decorators.py:26
@@ -96,172 +101,196 @@ msgstr ""
 msgid "Enable or disable CSRF Protection."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:56
+#: inyoka/core/config/defaults.py:55
+msgid "Use SSL for ReCaptcha requests, defaults to True"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:58
 msgid "Recaptcha public key"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:59
+#: inyoka/core/config/defaults.py:61
 msgid "Recaptcha private key"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:61
+#: inyoka/core/config/defaults.py:63
 msgid "The website title to show in various places"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:65
+msgid "The mail address used for sending mails"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:69
 msgid ""
 "The database URL.  For more information about database settings consult the "
 "Inyoka docs."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:68
+#: inyoka/core/config/defaults.py:72
 msgid ""
 "If enabled the database will collect the SQL statements and add them to the "
 "bottom of the page for easier debugging."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:72
+#: inyoka/core/config/defaults.py:76
 msgid ""
 "If enabled the database will echo all submitted statements to the default "
 "logger.  That defaults to stdout."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:76
+#: inyoka/core/config/defaults.py:80
 msgid ""
 "If set to non -1, number of seconds between connection recycling. If this "
 "timeout is surpassed the connection will be closed and replaced with a newly"
 " opened connection."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:80
+#: inyoka/core/config/defaults.py:84
 msgid ""
 "The number of seconds to wait before giving up on returning a connection.  "
 "This will not be used if the used database is one of SQLite, Access or "
 "Informix as those don't support queued connection pools."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:87
+#: inyoka/core/config/defaults.py:91
 msgid "Imaging backend to use."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:89
+#: inyoka/core/config/defaults.py:93
 msgid "Portal avatar size."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:91
+#: inyoka/core/config/defaults.py:95
 msgid "Portal thumbnail size."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:95
+#: inyoka/core/config/defaults.py:99
 msgid "Custom template path which is searched before the default path."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:98
+#: inyoka/core/config/defaults.py:102
 msgid "Auto reload template files if they changed their contents."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:101
+#: inyoka/core/config/defaults.py:105
 msgid "Use either memory, filesystem or memcached bytecode caches"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:104
+#: inyoka/core/config/defaults.py:108
 msgid "Use Memcached for bytecode caching"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:106
+#: inyoka/core/config/defaults.py:110
 msgid "Use filesystem for bytecode caching"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:110
+#: inyoka/core/config/defaults.py:114
 msgid "Choose one of null, simple, memcached or filesystem for the caching system."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:113
+#: inyoka/core/config/defaults.py:117
 msgid "The path for the filesystem caches"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:115
+#: inyoka/core/config/defaults.py:119
 msgid "The timeout for the caching system"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:117
+#: inyoka/core/config/defaults.py:121
 msgid "Comma seperated list of memcached servers"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:121
+#: inyoka/core/config/defaults.py:125
 msgid "The Authsystem which should get used"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:127
+#: inyoka/core/config/defaults.py:131
 msgid "Url mapping used for the portal application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:129
+#: inyoka/core/config/defaults.py:133
 msgid "Url mapping used for the calendar application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:131
+#: inyoka/core/config/defaults.py:135
 msgid "Url mapping used for the news application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:133
+#: inyoka/core/config/defaults.py:137
 msgid "Url mapping used for the forum application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:135
+#: inyoka/core/config/defaults.py:139
 msgid "Url mapping used for the wiki application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:137
+#: inyoka/core/config/defaults.py:141
 msgid "Url mapping used for the paste application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:139
+#: inyoka/core/config/defaults.py:143
 msgid "Url mapping used for the planet application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:141
+#: inyoka/core/config/defaults.py:145
 msgid "Url mapping used for the admin application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:143
+#: inyoka/core/config/defaults.py:147
 msgid "Url mapping used for the API"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:147
+#: inyoka/core/config/defaults.py:151
 msgid "Url mapping used for the testing system.  Do never chage that value!"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:153
+#: inyoka/core/config/defaults.py:157
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:155
+#: inyoka/core/config/defaults.py:159
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:157
+#: inyoka/core/config/defaults.py:161
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:161
+#: inyoka/core/config/defaults.py:165
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:167
+#: inyoka/core/config/defaults.py:171
 msgid ""
 "Name of the wiki index page (the one a user accessing the wiki's / is "
 "redirected to)"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:172
+#: inyoka/core/config/defaults.py:176
 msgid ""
 "Files with lines greater than this number will not have syntax highlighting."
 " Enter 0 for no limit."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:75
+msgid "You have to enter a valid email address."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:97
+msgid "You have to enter a valid URL."
+msgstr ""
+
+#: inyoka/core/forms/validators.py:125
+msgid "You have to enter a valid Jabber ID"
+msgstr ""
+
+#: inyoka/core/forms/validators.py:135
+msgid "You entered an invalid captcha."
 msgstr ""
 
 #: inyoka/core/markup/parser.py:47
@@ -279,35 +308,35 @@ msgstr ""
 msgid "Forum"
 msgstr ""
 
-#: inyoka/forum/forms.py:21 inyoka/news/forms.py:20
+#: inyoka/forum/forms.py:21 inyoka/news/forms.py:19
 #: inyoka/templates/paste/browse.html:14
 msgid "Title"
 msgstr ""
 
-#: inyoka/forum/forms.py:23 inyoka/forum/forms.py:32 inyoka/news/forms.py:22
-#: inyoka/news/forms.py:32 inyoka/paste/forms.py:31 inyoka/wiki/forms.py:17
+#: inyoka/forum/forms.py:23 inyoka/forum/forms.py:31 inyoka/news/forms.py:21
+#: inyoka/news/forms.py:31 inyoka/paste/forms.py:31 inyoka/wiki/forms.py:16
 msgid "Text"
 msgstr ""
 
-#: inyoka/forum/forms.py:25 inyoka/forum/forms.py:46 inyoka/news/forms.py:24
+#: inyoka/forum/forms.py:25 inyoka/forum/forms.py:45 inyoka/news/forms.py:23
 #: inyoka/templates/news/base.html:20 inyoka/templates/portal/index.html:25
 #: inyoka/templates/portal/admin/index.html:5
 msgid "Tags"
 msgstr ""
 
-#: inyoka/forum/forms.py:38 inyoka/portal/forms.py:69
+#: inyoka/forum/forms.py:37 inyoka/portal/forms.py:71
 msgid "Name"
 msgstr ""
 
-#: inyoka/forum/forms.py:40
+#: inyoka/forum/forms.py:39
 msgid "Slug"
 msgstr ""
 
-#: inyoka/forum/forms.py:42
+#: inyoka/forum/forms.py:41
 msgid "Parent"
 msgstr ""
 
-#: inyoka/forum/forms.py:44
+#: inyoka/forum/forms.py:43
 msgid "Description"
 msgstr ""
 
@@ -453,19 +482,19 @@ msgstr ""
 msgid "%s – %s"
 msgstr ""
 
-#: inyoka/news/forms.py:21
+#: inyoka/news/forms.py:20
 msgid "Intro"
 msgstr ""
 
-#: inyoka/news/forms.py:23
+#: inyoka/news/forms.py:22
 msgid "Published"
 msgstr ""
 
-#: inyoka/news/forms.py:26 inyoka/templates/paste/browse.html:15
+#: inyoka/news/forms.py:25 inyoka/templates/paste/browse.html:15
 msgid "Author"
 msgstr ""
 
-#: inyoka/news/forms.py:33
+#: inyoka/news/forms.py:32
 msgid ""
 "To quote another comment use <em>@comment_number</em>. This is automatically"
 " used if you click “answer”."
@@ -534,23 +563,23 @@ msgstr ""
 msgid "User is unknown or the password is not correct."
 msgstr ""
 
-#: inyoka/portal/auth.py:109 inyoka/portal/auth.py:151 inyoka/portal/auth.py:195
+#: inyoka/portal/auth.py:110 inyoka/portal/auth.py:152 inyoka/portal/auth.py:196
 msgid "You are now logged in."
 msgstr ""
 
-#: inyoka/portal/auth.py:130
+#: inyoka/portal/auth.py:131
 msgid "You have been logged out successfully."
 msgstr ""
 
-#: inyoka/portal/auth.py:183
+#: inyoka/portal/auth.py:184
 msgid "Please log in."
 msgstr ""
 
-#: inyoka/portal/auth.py:198
+#: inyoka/portal/auth.py:199
 msgid "Invalid login."
 msgstr ""
 
-#: inyoka/portal/auth.py:200
+#: inyoka/portal/auth.py:201
 msgid "Invalid login"
 msgstr ""
 
@@ -566,68 +595,72 @@ msgstr ""
 msgid "The supplied key is not valid anymore."
 msgstr ""
 
-#: inyoka/portal/forms.py:45 inyoka/portal/forms.py:59
+#: inyoka/portal/forms.py:46 inyoka/portal/forms.py:60
 #: inyoka/templates/portal/users.html:13
 msgid "Username"
 msgstr ""
 
-#: inyoka/portal/forms.py:46 inyoka/portal/forms.py:61
+#: inyoka/portal/forms.py:47 inyoka/portal/forms.py:62
 msgid "Password"
 msgstr ""
 
-#: inyoka/portal/forms.py:48
+#: inyoka/portal/forms.py:49
 msgid "Remember me"
 msgstr ""
 
-#: inyoka/portal/forms.py:60
+#: inyoka/portal/forms.py:61
 msgid "Email"
 msgstr ""
 
-#: inyoka/portal/forms.py:62
+#: inyoka/portal/forms.py:63
 msgid "Passwords must match"
 msgstr ""
 
-#: inyoka/portal/forms.py:64
+#: inyoka/portal/forms.py:65
 msgid "Repeat Passord"
 msgstr ""
 
-#: inyoka/portal/models.py:25
+#: inyoka/portal/forms.py:67
+msgid "ReCaptcha"
+msgstr ""
+
+#: inyoka/portal/models.py:24
 msgid "Realname"
 msgstr ""
 
-#: inyoka/portal/models.py:29
+#: inyoka/portal/models.py:28
 msgid "Website"
 msgstr ""
 
-#: inyoka/portal/models.py:33
+#: inyoka/portal/models.py:32
 msgid "Location"
 msgstr ""
 
-#: inyoka/portal/models.py:37
+#: inyoka/portal/models.py:36
 msgid "Interests"
 msgstr ""
 
-#: inyoka/portal/models.py:41
+#: inyoka/portal/models.py:40
 msgid "Occupation"
 msgstr ""
 
-#: inyoka/portal/models.py:45
+#: inyoka/portal/models.py:44
 msgid "Signature"
 msgstr ""
 
-#: inyoka/portal/models.py:49
+#: inyoka/portal/models.py:48
 msgid "Jabber ID"
 msgstr ""
 
-#: inyoka/portal/models.py:53
+#: inyoka/portal/models.py:52
 msgid "Skype"
 msgstr ""
 
-#: inyoka/portal/models.py:57
+#: inyoka/portal/models.py:56
 msgid "QuteCom (previously called WengoPhone)"
 msgstr ""
 
-#: inyoka/portal/models.py:62
+#: inyoka/portal/models.py:61
 msgid "SIP"
 msgstr ""
 
@@ -678,6 +711,11 @@ msgstr ""
 
 #: inyoka/templates/base.html:52
 msgid "Logout"
+msgstr ""
+
+#: inyoka/templates/base.html:72
+#, python-format
+msgid "Powered by Inyoka %(revision)s on Python %(python)s"
 msgstr ""
 
 #: inyoka/templates/admin/base.html:6
@@ -898,7 +936,7 @@ msgid "unsubscribe"
 msgstr ""
 
 #: inyoka/templates/news/edit_comment.html:5 inyoka/templates/wiki/history.html:13
-#: inyoka/wiki/forms.py:18
+#: inyoka/wiki/forms.py:17
 msgid "Edit comment"
 msgstr ""
 
@@ -1027,7 +1065,7 @@ msgstr ""
 msgid "Pastebin Admin"
 msgstr ""
 
-#: inyoka/templates/paste/admin/edit.html:13 inyoka/templates/wiki/base.html:17
+#: inyoka/templates/paste/admin/edit.html:13 inyoka/templates/wiki/base.html:18
 #: inyoka/templates/wiki/edit.html:3
 msgid "Edit"
 msgstr ""
@@ -1161,11 +1199,11 @@ msgstr ""
 msgid "…or <a href=\"%(link)s\">create a new tag</a>"
 msgstr ""
 
-#: inyoka/templates/wiki/base.html:16
+#: inyoka/templates/wiki/base.html:17
 msgid "Show"
 msgstr ""
 
-#: inyoka/templates/wiki/base.html:18 inyoka/templates/wiki/history.html:2
+#: inyoka/templates/wiki/base.html:19 inyoka/templates/wiki/history.html:2
 msgid "History"
 msgstr ""
 
@@ -1177,16 +1215,12 @@ msgstr ""
 msgid "Creator"
 msgstr ""
 
-#: inyoka/utils/forms.py:247
-msgid "You have to enter a valid email address."
+#: inyoka/templates/wiki/not_found.html:7
+msgid "The requested page was not found."
 msgstr ""
 
-#: inyoka/utils/forms.py:269
-msgid "You have to enter a valid URL."
-msgstr ""
-
-#: inyoka/utils/forms.py:297
-msgid "You have to enter a valid Jabber ID"
+#: inyoka/templates/wiki/not_found.html:11
+msgid "If you want, you can create it"
 msgstr ""
 
 #: inyoka/utils/pagination.py:32
@@ -1197,6 +1231,42 @@ msgstr ""
 msgid "« previous"
 msgstr ""
 
+#: inyoka/utils/recaptcha.py:56
+msgid "Get a visual challenge"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:57
+msgid "Get an audio challenge"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:58
+msgid "Get a new challenge"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:59
+msgid "Type the two words:"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:60
+msgid "Type what you hear:"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:61
+msgid "Help"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:62
+msgid "Play sound again"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:63
+msgid "Download sound as MP3"
+msgstr ""
+
+#: inyoka/utils/recaptcha.py:64
+msgid "Incorrect. Try again."
+msgstr ""
+
 #: inyoka/utils/sortable.py:98
 #, python-format
 msgid ""
@@ -1204,19 +1274,19 @@ msgid ""
 "ordering"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:45 inyoka/wiki/controllers.py:47
+#: inyoka/wiki/controllers.py:52 inyoka/wiki/controllers.py:54
 msgid "Invalid revision specified."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:76
+#: inyoka/wiki/controllers.py:85
 msgid "Text didn't change."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:88
+#: inyoka/wiki/controllers.py:97
 msgid "The page has been saved."
 msgstr ""
 
-#: inyoka/wiki/utils.py:58 inyoka/wiki/utils.py:65
+#: inyoka/wiki/utils.py:61 inyoka/wiki/utils.py:68
 msgid "No such page."
 msgstr ""
 

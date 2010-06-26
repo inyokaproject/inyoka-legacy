@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-06-26 15:24+0200\n"
+"POT-Creation-Date: 2010-06-27 00:58+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -17,13 +17,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
 
-#: inyoka/core/serializer.py:143
+#: inyoka/core/serializer.py:142
 msgid ""
 "Could not detect format.  You have to specify the format as query argument "
 "or in the accept HTTP header."
 msgstr ""
 
-#: inyoka/core/serializer.py:161
+#: inyoka/core/serializer.py:160
 #, python-format
 msgid "Unknown format \"%s\""
 msgstr "Unbekanntes Format \"%s\""
@@ -31,11 +31,11 @@ msgstr "Unbekanntes Format \"%s\""
 #: inyoka/core/tasks.py:23
 #, python-format
 msgid "Registration at %s"
-msgstr ""
+msgstr "Registrierung bei %s"
 
 #: inyoka/core/auth/decorators.py:26
 msgid "You must login to view this!"
-msgstr ""
+msgstr "Du musst angemeldet sein, um dies zu sehen!"
 
 #: inyoka/core/auth/models.py:28
 msgid "inactive"
@@ -59,11 +59,11 @@ msgstr "Debugmodus aktivieren"
 
 #: inyoka/core/config/defaults.py:32
 msgid "List of activated components"
-msgstr ""
+msgstr "Liste der aktivierten Komponenten"
 
 #: inyoka/core/config/defaults.py:34
 msgid "List of deactivted components"
-msgstr ""
+msgstr "Liste der deaktivierten Komponenten"
 
 #: inyoka/core/config/defaults.py:36
 msgid "The path to the media folder"
@@ -95,15 +95,15 @@ msgstr "Standard Zeitzone für alle Benutzer."
 
 #: inyoka/core/config/defaults.py:51
 msgid "The name of the anonymous user."
-msgstr ""
+msgstr "Der Name des anonymen Benutzers"
 
 #: inyoka/core/config/defaults.py:53
 msgid "Enable or disable CSRF Protection."
-msgstr ""
+msgstr "Aktiviere bzw. deaktiviere den CSRF-Schutz"
 
 #: inyoka/core/config/defaults.py:55
 msgid "Use SSL for ReCaptcha requests, defaults to True"
-msgstr ""
+msgstr "Benutze SSL für ReCaptcha-Anfragen, standardmäßig aktiviert"
 
 #: inyoka/core/config/defaults.py:58
 msgid "Recaptcha public key"
@@ -115,11 +115,11 @@ msgstr "Privater Recaptcha Schlüssel"
 
 #: inyoka/core/config/defaults.py:63
 msgid "The website title to show in various places"
-msgstr ""
+msgstr "Der Name der Webseite, der an verschiedenen Stellen angezeigt wird"
 
 #: inyoka/core/config/defaults.py:65
 msgid "The mail address used for sending mails"
-msgstr ""
+msgstr "Die Adresse, die für ausgehende E-Mails benutzt wird"
 
 #: inyoka/core/config/defaults.py:69
 msgid ""
@@ -279,211 +279,211 @@ msgid ""
 " Enter 0 for no limit."
 msgstr ""
 
-#: inyoka/core/forms/validators.py:75
+#: inyoka/core/forms/validators.py:74
 msgid "You have to enter a valid email address."
 msgstr "Du musst eine valide E-Mail Adresse eingeben."
 
-#: inyoka/core/forms/validators.py:97
+#: inyoka/core/forms/validators.py:96
 msgid "You have to enter a valid URL."
 msgstr "Du musst eine intakte URL eingeben."
 
-#: inyoka/core/forms/validators.py:125
+#: inyoka/core/forms/validators.py:124
 msgid "You have to enter a valid Jabber ID"
 msgstr "Du musst eine valide Jabber-ID eingeben"
 
-#: inyoka/core/forms/validators.py:135
+#: inyoka/core/forms/validators.py:134
 msgid "You entered an invalid captcha."
-msgstr ""
+msgstr "Du hast das Sicherheitsbild falsch eingegeben"
 
-#: inyoka/core/markup/parser.py:47
+#: inyoka/core/markup/parser.py:46
 msgid "Internal parser error: "
 msgstr ""
 
-#: inyoka/core/markup/parser.py:48
+#: inyoka/core/markup/parser.py:47
 msgid ""
 "The parser could not process the text because it exceeded the maximum "
 "allowed depth for nested elements"
 msgstr ""
 
-#: inyoka/forum/admin.py:21 inyoka/templates/base.html:39
+#: inyoka/forum/admin.py:20 inyoka/templates/base.html:39
 #: inyoka/templates/forum/base.html:2 inyoka/templates/forum/index.html:4
 msgid "Forum"
 msgstr "Forum"
 
-#: inyoka/forum/forms.py:21 inyoka/news/forms.py:19
+#: inyoka/forum/forms.py:19 inyoka/news/forms.py:19
 #: inyoka/templates/paste/browse.html:14
 msgid "Title"
 msgstr "Titel"
 
-#: inyoka/forum/forms.py:23 inyoka/forum/forms.py:31 inyoka/news/forms.py:21
+#: inyoka/forum/forms.py:21 inyoka/forum/forms.py:29 inyoka/news/forms.py:21
 #: inyoka/news/forms.py:31 inyoka/paste/forms.py:31 inyoka/wiki/forms.py:16
 msgid "Text"
 msgstr "Text"
 
-#: inyoka/forum/forms.py:25 inyoka/forum/forms.py:45 inyoka/news/forms.py:23
+#: inyoka/forum/forms.py:23 inyoka/forum/forms.py:43 inyoka/news/forms.py:23
 #: inyoka/templates/news/base.html:20 inyoka/templates/portal/index.html:25
 #: inyoka/templates/portal/admin/index.html:5
 msgid "Tags"
-msgstr "Tags"
+msgstr "Schlagwörter"
 
-#: inyoka/forum/forms.py:37 inyoka/portal/forms.py:71
+#: inyoka/forum/forms.py:35 inyoka/portal/forms.py:70
 msgid "Name"
 msgstr "Name"
 
-#: inyoka/forum/forms.py:39
+#: inyoka/forum/forms.py:37
 msgid "Slug"
 msgstr "Slug"
 
-#: inyoka/forum/forms.py:41
+#: inyoka/forum/forms.py:39
 msgid "Parent"
 msgstr "Übergeordnetes Forum"
 
-#: inyoka/forum/forms.py:43
+#: inyoka/forum/forms.py:41
 msgid "Description"
 msgstr "Beschreibung"
 
-#: inyoka/forum/models.py:37
+#: inyoka/forum/models.py:36
 msgid "Questions"
 msgstr "Fragen"
 
-#: inyoka/l10n/__init__.py:142
+#: inyoka/l10n/__init__.py:141
 msgid "zero"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:142
+#: inyoka/l10n/__init__.py:141
 msgid "one"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:142
+#: inyoka/l10n/__init__.py:141
 msgid "two"
-msgstr ""
+msgstr "zwei"
 
-#: inyoka/l10n/__init__.py:142
+#: inyoka/l10n/__init__.py:141
 msgid "three"
-msgstr ""
+msgstr "drei"
+
+#: inyoka/l10n/__init__.py:141
+msgid "four"
+msgstr "view"
 
 #: inyoka/l10n/__init__.py:142
-msgid "four"
-msgstr ""
-
-#: inyoka/l10n/__init__.py:143
 msgid "five"
-msgstr ""
+msgstr "fünf"
 
-#: inyoka/l10n/__init__.py:143
+#: inyoka/l10n/__init__.py:142
 msgid "six"
-msgstr ""
+msgstr "sechs"
 
-#: inyoka/l10n/__init__.py:143
+#: inyoka/l10n/__init__.py:142
 msgid "seven"
-msgstr ""
+msgstr "sieben"
 
-#: inyoka/l10n/__init__.py:143
+#: inyoka/l10n/__init__.py:142
 msgid "eight"
 msgstr "acht"
 
-#: inyoka/l10n/__init__.py:144
+#: inyoka/l10n/__init__.py:143
 msgid "nine"
 msgstr "neun"
 
-#: inyoka/l10n/__init__.py:144
+#: inyoka/l10n/__init__.py:143
 msgid "ten"
-msgstr ""
+msgstr "zehn"
 
-#: inyoka/l10n/__init__.py:144
+#: inyoka/l10n/__init__.py:143
 msgid "eleven"
 msgstr "elf"
 
-#: inyoka/l10n/__init__.py:144
+#: inyoka/l10n/__init__.py:143
 msgid "twelve"
-msgstr ""
+msgstr "zwölf"
 
-#: inyoka/l10n/__init__.py:220
+#: inyoka/l10n/__init__.py:219
 msgid "just now"
-msgstr ""
+msgstr "gerade eben"
 
-#: inyoka/l10n/__init__.py:224
+#: inyoka/l10n/__init__.py:223
 #, python-format
 msgid "%(timedelta)s ago"
-msgstr "%(timedelta)s her"
+msgstr "vor %(timedelta)s"
 
-#: inyoka/news/admin.py:24 inyoka/templates/base.html:37
+#: inyoka/news/admin.py:23 inyoka/templates/base.html:37
 #: inyoka/templates/news/base.html:2
 msgid "News"
-msgstr "News"
+msgstr "Neuigkeiten"
 
-#: inyoka/news/admin.py:68
+#: inyoka/news/admin.py:67
 #, python-format
 msgid "Updated article “%s”"
 msgstr "Der Artikel „%s“ wurde erfolgreich aktualisiert"
 
-#: inyoka/news/admin.py:78 inyoka/portal/admin.py:88
+#: inyoka/news/admin.py:77 inyoka/portal/admin.py:87
 msgid "Action canceled"
 msgstr "Aktion abgebrochen"
 
-#: inyoka/news/admin.py:82
+#: inyoka/news/admin.py:81
 #, python-format
 msgid "The article “%s” was deleted successfully."
 msgstr "Der Artikel „%s“ wurde erfolgreich gelöscht."
 
-#: inyoka/news/controllers.py:119
+#: inyoka/news/controllers.py:116
 msgid "This article is hidden"
-msgstr ""
+msgstr "Der Artikel ist verborgen"
 
-#: inyoka/news/controllers.py:127
+#: inyoka/news/controllers.py:124
 msgid "The comment was successfully edited"
 msgstr "Der Kommentar wurde erfolgreich bearbeitet"
 
-#: inyoka/news/controllers.py:132
+#: inyoka/news/controllers.py:129
 msgid "Your comment was successfully created"
 msgstr "Der Kommentar wurde erfolgreich erstellt"
 
-#: inyoka/news/controllers.py:158
+#: inyoka/news/controllers.py:155
 msgid "The comment was hidden"
 msgstr "Der Kommentar wurde versteckt"
 
-#: inyoka/news/controllers.py:159
+#: inyoka/news/controllers.py:156
 msgid "The comment was restored"
 msgstr "Der Kommentar wurde wiederhergestellt"
 
-#: inyoka/news/controllers.py:168
+#: inyoka/news/controllers.py:165
 msgid "The comment was saved"
 msgstr "Der Kommentar wurde gespeichert"
 
-#: inyoka/news/controllers.py:209 inyoka/news/controllers.py:231
+#: inyoka/news/controllers.py:205 inyoka/news/controllers.py:227
 msgid "You had already been subscribed before."
 msgstr "You had already been subscribed before."
 
-#: inyoka/news/controllers.py:210
+#: inyoka/news/controllers.py:206
 msgid "You have successfully been subscribed to new News articles."
 msgstr "Du wurdest erfolgreich für Benachrichtigungen neuer Artikel registriert."
 
-#: inyoka/news/controllers.py:212 inyoka/news/controllers.py:234
+#: inyoka/news/controllers.py:208 inyoka/news/controllers.py:230
 msgid "You had not been subscribed before."
 msgstr "Du warst noch nicht für Benachrichtigungen registriert."
 
-#: inyoka/news/controllers.py:213
+#: inyoka/news/controllers.py:209
 msgid "You have successfully been unsubscribed from new News articles."
 msgstr "Du wurdest erfolgreich für Benachrichtigungen neuer Artikel gelöscht."
 
-#: inyoka/news/controllers.py:232
+#: inyoka/news/controllers.py:228
 msgid "You have successfully been subscribed to new comments on this article."
 msgstr ""
 "Du wurdest erfolgreich für Benachrichtigungen neuer Kommentare dieses "
 "Artikels registriert."
 
-#: inyoka/news/controllers.py:235
+#: inyoka/news/controllers.py:231
 msgid "You have successfully been unsubscribed from new comments on this article."
 msgstr ""
 "Du wurdest erfolgreich für Benachrichtigungen neuer Kommentare dieses "
 "Artikels gelöscht."
 
-#: inyoka/news/controllers.py:254
+#: inyoka/news/controllers.py:249
 #, python-format
 msgid "News for %s"
 msgstr "Artikel für %s"
 
-#: inyoka/news/controllers.py:260
+#: inyoka/news/controllers.py:254
 #, python-format
 msgid "%s – %s"
 msgstr ""
@@ -538,137 +538,137 @@ msgstr "Paste verstecken"
 msgid "Paste #%d"
 msgstr "Paste #%d"
 
-#: inyoka/portal/admin.py:22 inyoka/templates/base.html:35
+#: inyoka/portal/admin.py:21 inyoka/templates/base.html:35
 #: inyoka/templates/portal/base.html:4
 msgid "Portal"
 msgstr "Portal"
 
-#: inyoka/portal/admin.py:50
+#: inyoka/portal/admin.py:49
 #, python-format
 msgid "The tag “%s” does not exist"
-msgstr ""
+msgstr "Das Schlagwort „%s“ existiert nicht"
 
-#: inyoka/portal/admin.py:75
+#: inyoka/portal/admin.py:74
 #, python-format
 msgid "Created tag “%s”"
-msgstr "Tag „%s“ wurde erfolgreich erstellt"
+msgstr "Das Schlagwort „%s“ wurde erfolgreich erstellt"
 
-#: inyoka/portal/admin.py:77
+#: inyoka/portal/admin.py:76
 #, python-format
 msgid "Updated tag “%s”"
-msgstr "Kategorie „%s“ erfolgreich aktualisiert"
+msgstr "Das Schlagwort „%s“ wurde erfolgreich aktualisiert"
 
-#: inyoka/portal/admin.py:92
+#: inyoka/portal/admin.py:91
 #, python-format
 msgid "The tag “%s” was deleted successfully."
-msgstr "Die Kategorie „%s“ wurde erfolgreich gelöscht."
+msgstr "Das Schlagwort „%s“ wurde erfolgreich gelöscht."
 
 #: inyoka/portal/auth.py:31
-msgid "Activation successfull, you can now login with you're credentials"
-msgstr ""
+msgid "Activation successfull, you can now login with your credentials"
+msgstr "Aktivierung erfolgreich, du kannst dich anmelden"
 
 #: inyoka/portal/auth.py:44
 msgid "User is unknown or the password is not correct."
 msgstr "Der Benutzer existiert nicht oder das Passwort ist falsch."
 
-#: inyoka/portal/auth.py:110 inyoka/portal/auth.py:152 inyoka/portal/auth.py:196
+#: inyoka/portal/auth.py:110 inyoka/portal/auth.py:142 inyoka/portal/auth.py:186
 msgid "You are now logged in."
-msgstr "Du bist nun eingeloggt."
+msgstr "Du bist nun angemeldet."
 
 #: inyoka/portal/auth.py:131
 msgid "You have been logged out successfully."
-msgstr ""
+msgstr "Du hast dich erfolgreich abgemeldet."
 
-#: inyoka/portal/auth.py:184
+#: inyoka/portal/auth.py:174
 msgid "Please log in."
-msgstr "Bitte einloggen."
+msgstr "Bitte anmelden."
 
-#: inyoka/portal/auth.py:199
+#: inyoka/portal/auth.py:189
 msgid "Invalid login."
 msgstr ""
 
-#: inyoka/portal/auth.py:201
+#: inyoka/portal/auth.py:191
 msgid "Invalid login"
 msgstr ""
 
-#: inyoka/portal/controllers.py:64
+#: inyoka/portal/controllers.py:60
 msgid "Your profile was saved successfully"
 msgstr "Der Artikel %s wurde erfolgreich gespeichert."
 
-#: inyoka/portal/controllers.py:146
+#: inyoka/portal/controllers.py:142
 msgid "Key not found. Maybe it has already been used?"
 msgstr "CSRF-Schlüssel nicht gefunden. Wurde er bereits verwendet?"
 
-#: inyoka/portal/controllers.py:148
+#: inyoka/portal/controllers.py:144
 msgid "The supplied key is not valid anymore."
 msgstr "Der übergebene CSRF-Schlüssel ist nicht mehr gültig."
 
-#: inyoka/portal/forms.py:46 inyoka/portal/forms.py:60
+#: inyoka/portal/forms.py:45 inyoka/portal/forms.py:59
 #: inyoka/templates/portal/users.html:13
 msgid "Username"
 msgstr "Benutzername"
 
-#: inyoka/portal/forms.py:47 inyoka/portal/forms.py:62
+#: inyoka/portal/forms.py:46 inyoka/portal/forms.py:61
 msgid "Password"
 msgstr "Passwort"
 
-#: inyoka/portal/forms.py:49
+#: inyoka/portal/forms.py:48
 msgid "Remember me"
 msgstr "Angemeldet bleiben"
 
-#: inyoka/portal/forms.py:61
+#: inyoka/portal/forms.py:60
 msgid "Email"
 msgstr "Email"
 
-#: inyoka/portal/forms.py:63
+#: inyoka/portal/forms.py:62
 msgid "Passwords must match"
 msgstr "Die zwei Passwörter müssen gleich sein"
 
-#: inyoka/portal/forms.py:65
+#: inyoka/portal/forms.py:64
 msgid "Repeat Passord"
-msgstr ""
+msgstr "Passwortwiederholung"
 
-#: inyoka/portal/forms.py:67
+#: inyoka/portal/forms.py:66
 msgid "ReCaptcha"
 msgstr ""
 
-#: inyoka/portal/models.py:24
+#: inyoka/portal/models.py:23
 msgid "Realname"
 msgstr "Name"
 
-#: inyoka/portal/models.py:28
+#: inyoka/portal/models.py:27
 msgid "Website"
 msgstr "Website"
 
-#: inyoka/portal/models.py:32
+#: inyoka/portal/models.py:31
 msgid "Location"
 msgstr "Ort"
 
-#: inyoka/portal/models.py:36
+#: inyoka/portal/models.py:35
 msgid "Interests"
 msgstr "Interessen"
 
-#: inyoka/portal/models.py:40
+#: inyoka/portal/models.py:39
 msgid "Occupation"
 msgstr "Beruf"
 
-#: inyoka/portal/models.py:44
+#: inyoka/portal/models.py:43
 msgid "Signature"
 msgstr "Signatur"
 
-#: inyoka/portal/models.py:48
+#: inyoka/portal/models.py:47
 msgid "Jabber ID"
 msgstr "Jabber ID"
 
-#: inyoka/portal/models.py:52
+#: inyoka/portal/models.py:51
 msgid "Skype"
 msgstr "Skype"
 
-#: inyoka/portal/models.py:56
+#: inyoka/portal/models.py:55
 msgid "QuteCom (previously called WengoPhone)"
 msgstr "QuteCom (ehemals WengoPhone)"
 
-#: inyoka/portal/models.py:61
+#: inyoka/portal/models.py:60
 msgid "SIP"
 msgstr "SIP"
 
@@ -715,16 +715,16 @@ msgstr "Registrieren"
 #: inyoka/templates/base.html:52
 #, python-format
 msgid "Hello %(name)s (%(status)s)"
-msgstr ""
+msgstr "Hallo %(name)s (%(status)s)"
 
 #: inyoka/templates/base.html:52
 msgid "Logout"
-msgstr "Ausloggen"
+msgstr "Abmelden"
 
 #: inyoka/templates/base.html:72
 #, python-format
 msgid "Powered by Inyoka %(revision)s on Python %(python)s"
-msgstr ""
+msgstr "Basiert auf Inyoka %(revision)s mit Python %(python)s"
 
 #: inyoka/templates/admin/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
@@ -732,11 +732,11 @@ msgstr "Willkommen in der Inyoka-Administration!"
 
 #: inyoka/templates/forum/ask.html:8
 msgid "Ask a Question"
-msgstr "Fragen"
+msgstr "Neue Frage"
 
 #: inyoka/templates/forum/index.html:6
 msgid "Welcome to our bulletin board!"
-msgstr ""
+msgstr "Wilkommen in unserem Forum!"
 
 #: inyoka/templates/forum/index.html:14 inyoka/templates/forum/questions.html:39
 msgid "All Questions"
@@ -748,7 +748,7 @@ msgstr "gefragt"
 
 #: inyoka/templates/forum/question.html:6 inyoka/templates/forum/questions.html:84
 msgid "by"
-msgstr ""
+msgstr "von"
 
 #: inyoka/templates/forum/question.html:7 inyoka/templates/news/detail.html:26
 #, python-format
@@ -760,27 +760,27 @@ msgstr[1] "%(num)s mal besucht"
 #: inyoka/templates/forum/question.html:18 inyoka/templates/forum/question.html:28
 #: inyoka/templates/forum/question.html:82 inyoka/templates/forum/question.html:92
 msgid "vote revoke"
-msgstr ""
+msgstr "Stimme zurückziehen"
 
 #: inyoka/templates/forum/question.html:22 inyoka/templates/forum/question.html:86
 msgid "vote up"
-msgstr ""
+msgstr "Positiv bewerten"
 
 #: inyoka/templates/forum/question.html:32 inyoka/templates/forum/question.html:96
 msgid "vote down"
-msgstr ""
+msgstr "Negativ bewerten"
 
 #: inyoka/templates/forum/question.html:38
 msgid "favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: inyoka/templates/forum/question.html:42
 msgid "no favorite"
-msgstr ""
+msgstr "kein Favorit"
 
 #: inyoka/templates/forum/question.html:51
 msgid "Tags: "
-msgstr "Tags: "
+msgstr "Schlagwörter: "
 
 #: inyoka/templates/forum/question.html:62
 #, python-format
@@ -792,7 +792,7 @@ msgstr[1] "%(count)s Antworten"
 #: inyoka/templates/forum/question.html:69
 #: inyoka/templates/forum/questions.html:55
 msgid "Votes"
-msgstr ""
+msgstr "Stimmen"
 
 #: inyoka/templates/forum/question.html:71
 #: inyoka/templates/forum/questions.html:49
@@ -801,7 +801,7 @@ msgstr "Neueste"
 
 #: inyoka/templates/forum/question.html:73
 msgid "Oldest"
-msgstr ""
+msgstr "Älteste"
 
 #: inyoka/templates/forum/question.html:103
 #, python-format
@@ -810,20 +810,20 @@ msgstr "gefragt <strong>%(date)s</strong>"
 
 #: inyoka/templates/forum/question.html:111
 msgid "There aren't any answers yet."
-msgstr ""
+msgstr "Es gibt noch keine Antworten."
 
 #: inyoka/templates/forum/question.html:116
 msgid "Your Answer"
-msgstr ""
+msgstr "Deine Antwort"
 
 #: inyoka/templates/forum/questions.html:6
 #, python-format
 msgid "Forum “%(forum)s”"
-msgstr ""
+msgstr "Forum „%(forum)s“"
 
 #: inyoka/templates/forum/questions.html:11
 msgid "Subforums:"
-msgstr ""
+msgstr "Unterforen:"
 
 #: inyoka/templates/forum/questions.html:28
 msgid "Tagged Questions"
@@ -835,11 +835,11 @@ msgstr "Aktiv"
 
 #: inyoka/templates/forum/questions.html:53
 msgid "Unanswered"
-msgstr ""
+msgstr "Unbeantwortet"
 
 #: inyoka/templates/forum/questions.html:57
 msgid "Ask Question"
-msgstr "Fragen"
+msgstr "Neue Frage"
 
 #: inyoka/templates/forum/questions.html:66
 #, python-format
@@ -862,7 +862,7 @@ msgstr "gefragt <strong>%(date)s</strong>"
 
 #: inyoka/templates/forum/questions.html:99
 msgid "No questions found."
-msgstr ""
+msgstr "Keine Fragen gefunden."
 
 #: inyoka/templates/forum/admin/forum.html:7
 #: inyoka/templates/forum/admin/index.html:9
@@ -874,8 +874,8 @@ msgstr "Erstelle ein neues Forum"
 #, python-format
 msgid "%(human_count)s Comment"
 msgid_plural "%(human_count)s Comments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(human_count)s Kommentar"
+msgstr[1] "%(human_count)s Kommentare"
 
 #: inyoka/templates/news/_article.html:13 inyoka/templates/news/detail.html:22
 #: inyoka/templates/news/detail.html:37
@@ -961,12 +961,12 @@ msgstr "Neueste Artikel"
 
 #: inyoka/templates/news/index.html:23
 msgid "No articles written yet."
-msgstr "Keine Artikel wurden bis jetzt geschrieben."
+msgstr "Es gibt noch keine Artikel."
 
 #: inyoka/templates/news/admin/article_delete.html:2
 #, python-format
 msgid "Do you really want to delete the article “%(article)s”?"
-msgstr "Willst du diesen Artikel „%(article)s” wirklich löschen?"
+msgstr "Willst du den Artikel „%(article)s” wirklich löschen?"
 
 #: inyoka/templates/news/admin/article_delete.html:4
 #: inyoka/templates/portal/admin/tag_delete.html:4
@@ -1008,7 +1008,7 @@ msgstr "…oder <a href=\"%(link)s\">erstelle einen neuen Artikel</a>"
 
 #: inyoka/templates/paste/base.html:13
 msgid "New"
-msgstr ""
+msgstr "Neu"
 
 #: inyoka/templates/paste/base.html:15 inyoka/templates/paste/browse.html:2
 #: inyoka/templates/paste/admin/edit.html:15
@@ -1084,15 +1084,15 @@ msgstr "Bearbeiten"
 
 #: inyoka/templates/portal/404.html:2
 msgid "Page does not exist"
-msgstr ""
+msgstr "Diese Seite existiert nicht"
 
 #: inyoka/templates/portal/404.html:6
 msgid "The requested page could not be found."
-msgstr ""
+msgstr "Die gesuchte Seite wurde nicht gefunden."
 
 #: inyoka/templates/portal/404.html:7
 msgid "Not Found"
-msgstr ""
+msgstr "Nicht gefunden"
 
 #: inyoka/templates/portal/base.html:10
 msgid "Users"
@@ -1110,19 +1110,19 @@ msgstr "Auf dieser Seite werden alle Mitglieder von „%(group)s“ angezeigt."
 #: inyoka/templates/portal/group.html:8
 #, python-format
 msgid "Group “%(group)s”"
-msgstr ""
+msgstr "Gruppe „%(group)s“"
 
 #: inyoka/templates/portal/group.html:14
 msgid "Website: "
-msgstr "Website:"
+msgstr "Website: "
 
 #: inyoka/templates/portal/group.html:15
 msgid "Location: "
-msgstr "Ort:"
+msgstr "Ort: "
 
 #: inyoka/templates/portal/group.html:19
 msgid "There are no users in this group yet!"
-msgstr ""
+msgstr "In dieser Gruppe sind noch keine Benutzer!"
 
 #: inyoka/templates/portal/groups.html:4
 msgid "On this page you can see all existing groups."
@@ -1138,11 +1138,11 @@ msgstr "#"
 
 #: inyoka/templates/portal/groups.html:15
 msgid "Groupname"
-msgstr ""
+msgstr "Name der Gruppe"
 
 #: inyoka/templates/portal/index.html:4
 msgid "Welcome to Inyoka"
-msgstr ""
+msgstr "Wilkommen bei Inyoka"
 
 #: inyoka/templates/portal/index.html:5
 #, python-format
@@ -1155,19 +1155,19 @@ msgstr ""
 
 #: inyoka/templates/portal/index.html:20
 msgid "There's no content yet!"
-msgstr ""
+msgstr "Es gibt noch keine Inhalte!"
 
 #: inyoka/templates/portal/index.html:28
 #: inyoka/templates/portal/admin/tags.html:12
 #, python-format
 msgid "%(count)s item tagged %(tag)s"
 msgid_plural "%(count)s items tagged %(tag)s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(count)s Eintrag für das Schlagwort „%s“"
+msgstr[1] "%(count)s Einträge für das Schlagwot „%s“"
 
 #: inyoka/templates/portal/index.html:34
 msgid "more Tags"
-msgstr ""
+msgstr "mehr Schlagwörter"
 
 #: inyoka/templates/portal/profile.html:12
 msgid "Edit Profile"
@@ -1192,19 +1192,19 @@ msgstr "Willst du diese Kategorie wirklich löschen?"
 #: inyoka/templates/portal/admin/tag_edit.html:6
 #, python-format
 msgid "Edit “%(tag)s”"
-msgstr "Edit „%(tag)s“"
+msgstr "„%(tag)s“ bearbeiten"
 
 #: inyoka/templates/portal/admin/tag_edit.html:8
 msgid "New Tag"
-msgstr "neuer Tag"
+msgstr "Neues Schlagwort"
 
 #: inyoka/templates/portal/admin/tags.html:4
 msgid "Choose Tag"
-msgstr ""
+msgstr "Wähle Schlagwort"
 
 #: inyoka/templates/portal/admin/tags.html:8
 msgid "All tags"
-msgstr "Alle Tags"
+msgstr "Alle Schlagwörter"
 
 #: inyoka/templates/portal/admin/tags.html:18
 #, python-format
@@ -1229,11 +1229,11 @@ msgstr "Ersteller"
 
 #: inyoka/templates/wiki/not_found.html:7
 msgid "The requested page was not found."
-msgstr ""
+msgstr "Die gesuchte Seite wurde nicht gefunden."
 
 #: inyoka/templates/wiki/not_found.html:11
 msgid "If you want, you can create it"
-msgstr ""
+msgstr "Wenn du willst kannst du sie erstellen"
 
 #: inyoka/utils/pagination.py:32
 msgid "next »"
@@ -1243,41 +1243,41 @@ msgstr "Weiter »"
 msgid "« previous"
 msgstr "« Zurück"
 
-#: inyoka/utils/recaptcha.py:56
+#: inyoka/utils/recaptcha.py:50
 msgid "Get a visual challenge"
 msgstr ""
 
-#: inyoka/utils/recaptcha.py:57
+#: inyoka/utils/recaptcha.py:51
 msgid "Get an audio challenge"
 msgstr ""
 
-#: inyoka/utils/recaptcha.py:58
+#: inyoka/utils/recaptcha.py:52
 msgid "Get a new challenge"
 msgstr ""
 
-#: inyoka/utils/recaptcha.py:59
+#: inyoka/utils/recaptcha.py:53
 msgid "Type the two words:"
-msgstr ""
+msgstr "Tippe die zwei Wörter ein:"
 
-#: inyoka/utils/recaptcha.py:60
+#: inyoka/utils/recaptcha.py:54
 msgid "Type what you hear:"
 msgstr ""
 
-#: inyoka/utils/recaptcha.py:61
+#: inyoka/utils/recaptcha.py:55
 msgid "Help"
-msgstr ""
+msgstr "Hilfe"
 
-#: inyoka/utils/recaptcha.py:62
+#: inyoka/utils/recaptcha.py:56
 msgid "Play sound again"
 msgstr ""
 
-#: inyoka/utils/recaptcha.py:63
+#: inyoka/utils/recaptcha.py:57
 msgid "Download sound as MP3"
 msgstr ""
 
-#: inyoka/utils/recaptcha.py:64
+#: inyoka/utils/recaptcha.py:58
 msgid "Incorrect. Try again."
-msgstr ""
+msgstr "Falsch! Bitte versuche es nocheinmal."
 
 #: inyoka/utils/sortable.py:98
 #, python-format
@@ -1285,24 +1285,24 @@ msgid ""
 "The selected criterium “%s” is not available, falling back to default "
 "ordering"
 msgstr ""
-"Das ausgewählte Kriterium „%s” ist nicht verfügbar, benutze standard "
-"sortierung"
+"Das ausgewählte Kriterium „%s” ist nicht verfügbar, benutze "
+"Standardsortierung"
 
 #: inyoka/wiki/controllers.py:52 inyoka/wiki/controllers.py:54
 msgid "Invalid revision specified."
-msgstr ""
+msgstr "Ungültige Version angegeben."
 
 #: inyoka/wiki/controllers.py:85
 #, fuzzy
 msgid "Text didn't change."
 msgstr "Der Text hat sich nicht geändert!"
 
-#: inyoka/wiki/controllers.py:97
+#: inyoka/wiki/controllers.py:96
 #, fuzzy
 msgid "The page has been saved."
 msgstr "Die Seite wurde gespeichert"
 
 #: inyoka/wiki/utils.py:61 inyoka/wiki/utils.py:68
 msgid "No such page."
-msgstr ""
+msgstr "Diese Seite existiert nicht."
 

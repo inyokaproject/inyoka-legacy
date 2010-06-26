@@ -10,8 +10,10 @@
 """
 from inyoka.core.api import db, ctx
 from inyoka.core.test import *
-from inyoka.core.cache import cache
+from inyoka.core.cache import CACHE_SYSTEMS
 from inyoka.core.storage import storage
+
+cache = CACHE_SYSTEMS['simple']()
 
 ITEMS1 = [u'foobar', 1, 1.5, ['asd', u'ümlauts'], {'foo': 'bar'}]
 ITEMS2 = [u'barfoo', 2, 5.1, [u'ümlauts', 'asd'], {'bar': 'foo'}]

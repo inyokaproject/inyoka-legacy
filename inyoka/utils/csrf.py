@@ -9,7 +9,7 @@
     :license: GNU GPl, see LICENSE for more details.
 """
 from uuid import uuid4
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.exceptions import BadRequest
 
 

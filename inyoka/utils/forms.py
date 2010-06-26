@@ -16,7 +16,7 @@ from wtforms.validators import ValidationError, Required
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 from inyoka.i18n import get_translations, lazy_gettext
 from inyoka.core.database import db
-from inyoka.core.context import local, ctx
+from inyoka.context import local, ctx
 from inyoka.utils import classproperty
 from inyoka.utils.csrf import get_csrf_token, check_request
 from inyoka.utils.datastructures import _missing

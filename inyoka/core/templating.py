@@ -14,7 +14,7 @@ import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
 from inyoka import INYOKA_REVISION, l10n, i18n
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 from inyoka.core.cache import cache as inyoka_cache

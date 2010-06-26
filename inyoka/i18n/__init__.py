@@ -17,7 +17,7 @@ from os.path import realpath, dirname
 from gettext import NullTranslations
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 
 
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']

@@ -7,7 +7,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.middlewares import IMiddleware
 from inyoka.utils.debug import inject_query_info
 

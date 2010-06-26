@@ -15,7 +15,7 @@ from werkzeug import cached_property
 from inyoka import Interface
 from inyoka.i18n import _
 from inyoka.core.cache import cache
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.database import db, IModelPropertyProvider
 from inyoka.core.serializer import SerializableObject
 from inyoka.core.subscriptions import subscribed
@@ -259,5 +259,5 @@ class IUserProfileExtender(db.IModelPropertyProvider, Interface):
         return fields
 
 
-class UserSchemaController(db.ISchemaController):
+class AuthSchemaController(db.ISchemaController):
     models = [User, UserProfile, Group, group_group, user_group]

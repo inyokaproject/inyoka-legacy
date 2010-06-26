@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.utils.decorators import abstract
 
 

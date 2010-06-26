@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Interface
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.routing import UrlMixin
 
 

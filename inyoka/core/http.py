@@ -17,7 +17,7 @@ from functools import update_wrapper
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, get_current_url, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
-from inyoka.core.context import ctx, local
+from inyoka.context import ctx, local
 from inyoka.core.routing import href
 from inyoka.utils.html import escape, Markup
 

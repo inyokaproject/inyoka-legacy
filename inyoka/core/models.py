@@ -19,7 +19,7 @@ from sqlalchemy.orm.dynamic import AppenderQuery
 from sqlalchemy.orm.properties import RelationshipProperty
 from inyoka import Interface
 from inyoka.core.database import db
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.routing import href
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.diff3 import prepare_udiff, generate_udiff

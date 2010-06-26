@@ -7,9 +7,9 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 
-# Imports for easy API access
+# Imports for easy API access and our import system
 from inyoka import Interface
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.core.auth import login_required
 from inyoka.core.http import Request, Response, redirect_to, redirect

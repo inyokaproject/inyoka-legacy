@@ -15,7 +15,7 @@ from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
 from werkzeug import url_quote
 from werkzeug.routing import Map as BaseMap
 from inyoka import Interface
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.exceptions import MethodNotAllowed
 from inyoka.core.serializer import send_service_response
 from inyoka.utils.decorators import make_decorator, update_wrapper

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.core.context
-    ~~~~~~~~~~~~~~~~~~~
+    inyoka.context
+    ~~~~~~~~~~~~~~
 
     Thread Locals
 

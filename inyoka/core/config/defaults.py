@@ -23,14 +23,14 @@ DEFAULTS = {
     'debug':                        BooleanField(default=False,
         help_text=lazy_gettext(u'Enable debug mode')),
     'activated_components':         ListField(['inyoka.core.*',
-        'inyoka.admin.*',
-        'inyoka.portal.*',
-        'inyoka.news.*',
-        'inyoka.forum.*',
-        'inyoka.paste.*',
-        'inyoka.wiki.*'],
+        'inyoka.admin',
+        'inyoka.portal',
+        'inyoka.news',
+        'inyoka.forum',
+        'inyoka.paste',
+        'inyoka.wiki'],
         lazy_gettext(u'List of activated components')),
-    'deactivated_components':       ListField([],
+    'deactivated_components':       ListField(['inyoka.core.tasks'],
         lazy_gettext(u'List of deactivted components')),
     'media_root':                   TextField(default=_default_media_data_path,
         help_text=lazy_gettext(u'The path to the media folder')),
@@ -177,11 +177,12 @@ DEFAULTS = {
 
     # celery settings
     'celery.result_backend':        TextField(u'amqp',''),
-    'celery.imports':               ListField(['tasks'],''),
+    'celery.imports':               ListField(['inyoka.core.tasks'],''),
+
     # ampq broker settings
     'broker.host':                  TextField(u'localhost', ''),
     'broker.port':                  IntegerField(5672, ''),
     'broker.user':                  TextField(u'inyoka', ''),
-    'broker.password':              TextField(u'inyoka', ''),
+    'broker.password':              TextField(u'default', ''),
     'broker.vhost':                 TextField(u'inyoka', ''),
 }

@@ -11,7 +11,7 @@
 from functools import wraps
 from inyoka.i18n import _
 from inyoka.core.http import redirect_to
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 
 
 def login_required(func):

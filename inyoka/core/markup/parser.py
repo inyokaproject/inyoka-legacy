@@ -8,7 +8,7 @@
 """
 import re
 from inyoka.i18n import _
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.routing import href
 from inyoka.core.markup.lexer import escape, Lexer
 from inyoka.core.markup.machine import Renderer, RenderContext

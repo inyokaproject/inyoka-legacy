@@ -19,7 +19,7 @@ from xml.sax.saxutils import quoteattr
 from datetime import datetime
 from babel import Locale
 from inyoka.i18n import _
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.exceptions import BadRequest
 from inyoka.utils.html import escape
 from inyoka.utils.urls import make_full_domain

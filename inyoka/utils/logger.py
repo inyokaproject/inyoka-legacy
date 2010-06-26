@@ -12,7 +12,7 @@ import sys
 import logging
 from logging import Formatter
 from inyoka import INYOKA_REVISION
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.utils.colors import blue, green, red, yellow, white
 
 

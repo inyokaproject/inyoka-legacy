@@ -13,7 +13,7 @@ from threading import Lock
 from werkzeug import import_string
 from inyoka import Interface
 from inyoka.core.auth.decorators import login_required
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.middlewares import IMiddleware
 
 

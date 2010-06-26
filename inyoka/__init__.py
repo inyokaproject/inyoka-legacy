@@ -15,7 +15,7 @@ import re
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from werkzeug import find_modules, import_string, cached_property
-from inyoka.core.context import LocalProperty
+from inyoka.context import LocalProperty
 
 
 #: Inyoka revision present in the current mercurial working copy
@@ -93,8 +93,9 @@ def _is_interface(value):
             value is not Interface)
 
 
-def _import_modules(modules):
+def _import_modules(modules, ignore_modules=None):
     """Import the components to setup the metaclass magic."""
+    ignore_modules = ignore_modules or []
     for module in modules:
         # No star at the end means a package/module/class but nothing below.
         if module[-1] != '*':
@@ -102,7 +103,8 @@ def _import_modules(modules):
         else:
             try:
                 for mod in find_modules(module[:-2], True, True):
-                    yield import_string(mod)
+                    if not mod in ignore_modules:
+                        yield import_string(mod)
                 # find_modules does import our package, but doesn't yield it
                 # hence we import it ourself.
                 yield import_string(module[:-2])
@@ -146,7 +148,7 @@ class ApplicationContext(object):
         """This method binds the :class:`ApplicationContext` to
         our thread-local so that all components can access it.
         """
-        from inyoka.core.context import local
+        from inyoka.context import local
         local.ctx = self
 
     @cached_property
@@ -234,7 +236,7 @@ class ApplicationContext(object):
         """
         deactivated_packages = (deactivated_packages or
                                 self.cfg['deactivated_components'])
-        modules = _import_modules(packages)
+        modules = _import_modules(packages, deactivated_packages)
         components = list(m[1] for m in
             sum((getmembers(mod, _is_interface) for mod in modules), [])
             if self.component_is_activated(m[1], deactivated_packages)

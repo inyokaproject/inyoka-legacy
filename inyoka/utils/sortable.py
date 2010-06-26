@@ -13,7 +13,7 @@ from jinja2.utils import Markup
 from inyoka.i18n import _
 from inyoka.core.database import db
 from inyoka.core.routing import href
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.utils.html import build_html_tag, escape
 
 

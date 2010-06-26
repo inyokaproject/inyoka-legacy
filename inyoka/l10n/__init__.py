@@ -25,7 +25,7 @@ from babel.core import default_locale, get_global, Locale
 from babel.dates import TIMEDELTA_UNITS
 
 from inyoka.i18n import get_locale, lazy_gettext, _
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 
 
 UTC = pytz.timezone('UTC')

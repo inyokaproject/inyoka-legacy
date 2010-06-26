@@ -147,8 +147,8 @@ def celeryd():
     """
     # the inyoka celery loader is temporarily deactivated until we have worked
     # over our import system.
-    #local('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" celeryd --loglevel=INFO', capture=False)
-    local('CELERY_LOADER="celery.loaders.default.Loader" celeryd --loglevel=INFO', capture=False)
+    local('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" celeryd --loglevel=INFO', capture=False)
+    #local('CELERY_LOADER="celery.loaders.default.Loader" celeryd --loglevel=INFO', capture=False)
 
 
 def build_docs(clean='no', browse='no', builder='html'):

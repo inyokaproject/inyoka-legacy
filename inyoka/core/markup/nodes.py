@@ -18,11 +18,11 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from urlparse import urlparse, urlunparse
+from inyoka.context import ctx
 from inyoka.core.markup.machine import NodeCompiler, NodeRenderer, \
     NodeQueryInterface
 from inyoka.core.routing import href
 from inyoka.core.templating import render_template
-from inyoka.core.context import ctx
 from inyoka.utils.html import build_html_tag, escape
 from inyoka.utils.debug import debug_repr
 from inyoka.utils.text import gen_slug

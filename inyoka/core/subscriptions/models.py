@@ -169,11 +169,11 @@ class Subscription(db.Model):
         if isinstance(type_, basestring):
             type_ = SubscriptionType.by_name(type_)
 
-        subject_type = type_.subject_type or type(None)
+        subject_type = type_ and type_.subject_type or type(None)
         if not isinstance(subject, subject_type):
             raise ValueError('subject (%r) does not match the subject_type '
                              '(%r) of given SubscriptionType'
-                             % (subject, type_.subject_type))
+                             % (subject, subject_type))
 
         subject_id = None if subject is None else subject.id
         args = {

@@ -22,9 +22,9 @@ from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
+from inyoka.context import ctx
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.context import ctx
 from inyoka.core.http import Response, Request
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain

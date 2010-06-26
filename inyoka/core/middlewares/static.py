@@ -14,7 +14,7 @@ from os.path import join
 from werkzeug import SharedDataMiddleware
 from werkzeug.routing import Rule
 
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.middlewares import IMiddleware
 
 

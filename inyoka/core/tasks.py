@@ -9,11 +9,12 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from celery.decorators import task
+from inyoka.context import ctx
 from inyoka.core.auth.models import User
 from inyoka.core.templating import render_template
 from inyoka.utils.mail import send_mail
 from inyoka.core.api import _
-from inyoka.core.context import ctx
+
 
 @task
 def send_activation_mail(user_id, activation_url):

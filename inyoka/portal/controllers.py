@@ -16,7 +16,7 @@ from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
     Group
 from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination

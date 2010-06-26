@@ -11,7 +11,8 @@
 from celery.loaders.base import BaseLoader
 from celery.loaders.default import Settings
 
-from inyoka.core.context import ctx
+from inyoka.context import ctx
+
 
 class CeleryLoader(BaseLoader):
     def read_configuration(self):
@@ -35,4 +36,3 @@ class CeleryLoader(BaseLoader):
         setting in ``celeryconf.py``.
         """
         self.import_default_modules()
-

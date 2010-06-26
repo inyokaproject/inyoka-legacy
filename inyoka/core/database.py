@@ -93,7 +93,7 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta, _declarative_constructor
 from inyoka import Interface
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
@@ -411,6 +411,9 @@ class IModelPropertyProvider(Interface):
     #: You can define everything as a “property” that can be defined as
     #: a models attribute.  Including relations, synonyms and such.
     properties = {}
+
+    #: If the provider already configured the models
+    configured = False
 
 
 class ModelPropertyProviderGoesWild(RuntimeError):

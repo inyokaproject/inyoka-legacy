@@ -18,7 +18,7 @@ from datetime import datetime
 from os.path import join
 from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
      MemcachedCache, BaseCache, GAEMemcachedCache
-from inyoka.core.context import ctx
+from inyoka.context import ctx
 from inyoka.core.database import db
 
 __all__ = ('cache',)

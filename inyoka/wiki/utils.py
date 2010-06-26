@@ -12,11 +12,14 @@ from werkzeug import abort
 from inyoka.core.api import _, db, redirect_to
 from inyoka.core.exceptions import NotFound
 
+
 def urlify_page_name(name):
     return name.replace(' ', '_').strip('_')
 
+
 def deurlify_page_name(name):
     return name.replace('_', ' ').strip(' ')
+
 
 def find_page(url_name, redirect_view=None, redirect_params=None,
               redirect=True, user=None, redirect_params_page_key='page'):

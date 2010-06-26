@@ -8,8 +8,6 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-# XXX ENTFERNEN
-import inyoka
 from inyoka.core.api import db, ctx
 from inyoka.core.test import *
 from inyoka.core.cache import cache

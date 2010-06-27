@@ -125,7 +125,8 @@ class ForumController(IController):
         answer_ids = [a.id for a in answers]
         user_votes = defaultdict(int, dict(
             db.session.query(Vote.entry_id, Vote.score) \
-                      .filter(db.and_(Vote.user_id==request.user.id, Vote.entry_id.in_(answer_ids)))
+                      .filter(db.and_(Vote.user_id==request.user.id,
+                                      Vote.entry_id.in_(answer_ids)))
         ))
 
         return {

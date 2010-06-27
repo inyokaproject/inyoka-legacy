@@ -61,9 +61,7 @@ def reset():
 
 
 def _action(*args, **kwargs):
-    def _inner(app_factory, hostname=None, port=None,
-               threaded=False, processes=1):
-        from werkzeug.serving import run_simple
+    def _inner(app_factory, hostname=None, port=None, server='simple'):
         from inyoka.core.api import ctx
 
         parts = ctx.cfg['base_domain_name'].split(':')
@@ -73,53 +71,50 @@ def _action(*args, **kwargs):
             port = int(parts[1])
 
         app = app_factory()
-        run_simple(hostname, port, app, threaded=threaded,
-            processes=processes, use_reloader=True, use_debugger=False)
+
+        def _simple():
+            from werkzeug.serving import run_simple
+            run_simple(hostname, port, app, threaded=False,
+                processes=1, use_reloader=True, use_debugger=False)
+
+        def _eventlet():
+            from eventlet import api, wsgi
+            wsgi.server(api.tcp_listener((hostname, port)), app)
+
+        def _cherrypy():
+            from cherrypy.wsgiserver import CherryPyWSGIServer
+            server = CherryPyWSGIServer((hostname, port), app,
+                server_name=ctx.cfg['base_domain_name'],
+                request_queue_size=500)
+            server.start()
+
+        def _tornado():
+            from tornado import httpserver, ioloop, wsgi
+            container = wsgi.WSGIContainer(app)
+            http_server = httpserver.HTTPServer(container)
+            http_server.listen(port, hostname)
+            ioloop.IOLoop.instance().start()
+
+        mapping = {
+            'simple': _simple,
+            'eventlet': _eventlet,
+            'cherrypy': _cherrypy,
+            'tornado': _tornado
+        }
+
+        # run actually the server
+        mapping[server]()
     return _partial(_inner, *args, **kwargs)
 
 
 runserver = _action(lambda: _make_app(debug=True))
-runserver.__doc__ = u'Run a development server'
+runserver.__doc__ = u'''Run a development server.
+You can choose between Werkzeug (simple), eventlet, cherrypy or tornado
+to run Inyoka.  Use the `server` attribute to set the server app'''
 profiled = _action(lambda: _make_app(debug=True, profile=True))
 profiled.__doc__ = u'Run a development server with activated profiler.'
 leakfinder = _action(lambda: _make_app(debug=True, leaky=True))
 leakfinder.__doc__ = u'Run a development server with activated leakfinder.'
-
-
-def runeventlet(hostname='localhost', port=5000):
-    """
-    Run development server with Eventlet.
-    """
-    from eventlet import api, wsgi
-    app = _make_app(debug=True)
-    wsgi.server(api.tcp_listener((hostname, port)), app)
-
-
-def runcherrypy(hostname='localhost', port=5000):
-    """
-    Run development server with CherryPy.
-    """
-    from cherrypy.wsgiserver import CherryPyWSGIServer
-    from inyoka.core.api import ctx
-    app = _make_app(debug=True)
-    server = CherryPyWSGIServer((hostname, port), app,
-        server_name=ctx.cfg['base_domain_name'])
-    server.start()
-
-
-def runtornado(hostname='localhost', port=5000):
-    """Run development server with tornado"""
-    import tornado.httpserver
-    import tornado.ioloop
-    import tornado.wsgi
-    from inyoka.core.api import ctx
-
-    app = _make_app(debug=True)
-
-    container = tornado.wsgi.WSGIContainer(app)
-    http_server = tornado.httpserver.HTTPServer(container)
-    http_server.listen(port, hostname)
-    tornado.ioloop.IOLoop.instance().start()
 
 
 def shell(app='ipython', banner=u'Interactive Inyoka Shell'):

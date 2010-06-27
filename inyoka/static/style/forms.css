@@ -112,6 +112,11 @@ textarea, input[type='text'], input[type='password'],
 select {
   border: 1px solid #ccc;
   background: #fff;
+  padding: 5px 5px 4px;
+}
+
+input[type='text'], input[type='password'] {
+  height: 25px;
 }
 
 textarea:hover, input[type='text']:hover,
@@ -142,7 +147,10 @@ input[type="text"]:focus, textarea:focus {
     border-color: #90A818;
 }
 
-input[type="checkbox"] {
+
+input[type=checkbox], input[type=radio] {
+    position: relative;
+    margin: 0;
 }
 
 form div.actions {

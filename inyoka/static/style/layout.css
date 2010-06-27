@@ -305,10 +305,10 @@ div.not_found img {
 .zealots {
   width: 350px;
   height: 100px;
-    font-size: 0.8em;
-    padding: 10px 20px;
-    margin: 0 10px 10px 10px;
-    border: 1px solid #ddd;
+  font-size: 0.8em;
+  padding: 10px 20px;
+  margin: 0 10px 10px 10px;
+  border: 1px solid #ddd;
 }
 
 .zealots img {

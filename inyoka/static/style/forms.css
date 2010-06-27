@@ -104,6 +104,7 @@ legend {
 }
 
 label {
+  display: block;
   font-weight: bold;
   margin-top: 5px;
 }
@@ -147,12 +148,33 @@ input[type="text"]:focus, textarea:focus {
     border-color: #90A818;
 }
 
-
-input[type=checkbox], input[type=radio] {
+input[type=checkbox] + label {
     position: relative;
-    margin: 0;
+    float: none;
+    top: 0;
+    display: inline-block;
+    margin-bottom: -2px;
 }
 
 form div.actions {
   clear: both;
+}
+
+p.inline_pair {
+  clear: both;
+  float: none;
+}
+
+p.inline_pair label {
+  clear: left;
+  display: block;
+  float: left;
+  text-align: right;
+  width: 100px;
+}
+
+p.inline_pair input {
+  clear: right;
+  margin-left: 10px;
+  width: 200px;
 }

@@ -18,7 +18,7 @@
 """
 from __future__ import division
 from functools import wraps
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, time
 import pytz
 from babel import dates
 from babel.dates import TIMEDELTA_UNITS

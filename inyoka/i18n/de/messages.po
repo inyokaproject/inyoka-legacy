@@ -948,7 +948,7 @@ msgstr ""
 #: inyoka/templates/news/edit_comment.html:5 inyoka/templates/wiki/history.html:13
 #: inyoka/wiki/forms.py:17
 msgid "Edit comment"
-msgstr "Kommentar bearbeiten"
+msgstr "Bearbeitungskommentar"
 
 #: inyoka/templates/news/index.html:14
 #, python-format

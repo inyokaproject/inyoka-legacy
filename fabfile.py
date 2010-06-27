@@ -95,11 +95,17 @@ def _action(*args, **kwargs):
             http_server.listen(port, hostname)
             ioloop.IOLoop.instance().start()
 
+        def _gevent():
+            from gevent import monkey; monkey.patch_all()
+            from gevent.wsgi import WSGIServer
+            WSGIServer((hostname, port), app).serve_forever()
+
         mapping = {
             'simple': _simple,
             'eventlet': _eventlet,
             'cherrypy': _cherrypy,
-            'tornado': _tornado
+            'tornado': _tornado,
+            'gevent': _gevent
         }
 
         # run actually the server

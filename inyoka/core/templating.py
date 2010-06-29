@@ -18,7 +18,6 @@ from inyoka.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 from inyoka.core.cache import cache as inyoka_cache
-from inyoka.utils.csrf import get_csrf_token
 
 try:
     import simplejson as json
@@ -144,7 +143,6 @@ class InyokaEnvironment(Environment):
             INYOKA_REVISION=INYOKA_REVISION,
             PYTHON_VERSION='%d.%d.%d' % sys.version_info[:3],
             href=href,
-            get_csrf_token=get_csrf_token,
         )
         self.filters.update(
             jsonencode=json.dumps,

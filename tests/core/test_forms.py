@@ -12,8 +12,7 @@
 from werkzeug import MultiDict
 from inyoka.core.test import *
 from inyoka.core.exceptions import BadRequest
-from inyoka.utils.csrf import check_request, get_csrf_token
-from inyoka.core.forms import Form, TextField
+from inyoka.core.forms import Form, TextField, get_csrf_token
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.portal.controllers import PortalController
 
@@ -105,9 +104,9 @@ class CsrfTester(ViewTestSuite):
 
     @raises(BadRequest)
     def test_csrf_protection_failure(self):
-        req = self.get_new_request(path='/login', method='POST', data={'csrf_token':'invalid'})
-        get_csrf_token(req)
-        check_request(req)
+        request = self.get_new_request(path='/login', method='POST', data={'csrf_token':'invalid'})
+        form = DummyForm2(request.form)
+        form.validate()
 
     def check_token_set_on_session(self):
         req = self.get_new_request()

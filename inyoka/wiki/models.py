@@ -110,7 +110,8 @@ class Revision(db.Model):
     epoch = db.Column(db.Integer, nullable=False)
 
     _page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
-        backref=db.backref('all_revisions', lazy='dynamic'))
+        backref=db.backref('all_revisions', lazy='dynamic',
+                           cascade='all, delete-orphan'))
     text = db.relationship(Text)
     change_user = db.relationship(User)
 

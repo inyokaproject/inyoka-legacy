@@ -156,6 +156,7 @@ class EasyAuth(IAuthSystem):
         if user is None:
             user = User.query.get_anonymous()
 
+        request.session.permanent = False
         request.session['user_id'] = user.id
 
 

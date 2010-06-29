@@ -1,5 +1,5 @@
 {%- extends 'admin/base.html' %}
-{% from 'utils/macros.html' import render_fields, csrf_token %}
+{% from 'utils/macros.html' import render_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 
@@ -13,8 +13,7 @@
 <form method="post" action="">
 {{ render_fields(form, [form.title, form.intro, form.text,
                  form.tags, form.author]) }}
-{{ render_fields(form, [form.public], true) }}
-{{ csrf_token() }}
+{{ render_fields(form, [form.public, form.csrf], true) }}
 <p class="actions">
   <input type="submit" value="{{ _('Submit') }}">
   {% if article.slug %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}

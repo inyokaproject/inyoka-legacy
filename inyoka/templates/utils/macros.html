@@ -32,10 +32,6 @@
   {%- endif %}
 {%- endmacro %}
 
-{% macro csrf_token() %}
-  <input type="hidden" value="{{ get_csrf_token() }}" name="csrf_token">
-{% endmacro %}
-
 {% macro render_fields(form, include=none, inline=false) %}
 {%- set fields = include or form %}
   {%- for field in fields %}
@@ -43,9 +39,6 @@
     {{ render_field(field) }}
     </p>
   {%- endfor %}
-  {#- We just include the csrf token if we can assume that render_fields
-     is only called once.  Else we get quite a couple of csrf token fields #}
-  {%- if not include %}{{ csrf_token() }}{% endif %}
 {% endmacro %}
 
 {% macro render_form(form) %}

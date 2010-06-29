@@ -61,7 +61,6 @@ This section covers all utilities inyoka implements.
     utils/confirm
     utils/colors
     utils/crypt
-    utils/csrf
     utils/datastructures
     utils/decorators
     utils/diff3

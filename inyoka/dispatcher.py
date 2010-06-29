@@ -167,7 +167,7 @@ class RequestDispatcher(object):
         # apply common response processors like cookies and etags
         if request.session.should_save:
             # check for permanent session saving
-            if request.session.get('_permanent_session'):
+            if request.session.permanent:
                 max_age = 60 * 60 * 24 * 31 # one month
                 expires = time() + max_age
             else:

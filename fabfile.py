@@ -196,7 +196,7 @@ def build_test_venv(pyver=None):
     create_virtualenv(pyver=pyver)
 
 
-def create_virtualenv(directory='../inyoka-testsuite',pyver=None):
+def create_virtualenv(directory='../inyoka-testsuite', pyver=None, interpreter='python'):
     """
     Create a virtual environment for inyoka.
 
@@ -204,10 +204,12 @@ def create_virtualenv(directory='../inyoka-testsuite',pyver=None):
     :param pyver: Which Python Version to use.
     """
     if pyver is None:
-        pyver = u'.'.join(str(x) for x in sys.version_info[:2])
-    local('python %s -p %s > %s' % (_j('extra/make-bootstrap.py'),
-          pyver, _j('bootstrap.py')), capture=False)
-    local('python ./bootstrap.py -r %s %s' % (
+        pyver = ''
+    else:
+        pyver = '-p ' + pyver
+    local('%s %s %s > %s' % (interpreter,
+        _j('extra/make-bootstrap.py'), pyver, _j('bootstrap.py')), capture=False)
+    local('%s ./bootstrap.py --no-site-packages -r %s %s' % (interpreter,
         _j('requirements.txt'), directory), capture=False)
 
 

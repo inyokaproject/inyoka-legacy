@@ -200,7 +200,7 @@ class RequestDispatcher(object):
                                 and buffered as response object
         ======================= ===========================================
 
-        This method comes from `Flask`_.
+        This method comes from `Flask <http://flask.pocoo.org>`_.
 
         :param request:
             A :class:`Request` instance.

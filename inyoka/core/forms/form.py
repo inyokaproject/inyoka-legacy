@@ -47,7 +47,7 @@ class Form(BaseForm):
         if formdata is None:
             formdata = ctx.current_request.form
 
-        csrf_token = get_csrf_token(force_reset=True)
+        csrf_token = get_csrf_token(force_reset=False)
 
         super(Form, self).__init__(formdata, csrf=csrf_token, *args, **kwargs)
 

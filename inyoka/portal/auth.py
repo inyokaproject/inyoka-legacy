@@ -101,7 +101,9 @@ class EasyAuth(IAuthSystem):
         # twice, it would clear the error added.
         if request.method == 'POST' and form.validate():
             try:
-                rv = self.perform_login(request, **form.data)
+                fd = form.data
+                rv = self.perform_login(request, username=fd['username'],
+                    password=fd['password'], permanent=fd['permanent'])
             except LoginUnsucessful, e:
                 request.flash(lazy_gettext(unicode(e)), False)
             else:

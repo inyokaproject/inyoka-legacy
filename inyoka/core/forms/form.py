@@ -47,7 +47,7 @@ class Form(BaseForm):
         if formdata is None:
             formdata = ctx.current_request.form
 
-        csrf_token = get_csrf_token(force_reset=False)
+        csrf_token = get_csrf_token()
 
         super(Form, self).__init__(formdata, csrf=csrf_token, *args, **kwargs)
 
@@ -65,7 +65,7 @@ class Form(BaseForm):
         is_valid = field.data and field.data == csrf_token
 
         # reset this field, otherwise stale token is displayed
-        field.data = get_csrf_token(force_reset=True)
+        field.data = get_csrf_token()
 
         if not is_valid:
             raise BadRequest()

@@ -108,7 +108,7 @@ class CsrfTester(ViewTestSuite):
         form = DummyForm2(request.form)
         form.validate()
 
-    def check_token_set_on_session(self):
+    def test_token_set_on_session(self):
         req = self.get_new_request()
         token = get_csrf_token(req)
         eq_(token, req.session['csrf_token'])

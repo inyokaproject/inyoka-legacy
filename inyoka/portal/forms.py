@@ -13,31 +13,35 @@ from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.core.database import db
 from inyoka.i18n import lazy_gettext
-from inyoka.core.auth.models import UserProfile, IUserProfileExtender
+from inyoka.core.auth.models import UserProfile
 
 
-def get_profile_form():
-    class ProfileForm(Form):
-        def __init__(self, *args, **kwargs):
-            self.profile = profile = kwargs.pop('profile')
-            if profile is not None:
-                profile_fields = IUserProfileExtender.get_profile_names()
-                kwargs.update(model_to_dict(profile, fields=profile_fields))
-            super(ProfileForm, self).__init__(*args, **kwargs)
+class ProfileForm(Form):
 
-        def save(self, commit=True):
-            profile = UserProfile() if self.profile is None else self.profile
-            profile_fields = IUserProfileExtender.get_profile_names()
-            profile = update_model(profile, self, profile_fields)
-            if commit:
-                db.session.commit()
-            return profile
+    # personal data
+    real_name = TextField(lazy_gettext(u'Realname'), [validators.Length(max=200)])
+    website = TextField(lazy_gettext(u'Website'), validators=[validators.is_valid_url()])
+    location = TextField(lazy_gettext(u'Location'), [validators.Length(max=200)])
+    interests = TextField(lazy_gettext(u'Interests'), [validators.Length(max=200)])
+    occupation = TextField(lazy_gettext(u'Occupation'), [validators.Length(max=200)])
+    signature = TextField(lazy_gettext(u'Signature'), widget=widgets.TextArea())
 
+    # communication channels
+    jabber = TextField(lazy_gettext(u'Jabber ID'), validators=[validators.is_valid_jabber()])
+    skype = TextField(lazy_gettext(u'Skype'), [validators.Length(max=200)])
 
-    for name, field in IUserProfileExtender.get_profile_forms().iteritems():
-        setattr(ProfileForm, name, field)
+    def __init__(self, *args, **kwargs):
+        self.profile = profile = kwargs.pop('profile')
+        if profile is not None:
+            kwargs.update(model_to_dict(profile, exclude=['user', 'user_id']))
+        super(ProfileForm, self).__init__(*args, **kwargs)
 
-    return ProfileForm
+    def save(self, commit=True):
+        profile = UserProfile() if self.profile is None else self.profile
+        profile = update_model(profile, self)
+        if commit:
+            db.session.commit()
+        return profile
 
 
 class LoginForm(Form):

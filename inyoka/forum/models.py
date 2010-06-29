@@ -36,7 +36,8 @@ class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider)
     name = _('Questions')
 
     def get_latest_content(self):
-        return Question.query.order_by(Question.date_active.desc())
+        return Question.query.order_by(Question.date_active.desc()) \
+            .options(db.noload('votes'), db.noload('author'))
 
     def get_taggable_content(self, tag):
         return Question.query.order_by(Question.score, Question.view_count) \

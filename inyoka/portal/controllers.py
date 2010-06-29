@@ -11,8 +11,7 @@
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, _
 from inyoka.core.auth import get_auth_system, login_required
-from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
-    Group
+from inyoka.core.auth.models import User, UserProfile, Group
 from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
 from inyoka.context import ctx
@@ -20,7 +19,7 @@ from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.forms import get_profile_form
+from inyoka.portal.forms import ProfileForm
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
@@ -53,7 +52,7 @@ class PortalController(IController):
     @templated('portal/profile_edit.html', modifier=context_modifier)
     def profile_edit(self, request):
         profile = UserProfile.query.filter_by(user_id=request.user.id).first()
-        form = get_profile_form()(request.form, profile=profile)
+        form = ProfileForm(request.form, profile=profile)
 
         if request.method == 'POST' and form.validate():
             form.save()
@@ -109,14 +108,10 @@ class PortalController(IController):
     @view
     @templated('portal/profile.html', modifier=context_modifier)
     def profile(self, request, username):
-        user, profile = db.session.query(User, UserProfile).outerjoin(UserProfile).\
+        user, profile = db.session.query(User, UserProfile).innerjoin(UserProfile).\
                             filter(User.username==username).one()
-        data = {
-            'user': user,
-            'profile': profile,
-            'fields': IUserProfileExtender.get_profile_names(),
-        }
-        return data
+        return {'user': user,
+                'profile': profile}
 
     @view
     @templated('portal/login.html', modifier=context_modifier)

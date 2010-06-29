@@ -36,6 +36,7 @@ def get_csrf_token(request=None, force_reset=False):
 
 
 class Form(BaseForm):
+    """This form implements basic CSRF protection."""
 
     csrf = fields.HiddenField()
 
@@ -44,20 +45,11 @@ class Form(BaseForm):
     csrf_disabled = False
 
     def __init__(self, formdata=None, *args, **kwargs):
-        if formdata is None:
-            formdata = ctx.current_request.form
-
         csrf_token = get_csrf_token()
-
         super(Form, self).__init__(formdata, csrf=csrf_token, *args, **kwargs)
 
-    def _get_remote_addr(self):
-        req = ctx.current_request
-        if req is not None:
-            return req.environ['REMOTE_ADDR']
-
     def validate_csrf(self, field):
-        enabled = not self.csrf_disabled or ctx.cfg['enable_csrf_checks']
+        enabled = ctx.cfg['enable_csrf_checks'] and not self.csrf_disabled
         if not enabled or ctx.current_request.is_xhr:
             return
 
@@ -69,6 +61,3 @@ class Form(BaseForm):
 
         if not is_valid:
             raise BadRequest()
-
-    def validate_on_submit(self):
-        return request.method in ("POST", "PUT") and self.validate()

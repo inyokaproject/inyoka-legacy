@@ -30,12 +30,12 @@ def debug_repr(obj):
     )
 
 
-def find_calling_context(skip=2):
+def find_calling_context(skip=2, module='inyoka'):
     """Finds the calling context."""
     frame = sys._getframe(skip)
     while frame.f_back is not None:
         name = frame.f_globals.get('__name__')
-        if name and name.startswith('inyoka.'):
+        if name and (name == module or name.startswith(module + '.')):
             funcname = frame.f_code.co_name
             if 'self' in frame.f_locals:
                 funcname = '%s.%s of %s' % (

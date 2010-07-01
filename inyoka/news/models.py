@@ -29,7 +29,9 @@ class ArticlesContentProvider(ILatestContentProvider, ITaggableContentProvider):
     name = _('Articles')
 
     def get_latest_content(self):
-        return Article.query.published().order_by(Article.updated.desc())
+        return Article.query.published().lightweight(lazy=(
+            Article.comments, Article.author, Article.tags)). \
+                      order_by(Article.updated.desc())
 
     def get_taggable_content(self, tag):
         return tag.articles.order_by('view_count')
@@ -42,7 +44,8 @@ class LatestCommentsContentProvider(ILatestContentProvider):
 
     def get_latest_content(self):
         return Comment.query.options(db.eagerload('author')) \
-                      .order_by(Comment.pub_date)
+                      .order_by(Comment.pub_date).lightweight(lazy=(
+                      'author.profile', 'article.tags'))
 
 
 class ArticleMapperExtension(db.MapperExtension):

@@ -30,6 +30,7 @@ simplejson==2.1.1
 translitcodec==0.1
 virtualenv==1.4.9
 wsgiref==0.1.2
+twill==0.9
 # We currently use the celery trunk because it relies on sqlalchemy rather on
 # Django
 http://github.com/ask/celery/tarball/master

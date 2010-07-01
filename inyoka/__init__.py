@@ -306,33 +306,6 @@ def _bootstrap():
     # setup components
     ctx.load_packages(ctx.cfg['activated_components'])
 
-    # setup model property providers
-    from inyoka.core.database import (IModelPropertyProvider, DeclarativeMeta,
-                                      ModelPropertyProviderGoesWild)
-
-    property_providers = ctx.get_implementations(IModelPropertyProvider)
-    extendable_models = [m for m in DeclarativeMeta._models
-                         if getattr(m, '__extendable__', False)]
-
-    for provider in property_providers:
-        try:
-            model = provider.model
-            extendable_models.index(model)
-
-        except ValueError:
-            raise RuntimeError('%r tries to extend a not extendable model'
-                                % provider)
-
-        else:
-            for key, value in provider.properties.iteritems():
-                if key not in model.__dict__:
-                    setattr(model, key, value)
-                else:
-                    raise ModelPropertyProviderGoesWild(
-                        u'%r tried to overwrite already existing '
-                        u'properties (%s) on %r, aborting'
-                            % (provider, key, model))
-
 
 _bootstrap()
 del _bootstrap

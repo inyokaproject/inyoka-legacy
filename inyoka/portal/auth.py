@@ -101,7 +101,9 @@ class EasyAuth(IAuthSystem):
         # twice, it would clear the error added.
         if request.method == 'POST' and form.validate():
             try:
-                rv = self.perform_login(request, **form.data)
+                fd = form.data
+                rv = self.perform_login(request, username=fd['username'],
+                    password=fd['password'], permanent=fd['permanent'])
             except LoginUnsucessful, e:
                 request.flash(lazy_gettext(unicode(e)), False)
             else:
@@ -138,7 +140,7 @@ class EasyAuth(IAuthSystem):
         if user.check_password(password):
             self.set_user(request, user)
             if permanent:
-                request.session['_permanent_session'] = True
+                request.session.permanent = True
             request.flash(_(u'You are now logged in.'))
             return redirect_to('portal/index')
         else:
@@ -152,10 +154,10 @@ class EasyAuth(IAuthSystem):
 
     def set_user(self, request, user):
         if user is None:
-            request.session.pop('user_id', None)
-            request.session.pop('_permanent_session', None)
-        else:
-            request.session['user_id'] = user.id
+            user = User.query.get_anonymous()
+
+        request.session.permanent = False
+        request.session['user_id'] = user.id
 
 
 class HttpBasicAuth(EasyAuth):

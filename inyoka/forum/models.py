@@ -36,7 +36,8 @@ class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider)
     name = _('Questions')
 
     def get_latest_content(self):
-        return Question.query.order_by(Question.date_active.desc())
+        return Question.query.order_by(Question.date_active.desc()) \
+            .options(db.noload('votes'), db.noload('author'))
 
     def get_taggable_content(self, tag):
         return Question.query.order_by(Question.score, Question.view_count) \
@@ -66,8 +67,8 @@ class Forum(db.Model, SerializableObject):
 
     subforums = db.relationship('Forum',
             backref=db.backref('parent',remote_side=id),
-            lazy='joined', join_depth=1)
-    tags = db.relationship(Tag, secondary=forum_tag, lazy='joined',
+            lazy='joined')
+    tags = db.relationship(Tag, secondary=forum_tag, lazy='dynamic',
                            backref=db.backref('forums', lazy='dynamic'),
                            extension=TagCounterExtension())
 
@@ -160,9 +161,9 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
     rendered_text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
-    author = db.relationship(User, lazy='joined')
+    author = db.relationship(User, lazy='joined', innerjoin=True)
     votes = db.relationship('Vote', backref='entry',
-            extension=EntryVotesExtension(), lazy='subquery')
+            extension=EntryVotesExtension())
 
     __mapper_args__ = {'polymorphic_on': discriminator}
 

@@ -63,6 +63,9 @@ DEFAULTS = {
         help_text=lazy_gettext(u'The website title to show in various places')),
     'mail_address':                  TextField(default=u'system@inyoka.local',
         help_text=lazy_gettext(u'The mail address used for sending mails')),
+    'permanent_session_lifetime':    IntegerField(default=30,
+        help_text=lazy_gettext(u'The duration a permanent session is valid. '
+                               u'Defined in days, defaults to 30.')),
 
     # database specific values
     'database.url':                 TextField(default=u'sqlite:///dev.db',

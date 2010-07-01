@@ -13,7 +13,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from time import time
+from datetime import timedelta, datetime
 
 from werkzeug import redirect, cached_property
 from werkzeug.exceptions import NotFound
@@ -167,13 +167,13 @@ class RequestDispatcher(object):
         # apply common response processors like cookies and etags
         if request.session.should_save:
             # check for permanent session saving
-            if request.session.get('_permanent_session'):
-                max_age = 60 * 60 * 24 * 31 # one month
-                expires = time() + max_age
-            else:
-                max_age = expires = None
+            expires = None
+            if request.session.permanent:
+                lifetime = timedelta(days=ctx.cfg['permanent_session_lifetime'])
+                expires = datetime.utcnow() + lifetime
+
             request.session.save_cookie(response, ctx.cfg['cookie_name'],
-                max_age=max_age, expires=expires, httponly=True,
+                expires=expires, httponly=True,
                 domain=ctx.cfg['cookie_domain_name'])
 
         if response.status == 200:
@@ -200,7 +200,7 @@ class RequestDispatcher(object):
                                 and buffered as response object
         ======================= ===========================================
 
-        This method comes from `Flask`_.
+        This method comes from `Flask <http://flask.pocoo.org>`_.
 
         :param request:
             A :class:`Request` instance.

@@ -138,7 +138,7 @@ def is_valid_recaptcha(message=None):
         valid = validate_recaptcha(ctx.cfg['recaptcha.private_key'],
             req.form.get('recaptcha_challenge_field'),
             req.form.get('recaptcha_response_field'),
-            form._get_remote_addr())
+            req.environ['REMOTE_ADDR'] if req else None)
 
         if not valid:
             raise ValidationError(message)

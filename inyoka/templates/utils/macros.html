@@ -22,31 +22,23 @@
 {% macro render_field(field) -%}
   {# TODO: remove __class__.__name__ hack! #}
   {%- if field.label and not field.widget.__class__.__name__ == 'HiddenInput' %}
-  <dt>{{ field.label }}</dt>
+  {{ field.label }}
   {%- endif %}
-  <dd>{{ field(**kwargs) }}
+  {{ field(**kwargs) }}
   {%- if field.errors %}
     <ul class="errors">
     {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
     </ul>
   {%- endif %}
-  </dd>
 {%- endmacro %}
 
-{% macro csrf_token() %}
-  <input type="hidden" value="{{ get_csrf_token() }}" name="csrf_token">
-{% endmacro %}
-
-{% macro render_fields(form, include=none) %}
+{% macro render_fields(form, include=none, inline=false) %}
 {%- set fields = include or form %}
-  <dl>
-  {%- for field in form %}
+  {%- for field in fields %}
+    <p{% if inline %} class="inline_pair"{% endif %}>
     {{ render_field(field) }}
+    </p>
   {%- endfor %}
-  </dl>
-  {#- We just include the csrf token if we can assume that render_fields
-     is only called once.  Else we get quite a couple of csrf token fields #}
-  {%- if not include %}{{ csrf_token() }}{% endif %}
 {% endmacro %}
 
 {% macro render_form(form) %}

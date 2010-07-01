@@ -56,6 +56,20 @@ def get_bound_request(cls, environ):
     return request
 
 
+class Session(SecureCookie):
+    """Expands the session with support for switching between permanent
+    and non-permanent sessions.
+    """
+
+    @property
+    def permanent(self):
+        return self.get('_permanent', False)
+
+    @permanent.setter
+    def permanent(self, value):
+        self['_permanent'] = bool(value)
+
+
 class Request(BaseRequest):
     """Our Request object with some special attributes and methods.
 
@@ -79,7 +93,7 @@ class Request(BaseRequest):
         # that we have a bytecode string here
         secret = ctx.cfg['secret_key'].encode('utf-8')
         name = ctx.cfg['cookie_name']
-        return SecureCookie.load_cookie(self, name, secret_key=secret)
+        return Session.load_cookie(self, name, secret_key=secret)
 
     @property
     def flash_messages(self):

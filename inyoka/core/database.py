@@ -375,51 +375,6 @@ class ISchemaController(Interface):
     models = []
 
 
-class IModelPropertyProvider(Interface):
-    """A subclass of this interface is able to extend a models
-    columns and various other properties.
-
-    To be able to extend a model the model must be defined as extendable
-    by setting `__extendable__` to `True`.
-
-    Example::
-
-        class UserCreditcardPropertyProvider(IModelPropertyProvider):
-            model = User
-            properties = {
-                'credit_card':  db.Column(db.String(30))
-            }
-
-    Note that every property provider that tries to overwrite already existing
-    columns breaks yet the whole application since that is not supported.
-
-    This also applies to multiple providers overwriting the same column.  The
-    property provider that get's first loaded wins all others will break.
-
-    """
-
-    #: The model to extend
-    model = None
-
-    #: A dictionary with the properties to extend.  Example:
-    #:
-    #: properties = {
-    #:    'credit_card':  db.Column(db.String(60), nullable=True),
-    #:    'credit_card_owner': db.Column(db.String(60), nullable=True)
-    #: }
-    #:
-    #: You can define everything as a “property” that can be defined as
-    #: a models attribute.  Including relations, synonyms and such.
-    properties = {}
-
-    #: If the provider already configured the models
-    configured = False
-
-
-class ModelPropertyProviderGoesWild(RuntimeError):
-    """A model property provider has gone too far and we need to stop here"""
-
-
 class DeclarativeMeta(SADeclarativeMeta):
     """Our own metaclass to register all model classes
     so that we are able to hook up our model property extension
@@ -545,7 +500,6 @@ def _make_module():
     db.NoResultFound = orm.exc.NoResultFound
     db.SQLAlchemyError = exc.SQLAlchemyError
     db.ISchemaController = ISchemaController
-    db.IModelPropertyProvider = IModelPropertyProvider
     return db
 
 sys.modules['inyoka.core.database.db'] = db = _make_module()

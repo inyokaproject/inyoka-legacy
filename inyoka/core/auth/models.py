@@ -120,7 +120,7 @@ class User(db.Model, SerializableObject):
     username = db.Column(db.String(40), unique=True)
     # the email of the user.  If an external auth system is used, the
     # login code should update that information automatically on login
-    email = db.Column(db.String(200), index=True, unique=True)
+    email = db.Column(db.String(250), index=True, unique=True)
     # the password hash.  This might not be used by every auth system.
     # the OpenID auth for example does not use it at all.  But also
     # external auth systems might not store the password here.
@@ -196,24 +196,27 @@ class UserProfile(db.Model):
     This model provides basic fields but is extendable to provide much
     more information if required.
 
-    To add new fields to the user profile implement the
-    :class:`IUserProfileExtender` interface::
-
-        class HardwareInformationProfile(IUserProfileExtender):
-            properties = {
-                'cpu': db.Column(db.String(200)),
-                'gpu': db.Column(db.String(200))
-                'mainboard': db.Column(db.String(200))
-            }
-
-    These fields are added to the user profile model on initialisation.
     """
     __tablename__ = 'core_userprofile'
-    __extendable__ = True
 
     user_id = db.Column(db.ForeignKey(User.id), primary_key=True)
     user = db.relationship(User, backref=db.backref('profile',
         uselist=False, lazy='joined', innerjoin=True))
+
+    # profile properties.  We implement them here to get a better documented
+    # and tested model structure.  Feel free to advance the attributes!
+
+    # personal attributes
+    real_name = db.Column(db.String(200))
+    website = db.Column(db.String(200))
+    location = db.Column(db.String(200))
+    interests = db.Column(db.String(200))
+    occupation = db.Column(db.String(200))
+    signature = db.Column(db.Text)
+
+    # communication channels
+    jabber = db.Column(db.String(200))
+    skype = db.Column(db.String(200))
 
     def get_url_values(self, action='view'):
         values = {
@@ -222,41 +225,6 @@ class UserProfile(db.Model):
         }
 
         return values[action][0], values[action][1]
-
-
-class IUserProfileExtender(db.IModelPropertyProvider, Interface):
-    model = UserProfile
-    profile_properties = {}
-
-    @classproperty
-    def properties(cls):
-        return dict((k, cls.profile_properties[k]['column'])
-                    for k in cls.profile_properties)
-
-    @classmethod
-    def get_all_properties(cls):
-        props = {}
-        for imp in ctx.get_implementations(cls):
-            props.update(dict(
-                (k, imp.profile_properties[k]['column']) for k in imp.profile_properties.keys()
-            ))
-        return props
-
-    @classmethod
-    def get_profile_names(cls):
-        fields = []
-        for imp in ctx.get_implementations(cls):
-            fields += imp.profile_properties.keys()
-        return fields
-
-    @classmethod
-    def get_profile_forms(cls):
-        fields = {}
-        for imp in ctx.get_implementations(cls):
-            fields.update(dict(
-                (k, imp.profile_properties[k]['form']) for k in imp.profile_properties.keys()
-            ))
-        return fields
 
 
 class AuthSchemaController(db.ISchemaController):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-06-27 00:58+0200\n"
+"POT-Creation-Date: 2010-07-01 20:37+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -212,68 +212,72 @@ msgid "Url mapping used for the portal application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:133
-msgid "Url mapping used for the calendar application"
+msgid "Url mapping used for the usercp application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:135
-msgid "Url mapping used for the news application"
+msgid "Url mapping used for the calendar application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:137
-msgid "Url mapping used for the forum application"
+msgid "Url mapping used for the news application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:139
-msgid "Url mapping used for the wiki application"
+msgid "Url mapping used for the forum application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:141
-msgid "Url mapping used for the paste application"
+msgid "Url mapping used for the wiki application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:143
-msgid "Url mapping used for the planet application"
+msgid "Url mapping used for the paste application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:145
-msgid "Url mapping used for the admin application"
+msgid "Url mapping used for the planet application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:147
+msgid "Url mapping used for the admin application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:149
 msgid "Url mapping used for the API"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:151
+#: inyoka/core/config/defaults.py:153
 msgid "Url mapping used for the testing system.  Do never chage that value!"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:157
+#: inyoka/core/config/defaults.py:159
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:159
+#: inyoka/core/config/defaults.py:161
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:161
+#: inyoka/core/config/defaults.py:163
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:165
+#: inyoka/core/config/defaults.py:167
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:171
+#: inyoka/core/config/defaults.py:173
 msgid ""
 "Name of the wiki index page (the one a user accessing the wiki's / is "
 "redirected to)"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:176
+#: inyoka/core/config/defaults.py:178
 msgid ""
 "Files with lines greater than this number will not have syntax highlighting."
 " Enter 0 for no limit."
@@ -591,17 +595,36 @@ msgstr ""
 msgid "Invalid login"
 msgstr ""
 
-#: inyoka/portal/controllers.py:60
-msgid "Your profile was saved successfully"
-msgstr "Der Artikel %s wurde erfolgreich gespeichert."
-
-#: inyoka/portal/controllers.py:142
+#: inyoka/portal/controllers.py:128
 msgid "Key not found. Maybe it has already been used?"
 msgstr "CSRF-Schlüssel nicht gefunden. Wurde er bereits verwendet?"
 
-#: inyoka/portal/controllers.py:144
+#: inyoka/portal/controllers.py:130
 msgid "The supplied key is not valid anymore."
 msgstr "Der übergebene CSRF-Schlüssel ist nicht mehr gültig."
+
+#: inyoka/portal/controllers.py:178
+#, fuzzy
+msgid "Edit profile"
+msgstr "Profil bearbeiten"
+
+#: inyoka/portal/controllers.py:194
+msgid "Your profile was saved successfully"
+msgstr "Dein Profil wurde erfolgreich gespeichet"
+
+#: inyoka/portal/controllers.py:202
+#, fuzzy
+msgid "Change password"
+msgstr "Passwort ändern"
+
+#: inyoka/portal/controllers.py:216
+msgid "The password you entered doesn't match your old one."
+msgstr "Das eingegebene Passwort stimmt nicht mit deinem alten Passwort überein."
+
+#: inyoka/portal/controllers.py:221
+#, fuzzy
+msgid "Your password was changed successfully"
+msgstr "Dein Passwort wurde erfolgreich geändert"
 
 #: inyoka/portal/forms.py:45 inyoka/portal/forms.py:59
 #: inyoka/templates/portal/users.html:13
@@ -631,6 +654,20 @@ msgstr "Passwortwiederholung"
 #: inyoka/portal/forms.py:66
 msgid "ReCaptcha"
 msgstr ""
+
+#: inyoka/portal/forms.py:75
+#, fuzzy
+msgid "Old Password"
+msgstr "Altes Passwort"
+
+#: inyoka/portal/forms.py:77
+#, fuzzy
+msgid "New Password"
+msgstr "Neues Passwort"
+
+#: inyoka/portal/forms.py:79
+msgid "New Password (confirmation)"
+msgstr "Neues Passwort (bestätigen)"
 
 #: inyoka/portal/models.py:23
 msgid "Realname"
@@ -716,6 +753,11 @@ msgstr "Registrieren"
 #, python-format
 msgid "Hello %(name)s (%(status)s)"
 msgstr "Hallo %(name)s (%(status)s)"
+
+#: inyoka/templates/base.html:52 inyoka/templates/usercp/base.html:2
+#: inyoka/templates/usercp/index.html:4
+msgid "User Control Panel"
+msgstr "Mein Konto"
 
 #: inyoka/templates/base.html:52
 msgid "Logout"
@@ -1169,7 +1211,7 @@ msgstr[1] "%(count)s Einträge für das Schlagwot „%s“"
 msgid "more Tags"
 msgstr "mehr Schlagwörter"
 
-#: inyoka/templates/portal/profile.html:12
+#: inyoka/templates/portal/profile.html:12 inyoka/templates/usercp/profile.html:5
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
 
@@ -1210,6 +1252,19 @@ msgstr "Alle Schlagwörter"
 #, python-format
 msgid "…or <a href=\"%(link)s\">create a new tag</a>"
 msgstr "…oder <a href=\"%(link)s\">erstelle einen neue Kategorie</a>"
+
+#: inyoka/templates/usercp/password.html:5
+#, fuzzy
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: inyoka/templates/usercp/password.html:7
+msgid "Here you can change your account's password."
+msgstr "Hier kannst du das Passwort von deinem Benutzer ändern."
+
+#: inyoka/templates/usercp/password.html:8
+msgid "For security reasons you've to enter your old password once again."
+msgstr "Zur Sicherheit musst du dazu dein altes Passwort nocheinmal eingeben."
 
 #: inyoka/templates/wiki/base.html:17
 msgid "Show"

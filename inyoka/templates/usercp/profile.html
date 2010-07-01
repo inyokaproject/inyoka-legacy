@@ -1,6 +1,7 @@
-{%- extends 'portal/base.html' %}
+{%- extends 'usercp/base.html' %}
 {%- from 'utils/macros.html' import render_form %}
 
 {%- block content %}
+<h1>{{ _('Edit Profile')  }}</h1>
 {{ render_form(form) }}
 {%- endblock %}

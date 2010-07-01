@@ -113,10 +113,6 @@ body {
   font-size: 0.8em;
 }
 
-#page-navbar a {
-  word-spacing: 5em;
-}
-
 #page-navbar .user-status {
   float: right;
 }

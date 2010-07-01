@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-06-27 00:58+0200\n"
+"POT-Creation-Date: 2010-07-01 20:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,68 +210,72 @@ msgid "Url mapping used for the portal application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:133
-msgid "Url mapping used for the calendar application"
+msgid "Url mapping used for the usercp application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:135
-msgid "Url mapping used for the news application"
+msgid "Url mapping used for the calendar application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:137
-msgid "Url mapping used for the forum application"
+msgid "Url mapping used for the news application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:139
-msgid "Url mapping used for the wiki application"
+msgid "Url mapping used for the forum application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:141
-msgid "Url mapping used for the paste application"
+msgid "Url mapping used for the wiki application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:143
-msgid "Url mapping used for the planet application"
+msgid "Url mapping used for the paste application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:145
-msgid "Url mapping used for the admin application"
+msgid "Url mapping used for the planet application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:147
+msgid "Url mapping used for the admin application"
+msgstr ""
+
+#: inyoka/core/config/defaults.py:149
 msgid "Url mapping used for the API"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:151
+#: inyoka/core/config/defaults.py:153
 msgid "Url mapping used for the testing system.  Do never chage that value!"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:157
+#: inyoka/core/config/defaults.py:159
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:159
+#: inyoka/core/config/defaults.py:161
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:161
+#: inyoka/core/config/defaults.py:163
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:165
+#: inyoka/core/config/defaults.py:167
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:171
+#: inyoka/core/config/defaults.py:173
 msgid ""
 "Name of the wiki index page (the one a user accessing the wiki's / is "
 "redirected to)"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:176
+#: inyoka/core/config/defaults.py:178
 msgid ""
 "Files with lines greater than this number will not have syntax highlighting."
 " Enter 0 for no limit."
@@ -583,16 +587,32 @@ msgstr ""
 msgid "Invalid login"
 msgstr ""
 
-#: inyoka/portal/controllers.py:60
-msgid "Your profile was saved successfully"
-msgstr ""
-
-#: inyoka/portal/controllers.py:142
+#: inyoka/portal/controllers.py:128
 msgid "Key not found. Maybe it has already been used?"
 msgstr ""
 
-#: inyoka/portal/controllers.py:144
+#: inyoka/portal/controllers.py:130
 msgid "The supplied key is not valid anymore."
+msgstr ""
+
+#: inyoka/portal/controllers.py:178
+msgid "Edit profile"
+msgstr ""
+
+#: inyoka/portal/controllers.py:194
+msgid "Your profile was saved successfully"
+msgstr ""
+
+#: inyoka/portal/controllers.py:202
+msgid "Change password"
+msgstr ""
+
+#: inyoka/portal/controllers.py:216
+msgid "The password you entered doesn't match your old one."
+msgstr ""
+
+#: inyoka/portal/controllers.py:221
+msgid "Your password was changed successfully"
 msgstr ""
 
 #: inyoka/portal/forms.py:45 inyoka/portal/forms.py:59
@@ -622,6 +642,18 @@ msgstr ""
 
 #: inyoka/portal/forms.py:66
 msgid "ReCaptcha"
+msgstr ""
+
+#: inyoka/portal/forms.py:75
+msgid "Old Password"
+msgstr ""
+
+#: inyoka/portal/forms.py:77
+msgid "New Password"
+msgstr ""
+
+#: inyoka/portal/forms.py:79
+msgid "New Password (confirmation)"
 msgstr ""
 
 #: inyoka/portal/models.py:23
@@ -707,6 +739,11 @@ msgstr ""
 #: inyoka/templates/base.html:52
 #, python-format
 msgid "Hello %(name)s (%(status)s)"
+msgstr ""
+
+#: inyoka/templates/base.html:52 inyoka/templates/usercp/base.html:2
+#: inyoka/templates/usercp/index.html:4
+msgid "User Control Panel"
 msgstr ""
 
 #: inyoka/templates/base.html:52
@@ -1157,7 +1194,7 @@ msgstr[1] ""
 msgid "more Tags"
 msgstr ""
 
-#: inyoka/templates/portal/profile.html:12
+#: inyoka/templates/portal/profile.html:12 inyoka/templates/usercp/profile.html:5
 msgid "Edit Profile"
 msgstr ""
 
@@ -1197,6 +1234,18 @@ msgstr ""
 #: inyoka/templates/portal/admin/tags.html:18
 #, python-format
 msgid "…or <a href=\"%(link)s\">create a new tag</a>"
+msgstr ""
+
+#: inyoka/templates/usercp/password.html:5
+msgid "Change Password"
+msgstr ""
+
+#: inyoka/templates/usercp/password.html:7
+msgid "Here you can change your account's password."
+msgstr ""
+
+#: inyoka/templates/usercp/password.html:8
+msgid "For security reasons you've to enter your old password once again."
 msgstr ""
 
 #: inyoka/templates/wiki/base.html:17

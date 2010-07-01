@@ -129,6 +129,8 @@ DEFAULTS = {
     # if you only apply the submount use `/submount` the `:` will be completed
     'routing.urls.portal':          DottedField(default=u':/',
         help_text=lazy_gettext(u'Url mapping used for the portal application')),
+    'routing.urls.usercp':          DottedField(default=u':/usercp',
+        help_text=lazy_gettext(u'Url mapping used for the usercp application')),
     'routing.urls.calendar':        DottedField(default=u':/calendar',
         help_text=lazy_gettext(u'Url mapping used for the calendar application')),
     'routing.urls.news':            DottedField(default=u'news:/',

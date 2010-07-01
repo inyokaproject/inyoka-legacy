@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, _
+    templated, href, redirect, _
 from inyoka.core.auth import get_auth_system, login_required
 from inyoka.core.auth.models import User, UserProfile, IUserProfileExtender, \
     Group
@@ -20,7 +20,7 @@ from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.forms import get_profile_form
+from inyoka.portal.forms import get_profile_form, ChangePasswordForm
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
@@ -42,24 +42,10 @@ class PortalController(IController):
         Rule('/users/', endpoint='users'),
         Rule('/users/<int:page>/', endpoint='users'),
         Rule('/user/<username>/', endpoint='profile'),
-        Rule('/usercp/profile/', endpoint='profile_edit'),
         Rule('/groups/', endpoint='groups'),
         Rule('/group/<name>/', endpoint='group'),
         Rule('/tag/<slug>/', endpoint='tag'),
     ]
-
-    @login_required
-    @view
-    @templated('portal/profile_edit.html', modifier=context_modifier)
-    def profile_edit(self, request):
-        profile = UserProfile.query.filter_by(user_id=request.user.id).first()
-        form = get_profile_form()(request.form, profile=profile)
-
-        if request.method == 'POST' and form.validate():
-            form.save()
-            request.flash(_(u'Your profile was saved successfully'), True)
-
-        return {'form': form}
 
     @view
     @templated('portal/index.html', modifier=context_modifier)
@@ -182,3 +168,79 @@ class CalendarController(IController):
     @view('entry')
     def entry(self, request, date, slug):
         return Response('this is calendar entry %r from %r' % (slug, date))
+
+
+class UserCPExtension(IController):
+    name = 'usercp'
+
+
+class AlterProfileExtension(UserCPExtension):    
+    ext_name = _(u'Edit profile')
+    ext_key = 'profile'
+
+    url_rules = [
+        Rule('/profile', endpoint='profile'),
+    ]
+
+    @login_required
+    @view
+    @templated('usercp/profile.html', modifier=context_modifier)
+    def profile(self, request):
+        profile = UserProfile.query.filter_by(user_id=request.user.id).first()
+        form = get_profile_form()(request.form, profile=profile)
+
+        if request.method == 'POST' and form.validate():
+            form.save()
+            request.flash(_(u'Your profile was saved successfully'), True)
+
+        return {
+            'form': form
+        }
+
+
+class PasswordExtension(UserCPExtension):
+    ext_name = _(u'Change password')
+    ext_key = 'password'
+
+    url_rules = [
+        Rule('/password', endpoint='password'),
+    ]
+
+    @view
+    @login_required
+    @templated('usercp/password.html')
+    def password(self, request):
+        form = ChangePasswordForm(request.form)
+        if request.method == 'POST' and form.validate():
+            if not request.user.check_password(form.old_password.data):
+                form.old_password.errors = [_(u'The password you entered '
+                    u'doesn\'t match your old one.')]
+            else:
+                request.user.set_password(form.new_password.data)
+                db.session.commit()
+                request.flash(_(u'Your password was changed successfully'),
+                      success=True)
+                return redirect(href('usercp/index'))
+        return {
+            'form': form,
+        }
+
+
+class UserCPController(IController):
+    name = 'usercp'
+    url_rules = [
+        Rule('/', endpoint='index'),
+    ]
+
+    def __init__(self, ctx):
+        IController.__init__(self, ctx)
+        self.extensions = dict((ext.ext_key, ext.ext_name)
+            for ext in ctx.get_implementations(UserCPExtension))
+
+    @view
+    @login_required
+    @templated('usercp/index.html')
+    def index(self, request):
+        return {
+            'extensions':   self.extensions,
+        }

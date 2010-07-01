@@ -18,6 +18,8 @@ import functools
 import nose
 from nose.plugins import cover, base, errorclass
 
+import twill
+
 from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
@@ -27,7 +29,7 @@ from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.http import Response, Request, get_bound_request
 from inyoka.utils.logger import logger
-from inyoka.utils.urls import make_full_domain
+from inyoka.utils.urls import make_full_domain, get_host_port_mapping
 
 
 logger.disabled = True
@@ -89,12 +91,22 @@ class ViewTestSuite(TestSuite):
 
     def _pre_setup(self):
         """Setup the test client and url and base domain values"""
-        self._client = Client(ctx.dispatcher, response_wrapper=TestResponse,
-                              use_cookies=True)
+        self.client = Client(ctx.dispatcher, response_wrapper=TestResponse,
+                             use_cookies=True)
         self.base_domain = ctx.cfg['base_domain_name']
         name = 'test' if self.controller is None else self.controller.name
         subdomain = ctx.cfg['routing.urls.' + name].split(':', 1)[0]
         self.base_url = make_full_domain(subdomain)
+
+        # twill integration.  This intercept forwards all twill commands
+        # to our respective wsgi dispatcher
+        host, port, scheme = get_host_port_mapping(self.base_domain)
+        twill.add_wsgi_intercept(host, port, lambda: self.ctx.dispatcher)
+
+    def _post_teardown(self):
+        # remove the twill intercept
+        host, port, scheme = get_host_port_mapping(self.base_domain)
+        twill.remove_wsgi_intercept(host, port)
 
     def get_context(self, path, method='GET', **kwargs):
         """
@@ -166,14 +178,42 @@ class ViewTestSuite(TestSuite):
                                 create_environ(*args, **kwargs))
         return req
 
+    # Advanced Unittest methods for easy unittests
+
+    def assertRedirects(self, response, location):
+        assert response.status_code in (301, 302)
+        assert response.location == path.join(self.base_url, location)
+
+    def assertStatus(self, response, status_code):
+        self.assertEqual(response.status_code, status_code)
+
+    def assertResponseOK(self, response):
+        self.assertStatus(response, 200)
+
+    def assertNotFound(self, response):
+        self.assertStatus(response, 404)
+
+    def twill_url(self, url):
+        return u'%s://%s:%d%s' % (get_host_port_mapping(self.base_domain), url)
+
+    def execute_twill_script(self, script, initial_url="/"):
+        with open(script) as fp:
+            self.execute_twill_string(fp.read(), initial_url)
+
+    def execute_twill_string(self, string, initial_url="/"):
+        twill.execute_string(string, initial_url=self.twill_url(initial_url))
+
 
 class InyokaPlugin(cover.Coverage):
     """Nose plugin extension
 
-    This prevents modules from being loaded without a configured Inyoka
-    environment.
+    This plugin prevents modules from being loaded without a configured
+    Inyoka environment.
+
+    It also implements our fixture system and fixes the coverage html output.
 
     """
+
     enabled = False
     enableOpt = 'inyoka_config'
     name = 'inyoka'

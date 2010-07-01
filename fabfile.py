@@ -68,7 +68,7 @@ def _action(*args, **kwargs):
         if hostname is None:
             hostname = parts[0]
         if port is None:
-            port = int(parts[1])
+            port = int(parts[1]) if len(parts) > 1 else 5000
 
         app = app_factory()
 
@@ -268,11 +268,16 @@ def reindent():
     """
     local(_j('extra/reindent.py -r -B %s' % _base_dir), capture=False)
 
-def lsdns():
+def lsdns(basedomain=None):
     """
     Get the required DNS settings.
     """
     from urllib2 import splitport
     from inyoka.core.api import ctx
 
+    _old = ctx.cfg['base_domain_name']
+    if basedomain is not None:
+        ctx.cfg['base_domain_name'] = basedomain
+
     print u' '.join((sub +'.' if sub else sub) + splitport(ctx.dispatcher.url_adapter.server_name)[0] for sub in sorted(set(rule.subdomain for rule in ctx.dispatcher.url_map.iter_rules())))
+    ctx.cfg['base_domain_name'] = _old

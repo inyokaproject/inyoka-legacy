@@ -13,3 +13,4 @@
 \.pida-metadata/
 ^\.coverage_html/
 \.patch
+glob:extra/design/structure.dot.png

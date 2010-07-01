@@ -1,0 +1,94 @@
+/* 
+ * Get png: $ dot -O -Tpng structure.dot
+ * NOTE: This current structure is hereby put up for discussion ;)
+ */
+
+digraph Inyoka {
+
+  subgraph Caption {
+    Module [color=red];
+    View;
+    Action [color=green];
+    Module -> View [style=dashed, constraint=false, label=contains]
+    View -> Action [constraint=false, label="links to"]
+  }
+  
+  INYOKA -> Portal;
+  INYOKA -> Pastebin;
+  INYOKA -> News;
+  INYOKA -> Wiki;
+  INYOKA -> Forum;
+  
+  INYOKA -> Login;
+  Login [color=green];
+  INYOKA -> Register;
+  Register [color=green];
+  
+  subgraph Portal {
+    Portal [color=red];
+    subgraph Portal {
+      Portal -> "Latest content" [style=dashed];
+      Portal -> Tags [style=dashed];
+      Portal -> Welcome [style=dashed];
+    }
+    Portal -> Users;
+    Portal -> Groups;
+  }
+  
+  subgraph Pastebin {
+    Pastebin [color=red];
+    Pastebin -> "New paste" [style=dashed];
+    "New paste" [color=green];
+    "New paste" -> "Browse pastes";
+    "Browse pastes" -> Paste;
+    "Browse pastes" -> "Edit paste";
+    "Edit paste" [color=green];
+    Paste -> "New paste";
+    Paste -> Raw;
+    Paste -> "Reply to paste";
+    "Reply to paste" [color=green];
+    Paste -> "Paste tree";
+    "Paste tree" -> "Browse pastes";
+  }
+  
+  subgraph News {
+    News [color=red];
+    News -> "Article overview" [style=dashed];
+    "Article overview" -> Article;
+    subgraph Article {
+      Article -> Comments [style=dashed];
+      Article -> "Add comment" [style=dashed];
+      "Add comment" [color=green];
+      Comments -> "Edit comment";
+      "Edit comment" [color=green];
+      Comments -> "Hide comment";
+      "Hide comment" [color=green];
+    }
+    
+  }
+  
+  subgraph Wiki {
+    Wiki [color=red];
+    Wiki -> "Wiki page" [style=dashed];
+    "Wiki page" -> "Edit page";
+    "Edit page" [color=green];
+    "Wiki page" -> History;
+  }
+  
+  subgraph Forum {
+    Forum [color=red];
+    Forum -> "Board overview" [style=dashed];
+    "Board overview" -> Tagboard;
+    "Board overview" -> "All questions";
+    Tagboard -> Question;
+    "All questions" -> Question;
+    Tagboard -> "Ask question";
+    "All questions" -> "Ask question";
+    "Ask question"     [color=green]
+    Question -> "Answer(s)" [style=dashed];
+    Question -> "Add answer" [style=dashed];
+    Question -> Rate [style=dashed];
+    "Answer(s)" -> Rate [style=dashed];
+  }
+  
+}

@@ -12,14 +12,12 @@ import random
 from datetime import datetime
 from werkzeug import cached_property
 
-from inyoka import Interface
 from inyoka.i18n import _
 from inyoka.core.cache import cache
 from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.core.serializer import SerializableObject
 from inyoka.core.subscriptions import subscribed
-from inyoka.utils import classproperty
 from inyoka.utils.datastructures import BidiMap
 from inyoka.utils.crypt import get_hexdigest
 

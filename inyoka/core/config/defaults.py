@@ -156,7 +156,6 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Url mapping used for the testing system.  '
                                u'Do never chage that value!')),
 
-
     # values for static and media serving
     'routing.urls.static':          DottedField(default=u':/_static',
         help_text=lazy_gettext(u'Url mapping used for static file serving')),

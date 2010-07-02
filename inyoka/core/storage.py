@@ -105,7 +105,7 @@ class CachedStorage(object):
             # get the items that are not in cache using a database query
             query = db.select([Storage.key, Storage.value]) \
                 .where(Storage.key.in_(to_fetch))
-    
+
             for key, value in db.session.execute(query):
                 values[key] = value
                 self._update_cache(key, value, timeout)

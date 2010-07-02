@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from operator import attrgetter
+from inyoka.core.api import logger
 from inyoka.core.subscriptions import SubscriptionType, SubscriptionAction
 from inyoka.core.models import Tag
 from inyoka.news.models import Article, Comment
@@ -53,8 +54,8 @@ class NewArticleSubscriptionAction(SubscriptionAction):
 
     @classmethod
     def notify(cls, user, object, subjects):
-        print 'Notify %s about new article „%s“' % \
-                (user.username, object.title)
+        logger.debug('Notify %s about new article „%s“' % \
+                     (user.username, object.title))
 
 
 class NewCommentSubscriptionAction(SubscriptionAction):
@@ -62,6 +63,6 @@ class NewCommentSubscriptionAction(SubscriptionAction):
 
     @classmethod
     def notify(cls, user, object, subjects):
-        print 'Notify %s about new comment by %s on %s' % \
-                (user.username, object.author.username,
-                 object.article.title)
+        logger.debug('Notify %s about new comment by %s on %s' % \
+                     (user.username, object.author.username,
+                      object.article.title))

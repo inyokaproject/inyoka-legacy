@@ -11,6 +11,7 @@ from uuid import uuid4
 from StringIO import StringIO
 from inyoka.core.middlewares import IMiddleware
 from inyoka.utils.debug import inject_query_info
+from inyoka.utils.logger import logger
 
 re_htmlmime = re.compile(r'^text/x?html')
 
@@ -65,9 +66,10 @@ class TwillRecordMiddleware(IMiddleware):
         url = request.current_url
         if ([t for t in filter_ctypes if t in ctype] or
             [u for u in filter_url if url.endswith(u)]):
-            print "do not log request", ctype, url
+            logger.debug("twill will not log request – %s, %s" % (ctype, url))
             return response
-        print "log request %s" % url
+
+        logger.debug("twill log request %s" % url)
 
         _buffer = []
 

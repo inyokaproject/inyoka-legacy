@@ -192,10 +192,10 @@ class ViewTestSuite(TestSuite):
 
     def assertRedirects(self, response, location):
         assert response.status_code in (301, 302)
-        assert response.location == path.join(self.base_url, location)
+        assert response.location == os.path.join(self.base_url, location)
 
     def assertStatus(self, response, status_code):
-        self.assertEqual(response.status_code, status_code)
+        eq_(response.status_code, status_code)
 
     def assertResponseOK(self, response):
         self.assertStatus(response, 200)
@@ -203,15 +203,35 @@ class ViewTestSuite(TestSuite):
     def assertNotFound(self, response):
         self.assertStatus(response, 404)
 
-    def twill_url(self, url):
+    def assertHeader(self, response, key, value=None):
+        """Fail if (key, [value]) not in response.headers"""
+        ikey = key.lower()
+        values = response.headers.getlist(ikey)
+        if values and value is None or value in values:
+            return True
+
+        if value is None:
+            msg = u'%r not in headers' % key
+        else:
+            msg = '%r:%r not in headers' % (key, value)
+        raise AssertionError(msg)
+
+    def assertNoheader(self, response, key):
+        """Fail if key in response.headers"""
+        if key.lower() in response.headers:
+            raise AssertionError(u'%r in headers' % key)
+        return True
+
+    def assertContext(self, response, value):
+        tctx = getattr(response, '_template_context', {})
+        if value != tctx:
+            raise AssertionError(u'Expected context:\n%r\n\nActual Context:\n%r'
+                                 % (value, tctx))
+        return True
+
+    def make_twill_url(self, url):
         return u'%s://%s:%d%s' % (get_host_port_mapping(self.base_domain), url)
 
-    def execute_twill_script(self, script, initial_url="/"):
-        with open(script) as fp:
-            self.execute_twill_string(fp.read(), initial_url)
-
-    def execute_twill_string(self, string, initial_url="/"):
-        twill.execute_string(string, initial_url=self.twill_url(initial_url))
 
 
 class InyokaPlugin(cover.Coverage):

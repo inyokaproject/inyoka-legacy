@@ -89,7 +89,7 @@ def create_uml_graph(mappers, show_operations=True, show_attributes=True, show_m
 
     return graph
 
-from sqlalchemy.databases.postgres import PGDialect
+from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy import Table, text
 
 def _render_table_html(table, metadata, show_indexes, show_datatypes):
@@ -158,13 +158,6 @@ def create_schema_graph(tables=None, metadata=None, show_indexes=True, show_data
             )
             graph.add_edge(graph_edge)
 
-# not sure what this part is for, doesn't work with pydot 1.0.2
-#            graph_edge.parent_graph = graph.parent_graph
-#            if table.name not in [e.get_source() for e in graph.get_edge_list()]:
-#                graph.edge_src_list.append(table.name)
-#            if fk.column.table.name not in graph.edge_dst_list:
-#                graph.edge_dst_list.append(fk.column.table.name)
-#            graph.sorted_graph_elements.append(graph_edge)
     return graph
 
 def show_uml_graph(*args, **kwargs):

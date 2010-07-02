@@ -62,8 +62,10 @@ class LoginForm(Form):
 
 class RegistrationForm(Form):
 
-    username = TextField(lazy_gettext(u'Username'), [validators.Required()])
-    email = TextField(lazy_gettext(u'Email'), [validators.Required()])
+    username = TextField(lazy_gettext(u'Username'), [validators.Required(),
+        validators.is_user(negative=True)])
+    email = TextField(lazy_gettext(u'Email'), [validators.Required(),
+        validators.is_user(negative=True, key='email')])
     password = TextField(lazy_gettext(u'Password'), [validators.Required(),
         validators.EqualTo('confirm', message=lazy_gettext(u'Passwords must match'))],
         widget=widgets.PasswordInput())

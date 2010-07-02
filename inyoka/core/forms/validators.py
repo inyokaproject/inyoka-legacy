@@ -14,6 +14,7 @@ from wtforms.validators import *
 from wtforms.validators import ValidationError
 from inyoka.i18n import lazy_gettext
 from inyoka.context import ctx
+from inyoka.core.auth.models import User
 
 
 _mail_re = re.compile(r'''(?xi)
@@ -142,4 +143,27 @@ def is_valid_recaptcha(message=None):
 
         if not valid:
             raise ValidationError(message)
+    return validator
+
+
+def is_user(message=None, key='username', negative=False):
+    """
+    Try to get an user either by name or by email (use the `key` parameter to
+    specify this).
+    Raises a validation error if no user was found. You can change this
+    behaviour by setting `negative`.
+    """
+    if message is None:
+        if key == 'username':
+            message = negative and lazy_gettext(u'This user does already exist'
+                             ) or lazy_gettext(u'This user doesn\'t exist')
+        else:
+            message = negative and lazy_gettext(u'This email address is already'
+                  u' used') or lazy_gettext(u'There\'s no user with this email')
+
+    def validator(form, field):
+        user = User.query.filter_by(**{key: field.data}).first()
+        if (negative and user) or (not negative and not user):
+            raise ValidationError(message)
+
     return validator

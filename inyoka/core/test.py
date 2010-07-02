@@ -126,7 +126,7 @@ class ViewTestSuite(TestSuite):
             kw['follow_redirects'] = True
         kw['base_url'] = self.base_url
         kw['buffered'] = True
-        response = self._client.open(path, *args, **kw)
+        response = self.client.open(path, *args, **kw)
         return response
 
     def get(self, *args, **kw):

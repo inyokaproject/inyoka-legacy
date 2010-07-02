@@ -48,4 +48,4 @@ def get_host_port_mapping(value):
     else:
         port = 80
 
-    return host, port, scheme
+    return host, port, url_scheme

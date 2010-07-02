@@ -93,7 +93,8 @@ class TagQuery(db.Query):
                 for idx in xrange(steps):
                     tag_weight = _calculate_tag_weight(item['count'] or 1, max_weight)
                     if not font_set and tag_weight <= thresholds[idx]:
-                        item['size'] = 80 + (tag_weight * idx / math.log(tag_weight or 1))
+                        mw = math.log(tag_weight) if tag_weight else 1
+                        item['size'] = 80 + (tag_weight * idx / mw)
                         font_set = True
                 item['size'] = int(item['size'])
             items.append(item)

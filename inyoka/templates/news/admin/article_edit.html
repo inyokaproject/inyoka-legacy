@@ -10,7 +10,7 @@
   <h3>{{ _('New Article') }}</h3>
 {% endif %}
 
-<form method="post" action="">
+<form method="post" action="" id="admin_edit_article">
 {{ render_fields(form, [form.title, form.intro, form.text,
                  form.tags, form.author]) }}
 {{ render_fields(form, [form.public, form.csrf], true) }}

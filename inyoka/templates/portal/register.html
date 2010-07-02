@@ -1,7 +1,7 @@
 {% extends "portal/base.html" %}
 {% from 'utils/macros.html' import render_fields %}
 {% block content %}
-<form method="post" action="">
+<form method="post" action="" id="portal_register">
 {{ render_fields(form) }}
 <p class="actions"><input type="submit" value="{{ _('Register') }}"></p>
 </form>

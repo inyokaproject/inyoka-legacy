@@ -192,4 +192,9 @@ DEFAULTS = {
     'broker.user':                  TextField(u'inyoka', ''),
     'broker.password':              TextField(u'default', ''),
     'broker.vhost':                 TextField(u'inyoka', ''),
+
+    # twill logging middleware
+    'middleware.enable_twill':      BooleanField(default=False,
+        help_text=lazy_gettext(u'Enables the twill logger.  Unittest skeletons are generated '
+            u'in inyoka_SOMERANDOMID_regressiontest files in your root directory')),
 }

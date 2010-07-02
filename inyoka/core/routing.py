@@ -8,7 +8,7 @@
 """
 import re
 import sre_constants
-from inspect import getmembers, ismethod
+from inspect import ismethod
 from datetime import datetime
 from werkzeug.routing import Submount, Subdomain, EndpointPrefix, \
     Rule, BaseConverter, ValidationError
@@ -18,6 +18,7 @@ from inyoka import Interface
 from inyoka.context import ctx
 from inyoka.core.exceptions import MethodNotAllowed
 from inyoka.core.serializer import send_service_response
+from inyoka.utils import getmembers
 from inyoka.utils.decorators import make_decorator, update_wrapper
 
 

@@ -66,7 +66,7 @@ class IMiddleware(Interface, UrlMixin):
     def process_response(self, request, response):
         """Process the response object.
 
-        This method must return a valid response object.
+        This method *must* return a valid response object.
         """
         return response
 

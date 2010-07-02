@@ -62,3 +62,22 @@ class classproperty(object):
     def __get__(self, desc, cls):
         value = self.func(cls)
         return value
+
+
+def getmembers(object, predicate=None, exclude_pattern='_'):
+    """Return all members of an object as (name, value) pairs sorted by name.
+    Optionally, only return members that satisfy a given predicate.
+
+    If `exclude_pattern` is given all objects starting with that pattern
+    wont be touched.
+    """
+    results = []
+    for key in dir(object):
+        if key.startswith(exclude_pattern):
+            continue
+
+        value = getattr(object, key)
+        if not predicate or predicate(value):
+            results.append((key, value))
+    results.sort()
+    return results

@@ -41,8 +41,8 @@
   {%- endfor %}
 {% endmacro %}
 
-{% macro render_form(form) %}
-  <form method="post" action="">
+{% macro render_form(form, id=none) %}
+  <form method="post" action=""{% if id %} id="{{ id }}"{% endif %}>
   {{ render_fields(form) }}
   <p class="actions"><input type="submit" value="{{ _('Submit') }}"></p>
   </form>

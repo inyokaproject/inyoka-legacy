@@ -8,7 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms.fields import BooleanField, DecimalField, DateField, \
+from wtforms.fields import BooleanField as OrigBooleanField, DecimalField, DateField, \
     DateTimeField, FieldList, FloatField, FormField, HiddenField, \
     IntegerField, PasswordField, RadioField, SelectField, SelectMultipleField, \
     SubmitField, TextField, TextAreaField
@@ -17,6 +17,14 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectF
 
 from inyoka.core.forms import widgets
 from inyoka.core.forms import validators
+
+
+class BooleanField(OrigBooleanField):
+    def _value(self):
+        if self.raw_data:
+            return unicode(self.raw_data[0])
+        else:
+            return u'true'
 
 
 class FileField(TextField):

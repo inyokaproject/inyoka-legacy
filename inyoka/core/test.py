@@ -67,6 +67,10 @@ class _TwillBrowserProxy(object):
     def __setattr__(self, name, value):
         setattr(twill.get_browser(), name, value)
 
+# define shortcuts for twill
+twill.b = _TwillBrowserProxy()
+twill.c = twill.commands
+
 
 class TestSuite(unittest.TestSuite):
     """TestSuite for the Inyoka test framework.

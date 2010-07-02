@@ -169,7 +169,7 @@ class UserCPExtension(IController):
     name = 'usercp'
 
 
-class AlterProfileExtension(UserCPExtension):    
+class AlterProfileExtension(UserCPExtension):
     ext_name = _(u'Edit profile')
     ext_key = 'profile'
 

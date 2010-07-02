@@ -22,7 +22,7 @@ _link_file = None
 
 
 # one of small, medium or large
-SIZE = 'large'
+SIZE = 'small'
 
 USERNAMES = u'''
     asanuma bando chiba ekiguchi erizawa fukuyama inouye ise jo kanada

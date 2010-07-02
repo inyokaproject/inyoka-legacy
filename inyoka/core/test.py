@@ -58,6 +58,16 @@ class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
 
 
+class _TwillBrowserProxy(object):
+    """Small twill browser proxy"""
+
+    def __getattribute__(self, name):
+        return getattr(twill.get_browser(), name)
+
+    def __setattr__(self, name, value):
+        setattr(twill.get_browser(), name, value)
+
+
 class TestSuite(unittest.TestSuite):
     """TestSuite for the Inyoka test framework.
 
@@ -101,7 +111,7 @@ class ViewTestSuite(TestSuite):
         # twill integration.  This intercept forwards all twill commands
         # to our respective wsgi dispatcher
         host, port, scheme = get_host_port_mapping(self.base_domain)
-        twill.add_wsgi_intercept(host, port, lambda: self.ctx.dispatcher)
+        twill.add_wsgi_intercept(host, port, lambda: ctx.dispatcher)
 
     def _post_teardown(self):
         # remove the twill intercept

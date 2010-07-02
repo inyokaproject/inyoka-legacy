@@ -61,13 +61,12 @@ class Session(SecureCookie):
     and non-permanent sessions.
     """
 
-    @property
-    def permanent(self):
+    def _get_permanent(self):
         return self.get('_permanent', False)
 
-    @permanent.setter
-    def permanent(self, value):
+    def _set_permanent(self, value):
         self['_permanent'] = bool(value)
+    permanent = property(_get_permanent, _set_permanent)
 
 
 class Request(BaseRequest):

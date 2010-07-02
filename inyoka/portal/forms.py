@@ -20,14 +20,16 @@ class ProfileForm(Form):
 
     # personal data
     real_name = TextField(lazy_gettext(u'Realname'), [validators.Length(max=200)])
-    website = TextField(lazy_gettext(u'Website'), validators=[validators.is_valid_url()])
+    website = TextField(lazy_gettext(u'Website'),
+        validators=[validators.Optional(), validators.is_valid_url()])
     location = TextField(lazy_gettext(u'Location'), [validators.Length(max=200)])
     interests = TextField(lazy_gettext(u'Interests'), [validators.Length(max=200)])
     occupation = TextField(lazy_gettext(u'Occupation'), [validators.Length(max=200)])
     signature = TextField(lazy_gettext(u'Signature'), widget=widgets.TextArea())
 
     # communication channels
-    jabber = TextField(lazy_gettext(u'Jabber ID'), validators=[validators.is_valid_jabber()])
+    jabber = TextField(lazy_gettext(u'Jabber ID'),
+        validators=[validators.Optional(), validators.is_valid_jabber()])
     skype = TextField(lazy_gettext(u'Skype'), [validators.Length(max=200)])
 
     def __init__(self, *args, **kwargs):

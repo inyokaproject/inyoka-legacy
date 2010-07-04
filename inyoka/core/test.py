@@ -24,6 +24,7 @@ from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
+from inyoka.l10n import parse_timestamp
 from inyoka.context import ctx
 from inyoka.core import database
 from inyoka.core.database import db
@@ -39,7 +40,7 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 
 __all__ = ('TestResponse', 'ViewTestSuite', 'TestSuite', 'fixture', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
-           'ctx')
+           'ctx', 'FixtureLoader')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -70,6 +71,152 @@ class _TwillBrowserProxy(object):
 # define shortcuts for twill
 twill.b = _TwillBrowserProxy()
 twill.c = twill.commands
+
+
+# Fixture Framework
+#
+# The code is based on `bootalchemy <http://pypi.python.org/pypi/bootalchemy>`
+# but was heavily modified to better match into Inyoka.
+
+
+class FixtureLoader(object):
+    """Basic fixture loader
+
+    :references: References from a sqlalchemy session to initialize with.
+    :check_types: Introspect the garget model to re-cast the data appropriately.
+    """
+    def __init__(self, references=None, check_types=True):
+        if references is None:
+            self._references = {}
+        else:
+            self._references = references
+
+        self.check_types = check_types
+
+    def clear(self):
+        """
+        clear the existing references
+        """
+        self._references = {}
+
+    def create_obj(self, cls, item):
+        """
+        create an object with the given data
+        """
+        return cls(**item)
+
+    def update_item(self, item):
+        new_item = item.copy()
+        for key, value in new_item.iteritems():
+            if isinstance(value, basestring) and value.startswith('&'):
+                new_item[key] = None
+            if isinstance(value, basestring) and value.startswith('*'):
+                id = value[1:]
+                new_item[key] = self._references.get(id, new_item[key])
+            if isinstance(value, list):
+                l = []
+                for i in value:
+                    if isinstance(i, basestring) and i.startswith('*'):
+                        id = i[1:]
+                        l.append(self._references.get(id, i))
+                        continue
+                    l.append(i)
+                new_item[key] = l
+        return new_item
+
+    def has_references(self, item):
+        for key, value in item.iteritems():
+            if isinstance(value, basestring) and value.startswith('&'):
+                return True
+
+    def add_reference(self, key, obj):
+        """
+        add a reference to the internal reference dictionary
+        """
+        self._references[key[1:]] = obj
+
+    def set_references(self, obj, item):
+        """
+        extracts the value from the object and stores them in the reference dictionary.
+        """
+        for key, value in item.iteritems():
+            if isinstance(value, basestring) and value.startswith('&'):
+                self._references[value[1:]] = getattr(obj, key)
+            if isinstance(value, list):
+                for i in value:
+                    if isinstance(value, basestring) and i.startswith('&'):
+                        self._references[value[1:]] = getattr(obj, value[1:])
+
+    def _check_types(self, cls, obj):
+        if not self.check_types:
+            return obj
+        mapper = db.class_mapper(cls)
+        for table in mapper.tables:
+            for key in obj.keys():
+                col = table.columns.get(key, None)
+                if col is not None and isinstance(col.type, (db.Date, db.DateTime, db.Time)) \
+                                   and isinstance(obj[key], basestring):
+                    obj[key] = parse_timestamp(obj[key])
+                    continue
+                if col is not None and isinstance(col.type, (db.Unicode, db.String)) \
+                                   and isinstance(obj[key], basestring):
+                    obj[key] = unicode(obj[key])
+                    continue
+        return obj
+
+    def from_list(self, session, data):
+        """Extract data from a list of groups in the form:
+
+        [{
+            'User: [{
+                'username': 'peter',
+                'email': 'peter@example.com'
+            }, {
+                'username': 'Paul'
+                'email': paul@example.com'
+            }],
+        }]
+
+        """
+        for group in data:
+            for name, items in group.iteritems():
+                if name in ('nocommit',):
+                    continue
+
+                # try to find the right model class
+                cls = None
+                models = list(db.ISchemaController.get_models())
+                names = [m.__name__ for m in models]
+                if name in names:
+                    cls = models[names.index(name)]
+
+                # check that the class was found.
+                if cls is None:
+                    raise AttributeError('Model %s not found' % name)
+
+                for item in items:
+                    ref_name = None
+                    keys = item.keys()
+                    if (len(keys) == 1 and keys[0].startswith('&') and \
+                            isinstance(item[keys[0]], dict)):
+                        ref_name = keys[0]
+                        item = item[ref_name]
+                        name = name[1:]
+                    new_item = self.update_item(item)
+                    new_item = self._check_types(cls, new_item)
+                    obj = self.create_obj(cls, new_item)
+                    session.add(obj)
+                    if ref_name:
+                        self.add_reference(ref_name, obj)
+                    if self.has_references(item):
+                        session.flush()
+                        self.set_references(obj, item)
+            keys = group.keys()
+            if not 'nocommit' in keys:
+                session.commit()
+
+        # commit everything at the end of fixture loading
+        session.commit()
 
 
 class TestSuite(unittest.TestSuite):
@@ -311,6 +458,13 @@ class InyokaPlugin(cover.Coverage):
             # enable our test suite to setup internal things
             t.inst._pre_setup()
 
+        #TODO: find out how to handle session transaction management better.
+        #      Sometimes there's just no rollback for that stuff.
+        #      As it seems the most safe way is to delete the tables before every
+        #      test.  But this makes the unittests awefully slow and introduces
+        #      a quite big overhead.  If someone has an idea?
+        #
+        #
         # setup the new transaction context so that we can revert
         # it to get a clean and nice database
         self._transaction = self._connection.begin()

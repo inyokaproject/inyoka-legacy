@@ -133,10 +133,11 @@ class User(db.Model, SerializableObject):
     groups = db.relationship(Group, secondary=user_group,
         backref=db.backref('users', lazy='dynamic'))
 
-    def __init__(self, username, email, password=''):
-        self.username = username
-        self.email = email
-        self.set_password(password)
+    def __init__(self, *args, **kwargs):
+        # we just ignore applied pw_hashes so we calculate those ourselfs
+        kwargs.pop('pw_hash', None)
+        self.set_password(kwargs.pop('password', u''))
+        db.Model.__init__(self, *args, **kwargs)
 
     def set_password(self, raw_password):
         """Set a new sha1 generated password hash"""
@@ -197,7 +198,8 @@ class UserProfile(db.Model):
     """
     __tablename__ = 'core_userprofile'
 
-    user_id = db.Column(db.ForeignKey(User.id), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.ForeignKey(User.id))
     user = db.relationship(User, backref=db.backref('profile',
         uselist=False, lazy='joined', innerjoin=True))
 

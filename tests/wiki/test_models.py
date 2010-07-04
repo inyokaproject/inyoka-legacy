@@ -15,7 +15,7 @@ from inyoka.wiki.models import Page, Revision, Text
 
 
 def test_page_name_conversion_and_get_by_name():
-    p = Page(u'some name')
+    p = Page(name=u'some name')
     eq_(p.name, u'some name')
     eq_(p.url_name, u'some_name')
 
@@ -35,7 +35,7 @@ def test_text_raw_and_rendered():
     text2r = '<p>Now\nthere is something else.</p>'
     u = User.query.first()
 
-    r = Revision(page=Page('foo'), change_user=u, epoch=1)
+    r = Revision(page=Page(name='foo'), change_user=u, epoch=1)
     r.raw_text = text1
     eq_(r.raw_text, text1)
     eq_(r.rendered_text, text1r)
@@ -56,9 +56,9 @@ def test_text_raw_and_rendered():
 
 
 def test_update_current_revision():
-    u = User('somebody', 'some@body.invalid')
-    p1 = Page('one')
-    p2 = Page('two')
+    u = User(username='somebody', email='some@body.invalid')
+    p1 = Page(name='one')
+    p2 = Page(name='two')
 
     r1 = Revision(raw_text='rev 1', change_user=u, epoch=1, page=p1)
     r2 = Revision(raw_text='rev 2', change_user=u, epoch=1, page=p2)
@@ -85,7 +85,7 @@ def test_update_current_revision():
 
 def test_epoch_behavior():
     u = User.query.first()
-    p = Page('foo', current_epoch=3)
+    p = Page(name='foo', current_epoch=3)
     r1 = Revision(page=p, change_user=u, epoch=1)
     r2 = Revision(page=p, change_user=u, epoch=2)
     r3 = Revision(page=p, change_user=u, epoch=2)
@@ -98,7 +98,7 @@ def test_epoch_behavior():
 
 
 def test_url_generation():
-    p = Page('Page Name')
+    p = Page(name='Page Name')
     r = Revision(page=p, change_user_id=1, epoch=1)
     db.session.commit()
 

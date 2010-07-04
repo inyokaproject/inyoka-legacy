@@ -13,7 +13,7 @@ from inyoka.core.auth.models import User, USER_STATUS_MAP, Group
 
 
 def test_user():
-    me = User('me', 'me@example.com', 's3cr3t')
+    me = User(username='me', email='me@example.com', password='s3cr3t')
     db.session.commit()
     eq_(me._status, 0)
     eq_(me.status, USER_STATUS_MAP[0])

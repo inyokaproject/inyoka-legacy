@@ -374,6 +374,22 @@ class ISchemaController(Interface):
 
     models = []
 
+    @classmethod
+    def get_models(cls, tables=False):
+        """Generator that yields all registered models.  Yields tables
+        if `tables` is set to True.
+        """
+        for component in ctx.get_implementations(cls, instances=True):
+            for model in component.models:
+                is_table = isinstance(model, Table)
+                if is_table and not tables:
+                    continue
+
+                if is_table and tables:
+                    yield model
+                else:
+                    yield model.__table__ if tables else model
+
 
 class DeclarativeMeta(SADeclarativeMeta):
     """Our own metaclass to register all model classes
@@ -457,23 +473,14 @@ class SlugGenerator(orm.MapperExtension):
 
 
 def init_db(**kwargs):
-    tables = []
+    kwargs['tables'] = list(ISchemaController.get_models(tables=True))
 
-    for comp in ctx.get_implementations(ISchemaController, instances=True):
-        for model in comp.models:
-            if isinstance(model, Table):
-                tables.append(model)
-            else:
-                tables.append(model.__table__)
-
-    kwargs['tables'] = tables
-
-    if tables:
+    if kwargs['tables']:
         metadata.create_all(**kwargs)
         # some essential database things
         from inyoka.core.auth.models import User, UserProfile
         anon_name = ctx.cfg['anonymous_name']
-        anon = User(anon_name, u'', u'')
+        anon = User(username=anon_name, email=u'', password=u'')
         UserProfile(user=anon)
         db.session.commit()
 

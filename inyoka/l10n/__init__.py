@@ -17,6 +17,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from __future__ import division
+import re
 from functools import wraps
 from datetime import date, datetime, timedelta, time
 import pytz
@@ -25,6 +26,19 @@ from babel.dates import TIMEDELTA_UNITS
 
 from inyoka.i18n import get_locale, lazy_gettext, _
 from inyoka.context import ctx
+
+
+timestamp_regexp = re.compile(r'''
+    ^(?P<year>[0-9][0-9][0-9][0-9])
+    -(?P<month>[0-9][0-9]?)
+    -(?P<day>[0-9][0-9]?)
+    (?:(?:[Tt]|[ \t]+)
+    (?P<hour>[0-9][0-9]?)
+    :(?P<minute>[0-9][0-9])
+    :(?P<second>[0-9][0-9])
+    (?:\.(?P<fraction>[0-9]*))?
+    (?:[ \t]*(?P<tz>Z|(?P<tz_sign>[-+])(?P<tz_hour>[0-9][0-9]?)
+    (?::(?P<tz_minute>[0-9][0-9]))?))?)?$''', re.X)
 
 
 UTC = pytz.timezone('UTC')
@@ -221,3 +235,41 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
     timedelta_ = _format_timedelta(datetime_or_timedelta, granularity,
                                   threshold=threshold)
     return lazy_gettext(u'%(timedelta)s ago') % {'timedelta': timedelta_}
+
+
+def parse_timestamp(value):
+    """Try to simply parse a timestamp value into a datetime object.
+
+    .. note::
+
+        Do never rely on that function for presentation or calculation
+        purposes.  It's more or less only used for test serializaion.
+    """
+    match = timestamp_regexp.match(value)
+    values = match.groupdict()
+    year = int(values['year'])
+    month = int(values['month'])
+    day = int(values['day'])
+    if not values['hour']:
+        return date(year, month, day)
+
+    hour = int(values['hour'])
+    minute = int(values['minute'])
+    second = int(values['second'])
+    fraction = 0
+    if values['fraction']:
+        fraction = values['fraction'][:6]
+        while len(fraction) < 6:
+            fraction += '0'
+        fraction = int(fraction)
+    delta = None
+    if values['tz_sign']:
+        tz_hour = int(values['tz_hour'])
+        tz_minute = int(values['tz_minute'] or 0)
+        delta = timedelta(hours=tz_hour, minutes=tz_minute)
+        if values['tz_sign'] == '-':
+            delta = -delta
+    data = datetime(year, month, day, hour, minute, second, fraction)
+    if delta:
+        data -= delta
+    return data

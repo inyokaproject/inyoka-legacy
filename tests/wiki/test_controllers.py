@@ -22,7 +22,7 @@ class WikiTester(ViewTestSuite):
         self.assertRedirects(response, 'my_index_page')
 
 
-        p = Page(ctx.cfg['wiki.index.name'])
+        p = Page(name=ctx.cfg['wiki.index.name'])
         r = Revision(page=p, change_user_id=1, epoch=1, raw_text='index page')
         db.session.commit()
 
@@ -31,8 +31,8 @@ class WikiTester(ViewTestSuite):
         self.assertRedirects(response, ctx.cfg['wiki.index.name'])
 
     def test_show(self):
-        p = Page('test page', current_epoch=2)
-        p2 = Page('other page')
+        p = Page(name='test page', current_epoch=2)
+        p2 = Page(name='other page')
         r1 = Revision(page=p, change_user_id=1, epoch=1, raw_text='empty')
         r2 = Revision(page=p, change_user_id=1, epoch=2, raw_text='empty')
         r3 = Revision(page=p2, change_user_id=1, epoch=1, raw_text='empty')

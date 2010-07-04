@@ -458,6 +458,13 @@ class InyokaPlugin(cover.Coverage):
             # enable our test suite to setup internal things
             t.inst._pre_setup()
 
+        #TODO: find out how to handle session transaction management better.
+        #      Sometimes there's just no rollback for that stuff.
+        #      As it seems the most safe way is to delete the tables before every
+        #      test.  But this makes the unittests awefully slow and introduces
+        #      a quite big overhead.  If someone has an idea?
+        #
+        #
         # setup the new transaction context so that we can revert
         # it to get a clean and nice database
         self._transaction = self._connection.begin()

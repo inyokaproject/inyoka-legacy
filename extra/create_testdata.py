@@ -432,13 +432,13 @@ def create_wiki_test_data():
 
     u = User.query.first()
     a = Revision(
-        page=Page(ctx.cfg['wiki.index.name']), epoch=1,
+        page=Page(name=ctx.cfg['wiki.index.name']), epoch=1,
         raw_text=u'This is the wiki index page!',
         change_user=u, change_comment=u'hello world.',
     )
 
     b = Revision(
-        page=Page(u'Installation'), epoch=1,
+        page=Page(name=u'Installation'), epoch=1,
         raw_text=u"Type:\n ./configure\n make\n '''make install'''\nThat\'s it.",
         change_user=u, change_comment=u'started installation page',
     )

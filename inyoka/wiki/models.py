@@ -61,10 +61,6 @@ class Page(db.Model):
     current_revision = db.relationship('Revision', post_update=True,
         primaryjoin='Page.current_revision_id == Revision.id')
 
-    def __init__(self, name, **kwargs):
-        self.name = name
-        super(Page, self).__init__(**kwargs)
-
     def __repr__(self):
         return '<Page %r>' % self.name
 

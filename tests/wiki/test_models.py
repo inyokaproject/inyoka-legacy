@@ -56,7 +56,7 @@ def test_text_raw_and_rendered():
 
 
 def test_update_current_revision():
-    u = User('somebody', 'some@body.invalid')
+    u = User(username='somebody', email='some@body.invalid')
     p1 = Page('one')
     p2 = Page('two')
 

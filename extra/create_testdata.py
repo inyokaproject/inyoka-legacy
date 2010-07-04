@@ -178,7 +178,7 @@ def create_test_users():
     from inyoka.core.auth.models import User, UserProfile, Group
 
     # admin user
-    admin = User(u'admin', u'root@localhost', u'default')
+    admin = User(username=u'admin', email=u'root@localhost', password=u'default')
     admin.status = 'normal'
     admin_profile = UserProfile(user=admin)
 
@@ -210,7 +210,8 @@ def create_test_users():
 
     }
     for user in users:
-        u = User(user, *users[user][:-1])
+        email, pw = users[user][:-1]
+        u = User(username=user, email=email, password=pw)
         u.status = 'normal'
         p = UserProfile(user=u, **users[user][-1])
         user_instances.append(u)
@@ -236,7 +237,8 @@ def create_test_users():
             if username not in used:
                 used.add(username)
                 break
-        u = User(username, '%s@example.com' % username, 'default')
+        u = User(username=username, email='%s@example.com' % username,
+                 password='default')
         UserProfile(user=u)
         if random() > 0.6:
             u.groups = [choice(groups)]

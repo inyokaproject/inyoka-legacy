@@ -77,10 +77,13 @@ twill.c = twill.commands
 # Fixture Framework
 #
 # The code is based on `bootalchemy <http://pypi.python.org/pypi/bootalchemy>`
-# but was heavily modified to better match into Inyoka.
+# but was heavily modified to better fit Inyokas database system management.
+#
 
 
 class FixtureLoader(object):
+    """This class is responsible of loading fixtures."""
+
     default_encoding = 'utf-8'
 
     def cast(type_, cast_func, value):
@@ -110,18 +113,19 @@ class FixtureLoader(object):
         self.check_types = check_types
 
     def clear(self):
-        """
-        clear the existing references
-        """
+        """Clear the existing references."""
         self._references = {}
 
     def create_obj(self, cls, item):
-        """
-        create an object with the given data
-        """
+        """Create an object with the given data"""
         return cls(**item)
 
     def resolve_value(self, value):
+        """Resolve `value`.
+
+        This method resolves references on columns or even whole
+        objects as well as nested references.
+        """
         if isinstance(value, basestring):
             if value.startswith('&'):
                 return None
@@ -153,20 +157,17 @@ class FixtureLoader(object):
         return value
 
     def has_references(self, item):
+        """Check if `item` has references of any kind"""
         for key, value in item.iteritems():
             if isinstance(value, basestring) and value.startswith('&'):
                 return True
 
     def add_reference(self, key, obj):
-        """
-        add a reference to the internal reference dictionary
-        """
+        """Add a reference to the internal reference dictionary"""
         self._references[key[1:]] = obj
 
     def set_references(self, obj, item):
-        """
-        extracts the value from the object and stores them in the reference dictionary.
-        """
+        """Extracts and stores the value of an object in the reference counter."""
         for key, value in item.iteritems():
             if isinstance(value, basestring) and value.startswith('&'):
                 self._references[value[1:]] = getattr(obj, key)
@@ -176,6 +177,7 @@ class FixtureLoader(object):
                         self._references[value[1:]] = getattr(obj, value[1:])
 
     def _check_types(self, cls, obj):
+        """Validate all types and cast them to better matching types if possible."""
         if not self.check_types:
             return obj
         mapper = db.class_mapper(cls)
@@ -193,7 +195,7 @@ class FixtureLoader(object):
         return obj
 
     def get_cls(self, name):
-        # try to find the right model class
+        """Try to find the right class for `name`"""
         cls = None
         models = list(db.ISchemaController.get_models())
         names = [m.__name__ for m in models]
@@ -207,7 +209,11 @@ class FixtureLoader(object):
         return cls
 
     def add_cls_with_values(self, cls, values):
-        """cls is a type, values is a dictionary. Returns a new object."""
+        """Return a new objects with resolved `values.
+
+        :param cls: A type to initiate.
+        :param values: A dictionary with values for initialisation.
+        """
         ref_name = None
         keys = values.keys()
         if len(keys) == 1 and keys[0].startswith('&') and isinstance(values[keys[0]], dict):
@@ -248,6 +254,7 @@ class FixtureLoader(object):
         return objects
 
     def from_list(self, session, data):
+        """Initialize `data` in `session.  See unittest docs for more details."""
         self.session = session
         cls = None
         item = None

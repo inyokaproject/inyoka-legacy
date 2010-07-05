@@ -113,6 +113,7 @@ def test_ordereddict():
     assert_raises(TypeError, OrderedDict, 1, 3)
 
     items = [('a', 1), ('b', 2), ('c', 3), ('d', 4)]
+    d = OrderedDict(items)
 
     # clear
     d.clear()

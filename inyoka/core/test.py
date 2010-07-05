@@ -209,7 +209,7 @@ class FixtureLoader(object):
         return cls
 
     def add_cls_with_values(self, cls, values):
-        """Return a new objects with resolved `values.
+        """Return a new objects with resolved `values`.
 
         :param cls: A type to initiate.
         :param values: A dictionary with values for initialisation.
@@ -254,7 +254,7 @@ class FixtureLoader(object):
         return objects
 
     def from_list(self, session, data):
-        """Initialize `data` in `session.  See unittest docs for more details."""
+        """Initialize `data` in `session`.  See unittest docs for more details."""
         self.session = session
         cls = None
         item = None
@@ -599,6 +599,7 @@ class InyokaPlugin(cover.Coverage):
 
 
 def refresh_database(func):
+    """Refresh the database right after the decorated function was called"""
     @wraps(func)
     def decorator(*args, **kwargs):
         ret = func(*args, **kwargs)
@@ -612,13 +613,16 @@ def refresh_database(func):
 def with_fixtures(fixtures):
     """Mark this function to work with some fixture.
 
-    Example usage::
+    Example usage:
+
+    .. code-block:: python
 
         fixtures = [{'User': {'username': 'Paul', 'email': 'paul@example.com'}}]
 
         @with_fixtures(fixtures)
         def test_my_feature(fixtures):
-            # ...
+            # your tests here
+            pass
 
     Note that the database is refreshed right after function execution.
     This may lead into perforamnce issues.
@@ -635,8 +639,6 @@ def with_fixtures(fixtures):
             return func(data, *args, **kwargs)
         return _proxy
     return decorator
-
-
 
 
 class ExpectedFailure(Exception):

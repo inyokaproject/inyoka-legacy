@@ -12,8 +12,11 @@ from inyoka.core.api import href, ctx
 from inyoka.core.auth.models import User
 from inyoka.core.test import *
 from inyoka.wiki.models import Page, Revision, Text
+from inyoka.core.database import init_db
 
 
+
+@refresh_database
 def test_page_name_conversion_and_get_by_name():
     p = Page(name=u'some name')
     eq_(p.name, u'some name')
@@ -28,6 +31,7 @@ def test_page_name_conversion_and_get_by_name():
     eq_(p, Page.query.get('sOmE nAmE'))
 
 
+@refresh_database
 def test_text_raw_and_rendered():
     text1 = 'This\nis my first wiki page.'
     text1r = '<p>This\nis my first wiki page.</p>'
@@ -55,6 +59,7 @@ def test_text_raw_and_rendered():
     assert_false(tracker.check('Called Text._render()'))
 
 
+@refresh_database
 def test_update_current_revision():
     u = User(username='somebody', email='some@body.invalid')
     p1 = Page(name='one')
@@ -83,6 +88,8 @@ def test_update_current_revision():
     eq_(p1.current_revision, r3)
     eq_(p2.current_revision, r6)
 
+
+@refresh_database
 def test_epoch_behavior():
     u = User.query.first()
     p = Page(name='foo', current_epoch=3)
@@ -97,6 +104,7 @@ def test_epoch_behavior():
     eq_(p.revisions.all(), [r4, r5])
 
 
+@refresh_database
 def test_url_generation():
     p = Page(name='Page Name')
     r = Revision(page=p, change_user_id=1, epoch=1)

@@ -13,7 +13,8 @@ import os
 import sys
 import unittest
 import warnings
-import functools
+from functools import partial, wraps
+from pprint import pformat
 
 import nose
 from nose.plugins import cover, base, errorclass
@@ -24,7 +25,7 @@ from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
-from inyoka.l10n import parse_timestamp
+from inyoka.l10n import parse_timestamp, parse_timeonly
 from inyoka.context import ctx
 from inyoka.core import database
 from inyoka.core.database import db
@@ -38,9 +39,9 @@ logger.disabled = True
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
-__all__ = ('TestResponse', 'ViewTestSuite', 'TestSuite', 'fixture', 'with_fixtures',
+__all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
-           'ctx', 'FixtureLoader')
+           'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -80,11 +81,26 @@ twill.c = twill.commands
 
 
 class FixtureLoader(object):
-    """Basic fixture loader
+    default_encoding = 'utf-8'
 
-    :references: References from a sqlalchemy session to initialize with.
-    :check_types: Introspect the garget model to re-cast the data appropriately.
-    """
+    def cast(type_, cast_func, value):
+        if type(value) == type_:
+            return value
+        else:
+            return cast_func(value)
+
+    default_casts = {
+        db.Integer:int,
+        db.Unicode: partial(cast, unicode, lambda x: unicode(x, default_encoding)),
+        db.Date: parse_timestamp,
+        db.DateTime: parse_timestamp,
+        db.Time: parse_timeonly,
+        db.Float:float,
+        db.Boolean: partial(cast, bool, lambda x: x.lower() not in ('f', 'false', 'no', 'n')),
+        db.Binary: partial(cast, str, lambda x: x.encode('base64')),
+        db.PGArray: list
+    }
+
     def __init__(self, references=None, check_types=True):
         if references is None:
             self._references = {}
@@ -105,24 +121,36 @@ class FixtureLoader(object):
         """
         return cls(**item)
 
-    def update_item(self, item):
-        new_item = item.copy()
-        for key, value in new_item.iteritems():
-            if isinstance(value, basestring) and value.startswith('&'):
-                new_item[key] = None
-            if isinstance(value, basestring) and value.startswith('*'):
-                id = value[1:]
-                new_item[key] = self._references.get(id, new_item[key])
-            if isinstance(value, list):
-                l = []
-                for i in value:
-                    if isinstance(i, basestring) and i.startswith('*'):
-                        id = i[1:]
-                        l.append(self._references.get(id, i))
-                        continue
-                    l.append(i)
-                new_item[key] = l
-        return new_item
+    def resolve_value(self, value):
+        if isinstance(value, basestring):
+            if value.startswith('&'):
+                return None
+            elif value.startswith('*'):
+                if value[1:] in self._references:
+                    return self._references[value[1:]]
+                else:
+                    raise Exception('The pointer %(val)s could not be found. '
+                                    'Make sure that %(val)s is declared before '
+                                    'it is used.' % { 'val': value })
+        elif isinstance(value, dict):
+            keys = value.keys()
+            if len(keys) == 1 and keys[0].startswith('!'):
+                cls_name = keys[0][1:]
+                items = value[keys[0]]
+                cls = self.get_cls(cls_name)
+
+                if isinstance(items, dict):
+                    return self.add_cls_with_values(cls, items)
+                elif isinstance(items, (list, set)):
+                    return self.add_clses(cls, items)
+                else:
+                    raise TypeError('You can only give a nested value a list or a dict. '
+                                    'You tried to feed a %s into a %s.'
+                                    % (items.__class__.__name__, cls_name))
+        elif isinstance(value, (list, set)):
+            return type(value)([self.resolve_value(list_item) for list_item in value])
+
+        return value
 
     def has_references(self, item):
         for key, value in item.iteritems():
@@ -142,7 +170,7 @@ class FixtureLoader(object):
         for key, value in item.iteritems():
             if isinstance(value, basestring) and value.startswith('&'):
                 self._references[value[1:]] = getattr(obj, key)
-            if isinstance(value, list):
+            if isinstance(value, (list, set)):
                 for i in value:
                     if isinstance(value, basestring) and i.startswith('&'):
                         self._references[value[1:]] = getattr(obj, value[1:])
@@ -154,80 +182,110 @@ class FixtureLoader(object):
         for table in mapper.tables:
             for key in obj.keys():
                 col = table.columns.get(key, None)
-                if col is not None and isinstance(col.type, (db.Date, db.DateTime, db.Time)) \
-                                   and isinstance(obj[key], basestring):
-                    obj[key] = parse_timestamp(obj[key])
-                    continue
-                if col is not None and isinstance(col.type, (db.Unicode, db.String)) \
-                                   and isinstance(obj[key], basestring):
-                    obj[key] = unicode(obj[key])
-                    continue
+                value = obj[key]
+                if value is not None and col is not None and col.type is not None:
+                    for type_, func in self.default_casts.iteritems():
+                        if isinstance(col.type, type_):
+                            obj[key] = func(value)
+                            break
+                if value is None and col is not None and isinstance(col.type, (db.String, db.Unicode)):
+                    obj[key] = ''
         return obj
 
-    def from_list(self, session, data):
-        """Extract data from a list of groups in the form:
+    def get_cls(self, name):
+        # try to find the right model class
+        cls = None
+        models = list(db.ISchemaController.get_models())
+        names = [m.__name__ for m in models]
+        if name in names:
+            cls = models[names.index(name)]
 
-        [{
-            'User: [{
-                'username': 'peter',
-                'email': 'peter@example.com'
-            }, {
-                'username': 'Paul'
-                'email': paul@example.com'
-            }],
-        }]
+        # check that the class was found.
+        if cls is None:
+            raise AttributeError('Model %s not found' % name)
+
+        return cls
+
+    def add_cls_with_values(self, cls, values):
+        """cls is a type, values is a dictionary. Returns a new object."""
+        ref_name = None
+        keys = values.keys()
+        if len(keys) == 1 and keys[0].startswith('&') and isinstance(values[keys[0]], dict):
+            ref_name = keys[0]
+            values = values[ref_name] # ie. item.values[0]
+
+        # Values is a dict of attributes and their values for any ObjectName.
+        # Copy the given dict, iterate all key-values and process those with
+        # special directions (nested creations or links).
+        resolved_values = values.copy()
+        for key, value in resolved_values.iteritems():
+            resolved_values[key] = self.resolve_value(value)
+
+        # _check_types currently does nothing (unless you call the loaded with a check_types parameter)
+        resolved_values = self._check_types(cls, resolved_values)
+
+        obj = self.create_obj(cls, resolved_values)
+        self.session.add(obj)
+
+        if ref_name:
+            self.add_reference(ref_name, obj)
+        if self.has_references(values):
+            self.session.flush()
+            self.set_references(obj, values)
+
+        return obj
+
+    def add_clses(self, cls, items):
+        """Returns a list of the new objects.
+        These objects are already in session, so you don't
+        *need* to do anything with them.
 
         """
-        for group in data:
-            for name, items in group.iteritems():
-                if name in ('nocommit',):
-                    continue
+        objects = []
+        for item in items:
+            obj = self.add_cls_with_values(cls, item)
+            objects.append(obj)
+        return objects
 
-                # try to find the right model class
-                cls = None
-                models = list(db.ISchemaController.get_models())
-                names = [m.__name__ for m in models]
-                if name in names:
-                    cls = models[names.index(name)]
+    def from_list(self, session, data):
+        self.session = session
+        cls = None
+        item = None
+        group = None
+        skip_keys = ['nocommit']
+        new_data = {}
+        try:
+            for group in data:
+                for cls, items in group.iteritems():
+                    if cls in skip_keys:
+                        continue
+                    if isinstance(cls, basestring) and cls not in skip_keys:
+                        cls = self.get_cls(cls)
+                    new_data[cls.__name__] = self.add_clses(cls, items)
+                if not 'nocommit' in group:
+                    session.commit()
+        except Exception, e:
+            self.log_error(sys.exc_info()[2], data, cls, item)
+            db.session.rollback()
+            raise
 
-                # check that the class was found.
-                if cls is None:
-                    raise AttributeError('Model %s not found' % name)
+        self.session = None
+        return new_data
 
-                for item in items:
-                    ref_name = None
-                    keys = item.keys()
-                    if (len(keys) == 1 and keys[0].startswith('&') and \
-                            isinstance(item[keys[0]], dict)):
-                        ref_name = keys[0]
-                        item = item[ref_name]
-                        name = name[1:]
-                    new_item = self.update_item(item)
-                    new_item = self._check_types(cls, new_item)
-                    obj = self.create_obj(cls, new_item)
-                    session.add(obj)
-                    if ref_name:
-                        self.add_reference(ref_name, obj)
-                    if self.has_references(item):
-                        session.flush()
-                        self.set_references(obj, item)
-            keys = group.keys()
-            if not 'nocommit' in keys:
-                session.commit()
-
-        # commit everything at the end of fixture loading
-        session.commit()
+    def log_error(self, e, data, cls, item):
+        print 'error occured while loading fixture data with output:\n%s' % pformat(data)
+        print 'class: %s' % cls
+        print 'item: %s' % item
+        import traceback
+        print traceback.format_exc(e)
 
 
-class TestSuite(unittest.TestSuite):
-    """TestSuite for the Inyoka test framework.
+class TestCase(unittest.TestCase):
+    """TestCase for the Inyoka test framework.
 
-    A TestSuite holds various test methods for unittesting and
+    A TestCase holds various test methods for unittesting and
     is able to use our own fixtures framework.
     """
-
-    #: dictionary full of fixtures
-    fixtures = {}
 
     def _pre_setup(self):
         """Internal setup method so that unittests can implement setUp.
@@ -244,14 +302,77 @@ class TestSuite(unittest.TestSuite):
         can still access the fixtures and other things here.
         """
 
+    def __call__(self, result=None):
+        """
+        Wrapper around default __call__ method to perform common test
+        set up. This means that user-defined Test Cases aren't required to
+        include a call to super().setUp().
+        """
+        try:
+            self._pre_setup()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception:
+            import sys
+            result.addError(self, sys.exc_info())
+            return
+        super(TestCase, self).__call__(result)
+        try:
+            self._post_teardown()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception:
+            import sys
+            result.addError(self, sys.exc_info())
+            return
 
-class ViewTestSuite(TestSuite):
+
+class DatabaseTestCase(TestCase):
+    """This class provides fixture support."""
+
+    _started = False
+    data = {}
+    fixtures = {}
+
+    def _pre_setup(self):
+        super(DatabaseTestCase, self)._pre_setup()
+
+        if self.fixtures:
+            loader = FixtureLoader()
+            self.data = loader.from_list(db.session, self.fixtures)
+
+    def _post_teardown(self):
+        super(DatabaseTestCase, self)._post_teardown()
+
+        for group in self.data:
+            try:
+                for cls in self.data[group]:
+                    db.session.delete(cls)
+            except TypeError:
+                db.session.delete(self.data[group])
+        db.session.commit()
+
+        # revert all mock objects to get clear passage on the next test
+        revert_mocks()
+        try:
+            db.session.close()
+        except db.SQLAlchemyError:
+            db.session.rollback()
+            raise
+
+        for callback in ctx.dispatcher.cleanup_callbacks:
+            callback()
+
+
+class ViewTestCase(DatabaseTestCase):
     """A test case suitable to test view methods properly"""
 
     controller = None
 
     def _pre_setup(self):
         """Setup the test client and url and base domain values"""
+        super(ViewTestCase, self)._pre_setup()
+
         self.client = Client(ctx.dispatcher, response_wrapper=TestResponse,
                              use_cookies=True)
         self.base_domain = ctx.cfg['base_domain_name']
@@ -265,6 +386,7 @@ class ViewTestSuite(TestSuite):
         twill.add_wsgi_intercept(host, port, lambda: ctx.dispatcher)
 
     def _post_teardown(self):
+        super(ViewTestCase, self)._post_teardown()
         # remove the twill intercept
         host, port, scheme = get_host_port_mapping(self.base_domain)
         twill.remove_wsgi_intercept(host, port)
@@ -384,7 +506,6 @@ class ViewTestSuite(TestSuite):
         return u'%s://%s:%d%s' % (get_host_port_mapping(self.base_domain), url)
 
 
-
 class InyokaPlugin(cover.Coverage):
     """Nose plugin extension
 
@@ -398,7 +519,6 @@ class InyokaPlugin(cover.Coverage):
     enabled = False
     enableOpt = 'inyoka_config'
     name = 'inyoka'
-    _started = False
 
     def __init__(self):
         super(InyokaPlugin, self).__init__()
@@ -424,10 +544,6 @@ class InyokaPlugin(cover.Coverage):
         # then we create everything
         database.init_db(bind=engine)
 
-        # connect to the engine
-        self._connection = conn = self._engine.connect()
-        db.session.bind = conn
-
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
     def finalize(self, result):
@@ -445,88 +561,12 @@ class InyokaPlugin(cover.Coverage):
             self.enabled = bool(getattr(options, self.enableOpt))
             self.config_file = getattr(options, self.enableOpt)
 
-    def startTest(self, test):
-        """Called before each test seperately to support our
-        own fixture system and call special initialisation methods.
-
-        Note that this is called for *each* test *method* not
-        every TestCase.
-        """
-        t = test.test
-
-        if isinstance(t, nose.case.MethodTestCase):
-            # enable our test suite to setup internal things
-            t.inst._pre_setup()
-
-        #TODO: find out how to handle session transaction management better.
-        #      Sometimes there's just no rollback for that stuff.
-        #      As it seems the most safe way is to delete the tables before every
-        #      test.  But this makes the unittests awefully slow and introduces
-        #      a quite big overhead.  If someone has an idea?
-        #
-        #
-        # setup the new transaction context so that we can revert
-        # it to get a clean and nice database
-        self._transaction = self._connection.begin()
-
-        if hasattr(t, 'test') and hasattr(t.test, '_required_fixtures'):
-            self._started = True
-            # reset the database data.  That way we can assure
-            # that we get a clear database
-            loaded = {}
-            for fixture in t.test._required_fixtures:
-                loader = test.context.fixtures[fixture]
-                try:
-                    if isinstance(loader, _iterables):
-                        instances = []
-                        for func in loader:
-                            value = func()
-                            db.session.add(value)
-                            db.session.commit()
-                            instances.append(value)
-                    else:
-                        instances = loader()
-                        to_load = instances if isinstance(instances, _iterables) \
-                                    else [instances]
-                        db.session.add_all(to_load)
-                    loaded[fixture] = instances
-                except db.SQLAlchemyError:
-                    db.session.rollback()
-                    raise
-            t.test = functools.partial(t.test, loaded)
-
-    def stopTest(self, test):
-        """Called after each test seperately to clear up fixtures as
-        well as mock objects.
-
-        This also calls all cleanup callbacks for the WSGI Dispatcher.
-
-        Note that this is called for *each* test *method* not
-        every TestCase.
-        """
-        if self._started:
-            self._started = False
-            if isinstance(test.test, nose.case.MethodTestCase):
-                test.test.inst._post_teardown()
-
-        # revert all mock objects to get clear passage on the next test
-        revert_mocks()
-        try:
-            db.session.close()
-        except db.SQLAlchemyError:
-            db.session.rollback()
-            raise
-        # rollback the transaction
-        self._transaction.rollback()
-        for callback in ctx.dispatcher.cleanup_callbacks:
-            callback()
-
     def wantClass(self, cls):
         """Check if we can use a `cls` for unittest purposes.  This adds
-        `ViewTestSuite` to the list of possible unittest interfaces."""
-        if issubclass(cls, ViewTestSuite) and not cls is ViewTestSuite:
+        `ViewTestCase` to the list of possible unittest interfaces."""
+        if issubclass(cls, (DatabaseTestCase, ViewTestCase)) and not cls is ViewTestCase:
             return True
-        if cls is ViewTestSuite:
+        elif cls is ViewTestCase:
             return False
         return None
 
@@ -551,36 +591,45 @@ class InyokaPlugin(cover.Coverage):
             html_reporter.report(modules, self.coverHtmlDir)
 
 
-#TODO: write unittests
-def fixture(model, _callback=None, **kwargs):
-    """Insert some test fixtures into the database"""
-    def onload():
-        data = {}
-        if _callback is not None:
-            data = _callback if isinstance(_callback, dict) else _callback()
-        kwargs.update(data)
-        m = model(**kwargs)
-        return m
-    return onload
+def refresh_database(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        ret = func(*args, **kwargs)
+        # drop all data afterwards and initialize the database again.
+        database.metadata.drop_all(bind=database.get_engine())
+        database.init_db(bind=database.get_engine())
+        return ret
+    return decorator
 
 
-def with_fixtures(*names):
+def with_fixtures(fixtures):
     """Mark this function to work with some fixture.
 
     Example usage::
 
-        class MyTest(TestSuite):
-            fixtures = {'fix1': fixture(Entry, **some_data)}
+        fixtures = [{'User': {'username': 'Paul', 'email': 'paul@example.com'}}]
 
-            @with_fixtures('fix1')
-            def test_my_feature(self, fixtures):
-                # ...
+        @with_fixtures(fixtures)
+        def test_my_feature(fixtures):
+            # ...
 
+    Note that the database is refreshed right after function execution.
+    This may lead into perforamnce issues.
     """
-    def proxy(func):
-        func._required_fixtures = names
-        return func
-    return proxy
+    def decorator(func):
+        @refresh_database
+        @wraps(func)
+        def _proxy(*args, **kwargs):
+            if callable(fixtures):
+                # the function defines it's own fixture loader.
+                data = fixtures()
+            else:
+                data = FixtureLoader().from_list(db.session, fixtures)
+            return func(data, *args, **kwargs)
+        return _proxy
+    return decorator
+
+
 
 
 class ExpectedFailure(Exception):
@@ -604,7 +653,7 @@ class FuturePlugin(errorclass.ErrorClassPlugin):
 #TODO: write unittests
 def future(func):
     """Mark a test as expected to unconditionally fail."""
-    @functools.wraps(func)
+    @wraps(func)
     def future_decorator(*args, **kw):
         try:
             func(*args, **kw)

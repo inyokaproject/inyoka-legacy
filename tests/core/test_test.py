@@ -12,6 +12,7 @@ from inyoka.core.test import *
 from inyoka.core.auth.models import User, UserProfile, Group
 
 
+@refresh_database
 def test_fixture_loader():
     data = [{'User': [{
         'username': u'ente',
@@ -26,23 +27,19 @@ def test_fixture_loader():
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
 
-    # cleanup
-    db.session.delete(user.profile)
-    db.session.delete(user)
-    db.session.commit()
 
-
+@refresh_database
 def test_fixture_references():
     data = [{
         'User': [{
-            'id': '&ente_id',
-            'username': u'ente',
-            'email': u'some@one.com',
-            'password': u'Boo!',
-        }],
-        'nocommit': True,
+            '&ente': {
+                'username': u'ente',
+                'email': u'some@one.com',
+                'password': u'Boo!',
+            }
+        }]}, {
         'UserProfile': [{
-            'user_id': '*ente_id',
+            'user': '*ente',
             'real_name': u'Christopher Grebs',
             'website': u'http://webshox.org'
         }]
@@ -55,7 +52,3 @@ def test_fixture_references():
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
     eq_(user.profile.real_name, u'Christopher Grebs')
-
-    # cleanup
-    User.query.filter_by(username=u'ente').delete()
-    db.session.commit()

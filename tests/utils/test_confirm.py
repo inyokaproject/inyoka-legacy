@@ -30,6 +30,7 @@ def reset_log():
     del CONFIRM_LOG[:]
 
 
+@refresh_database
 @with_setup(reset_log)
 def test_base():
     data = {'some': 'data'}
@@ -48,6 +49,7 @@ def test_base():
 
     eq_(CONFIRM_LOG, [data, (2, data)])
 
+@refresh_database
 @with_setup(reset_log)
 def test_expiry():
     c = Confirm('__test_store', {}, timedelta(days=3))
@@ -65,6 +67,8 @@ def test_expiry():
 
     eq_(CONFIRM_LOG, [])
 
+
+@refresh_database
 @raises(Exception) # may raise anything, is not intended for catching anyway
 def test_duplicate():
     @register_confirm('__test_store')
@@ -72,6 +76,7 @@ def test_duplicate():
         pass
 
 
+@refresh_database
 @raises(KeyError)
 def test_no_handler():
     c = Confirm('__nonexistent', {}, 1)

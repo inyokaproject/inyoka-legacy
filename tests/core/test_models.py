@@ -32,31 +32,30 @@ class CoreTestSchemaController(db.ISchemaController):
     models = [FancyModel]
 
 
-class TestRevisionedModelMixin(TestSuite):
+class TestRevisionedModelMixin(DatabaseTestCase):
 
-    fixtures = {
-        'models': [
-            fixture(FancyModel, user_id=1, code=u'some code'),
-            fixture(FancyModel, user_id=2, code=u'Some Code', parent_id=1),
-            fixture(FancyModel, user_id=2, code=u'some Code', parent_id=2)]
-    }
+    fixtures = [{
+        User: [{'id': '&bob_id', 'username': 'bob', 'email': 'bob@bob.bo'}]}, {
+        FancyModel: [
+            {'id': '&root_id', 'user_id': '*bob_id', 'code': u'some code'},
+            {'id': '&second_id', 'user_id': '*bob_id', 'code': u'Some Code', 'parent_id': '*root_id'},
+            {'user_id': '*bob_id', 'code': u'some Code', 'parent_id': '*second_id'}
+        ]}
+    ]
 
-    @with_fixtures('models')
-    def test_resolve_root(self, fixtures):
+    def test_resolve_root(self):
         eq_(FancyModel.resolve_root(1).id, 1)
         eq_(FancyModel.resolve_root(2).id, 1)
         eq_(FancyModel.resolve_root(3).id, 1)
 
-    @with_fixtures('models')
-    def test_fetch_replies(self, fixtures):
-        root, second, last = fixtures['models']
+    def test_fetch_replies(self):
+        root, second, last = self.data['FancyModel']
         eq_(root.fetch_replies(), [second])
         eq_(second.fetch_replies(), [last])
         eq_(last.fetch_replies(), [])
 
-    @with_fixtures('models')
-    def test_compare_to(self, fixtures):
-        root, second, last = fixtures['models']
+    def test_compare_to(self):
+        root, second, last = self.data['FancyModel']
         eq_(root.compare_to(second, 'code'),
             u'--- #1 \n+++ #2 \n@@ -1,1 +1,1 @@\n-some code\n+Some Code')
         eq_(root.compare_to(last, 'code'),

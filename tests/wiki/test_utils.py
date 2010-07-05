@@ -26,6 +26,7 @@ def _find_page_test_exception(url, *args, **kwargs):
     else:
         raise ValueError('Should have raised redirect to %r' % url)
 
+
 def test_find_page():
     p = Page(name='test page', current_epoch=1)
     r = Revision(page=p, change_user_id=1, raw_text='foo', epoch=1)
@@ -42,3 +43,6 @@ def test_find_page():
         'tEsT pAgE', 'wiki/show', {'revision': 1})
     assert_raises(NotFound, find_page, 'some inexistent page', 'wiki/show')
     assert_raises(NotFound, find_page, 'test page', redirect=False)
+    db.session.delete(r)
+    db.session.delete(p)
+    db.session.commit()

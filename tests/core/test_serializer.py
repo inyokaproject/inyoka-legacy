@@ -69,6 +69,7 @@ def test_serializable_object():
     }), {'id': 1, '#type': u'_test.class', 'get_value': u'got value',
          'aliased': u'some value'})
 
+
 @raises(AssertionError)
 def test_doomed_serializable_object():
     class SerializableClass(SerializableObject):

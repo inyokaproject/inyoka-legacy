@@ -21,7 +21,6 @@ class Foo(object):
         return [cls.bar]
 
 
-
 def test_classproperty():
     eq_(Foo.bar, 'baz')
     eq_(Foo.bars, ['baz'])

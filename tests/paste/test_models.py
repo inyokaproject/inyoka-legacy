@@ -11,15 +11,22 @@ from inyoka.utils.highlight import highlight_text
 from inyoka.paste.models import Entry
 
 
-def test_automatic_rendering():
-    text1 = '@property\ndef(self, foo=None):\n    raise Exception\n'
+
+text1 = '@property\ndef(self, foo=None):\n    raise Exception\n'
+entry_fixture = [
+    {User: [{'&bob': {'username': 'bob', 'email': 'bob@example.com'}}]},
+    {Entry: [{'text': text1, 'author': '*bob', 'language': 'python'}]}
+]
+
+@with_fixtures(entry_fixture)
+def test_automatic_rendering(fixture):
+    e = fixture['Entry'][0]
+
     rendered_text1 = highlight_text(text1, 'python')
     text2 = 'import sys\nclass Example(object):\n    pass\n'
     rendered_text2 = highlight_text(text2, 'python')
     rendered_text2_plain = highlight_text(text2)
 
-    # assert the model does rendering the right way
-    e = Entry(text=text1, author=User.query.get_anonymous(), language='python')
     eq_(e.text, text1)
     eq_(e.rendered_text, rendered_text1)
     e.text = text2
@@ -45,29 +52,16 @@ def test_automatic_rendering():
     assert_false(tracker.check('Called Entry._render()'))
 
 
-def get_data_callback(title=None):
-    def callback():
-        data = {
-            'author': User.query.get_anonymous(),
-            'text': 'void'
-        }
-        if title is not None:
-            data['title'] = title
-        return data
-    return callback
+class TestEntryModel(DatabaseTestCase):
 
+    fixtures = [
+        {User: [{'&bob': {'username': 'bob', 'email': 'bob@example.com'}}]},
+        {Entry: [{'author': '*bob', 'text': 'void', 'title': u'some paste'},
+                 {'author': '*bob', 'text': 'void'}]}
+    ]
 
-class TestEntryModel(TestSuite):
-
-    fixtures = {
-        'pastes': [
-            fixture(Entry, get_data_callback(u'some paste')),
-            fixture(Entry, get_data_callback()),
-    ]}
-
-    @with_fixtures('pastes')
-    def test_display_title(self, fixtures):
-        e1, e2 = fixtures['pastes']
+    def test_display_title(self):
+        e1, e2 = self.data['Entry']
         eq_(e1.display_title, 'some paste')
         eq_(e2.display_title, 'Paste #%d' % e2.id)
         eq_(unicode(e1), 'some paste')

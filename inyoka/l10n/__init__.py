@@ -41,6 +41,14 @@ timestamp_regexp = re.compile(r'''
     (?::(?P<tz_minute>[0-9][0-9]))?))?)?$''', re.X)
 
 
+timeonly_regexp = re.compile(
+        r'''^(?P<hour>[0-9][0-9]?)
+            :(?P<minute>[0-9][0-9])
+            (?::(?P<second>[0-9][0-9]))?
+            (?:\.(?P<fraction>[0-9]*))?$''', re.X)
+
+
+
 UTC = pytz.timezone('UTC')
 
 
@@ -246,6 +254,9 @@ def parse_timestamp(value):
         purposes.  It's more or less only used for test serializaion.
     """
     match = timestamp_regexp.match(value)
+    if match is None:
+        raise ValueError('Unknown DateTime format, %s try %%Y-%%m-%%d %%h:%%m:%%s.d' % value)
+
     values = match.groupdict()
     year = int(values['year'])
     month = int(values['month'])
@@ -273,3 +284,23 @@ def parse_timestamp(value):
     if delta:
         data -= delta
     return data
+
+
+def parse_timeonly(value):
+    match = timeonly_regexp.match(value)
+    if match is None:
+        raise ValueError('Unknown Time format, %s try HH:MM:SS.dddddd' % value)
+
+    values = match.groupdict()
+    hour = int(values['hour'])
+    minute = int(values['minute'])
+    second = 0
+    if values['second']:
+        second = int(values['second'])
+    fraction = 0
+    if values['fraction']:
+        fraction = values['fraction'][:6]
+        while len(fraction) < 6:
+            fraction += '0'
+        fraction = int(fraction)
+    return datetime.time(hour, minute, second, fraction)

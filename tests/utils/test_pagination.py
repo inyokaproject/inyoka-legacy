@@ -18,7 +18,7 @@ from inyoka.utils.pagination import URLPagination, GETPagination, \
 GROUP_COUNTS = [0, 1, 3, 14, 15, 16, 30, 31, 50, 70, 80]
 
 
-def _setup_tables(model, set_position=False):
+def _setup_tables(model):
     # create groups with different number of entries (with random IDs).
     groups = []
     for n in range(len(GROUP_COUNTS)):
@@ -29,17 +29,9 @@ def _setup_tables(model, set_position=False):
     for group in groups:
         elem = model(group=group)
         by_group[group].append(elem)
-        if set_position:
-            elem.position = len(by_group[group])
         db.session.add(elem)
     db.session.commit()
     return by_group
-
-
-def setup():
-    global test1_by_group, test2_by_group
-    test1_by_group = _setup_tables(PaginationTest1)
-    test2_by_group = _setup_tables(PaginationTest2, set_position=True)
 
 
 class PaginationTest1(db.Model):
@@ -48,16 +40,8 @@ class PaginationTest1(db.Model):
     group = db.Column(db.Integer)
 
 
-#XXX: unused, position is not implemented for pagination
-class PaginationTest2(db.Model):
-    __tablename__ = '_test_utils_pagination2'
-    id = db.Column(db.Integer, primary_key=True)
-    group = db.Column(db.Integer)
-    position = db.Column(db.Integer)
-
-
 class PaginationTestSchemaController(db.ISchemaController):
-    models = [PaginationTest1, PaginationTest2]
+    models = [PaginationTest1]
 
 
 class QueryMock(object):
@@ -67,10 +51,16 @@ class QueryMock(object):
         return []
 
 
-def test_pagination_general():
+
+def fixtures():
+    return _setup_tables(PaginationTest1)
+
+
+@with_fixtures(fixtures)
+def test_pagination_general(fixtures):
     query = PaginationTest1.query.filter_by(group=10)
     p = URLPagination(query, 1, '/entries/', per_page=15)
-    eq_(list(p.query), test1_by_group[10][:15])
+    eq_(list(p.query), fixtures[10][:15])
     eq_(p.total, 80)
     eq_(list(p._get_buttons()), [
         ('prev', None),
@@ -88,7 +78,7 @@ def test_pagination_general():
         p = URLPagination(query, 1, per_page=15)
         eq_(p.pages, 1)
         eq_(len(p.query), qlen)
-        eq_(list(p.query), test1_by_group[group])
+        eq_(list(p.query), fixtures[group])
         assert_raises(NotFound, URLPagination, query, 2, per_page=15)
 
     for group, qlen in list(enumerate(GROUP_COUNTS))[5:7]:
@@ -96,25 +86,26 @@ def test_pagination_general():
         p = URLPagination(query, 1, per_page=15)
         eq_(p.pages, 2)
         eq_(len(p.query), 15)
-        eq_(list(p.query), test1_by_group[group][:15])
+        eq_(list(p.query), fixtures[group][:15])
 
         p = URLPagination(query, 2)
         eq_(len(p.query), qlen - 15)
-        eq_(list(p.query), test1_by_group[group][15:])
+        eq_(list(p.query), fixtures[group][15:])
         assert_raises(NotFound, URLPagination, query, 3, per_page=15)
 
     query = PaginationTest1.query.filter_by(group=7)
     p = URLPagination(query, 3, per_page=15)
     eq_(p.pages, 3)
     eq_(len(p.query), 1)
-    eq_(list(p.query), test1_by_group[7][30:])
+    eq_(list(p.query), fixtures[7][30:])
     p = URLPagination(query, 4, per_page=10)
     eq_(p.pages, 4)
     eq_(len(p.query), 1)
-    eq_(list(p.query), test1_by_group[7][30:])
+    eq_(list(p.query), fixtures[7][30:])
 
 
-def test_button_selection():
+@with_fixtures(fixtures)
+def test_button_selection(fixtures):
     query = PaginationTest1.query.filter_by(group=10)
     p = URLPagination(query, 1, per_page=15)
     eq_(list(p._get_buttons(next=False)), [
@@ -193,7 +184,9 @@ def test_button_selection():
         ('next', '../9/'),
     ])
 
-def test_urlpagination_links():
+
+@with_fixtures(fixtures)
+def test_urlpagination_links(fixtures):
     q = QueryMock()
     eq_(URLPagination(q, 1).make_link(1), './')
     eq_(URLPagination(q, 1).make_link(2), '2/')
@@ -226,7 +219,9 @@ def test_urlpagination_links():
     eq_(URLPagination(q, 2, link='/entries/', args={"a":"b"}).make_template(),
         '/entries/!/?a=b')
 
-def test_pageurlpagination_links():
+
+@with_fixtures(fixtures)
+def test_pageurlpagination_links(fixtures):
     q = QueryMock()
     eq_(PageURLPagination(q, 1).make_link(1), './')
     eq_(PageURLPagination(q, 1).make_link(2), 'page/2/')
@@ -245,7 +240,8 @@ def test_pageurlpagination_links():
         '/e/page/2/?a=b')
 
 
-def test_getpagination_links():
+@with_fixtures(fixtures)
+def test_getpagination_links(fixtures):
     q = QueryMock()
     eq_(GETPagination(q, 1).make_link(1), '?')
     eq_(GETPagination(q, 1, link=lambda: '/Example').make_link(1), '/Example')

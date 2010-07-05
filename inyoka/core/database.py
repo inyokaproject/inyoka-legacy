@@ -492,6 +492,10 @@ def _make_module():
             if key in mod.__all__:
                 setattr(db, key, value)
 
+    # support for postgresql array type
+    from sqlalchemy.dialects.postgresql.base import PGArray
+    db.PGArray = PGArray
+
     db.get_engine = get_engine
     db.session = session
     db.metadata = metadata

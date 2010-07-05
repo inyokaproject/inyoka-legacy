@@ -37,6 +37,7 @@ class DatabaseTestSchemaController(db.ISchemaController):
     models = [Category, SlugGeneratorTestModel]
 
 
+@refresh_database
 def test_find_next_increment():
     eq_(db.find_next_increment(Category.slug, 'cat'), 'cat')
 
@@ -51,6 +52,7 @@ def test_find_next_increment():
     eq_(db.find_next_increment(Category.slug, 'cat'), 'cat3')
 
 
+@refresh_database
 def test_slug_generator():
     c1 = SlugGeneratorTestModel(name=u'cat')
     db.session.commit()
@@ -64,6 +66,7 @@ def test_slug_generator():
     eq_(c3.slug, u'cat/drei')
 
 
+@refresh_database
 def test_cached_query():
     c = Category(slug='category')
     db.session.commit()

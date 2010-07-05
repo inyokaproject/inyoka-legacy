@@ -13,14 +13,15 @@ from inyoka.core.test import *
 from inyoka.wiki.controllers import WikiController
 from inyoka.wiki.models import Page, Revision, Text
 
-class WikiTester(ViewTestSuite):
+
+
+class TestWikiController(ViewTestCase):
     controller = WikiController
 
     def test_index_redirection(self):
         ctx.cfg['wiki.index.name'] = 'my_index_page'
         response = self.get('/', follow_redirects=False)
         self.assertRedirects(response, 'my_index_page')
-
 
         p = Page(name=ctx.cfg['wiki.index.name'])
         r = Revision(page=p, change_user_id=1, epoch=1, raw_text='index page')
@@ -29,6 +30,8 @@ class WikiTester(ViewTestSuite):
         p = Page.query.get(ctx.cfg['wiki.index.name'])
         response = self.get('/', follow_redirects=False)
         self.assertRedirects(response, ctx.cfg['wiki.index.name'])
+        db.session.delete(r)
+        db.session.delete(p)
 
     def test_show(self):
         p = Page(name='test page', current_epoch=2)
@@ -51,5 +54,10 @@ class WikiTester(ViewTestSuite):
 
         response = self.get('/test_page/+%d' % r2.id)
         self.assertResponseOK(response)
+
+        for obj in (r3, r2, r1, p2, p):
+            db.session.delete(obj)
+        db.session.commit()
+
         #TODO: test whether r1 is accessible as mod
         #TODO: test context if it's the right revision

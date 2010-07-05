@@ -13,7 +13,7 @@ from inyoka.core.test import *
 from inyoka.core.http import FlashMessage
 
 
-class TestRequest(ViewTestSuite):
+class TestRequest(ViewTestCase):
 
     def test_flash_messages(self):
         req = self.get_new_request()

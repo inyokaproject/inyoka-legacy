@@ -37,15 +37,14 @@ class TestFormsSchemaController(db.ISchemaController):
     models = [DummyModel]
 
 
-class TestFormUtils(TestSuite):
+class TestFormUtils(DatabaseTestCase):
 
-    fixtures = {
-        'models': [fixture(DummyModel, name=u'one', value=u'two')],
-    }
+    fixtures = [{
+        DummyModel: [{'name': u'one', 'value': u'two'}]
+    }]
 
-    @with_fixtures('models')
-    def test_model_to_dict(self, fixtures):
-        obj = fixtures['models'][0]
+    def test_model_to_dict(self):
+        obj = self.data['DummyModel'][0]
         data = model_to_dict(obj)
         eq_(data, {'id': 1, 'name': u'one', 'value': u'two'})
         data = model_to_dict(obj, fields=('name', 'id'))
@@ -55,9 +54,8 @@ class TestFormUtils(TestSuite):
         data = model_to_dict(obj, fields=('id', 'name'), exclude=('id',))
         eq_(data, {'name': u'one'})
 
-    @with_fixtures('models')
-    def test_update_model(self, fixtures):
-        old = fixtures['models'][0]
+    def test_update_model(self):
+        old = self.data['DummyModel'][0]
         new_data = {'name': u'three', 'value': u'yea!'}
         update_model(old, new_data)
         db.session.commit()
@@ -65,35 +63,32 @@ class TestFormUtils(TestSuite):
         eq_(new.name, u'three')
         eq_(new.value, u'yea!')
 
-    @with_fixtures('models')
-    def test_update_model_with_includes(self, fixtures):
-        old = fixtures['models'][0]
+    def test_update_model_with_includes(self):
+        old = self.data['DummyModel'][0]
         new_data = {'name': u'three', 'value': u'yea!'}
         update_model(old, new_data, ('name',))
         new = DummyModel.query.one()
         eq_(new.name, u'three')
         eq_(new.value, u'two')
 
-    @with_fixtures('models')
-    def test_update_model_fail_silently_on_wrong_parameters(self, fixtures):
+    def test_update_model_fail_silently_on_wrong_parameters(self):
         """test that update_model fails silently on wrong parameters."""
-        old = fixtures['models'][0]
+        old = self.data['DummyModel'][0]
         new_data = {'name': u'three', 'something wrong': u'yea!'}
         update_model(old, new_data)
         new = DummyModel.query.one()
         eq_(new.name, u'three')
         eq_(new.value, u'two')
 
-    @with_fixtures('models')
-    def test_api_compatibility(self, fixtures):
-        old = fixtures['models'][0]
+    def test_api_compatibility(self):
+        old = self.data['DummyModel'][0]
         update_model(old, DummyForm())
         new = DummyModel.query.one()
         eq_(new.name, u'three')
         eq_(new.value, u'yea!')
 
 
-class CsrfTester(ViewTestSuite):
+class CsrfTester(ViewTestCase):
 
     controller = PortalController
 

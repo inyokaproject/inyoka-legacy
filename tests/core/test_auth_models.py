@@ -12,8 +12,12 @@ from inyoka.core.test import *
 from inyoka.core.auth.models import User, USER_STATUS_MAP, Group
 
 
-def test_user():
-    me = User(username='me', email='me@example.com', password='s3cr3t')
+user_fixture = [{User: [{'username': 'me', 'email': 'me@example.com',
+                         'password': 's3cr3t'}]}]
+
+@with_fixtures(user_fixture)
+def test_user(fixtures):
+    me = fixtures['User'][0]
     db.session.commit()
     eq_(me._status, 0)
     eq_(me.status, USER_STATUS_MAP[0])
@@ -32,22 +36,23 @@ def test_user():
     eq_(unicode(me), me.display_name)
     eq_(me.is_anonymous, False)
 
-    # anonymous tests
+    # check that anonymous is created no matter what happens ;)
     anon = User.query.get_anonymous()
     eq_(anon.username, ctx.cfg['anonymous_name'])
 
 
-def test_groups():
+group_fixtures = [{Group: [
+    {'&g1': {'name': 'g1'}},
+    {'&g4': {'name': 'g4'}},
+    {'&g2': {'name': 'g2', 'parents': set(['*g1', '*g4'])}},
+    {'&g3': {'name': 'g3', 'parents': set(['*g1', '*g2'])}},
+]}]
+
+
+@with_fixtures(group_fixtures)
+def test_groups(fixtures):
     """Check that the self-referential many-to-many group relationship works"""
-    g1 = Group(name='g1')
-    g2 = Group(name='g2')
-    g3 = Group(name='g3')
-    g4 = Group(name='g4')
-    db.session.commit()
-    g1.children.update((g2, g3))
-    g4.children.add(g2)
-    g2.children.add(g3)
-    db.session.commit()
+    g1, g4, g2, g3 = fixtures['Group']
     eq_(g1.children, set([g2, g3]))
     eq_(g4.children, set([g2]))
     eq_(g3.parents, set([g1, g2]))

@@ -44,8 +44,9 @@ class PasteController(IController):
             e = Entry(text=form.text.data,
                       language=form.language.data or None,
                       title=form.title.data,
-                      author=request.user,
-                      parent_id=form.parent.data)
+                      author=request.user)
+            if form.parent.data:
+                e.parent_id = form.parent.data
             db.session.commit()
             return redirect_to(e)
         else:

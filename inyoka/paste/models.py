@@ -50,7 +50,7 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
                           nullable=True)
     children = db.relation('Entry', cascade='all',
         primaryjoin=parent_id == id,
-        backref=db.backref('parent', remote_side=[id], uselist=False, lazy='joined'))
+        backref=db.backref('parent', remote_side=[id]))
 
     def get_url_values(self, action='view'):
         if action == 'reply':

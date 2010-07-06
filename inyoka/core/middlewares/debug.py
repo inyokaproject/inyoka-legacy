@@ -77,6 +77,7 @@ class TwillRecordMiddleware(IMiddleware):
             _buffer.append(u'    # check that we can access %s properly'
                              % request.current_url)
             _buffer.append(u'    tw.c.go("%s")' % request.current_url)
+            _buffer.append(u'    tw.c.code(200)')
             _buffer.append(u'    tw.c.url("%s")' % request.current_url)
         elif request.method.lower() == 'post':
             counter = 1

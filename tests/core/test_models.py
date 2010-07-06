@@ -48,12 +48,6 @@ class TestRevisionedModelMixin(DatabaseTestCase):
         eq_(FancyModel.resolve_root(2).id, 1)
         eq_(FancyModel.resolve_root(3).id, 1)
 
-    def test_fetch_replies(self):
-        root, second, last = self.data['FancyModel']
-        eq_(root.fetch_replies(), [second])
-        eq_(second.fetch_replies(), [last])
-        eq_(last.fetch_replies(), [])
-
     def test_compare_to(self):
         root, second, last = self.data['FancyModel']
         eq_(root.compare_to(second, 'code'),

@@ -70,7 +70,6 @@ class RevisionedModelMixin(object):
 
     With that you can use the tree additional functions
     :func:`~RevisionedModelMixin.resolve_root`,
-    :func:`~RevisionedModelMixin.fetch_replies,
     :func:`~RevisionedModelMixin.compare_to`, see those documentation for
     more detail.
     """
@@ -89,18 +88,6 @@ class RevisionedModelMixin(object):
         while obj.parent_id is not None:
             obj = obj.parent
         return obj
-
-    def fetch_replies(self):
-        """Get new replies for the model.
-
-        Those replies only match the current active instance.
-        """
-        cls = self.__class__
-        obj_list = cls.query.filter(db.and_(
-            cls.parent_id.in_([self.id]),
-        )).order_by(cls.id.desc()).all()
-
-        return obj_list
 
     def compare_to(self, other, column, context_lines=4, template=False):
         """Compare the mdoel with another revision.

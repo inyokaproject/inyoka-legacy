@@ -19,8 +19,6 @@ from pprint import pformat
 import nose
 from nose.plugins import cover, base, errorclass
 
-import twill
-
 from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
@@ -58,20 +56,6 @@ _iterables = (list, tuple, set, frozenset)
 
 class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
-
-
-class _TwillBrowserProxy(object):
-    """Small twill browser proxy"""
-
-    def __getattribute__(self, name):
-        return getattr(twill.get_browser(), name)
-
-    def __setattr__(self, name, value):
-        setattr(twill.get_browser(), name, value)
-
-# define shortcuts for twill
-twill.b = _TwillBrowserProxy()
-twill.c = twill.commands
 
 
 # Fixture Framework
@@ -387,17 +371,6 @@ class ViewTestCase(DatabaseTestCase):
         subdomain = ctx.cfg['routing.urls.' + name].split(':', 1)[0]
         self.base_url = make_full_domain(subdomain)
 
-        # twill integration.  This intercept forwards all twill commands
-        # to our respective wsgi dispatcher
-        host, port, scheme = get_host_port_mapping(self.base_url)
-        twill.add_wsgi_intercept(host, port, lambda: ctx)
-
-    def _post_teardown(self):
-        super(ViewTestCase, self)._post_teardown()
-        # remove the twill intercept
-        host, port, scheme = get_host_port_mapping(self.base_domain)
-        twill.remove_wsgi_intercept(host, port)
-
     def get_context(self, path, method='GET', **kwargs):
         """
         Return the template context from a view wrapped by :func:`templated`.
@@ -441,7 +414,9 @@ class ViewTestCase(DatabaseTestCase):
         return path
 
     def submit_form(self, path, data, follow_redirects=False):
-        """Submit a form to `path` with `data`
+        """Submit a form to `path` with `data`.
+
+        This method takes care of CSRF token handling.
 
         :param path: The path to query.
         :param data: A dictionary containing the form data.
@@ -508,9 +483,6 @@ class ViewTestCase(DatabaseTestCase):
             raise AssertionError(u'Expected context:\n%r\n\nActual Context:\n%r'
                                  % (value, tctx))
         return True
-
-    def make_twill_url(self, url):
-        return u'%s://%s:%d/%s' % (get_host_port_mapping(self.base_domain), url)
 
 
 class InyokaPlugin(cover.Coverage):

@@ -29,7 +29,6 @@ simplejson==2.1.1
 translitcodec==0.1
 virtualenv==1.4.9
 wsgiref==0.1.2
-twill==0.9
 celery==2.0.0
 # We use the flickzeug trunk as there's no official release yet
 http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz

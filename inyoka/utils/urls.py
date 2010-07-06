@@ -38,14 +38,14 @@ def make_full_domain(subdomain=''):
 
 
 def get_host_port_mapping(value):
-    url_scheme = urlparse.urlsplit(value)[0]
-    pieces = value.split(':', 1)
+    url = urlparse.urlsplit(value)
+    pieces = url.netloc.split(':')
     host = pieces[0]
     if len(pieces) == 2 and pieces[1].isdigit():
         port = int(pieces[1])
-    elif url_scheme == 'https':
+    elif url.scheme == 'https':
         port = 443
     else:
         port = 80
 
-    return host, port, url_scheme
+    return host, port, url.scheme

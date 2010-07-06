@@ -46,10 +46,11 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
     author = db.relationship(User, lazy='joined')
 
     # revision model implementation
-    parent_id = db.Column(db.Integer, db.ForeignKey(id), nullable=True)
-    children = db.relationship('Entry', cascade='all',
+    parent_id = db.Column(db.Integer, db.ForeignKey('paste_entry.id'),
+                          nullable=True)
+    children = db.relation('Entry', cascade='all',
         primaryjoin=parent_id == id,
-        backref=db.backref('parent', remote_side=[id]))
+        backref=db.backref('parent', remote_side=[id], uselist=False, lazy='joined'))
 
     def get_url_values(self, action='view'):
         if action == 'reply':

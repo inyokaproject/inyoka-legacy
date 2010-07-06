@@ -26,10 +26,9 @@
     <td>{{ p.pub_date|datetimeformat('short') }}</td>
     <td>{{ p.language|default('plain text') }}</td>
   </tr>
-  {% endfor %}
   {% else %}
   <strong>{{ _('There are no pastes yet!') }}</strong>
-  {% endif %}
+  {% endfor %}
   </tbody>
 </table>
 

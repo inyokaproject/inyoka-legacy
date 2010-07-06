@@ -389,8 +389,8 @@ class ViewTestCase(DatabaseTestCase):
 
         # twill integration.  This intercept forwards all twill commands
         # to our respective wsgi dispatcher
-        host, port, scheme = get_host_port_mapping(self.base_domain)
-        twill.add_wsgi_intercept(host, port, lambda: ctx.dispatcher)
+        host, port, scheme = get_host_port_mapping(self.base_url)
+        twill.add_wsgi_intercept(host, port, lambda: ctx)
 
     def _post_teardown(self):
         super(ViewTestCase, self)._post_teardown()
@@ -510,7 +510,7 @@ class ViewTestCase(DatabaseTestCase):
         return True
 
     def make_twill_url(self, url):
-        return u'%s://%s:%d%s' % (get_host_port_mapping(self.base_domain), url)
+        return u'%s://%s:%d/%s' % (get_host_port_mapping(self.base_domain), url)
 
 
 class InyokaPlugin(cover.Coverage):

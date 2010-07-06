@@ -27,6 +27,9 @@
     <td>{{ p.language|default('plain text') }}</td>
   </tr>
   {% endfor %}
+  {% else %}
+  <strong>{{ _('There are no pastes yet!') }}</strong>
+  {% endif %}
   </tbody>
 </table>
 

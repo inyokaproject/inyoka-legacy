@@ -21,6 +21,7 @@
     {% endif %}
     </div>
   </div>
+  {% if tag_cloud %}
   <div class="column tagcloud">
     <h2>{{ _('Tags') }}</h2>
     {%- for tag in tag_cloud %}
@@ -29,10 +30,12 @@
         {{ tag.name }}
       </a>
     {%- endfor %}
+    {%- else %}
     {% if more_tags %}
     <br />
     <a href="#">{{ _('more Tags') }}</a>
     {% endif %}
+  {% endif %}
   </div>
 </div>
 {% endblock %}

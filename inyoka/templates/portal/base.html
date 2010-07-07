@@ -5,9 +5,20 @@
 {% set styles = ['portal.css'] + styles|default([]) %}
 
 {% block sidebar %}
+<div>
   {{ super() }}
   <ul>
     <li><a href="{{ href('portal/users') }}">{{ _('Users') }}</a></li>
     <li><a href="{{ href('portal/groups') }}">{{ _('Groups') }}</a></li>
   </ul>
+</div>
 {% endblock sidebar %}
+
+{% block download %}
+<div id="download">
+  {{ super() }}
+  <ul>
+    <li>{{ _('Download') }}</li>
+  </ul>
+</div>
+{% endblock download %}

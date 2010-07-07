@@ -59,9 +59,10 @@
         </div>
         {% endif %}
         {% if sidebar %}
-        <div id="page-sidebar">
+          <div id="page-sidebar">
           {% block sidebar %}{% endblock sidebar %}
-        </div>
+          {% block download %}{% endblock download %}
+          </div>
         {% endif %}
         <div id="content" {% if sidebar %}class="with-sidebar"{% endif %}>
           {% block content %}{% endblock content %}

@@ -92,25 +92,34 @@ body {
 }
 
 #page-inner > div {
-  padding: 1em;
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
   margin-bottom: 0.5em;
 }
 
 #page-sidebar {
-  background-color: #EEEEEE;
   float: left;
-  width: 22%;
+  width: 23em;
+}
+
+#page-sidebar div {
+  background-color: #EEEEEE;
   margin-bottom: 0.4em;
-  color: #444;
   padding: 0.5em 0.5em 0.5em 28px;
+  -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em;
+}
+
+#page-sidebar #download {
+  background-color: #304800;
+  color: #fff;
 }
 
 #page-navbar {
   background-color: #fff;
   color: #001800;
   font-size: 0.8em;
+  padding: 1em;
 }
 
 #page-navbar .user-status {
@@ -130,10 +139,11 @@ body {
 #content {
   background-color: #FFFFFF;
   color: #2b2422;
+  padding: 1em;
 }
 
 #content.with-sidebar {
-  margin-left: 378px;
+  margin-left: 23.5em;
 }
 
 #footer {

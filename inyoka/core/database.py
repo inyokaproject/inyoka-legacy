@@ -474,7 +474,7 @@ class SlugGenerator(orm.MapperExtension):
 
 def init_db(**kwargs):
     kwargs['tables'] = list(ISchemaController.get_models(tables=True))
-    is_test = kwargs.pop('is_test')
+    is_test = kwargs.pop('is_test', False)
 
     if kwargs['tables']:
         metadata.create_all(**kwargs)

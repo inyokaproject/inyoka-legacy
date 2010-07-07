@@ -41,8 +41,8 @@ class EasyAuth(IAuthSystem):
     key in the current session.
     """
 
+    #: This message is occured if the login fails.
     login_failed_message = _(u'User is unknown or the password is not correct.')
-
 
     def get_login_form(self, request, default=None):
         """Returns the login form."""
@@ -155,8 +155,8 @@ class EasyAuth(IAuthSystem):
     def set_user(self, request, user):
         if user is None:
             user = User.query.get_anonymous()
+            request.session.permanent = False
 
-        request.session.permanent = False
         request.session['user_id'] = user.id
 
 

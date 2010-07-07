@@ -12,8 +12,6 @@ from inyoka.core.api import href, ctx
 from inyoka.core.auth.models import User
 from inyoka.core.test import *
 from inyoka.wiki.models import Page, Revision, Text
-from inyoka.core.database import init_db
-
 
 
 @refresh_database

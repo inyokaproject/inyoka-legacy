@@ -474,6 +474,7 @@ class SlugGenerator(orm.MapperExtension):
 
 def init_db(**kwargs):
     kwargs['tables'] = list(ISchemaController.get_models(tables=True))
+    is_test = kwargs.pop('is_test')
 
     if kwargs['tables']:
         metadata.create_all(**kwargs)
@@ -482,6 +483,12 @@ def init_db(**kwargs):
         anon_name = ctx.cfg['anonymous_name']
         anon = User(username=anon_name, email=u'', password=u'')
         UserProfile(user=anon)
+
+        if is_test:
+            admin = User(username=u'admin', email=u'admin@example.com',
+                         password=u'default')
+            UserProfile(user=admin)
+
         db.session.commit()
 
 

@@ -426,7 +426,7 @@ class ViewTestCase(DatabaseTestCase):
         try:
             form = response.lxml.xpath('//form')[0]
         except IndexError:
-            raise RuntimeError('no form on page')
+            raise AssertionError('no form on page')
         csrf_token = form.xpath('//input[@name="csrf_token"]')[0]
         data.setdefault('csrf_token', csrf_token.attrib['value'])
         action = self.normalize_local_path(form.attrib['action'])
@@ -446,8 +446,10 @@ class ViewTestCase(DatabaseTestCase):
     # Advanced Unittest methods for easy unittests
 
     def assertRedirects(self, response, location):
-        assert response.status_code in (301, 302)
-        assert response.location == os.path.join(self.base_url, location)
+        assert response.status_code in (301, 302), \
+               "Status Code not in (301, 302) got %s" % response.status_code
+        assert response.location == os.path.join(self.base_url, location), \
+               "Location did not match, got %s instead" % response.location
 
     def assertStatus(self, response, status_code):
         eq_(response.status_code, status_code)
@@ -521,7 +523,7 @@ class InyokaPlugin(cover.Coverage):
         # first we cleanup the existing database
         database.metadata.drop_all(bind=engine)
         # then we create everything
-        database.init_db(bind=engine)
+        database.init_db(bind=engine, is_test=True)
 
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')]
 
@@ -577,7 +579,7 @@ def refresh_database(func):
         ret = func(*args, **kwargs)
         # drop all data afterwards and initialize the database again.
         database.metadata.drop_all(bind=database.get_engine())
-        database.init_db(bind=database.get_engine())
+        database.init_db(bind=database.get_engine(), is_test=True)
         return ret
     return decorator
 

@@ -2,7 +2,7 @@
 Installation
 ============
 
-Inyoka requires at least Python 2.5 to work correctly. Next to this Inyoka has
+Inyoka requires at least Python 2.6 to work correctly. Next to this Inyoka has
 a lot of dependencies as well as a nice bootstrap process. This is documentated
 on the following slides.
 
@@ -14,7 +14,7 @@ Dependencies and virtual environment
 ====================================
 
 To get Inyoka work properly we need those dependencies:
- * Python (at least 2.5)
+ * Python (at least 2.6)
  * python-setuptools
  * mercurial
  * fabric

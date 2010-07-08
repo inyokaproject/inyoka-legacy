@@ -14,6 +14,7 @@ import os
 import re
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
+from operator import methodcaller
 from werkzeug import find_modules, import_string, cached_property
 from inyoka.context import LocalProperty
 
@@ -55,17 +56,10 @@ class InterfaceMeta(type):
         else:
             # A Interface
             obj._isinterface = False
-            # store all unique interfaces
-            #XXX: yet for python 2.5 compatibility, upgrade to 2.6 asap to get
-            #     cool new things!
-            obj._interfaces = set(cls for cls in
-                sum(map(lambda obj: obj.mro(), bases), [])
-                if '_isinterface' in cls.__dict__)
-
-#            obj._interfaces = set(
-#                cls for cls in sum(map(methodcaller('mro'), bases), [])
-#                    if '_isinterface' in cls.__dict__
-#            )
+            obj._interfaces = set(
+                cls for cls in sum(map(methodcaller('mro'), bases), [])
+                    if '_isinterface' in cls.__dict__
+            )
 
         return obj
 

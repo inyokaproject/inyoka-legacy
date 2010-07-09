@@ -9,7 +9,6 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: MIT, see LICENSE for more details.
 """
-from __future__ import with_statement
 import os
 from os import path
 from threading import Lock

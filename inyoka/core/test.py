@@ -13,6 +13,7 @@ import os
 import sys
 import unittest
 import warnings
+import traceback
 from functools import partial, wraps
 from pprint import pformat
 
@@ -264,11 +265,11 @@ class FixtureLoader(object):
         return new_data
 
     def log_error(self, e, data, cls, item):
-        print 'error occured while loading fixture data with output:\n%s' % pformat(data)
-        print 'class: %s' % cls
-        print 'item: %s' % item
-        import traceback
-        print traceback.format_exc(e)
+        msg = 'error occured while loading fixture data with output:\n%s' % pformat(data)
+        msg += '\nclass: %s' % cls
+        msg += '\nitem: %s' % item
+        msg += '\n%s' % raceback.format_exc(e)
+        logger.error(msg)
 
 
 class TestCase(unittest.TestCase):

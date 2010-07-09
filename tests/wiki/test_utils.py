@@ -19,8 +19,8 @@ from inyoka.wiki.utils import find_page
 def _find_page_test_exception(url, *args, **kwargs):
     try:
         find_page(*args, **kwargs)
-    except _ProxyException, e:
-        r = e.get_response(None)
+    except _ProxyException as err:
+        r = err.get_response(None)
         assert r.status_code in (302, 303, 307)
         eq_(r.headers['Location'], url)
     else:

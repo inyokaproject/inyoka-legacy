@@ -13,6 +13,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
+import json
 import inspect
 from functools import partial
 from xml.sax.saxutils import quoteattr
@@ -23,10 +24,6 @@ from inyoka.context import ctx
 from inyoka.core.exceptions import BadRequest
 from inyoka.utils.html import escape
 
-try:
-    import simplejson as json
-except: #pragma: no cover
-    import json
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
 

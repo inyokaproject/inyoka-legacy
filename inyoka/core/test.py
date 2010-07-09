@@ -118,9 +118,9 @@ class FixtureLoader(object):
                 if value[1:] in self._references:
                     return self._references[value[1:]]
                 else:
-                    raise Exception('The pointer %(val)s could not be found. '
-                                    'Make sure that %(val)s is declared before '
-                                    'it is used.' % { 'val': value })
+                    raise Exception('The pointer {val} could not be found. '
+                                    'Make sure that {val} declared before '
+                                    'it is used.'.format(val=value))
         elif isinstance(value, dict):
             keys = value.keys()
             if len(keys) == 1 and keys[0].startswith('!'):
@@ -256,7 +256,7 @@ class FixtureLoader(object):
                     new_data[cls.__name__] = self.add_clses(cls, items)
                 if not 'nocommit' in group:
                     session.commit()
-        except Exception, e:
+        except Exception:
             self.log_error(sys.exc_info()[2], data, cls, item)
             db.session.rollback()
             raise
@@ -641,7 +641,7 @@ def future(func):
     def future_decorator(*args, **kw):
         try:
             func(*args, **kw)
-        except Exception, ex:
+        except Exception as ex:
             raise ExpectedFailure("Test failed as expected: %s ... " % str(ex))
         else:
             raise UnexpectedSuccess("Unexpected success for future test")

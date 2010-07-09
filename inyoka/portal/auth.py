@@ -93,8 +93,8 @@ class EasyAuth(IAuthSystem):
             rv = self.before_login(request)
             if rv is not None:
                 return rv
-        except LoginUnsucessful, e:
-            request.flash(lazy_gettext(unicode(e)), False)
+        except LoginUnsucessful as err:
+            request.flash(lazy_gettext(unicode(err)), False)
 
         # only validate if the before_login handler did not already cause
         # an error.  In that case there is not much win in validating
@@ -104,8 +104,8 @@ class EasyAuth(IAuthSystem):
                 fd = form.data
                 rv = self.perform_login(request, username=fd['username'],
                     password=fd['password'], permanent=fd['permanent'])
-            except LoginUnsucessful, e:
-                request.flash(lazy_gettext(unicode(e)), False)
+            except LoginUnsucessful as err:
+                request.flash(lazy_gettext(unicode(err)), False)
             else:
                 if rv is not None:
                     return rv

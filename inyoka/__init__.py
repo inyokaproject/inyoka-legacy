@@ -210,7 +210,7 @@ class ApplicationContext(object):
             try:
                 if getattr(component, '_isinterface', False):
                     self._components.pop(component)
-            except:
+            except KeyError:
                 # fail silently if component is not loaded
                 continue
 

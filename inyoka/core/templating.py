@@ -10,6 +10,7 @@
 """
 import os
 import sys
+import json
 import functools
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
@@ -18,11 +19,6 @@ from inyoka.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href
 from inyoka.core.cache import cache as inyoka_cache
-
-try:
-    import simplejson as json
-except:
-    import json
 
 
 def populate_context_defaults(context):

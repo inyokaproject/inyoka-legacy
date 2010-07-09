@@ -34,6 +34,9 @@ Ordering of import statements is as defined in PEP 8, additionally:
  - Within that, the statements are sorted alphabetically (shorter paths first).
  - Within `inyoka.*` imports, `inyoka.core` comes first, then `inyoka.utils`,
    then all other components (alphabetically)
+ - Use new language statemets instead of old backwards compatible statements,
+   we require Python 2.6, so use at least the new `with` statement and the new
+   `except Exception as err` instead of `except Exception, err`.
 
 No relative imports.
 

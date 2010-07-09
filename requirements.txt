@@ -25,7 +25,6 @@ pyparsing==1.5.3
 python-dateutil==1.5
 python-memcached==1.45
 pytz==2010h
-simplejson==2.1.1
 translitcodec==0.1
 virtualenv==1.4.9
 wsgiref==0.1.2

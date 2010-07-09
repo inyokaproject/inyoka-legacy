@@ -128,7 +128,7 @@ class RequestDispatcher(object):
             except db.NoResultFound:
                 raise NotFound()
 
-        except HTTPException, err:
+        except HTTPException as err:
             response = err.get_response(request.environ)
 
         response = self.make_response(request, response)

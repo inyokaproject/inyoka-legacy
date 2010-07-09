@@ -29,8 +29,8 @@ def main():
 
     try:
         locale = Locale.parse(args[0])
-    except UnknownLocaleError, e:
-        parser.error(str(e))
+    except UnknownLocaleError as err:
+        parser.error(str(err))
 
     create_application_lang(locale)
 
@@ -38,8 +38,8 @@ def main():
 def create_from_pot(locale, path):
     try:
         f = file(path)
-    except IOError, e:
-        parser.error(str(e))
+    except IOError as err:
+        parser.error(str(err))
     try:
         catalog = read_po(f, locale=locale)
     finally:

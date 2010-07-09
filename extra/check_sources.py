@@ -42,7 +42,7 @@ misspellings = ["developement", "adress", "verificate",  # ALLOW-MISSPELLING
 def check_syntax(fn, lines):
     try:
         compile(''.join(lines), fn, "exec")
-    except SyntaxError, err:
+    except SyntaxError as err:
         yield 0, "not compilable: %s" % err
 
 
@@ -63,9 +63,9 @@ def check_style_and_encoding(fn, lines):
                 encoding = co.group(1)
         try:
             line.decode(encoding)
-        except UnicodeDecodeError, err:
+        except UnicodeDecodeError as err:
             yield lno+1, "not decodable: %s\n   Line: %r" % (err, line)
-        except LookupError, err:
+        except LookupError as err:
             yield 0, "unknown encoding: %s" % encoding
             encoding = 'latin1'
 
@@ -209,7 +209,7 @@ def main(argv):
             try:
                 f = open(fn, 'r')
                 lines = list(f)
-            except (IOError, OSError), err:
+            except (IOError, OSError) as err:
                 print "%s: cannot open: %s" % (fn, err)
                 num += 1
                 continue

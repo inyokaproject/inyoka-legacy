@@ -10,11 +10,8 @@
 """
 from jinja2.utils import Markup
 from urllib import urlencode
+import json
 import urllib2
-try:
-    import simplejson as json
-except: #pragma: no cover
-    import json
 
 
 API_SERVER = 'http://api.recaptcha.net/'

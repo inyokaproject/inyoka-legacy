@@ -628,8 +628,7 @@ class Parser(object):
         while stream.current.type != 'wiki_link_end':
             children.append(self.parse_node(stream))
         stream.expect('wiki_link_end')
-        if not wiki:
-            return nodes.InternalLink(page, children, anchor=anchor)
+        return nodes.InternalLink(page, children, anchor=anchor)
         #TODO: Find a way to create that interwiki map automatically
         #      by using some kind of providers.
 
@@ -638,7 +637,7 @@ class Parser(object):
 #                children = [nodes.Text(page)]
 #            return nodes.Link(STANDARD_WIKI_MAP[wiki](page), children,
 #                              class_=wiki)
-        return nodes.InterWikiLink(wiki, page, children, anchor=anchor)
+#        return nodes.InterWikiLink(wiki, page, children, anchor=anchor)
 
     def parse_external_link(self, stream):
         """

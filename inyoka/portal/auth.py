@@ -15,7 +15,7 @@ from inyoka.core.auth import IAuthSystem, LoginUnsucessful
 from inyoka.core.auth.models import User
 from inyoka.core.templating import templated
 from inyoka.core.models import Confirm
-from inyoka.portal.forms import LoginForm, RegistrationForm
+from inyoka.portal.forms import LoginForm, get_registration_form
 from inyoka.utils.confirm import register_confirm
 
 
@@ -62,7 +62,7 @@ class EasyAuth(IAuthSystem):
         if rv is not None:
             return rv
 
-        form = RegistrationForm(request.form)
+        form = get_registration_form(request)(request.form)
         if request.method == 'POST' and form.validate():
             user = User(username=form.username.data, email=form.email.data,
                         password=form.password.data)
@@ -71,7 +71,7 @@ class EasyAuth(IAuthSystem):
             if isinstance(r, Response):
                 return r
             return redirect_to('portal/index')
-        return {'form': form}
+        return {'form': form, 'random_pw': form.password.data}
 
     def after_register(self, request, user):
         """

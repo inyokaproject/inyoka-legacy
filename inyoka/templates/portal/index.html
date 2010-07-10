@@ -26,7 +26,7 @@
     <h2>{{ _('Tags') }}</h2>
     {%- for tag in tag_cloud %}
       <a href="{{ href('portal/tag', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
-                  title="{% trans count=tag.count, tag=tag.name %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} items tagged {{ tag }}{% endtrans %}">
+                  title="{% trans num=tag.count, tag=tag.name %}{{ num }} item tagged {{ tag }}{% pluralize %}{{ num }} items tagged {{ tag }}{% endtrans %}">
         {{ tag.name }}
       </a>
     {%- endfor %}

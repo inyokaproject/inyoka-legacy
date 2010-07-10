@@ -61,18 +61,23 @@ class LoginForm(Form):
             del self.password
 
 
-class RegistrationForm(Form):
+def get_registration_form(request):
+    random_pw = get_random_password() if 'random' in request.args else None
 
-    username = TextField(lazy_gettext(u'Username'), [validators.Required(),
-        validators.is_user(negative=True)])
-    email = TextField(lazy_gettext(u'Email'), [validators.Required(),
-        validators.is_user(negative=True, key='email')])
-    password = TextField(lazy_gettext(u'Password'), [validators.Required(),
-        validators.EqualTo('confirm', message=lazy_gettext(u'Passwords must match'))],
-        widget=widgets.PasswordInput())
-    confirm = TextField(lazy_gettext(u'Repeat Passord'),
-        [validators.Required()], widget=widgets.PasswordInput())
-    captcha = RecaptchaField(lazy_gettext(u'ReCaptcha'))
+    class RegistrationForm(Form):
+        username = TextField(lazy_gettext(u'Username'), [validators.Required(),
+            validators.is_user(negative=True)])
+        email = TextField(lazy_gettext(u'Email'), [validators.Required(),
+            validators.is_user(negative=True, key='email')])
+        password = PasswordField(lazy_gettext(u'Password'), [validators.Required(),
+            validators.EqualTo('confirm', message=lazy_gettext(u'Passwords must match'))],
+            widget=widgets.PasswordInput(False), default=random_pw)
+        confirm = PasswordField(lazy_gettext(u'Repeat Passord'),
+            [validators.Required()], widget=widgets.PasswordInput(False),
+            default=random_pw)
+        captcha = RecaptchaField(lazy_gettext(u'ReCaptcha'))
+
+    return RegistrationForm
 
 
 class EditTagForm(Form):
@@ -90,8 +95,8 @@ def get_change_password_form(request):
                                      [validators.Required()],
                                      default=random_pw,
                                      widget=widgets.PasswordInput(False))
-        new_password_confirm = PasswordField(lazy_gettext(u'New Password '
-                   '(confirmation)'), [validators.EqualTo('new_password')],
-                   default=random_pw, widget=widgets.PasswordInput(False))
+        new_password_confirm = PasswordField(lazy_gettext(u'New Password (confirmation)'),
+            [validators.EqualTo('new_password', message=lazy_gettext(u'Passwords must match'))],
+            default=random_pw, widget=widgets.PasswordInput(False))
 
     return ChangePasswordForm

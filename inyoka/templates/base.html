@@ -2,23 +2,27 @@
 {%- set introduction = introduction|default(False) %}
 {%- set styles = ['typography.css', 'layout.css', 'debug.css'] + styles|default([]) %}
 {%- set styles = ['reset.css', 'table.css', 'forms.css', 'markup.css'] + styles|default([]) %}
-{%- set scripts = ['jquery.js', 'jquery.ui.js', 'Inyoka.js', 'pagination.js', 'babel.js'] + scripts|default([]) %}
+{%- set scripts = ['pagination.js'] + scripts|default([]) %}
 <!DOCTYPE HTML>
 <html>
   <head>
     <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
+    {# Commonly used javascript files needs to included first #}
+    {%- for script in ['jquery.js', 'jquery.ui.js', 'babel.js', 'Inyoka.js'] %}
+    <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
+    {%- endfor %}
      <script type=text/javascript>
-       $SCRIPT_ROOT = {{ request.script_root|jsonencode|safe }};
+       Inyoka.SCRIPT_ROOT = {{ request.url_root|jsonencode|safe }};
+       Inyoka.SERVICE_ROOT = {{ SERVICE_URL|jsonencode|safe }};
      </script>
+    <script type="text/javascript" src="{{ href('api/core/get_translations') }}"></script>
     {%- for script in scripts %}
     <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}
-    <script type="text/javascript" src="{{ href('api/core/get_translations') }}"></script>
-
     {%- for style in styles %}
     <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" media="screen" />
     {%- endfor %}
-    <link rel="stylesheet" href="{{ href('static', file='style/print.css') }}" media="print" />
+    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/print.css') }}" media="print" />
     <link rel="shortcut icon" type="image/icon" href="{{ href('static', file='img/favicon.ico') }}" />
     {% block html_head %}
     {% endblock %}

@@ -2,7 +2,17 @@
 {% from 'utils/macros.html' import render_fields %}
 {% block content %}
 <form method="post" action="" id="portal_register">
-{{ render_fields(form) }}
+{{ render_fields(form, [form.username, form.email, form.password, form.confirm]) }}
+<p>
+  {%- if random_pw %}
+  {{ _('Generated password: <code id="random_password">%(password)s</code> |', password=random_pw) }}
+  {%- endif %}
+  <a href="{{ href('portal/register', random=true) }}" id="random_password_link">
+  {%- if random_pw %}{{ _('generate another') }}{% else %}{{ _('Generate random password') }}{%- endif %}
+  </a>
+</p>
+{{ render_fields(form, [form.captcha]) }}
+
 <p class="actions"><input type="submit" value="{{ _('Register') }}"></p>
 </form>
 {% endblock content %}

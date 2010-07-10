@@ -12,7 +12,7 @@ from inyoka.core.api import IServiceProvider, Rule, service
 from inyoka.utils.text import get_random_password
 
 
-class CoreServiceController(IServiceProvider):
+class PortalServiceController(IServiceProvider):
     component = 'portal'
 
     url_rules = [

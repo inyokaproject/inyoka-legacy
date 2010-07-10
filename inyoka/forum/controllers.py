@@ -110,7 +110,7 @@ class ForumController(IController):
         pagination = URLPagination(answer_query, page)
 
         form = AnswerQuestionForm(request.form)
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             answer = Answer(author=request.user,
                             question=question,
                             text=form.text.data)
@@ -122,12 +122,8 @@ class ForumController(IController):
 
         # precalculate user votes
         answers = pagination.query
-        answer_ids = [a.id for a in answers]
-        user_votes = defaultdict(int, dict(
-            db.session.query(Vote.entry_id, Vote.score) \
-                      .filter(db.and_(Vote.user_id==request.user.id,
-                                      Vote.entry_id.in_(answer_ids)))
-        ))
+        user_votes = Vote.query.get_user_votes_on(request.user.id,
+                                                  [a.id for a in answers])
 
         return {
             'sort': sort,
@@ -152,7 +148,7 @@ class ForumController(IController):
 
         form = AskQuestionForm(request.form, tags=tags)
 
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             question = Question(
                 title=form.title.data,
                 author=request.user,

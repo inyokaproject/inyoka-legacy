@@ -61,3 +61,6 @@ class Form(BaseForm):
 
         if not is_valid:
             raise BadRequest()
+
+    def validate_on_submit(self):
+        return ctx.current_request.method in ("POST", "PUT") and self.validate()

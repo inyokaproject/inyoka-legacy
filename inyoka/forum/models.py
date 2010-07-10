@@ -285,12 +285,27 @@ class Answer(Entry):
         return self.question.get_url_values(**kwargs)
 
 
+class VoteQuery(db.Query):
+
+    def get_user_votes_on(self, user_id, entry_ids):
+        if entry_ids:
+            user_votes = defaultdict(int, dict(
+                db.session.query(Vote.entry_id, Vote.score) \
+                          .filter(db.and_(Vote.user_id==user_id,
+                                          Vote.entry_id.in_(entry_ids)))
+            ))
+        else:
+            return {}
+
+
 class Vote(db.Model, SerializableObject):
     """Users are able to vote for the entries in the forum they like.
     Additionally to the score (-1 or +1) users are able to mark the
     entry as one of their favorites."""
     __tablename__ = 'forum_vote'
     __table_args__ = (db.UniqueConstraint('entry_id', 'user_id'), {})
+
+    query = db.session.query_property(VoteQuery)
 
     #: Serializer attributes
     object_type = 'forum.vote'
@@ -305,7 +320,7 @@ class Vote(db.Model, SerializableObject):
             default=0), extension=VoteScoreExtension())
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
-    user = db.relationship(User, backref='votes', lazy='joined')
+    user = db.relationship(User, backref='votes', lazy='joined', innerjoin=True)
 
 
 class ForumSchemaController(db.ISchemaController):

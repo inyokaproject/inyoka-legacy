@@ -13,8 +13,12 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
+import re
+import json
+from cStringIO import StringIO
 from os.path import realpath, dirname
 from gettext import NullTranslations
+from weakref import WeakKeyDictionary
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
 from inyoka.context import ctx
@@ -24,6 +28,7 @@ __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 
 _translations = None
+_js_translations = WeakKeyDictionary()
 
 
 def load_core_translations(locale):
@@ -139,6 +144,57 @@ def has_language(language):
     """Check if a language exists."""
     return language in dict(list_languages())
 
+
+def pluralexpr(forms):
+    match = re.search(r'\bplural\s*=\s*([^;]+)', forms)
+    if not match:
+        raise ValueError('Failed to parse plural_forms %r' % (forms,))
+    return match.group(1)
+
+
+def serve_javascript(request):
+    """Serves the JavaScript translations."""
+    from inyoka.core.http import Response
+
+    code = _js_translations.get(ctx.dispatcher)
+    if code is None:
+        messages = {}
+        catalog = get_translations()._catalog
+        data = {'domain': 'messages', 'locale': unicode(get_locale())}
+
+        for msgid, msgstr in catalog.iteritems():
+            if isinstance(msgid, (list, tuple)):
+                messages.setdefault(msgid[0], {})
+                messages[msgid[0]][msgid[1]] = msgstr
+            elif msgid:
+                messages[msgid] = msgstr
+            else:
+                for line in msgstr.splitlines():
+                    line = line.strip()
+                    if not line:
+                        continue
+                    if ':' not in line:
+                        continue
+                    name, val = line.split(':', 1)
+                    name = name.strip().lower()
+                    if name == 'plural-forms':
+                        data['plural_expr'] = pluralexpr(val)
+                        break
+
+        data['messages'] = messages
+
+        code = u''.join((
+            ('// Generated messages javascript file from compiled MO file\n'),
+            ('babel.Translations.load('),
+            (json.dumps(data).encode('utf-8')),
+            (').install();\n')
+        ))
+        _js_translations[ctx.dispatcher] = code
+
+    response = Response(code, mimetype='application/javascript')
+    response.add_etag()
+    response.make_conditional(request)
+    return response
 
 #: synonym for :func:`gettext`
 _ = gettext

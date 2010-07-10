@@ -2,7 +2,7 @@
 {%- set introduction = introduction|default(False) %}
 {%- set styles = ['typography.css', 'layout.css', 'debug.css'] + styles|default([]) %}
 {%- set styles = ['reset.css', 'table.css', 'forms.css', 'markup.css'] + styles|default([]) %}
-{%- set scripts = ['jquery.js', 'jquery.ui.js', 'pagination.js'] + scripts|default([]) %}
+{%- set scripts = ['jquery.js', 'jquery.ui.js', 'Inyoka.js', 'pagination.js', 'babel.js'] + scripts|default([]) %}
 <!DOCTYPE HTML>
 <html>
   <head>
@@ -13,6 +13,8 @@
     {%- for script in scripts %}
     <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}
+    <script type="text/javascript" src="{{ href('api/core/get_translations') }}"></script>
+
     {%- for style in styles %}
     <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" media="screen" />
     {%- endfor %}

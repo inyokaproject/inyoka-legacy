@@ -8,6 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka.i18n import serve_javascript
 from inyoka.core.models import Tag
 from inyoka.core.api import IServiceProvider, Rule, service
 
@@ -17,6 +18,7 @@ class CoreServiceController(IServiceProvider):
 
     url_rules = [
         Rule('/get_tags/', endpoint='get_tags'),
+        Rule('/get_translations', endpoint='get_translations'),
     ]
 
     @service('get_tags', config={'core.tag': ['id', 'name'], 'show_type': False})
@@ -27,3 +29,7 @@ class CoreServiceController(IServiceProvider):
         else:
             tags = Tag.query.filter(Tag.name.startswith(q))[:10]
         return tags
+
+    @service('get_translations')
+    def get_translations(self, request):
+        return serve_javascript(request)

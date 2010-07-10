@@ -36,6 +36,16 @@ def populate_context_defaults(context):
         pass
 
 
+def _return_rendered_template(tmpl, context, modifier, request=None, stream=False):
+    populate_context_defaults(context)
+    # apply the context modifier
+    if modifier is not None:
+        modifier(request, context)
+    if stream:
+        return tmpl.stream(context)
+    return tmpl.render(context)
+
+
 def render_template(template_name, context, modifier=None, request=None, stream=False):
     """Renders a template.  If `stream` is ``True`` the return value will be
     a Jinja template stream and not an unicode object.
@@ -45,13 +55,15 @@ def render_template(template_name, context, modifier=None, request=None, stream=
     bunch processing.
     """
     tmpl = jinja_env.get_template(template_name)
-    populate_context_defaults(context)
-    # apply the context modifier
-    if modifier is not None:
-        modifier(request, context)
-    if stream:
-        return tmpl.stream(context)
-    return tmpl.render(context)
+    return _return_rendered_template(tmpl, context, modifier, request, stream)
+
+
+def render_string(source, context, modifier=None, request=None, stream=False):
+    """Same arguments as `render_template` but accepts the template source
+    as input rather than a filename.
+    """
+    tmpl = jinja_env.from_string(source)
+    return _return_rendered_template(tmpl, context, modifier, request, stream)
 
 
 def templated(template_name, modifier=None, stream=False):

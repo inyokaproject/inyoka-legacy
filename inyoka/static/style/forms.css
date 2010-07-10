@@ -178,3 +178,7 @@ p.inline_pair input {
   margin-left: 10px;
   width: 200px;
 }
+
+input[name="recaptcha_response_field"] {
+  height: 20px;
+}

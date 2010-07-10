@@ -134,7 +134,7 @@ def is_valid_recaptcha(message=None):
     if message is None:
         message = lazy_gettext(u'You entered an invalid captcha.')
     def validator(form, field):
-        from inyoka.utils.recaptcha import validate_recaptcha
+        from inyoka.utils.captcha import validate_recaptcha
         req = ctx.current_request
         valid = validate_recaptcha(ctx.cfg['recaptcha.private_key'],
             req.form.get('recaptcha_challenge_field'),

@@ -4,6 +4,7 @@
 ^profiles/
 ~$
 \.orig$
+\.rej$
 \.swp$
 \.py[co]$
 ^inyoka(_tests)?\.ini$

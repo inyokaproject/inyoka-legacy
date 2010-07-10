@@ -19,6 +19,7 @@ from inyoka.context import ctx
 from inyoka.core.exceptions import MethodNotAllowed
 from inyoka.core.serializer import send_service_response
 from inyoka.utils import getmembers
+from inyoka.utils.urls import make_full_domain
 from inyoka.utils.decorators import make_decorator, update_wrapper
 
 
@@ -102,6 +103,12 @@ class UrlMixin(object):
             endpoint = '/' + endpoint
         parts = endpoint.split('/', 1)
         return cls._endpoint_map[parts[0]][parts[1]]
+
+    @classmethod
+    def get_base_url(cls):
+        subdomain, mount = ctx.cfg['routing.urls.' + cls.name].split(':', 1)
+        url = make_full_domain(subdomain, mount)
+        return url
 
     def get_endpoint_map(self, prefix=''):
         """This method returns a dictionary with a mapping out of

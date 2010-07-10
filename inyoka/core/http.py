@@ -13,7 +13,7 @@ from uuid import uuid4
 from operator import itemgetter
 from functools import update_wrapper
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
-    redirect, get_current_url, cached_property
+    redirect, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
 from inyoka.context import ctx, local
 from inyoka.core.routing import href
@@ -80,11 +80,6 @@ class Request(BaseRequest):
         BaseRequest.__init__(self, *args, **kwargs)
         #: Logged database queries
         self.queries = []
-
-    @cached_property
-    def current_url(self):
-        """Get the current absolute URL from the WSGI environ"""
-        return get_current_url(self.environ)
 
     @cached_property
     def session(self):

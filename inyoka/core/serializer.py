@@ -165,8 +165,6 @@ def get_serializer(request_or_format):
 def send_service_response(request_or_format, result, config=None):
     """Sends the API response."""
     from inyoka.core.http import Response
-    ro = primitive(result, config)
-    serializer, mimetype = get_serializer(request_or_format)
 
     # acao disallows requests by default (-- only base domain).
     acao = 'http://%s' % ctx.cfg['base_domain_name']
@@ -176,8 +174,17 @@ def send_service_response(request_or_format, result, config=None):
         if origin and origin.endswith(ctx.cfg['base_domain_name']):
             acao = origin
 
+    if isinstance(result, Response):
+        result.headers['Access-Controll-Allow-Origin'] = acao
+        return result
+
+    ro = primitive(result, config)
+    serializer, mimetype = get_serializer(request_or_format)
     headers = {'Access-Control-Allow-Origin': acao}
-    return Response(serializer(ro), mimetype=mimetype, headers=headers)
+    response = Response(serializer(ro), mimetype=mimetype, headers=headers)
+    response.add_etag()
+    response.make_conditional(request)
+    return response
 
 
 def list_api_methods():

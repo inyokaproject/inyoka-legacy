@@ -19,7 +19,7 @@ from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.forms import ProfileForm, ChangePasswordForm
+from inyoka.portal.forms import ProfileForm, get_change_password_form
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
@@ -205,7 +205,8 @@ class PasswordExtension(UserCPExtension):
     @login_required
     @templated('usercp/password.html')
     def password(self, request):
-        form = ChangePasswordForm(request.form)
+        form = get_change_password_form(request)(request.form)
+
         if request.method == 'POST' and form.validate():
             if not request.user.check_password(form.old_password.data):
                 form.old_password.errors = [_(u'The password you entered '
@@ -216,7 +217,9 @@ class PasswordExtension(UserCPExtension):
                 request.flash(_(u'Your password was changed successfully'),
                       success=True)
                 return redirect(href('usercp/index'))
+
         return {
+            'random_pw': form.new_password.data,
             'form': form,
         }
 

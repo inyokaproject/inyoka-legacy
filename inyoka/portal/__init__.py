@@ -11,4 +11,5 @@
 """
 from inyoka.portal.auth import EasyAuth, HttpBasicAuth
 from inyoka.portal.admin import PortalAdminController
+from inyoka.portal.services import *
 from inyoka.portal.controllers import *

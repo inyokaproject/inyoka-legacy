@@ -14,6 +14,7 @@ from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.core.database import db
 from inyoka.i18n import lazy_gettext
 from inyoka.core.auth.models import UserProfile
+from inyoka.utils.text import get_random_password
 
 
 class ProfileForm(Form):
@@ -78,11 +79,19 @@ class EditTagForm(Form):
     name = TextField(lazy_gettext(u'Name'), [validators.Length(max=20)])
 
 
-class ChangePasswordForm(Form):
+def get_change_password_form(request):
+    random_pw = get_random_password() if 'random' in request.args else None
 
-    old_password = PasswordField(lazy_gettext(u'Old Password'),
-                                 [validators.Required()])
-    new_password = PasswordField(lazy_gettext(u'New Password'),
-                                 [validators.Required()])
-    new_password_confirm = PasswordField(lazy_gettext(u'New Password '
-               '(confirmation)'), [validators.EqualTo('new_password')])
+    class ChangePasswordForm(Form):
+
+        old_password = PasswordField(lazy_gettext(u'Old Password'),
+                                     [validators.Required()])
+        new_password = PasswordField(lazy_gettext(u'New Password'),
+                                     [validators.Required()],
+                                     default=random_pw,
+                                     widget=widgets.PasswordInput(False))
+        new_password_confirm = PasswordField(lazy_gettext(u'New Password '
+                   '(confirmation)'), [validators.EqualTo('new_password')],
+                   default=random_pw, widget=widgets.PasswordInput(False))
+
+    return ChangePasswordForm

@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
+import random
 import translitcodec
 from datetime import datetime
 from itertools import starmap
@@ -18,6 +19,21 @@ _punctuation_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 _string_inc_re = re.compile(r'(\d+)$')
 _placeholder_re = re.compile(r'%(\w+)%')
 _default_slug_format = u'%year%/%month%/%day%/%slug%'
+
+
+def get_random_password():
+    """This function returns a pronounceable word."""
+    consonants = 'bcdfghjklmnprstvwz'
+    vowels = 'aeiou'
+    numbers = '0123456789'
+    all = consonants + vowels + numbers
+    length = random.randrange(8, 12)
+    password = u''.join(
+        random.choice(consonants) +
+        random.choice(vowels) +
+        random.choice(all) for x in xrange(length // 3)
+    )[:length]
+    return password
 
 
 def gen_slug(text, delim=u'-', ascii=False):

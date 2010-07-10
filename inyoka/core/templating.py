@@ -17,7 +17,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
 from inyoka import INYOKA_REVISION, l10n, i18n
 from inyoka.context import ctx
 from inyoka.core.http import Response
-from inyoka.core.routing import href
+from inyoka.core.routing import href, IServiceProvider
 from inyoka.core.cache import cache as inyoka_cache
 
 
@@ -27,6 +27,7 @@ def populate_context_defaults(context):
         context.update({
             'request': ctx.current_request,
             'active': None,
+            'SERVICE_URL': IServiceProvider.get_base_url()
         })
     except AttributeError:
         # Don't raise an error if we don't have a request as it's

@@ -9,7 +9,7 @@
   <div class="tagcloud">
   {% for tag  in tag_cloud %}
     <a href="{{ href('admin/portal/tag_edit', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
-                title="{% trans count=tag.count, tag=tag.name %}{{ count }} item tagged {{ tag }}{% pluralize %}{{ count }} posts tagged {{ tag }}{% endtrans %}">
+                title="{% trans num=tag.count, tag=tag.name %}{{ num }} item tagged {{ tag }}{% pluralize %}{{ num }} posts tagged {{ tag }}{% endtrans %}">
       {{ tag.name }}
     </a>
   {%- endfor %}

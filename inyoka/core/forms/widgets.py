@@ -28,7 +28,7 @@ $(document).ready(function () {
 class RecaptchaWidget(object):
 
     def __call__(self, field, error=None, **kwargs):
-        from inyoka.utils.recaptcha import get_recaptcha_html
+        from inyoka.utils.captcha import get_recaptcha_html
         public_key = ctx.cfg['recaptcha.public_key']
         use_ssl = ctx.cfg['recaptcha.use_ssl']
         return get_recaptcha_html(public_key, use_ssl)

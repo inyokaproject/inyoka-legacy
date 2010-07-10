@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.utils.recaptcha
-    ~~~~~~~~~~~~~~~~~~~~~~
+    inyoka.utils.captcha
+    ~~~~~~~~~~~~~~~~~~~~
 
-    Recaptcha support.
+    Support for various captcha validating services.
 
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from jinja2.utils import Markup
-from urllib import urlencode
 import json
 import urllib2
+from urllib import urlencode
+from jinja2.utils import Markup
 
 
-API_SERVER = 'http://api.recaptcha.net/'
-SSL_API_SERVER = 'https://api-secure.recaptcha.net/'
-VERIFY_SERVER = 'http://api-verify.recaptcha.net/verify'
+RECAPTCHA_API_SERVER = 'http://api.recaptcha.net/'
+RECAPTCHA_SSL_API_SERVER = 'https://api-secure.recaptcha.net/'
+RECAPTCHA_VERIFY_SERVER = 'http://api-verify.recaptcha.net/verify'
 
 
 def get_recaptcha_html(public_key=None, use_ssl=True, error=None,
                        translations=None):
     """Returns the recaptcha input HTML."""
     _ = translations and translations.ugettext or (lambda x: x)
-    server = use_ssl and API_SERVER or SSL_API_SERVER
+    server = RECAPTCHA_SSL_API_SERVER if use_ssl else RECAPTCHA_API_SERVER
     options = dict(k=public_key.encode('utf-8'))
     if error is not None:
         options['error'] = unicode(error).encode('utf-8')
@@ -42,7 +42,7 @@ def get_recaptcha_html(public_key=None, use_ssl=True, error=None,
         script_url='%schallenge?%s' % (server, query),
         frame_url='%snoscript?%s' % (server, query),
         options=json.dumps({
-            'theme':    'clean',
+            'theme':    'white',
             'custom_translations': {
                 'visual_challenge': _("Get a visual challenge"),
                 'audio_challenge': _("Get an audio challenge"),
@@ -62,7 +62,7 @@ def validate_recaptcha(private_key, challenge, response, remote_ip):
     """Validates the recaptcha.  If the validation fails
     a `RecaptchaValidationFailed` error is raised.
     """
-    request = urllib2.Request(VERIFY_SERVER, data=urlencode({
+    request = urllib2.Request(RECAPTCHA_VERIFY_SERVER, data=urlencode({
         'privatekey':       private_key.encode('utf-8'),
         'remoteip':         remote_ip.encode('utf-8'),
         'challenge':        challenge.encode('utf-8'),

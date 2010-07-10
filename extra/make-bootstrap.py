@@ -11,7 +11,12 @@
 """
 
 from optparse import OptionParser
-from virtualenv import create_bootstrap_script
+# virtualenv is stored wrong in debian squeeze
+try:
+    from virtualenv import create_bootstrap_script
+except ImportError:
+    from virtualenv.virtualenv import create_bootstrap_script
+
 
 EXTRA_TEXT = """
 import os

@@ -111,7 +111,7 @@ class NewsController(IController):
     @templated('news/detail.html', modifier=context_modifier)
     def detail(self, request, slug):
         article = Article.query.filter_by(slug=slug).one()
-        if article.hidden or article.pub_date > datetime.utcnow():
+        if article.hidden:
             #TODO: ACL Check
             request.flash(_(u'This article is hidden'), False)
 

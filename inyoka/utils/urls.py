@@ -14,7 +14,7 @@ from werkzeug import url_encode, url_decode, url_quote, \
      url_quote_plus, url_fix
 
 
-def make_full_domain(subdomain=''):
+def make_full_domain(subdomain='', path=''):
     """Return the full domain based on :attr:`subdomain`
 
     >>> from inyoka.core.api import ctx
@@ -24,16 +24,20 @@ def make_full_domain(subdomain=''):
     u'http://example.com/'
     >>> make_full_domain('www')
     u'http://www.example.com/'
+    >>> make_full_domain('www', 'faz')
+    u'http://www.example.com/faz/'
     >>> del ctx.cfg['base_domain_name']
 
     """
     adapter = ctx.dispatcher.url_adapter
+    path = path.strip('/')
 
-    return unicode('%s://%s%s%s/' % (
+    return unicode('%s://%s%s%s/%s' % (
         adapter.url_scheme,
         subdomain and subdomain + '.' or '',
         adapter.server_name,
-        adapter.script_name[:-1]
+        adapter.script_name[:-1],
+        path + '/' if path else ''
     ))
 
 

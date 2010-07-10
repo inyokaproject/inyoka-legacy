@@ -40,7 +40,7 @@ class PortalAdminController(IAdminProvider):
     @templated('portal/admin/tags.html')
     def tags(self, request):
         cloud, more = Tag.query.public().get_cloud()
-        if request.method == 'POST':
+        if request.method in ('POST', 'PUT'):
             # the user choosed a tag by manually entered name
             name = request.form.get('tag')
             tag = Tag.query.filter_by(name=name).first()
@@ -67,7 +67,7 @@ class PortalAdminController(IAdminProvider):
 
         if 'delete' in request.form:
             return redirect_to('admin/portal/tag_delete', slug=tag.slug)
-        elif request.method == 'POST' and form.validate():
+        elif form.validate_on_submit():
             tag = update_model(tag, form, ('name'))
             db.session.commit()
             if new:
@@ -85,7 +85,7 @@ class PortalAdminController(IAdminProvider):
         tag = Tag.query.filter_by(slug=slug).one()
         if 'cancel' in request.form:
             request.flash(_(u'Action canceled'))
-        elif request.method == 'POST' and 'confirm' in request.form:
+        elif 'confirm' in request.form and form.validate_on_submit():
             db.session.delete(tag)
             db.session.commit()
             request.flash(_(u'The tag “%s” was deleted successfully.'

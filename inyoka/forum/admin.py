@@ -47,7 +47,7 @@ class ForumAdminProvider(IAdminProvider):
 
         form = EditForumForm(request.form, **initial)
 
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             if forum:
                 forum = update_model(forum, form,
                     ('name', 'slug', 'parent', 'description', 'tags'))

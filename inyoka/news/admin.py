@@ -59,7 +59,7 @@ class NewsAdminProvider(IAdminProvider):
         form = EditArticleForm(request.form, **data)
         if 'delete' in request.form:
             return redirect_to('admin/news/article_delete', slug=article.slug)
-        elif request.method == 'POST' and form.validate():
+        elif form.validate_on_submit():
             article = update_model(article, form, ('pub_date', 'updated',
                 'title', 'intro', 'text', 'public', 'tags',
                 'author'))
@@ -75,7 +75,7 @@ class NewsAdminProvider(IAdminProvider):
         article = Article.query.filter_by(slug=slug).one()
         if 'cancel' in request.form:
             request.flash(_(u'Action canceled'))
-        elif request.method == 'POST' and 'confirm' in request.form:
+        elif request.method in ('POST', 'PUT') and 'confirm' in request.form:
             db.session.delete(article)
             db.session.commit()
             request.flash(_(u'The article “%s” was deleted successfully.'

@@ -115,9 +115,9 @@ class NewsController(IController):
             #TODO: ACL Check
             request.flash(_(u'This article is hidden'), False)
 
-        if article.comments_enabled and request.method == 'POST':
+        if article.comments_enabled:
             form = EditCommentForm(request.form)
-            if form.validate():
+            if form.validate_on_submit():
                 if form.data.get('comment_id', None):
                     comment = Comment.query.get(form.comment_id.data)
                     comment.text = form.text.data
@@ -157,15 +157,15 @@ class NewsController(IController):
             return redirect_to(comment)
 
         # action == 'edit'
-        if request.method == 'POST':
-            form = EditCommentForm(request.form)
+        form = EditCommentForm(request.form)
+        if form.validate_on_submit():
             if form.validate():
                 comment.text = form.text.data
                 db.session.commit()
                 request.flash(_(u'The comment was saved'), True)
                 return redirect_to(comment)
         else:
-            form = EditCommentForm(text=comment.text)
+            form.text.data = comment.text
         return {
             'comment':  comment,
             'form':     form,

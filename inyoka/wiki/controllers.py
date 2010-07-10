@@ -77,7 +77,7 @@ class WikiController(IController):
 
 
         form = EditPageForm(request.form, **initial)
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             if type(page) == unicode:
                 page = Page(name=page)
             created = page.current_revision is None

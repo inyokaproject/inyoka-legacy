@@ -37,7 +37,7 @@ class PasteAdminProvider(IAdminProvider):
         form = EditPasteForm(request.form, **model_to_dict(
             entry, exclude=('rendered_text', 'id', 'author_id')
         ))
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             entry = update_model(entry, form,
                 ('text', 'language', 'title', 'author', 'hidden'))
             db.session.update(entry)

@@ -63,7 +63,7 @@ class EasyAuth(IAuthSystem):
             return rv
 
         form = get_registration_form(request)(request.form)
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             user = User(username=form.username.data, email=form.email.data,
                         password=form.password.data)
             db.session.commit()
@@ -99,7 +99,7 @@ class EasyAuth(IAuthSystem):
         # only validate if the before_login handler did not already cause
         # an error.  In that case there is not much win in validating
         # twice, it would clear the error added.
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             try:
                 fd = form.data
                 rv = self.perform_login(request, username=fd['username'],

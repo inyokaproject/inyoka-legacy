@@ -47,7 +47,7 @@ def update_model(instance, form, includes=None):
 
     Example Usage::
 
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             user = update_model(user, form)
             db.session.update(user)
             db.session.commit()

@@ -40,7 +40,7 @@ class PasteController(IController):
     @templated('paste/index.html', modifier=context_modifier)
     def index(self, request):
         form = AddPasteForm(request.form)
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             e = Entry(text=form.text.data,
                       language=form.language.data or None,
                       title=form.title.data,

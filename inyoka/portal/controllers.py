@@ -207,7 +207,7 @@ class PasswordExtension(UserCPExtension):
     def password(self, request):
         form = get_change_password_form(request)(request.form)
 
-        if request.method == 'POST' and form.validate():
+        if form.validate_on_submit():
             if not request.user.check_password(form.old_password.data):
                 form.old_password.errors = [_(u'The password you entered '
                     u'doesn\'t match your old one.')]

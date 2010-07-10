@@ -166,6 +166,13 @@ def send_service_response(request_or_format, result, config=None):
     """Sends the API response."""
     from inyoka.core.http import Response
 
+    if isinstance(result, Response):
+        response = result
+    else:
+        ro = primitive(result, config)
+        serializer, mimetype = get_serializer(request_or_format)
+        response = Response(serializer(ro), mimetype=mimetype)
+
     # acao disallows requests by default (-- only base domain).
     acao = 'http://%s' % ctx.cfg['base_domain_name']
     if not isinstance(request_or_format, basestring):
@@ -174,16 +181,11 @@ def send_service_response(request_or_format, result, config=None):
         if origin and origin.endswith(ctx.cfg['base_domain_name']):
             acao = origin
 
-    if isinstance(result, Response):
-        result.headers['Access-Controll-Allow-Origin'] = acao
-        return result
+        # make the response conditional
+        response.make_conditional(request_or_format)
 
-    ro = primitive(result, config)
-    serializer, mimetype = get_serializer(request_or_format)
-    headers = {'Access-Control-Allow-Origin': acao}
-    response = Response(serializer(ro), mimetype=mimetype, headers=headers)
+    response.headers['Access-Control-Allow-Origin'] = acao
     response.add_etag()
-    response.make_conditional(request)
     return response
 
 

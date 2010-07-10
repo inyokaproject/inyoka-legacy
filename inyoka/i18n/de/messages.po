@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-10 14:54+0200\n"
+"POT-Creation-Date: 2010-07-10 23:46+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Florian Apolloner <florian@apolloner.eu>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: inyoka/core/serializer.py:157
 #, python-format
 msgid "Unknown format \"%s\""
-msgstr "Unbekanntes Format \"%s\""
+msgstr "Unbekanntes Format „%s\\”"
 
 #: inyoka/core/tasks.py:23
 #, python-format
@@ -516,7 +516,7 @@ msgstr "Artikel für %s"
 #: inyoka/news/controllers.py:254
 #, python-format
 msgid "%s – %s"
-msgstr ""
+msgstr "%s – %s"
 
 #: inyoka/news/forms.py:20
 msgid "Intro"
@@ -849,8 +849,8 @@ msgstr "Schlagwörter: "
 #, python-format
 msgid "%(human_count)s Answer"
 msgid_plural "%(human_count)s Answers"
-msgstr[0] "%(count)s Antwort"
-msgstr[1] "%(count)s Antworten"
+msgstr[0] "%(human_count)s Antwort"
+msgstr[1] "%(human_count)s Antworten"
 
 #: inyoka/templates/forum/question.html:69
 #: inyoka/templates/forum/questions.html:55
@@ -1247,11 +1247,12 @@ msgid "There's no content yet!"
 msgstr "Es gibt noch keine Inhalte!"
 
 #: inyoka/templates/portal/index.html:29
+#: inyoka/templates/portal/admin/tags.html:12
 #, python-format
 msgid "%(num)s item tagged %(tag)s"
 msgid_plural "%(num)s items tagged %(tag)s"
-msgstr[0] "%(count)s Eintrag für das Schlagwort „%s“"
-msgstr[1] "%(count)s Einträge für das Schlagwot „%s“"
+msgstr[0] "%(num)s Eintrag für das Schlagwort „%(tag)s“"
+msgstr[1] "%(num)s Einträge für das Schlagwot „%(tag)s“"
 
 #: inyoka/templates/portal/index.html:36
 msgid "more Tags"
@@ -1310,13 +1311,6 @@ msgstr "Wähle Schlagwort"
 msgid "All tags"
 msgstr "Alle Schlagwörter"
 
-#: inyoka/templates/portal/admin/tags.html:12
-#, python-format
-msgid "%(count)s item tagged %(tag)s"
-msgid_plural "%(count)s posts tagged %(tag)s"
-msgstr[0] "%(count)s Eintrag für das Schlagwort „%s“"
-msgstr[1] "%(count)s Einträge für das Schlagwot „%s“"
-
 #: inyoka/templates/portal/admin/tags.html:18
 #, python-format
 msgid "…or <a href=\"%(link)s\">create a new tag</a>"
@@ -1359,6 +1353,42 @@ msgstr "Die gesuchte Seite wurde nicht gefunden."
 msgid "If you want, you can create it"
 msgstr "Wenn du willst kannst du sie erstellen"
 
+#: inyoka/utils/captcha.py:47
+msgid "Get a visual challenge"
+msgstr ""
+
+#: inyoka/utils/captcha.py:48
+msgid "Get an audio challenge"
+msgstr ""
+
+#: inyoka/utils/captcha.py:49
+msgid "Get a new challenge"
+msgstr ""
+
+#: inyoka/utils/captcha.py:50
+msgid "Type the two words:"
+msgstr "Tippe die zwei Wörter ein:"
+
+#: inyoka/utils/captcha.py:51
+msgid "Type what you hear:"
+msgstr ""
+
+#: inyoka/utils/captcha.py:52
+msgid "Help"
+msgstr "Hilfe"
+
+#: inyoka/utils/captcha.py:53
+msgid "Play sound again"
+msgstr ""
+
+#: inyoka/utils/captcha.py:54
+msgid "Download sound as MP3"
+msgstr ""
+
+#: inyoka/utils/captcha.py:55
+msgid "Incorrect. Try again."
+msgstr "Falsch! Bitte versuche es nocheinmal."
+
 #: inyoka/utils/pagination.py:32
 msgid "next »"
 msgstr "Weiter »"
@@ -1366,42 +1396,6 @@ msgstr "Weiter »"
 #: inyoka/utils/pagination.py:33
 msgid "« previous"
 msgstr "« Zurück"
-
-#: inyoka/utils/recaptcha.py:47
-msgid "Get a visual challenge"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:48
-msgid "Get an audio challenge"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:49
-msgid "Get a new challenge"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:50
-msgid "Type the two words:"
-msgstr "Tippe die zwei Wörter ein:"
-
-#: inyoka/utils/recaptcha.py:51
-msgid "Type what you hear:"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:52
-msgid "Help"
-msgstr "Hilfe"
-
-#: inyoka/utils/recaptcha.py:53
-msgid "Play sound again"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:54
-msgid "Download sound as MP3"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:55
-msgid "Incorrect. Try again."
-msgstr "Falsch! Bitte versuche es nocheinmal."
 
 #: inyoka/utils/sortable.py:98
 #, python-format

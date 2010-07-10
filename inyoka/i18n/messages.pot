@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-10 14:54+0200\n"
+"POT-Creation-Date: 2010-07-10 23:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1229,6 +1229,7 @@ msgid "There's no content yet!"
 msgstr ""
 
 #: inyoka/templates/portal/index.html:29
+#: inyoka/templates/portal/admin/tags.html:12
 #, python-format
 msgid "%(num)s item tagged %(tag)s"
 msgid_plural "%(num)s items tagged %(tag)s"
@@ -1292,13 +1293,6 @@ msgstr ""
 msgid "All tags"
 msgstr ""
 
-#: inyoka/templates/portal/admin/tags.html:12
-#, python-format
-msgid "%(count)s item tagged %(tag)s"
-msgid_plural "%(count)s posts tagged %(tag)s"
-msgstr[0] ""
-msgstr[1] ""
-
 #: inyoka/templates/portal/admin/tags.html:18
 #, python-format
 msgid "…or <a href=\"%(link)s\">create a new tag</a>"
@@ -1341,48 +1335,48 @@ msgstr ""
 msgid "If you want, you can create it"
 msgstr ""
 
+#: inyoka/utils/captcha.py:47
+msgid "Get a visual challenge"
+msgstr ""
+
+#: inyoka/utils/captcha.py:48
+msgid "Get an audio challenge"
+msgstr ""
+
+#: inyoka/utils/captcha.py:49
+msgid "Get a new challenge"
+msgstr ""
+
+#: inyoka/utils/captcha.py:50
+msgid "Type the two words:"
+msgstr ""
+
+#: inyoka/utils/captcha.py:51
+msgid "Type what you hear:"
+msgstr ""
+
+#: inyoka/utils/captcha.py:52
+msgid "Help"
+msgstr ""
+
+#: inyoka/utils/captcha.py:53
+msgid "Play sound again"
+msgstr ""
+
+#: inyoka/utils/captcha.py:54
+msgid "Download sound as MP3"
+msgstr ""
+
+#: inyoka/utils/captcha.py:55
+msgid "Incorrect. Try again."
+msgstr ""
+
 #: inyoka/utils/pagination.py:32
 msgid "next »"
 msgstr ""
 
 #: inyoka/utils/pagination.py:33
 msgid "« previous"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:47
-msgid "Get a visual challenge"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:48
-msgid "Get an audio challenge"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:49
-msgid "Get a new challenge"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:50
-msgid "Type the two words:"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:51
-msgid "Type what you hear:"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:52
-msgid "Help"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:53
-msgid "Play sound again"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:54
-msgid "Download sound as MP3"
-msgstr ""
-
-#: inyoka/utils/recaptcha.py:55
-msgid "Incorrect. Try again."
 msgstr ""
 
 #: inyoka/utils/sortable.py:98

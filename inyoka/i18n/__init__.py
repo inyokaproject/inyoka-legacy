@@ -159,7 +159,8 @@ def serve_javascript(request):
     code = _js_translations.get(ctx.dispatcher)
     if code is None:
         messages = {}
-        catalog = get_translations()._catalog
+        translations = get_translations()
+        catalog = translations._catalog if hasattr(translations, '_catalog') else {}
         data = {'domain': 'messages', 'locale': unicode(get_locale())}
 
         for msgid, msgstr in catalog.iteritems():

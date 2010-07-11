@@ -165,27 +165,24 @@ def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
     assert len(primary_key) == 1, 'atomic_add not supported for '\
         'classes with more than one primary key'
 
-    val = orm.attributes.get_attribute(obj, column)
-    if expire:
-        orm.attributes.instance_state(obj).expire_attributes(
-            orm.attributes.instance_dict(obj), [column])
-    else:
-        orm.attributes.set_committed_value(obj, column, val + delta)
-
-    # FIXME: Does uglier work?
-    for table in obj_mapper.tables:
-        if column in table.c:
-            break
-        continue
+    table = obj_mapper.mapped_table
 
     if primary_key_field:
         assert table.c[primary_key_field].primary_key == True, 'no primary key field'
+
     primary_key_field = table.c[primary_key_field] if primary_key_field is not None \
                          else obj_mapper.primary_key[0]
     stmt = sql.update(table, primary_key_field == primary_key[0], {
         column:     table.c[column] + delta
     })
     get_engine().execute(stmt)
+
+    val = orm.attributes.get_attribute(obj, column)
+    if expire:
+        orm.attributes.instance_state(obj).expire_attributes(
+            orm.attributes.instance_dict(obj), [column])
+    else:
+        orm.attributes.set_committed_value(obj, column, val + delta)
 
 
 def find_next_increment(column, string):

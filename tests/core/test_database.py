@@ -31,6 +31,7 @@ class SlugGeneratorTestModel(db.Model):
     slug = db.Column(db.String(100), nullable=False, unique=True)
     category = db.Column(db.Integer, db.ForeignKey(Category.id))
     categories = db.relationship(Category, lazy='joined', backref='sluggies')
+    count = db.Column(db.Integer, default=0)
 
 
 class DatabaseTestSchemaController(db.ISchemaController):
@@ -99,3 +100,21 @@ def test_cached_query():
     obj.sluggies
     obj = Category.query.cached('_test/categories')[0]
     obj.sluggies
+
+
+@refresh_database
+def test_atomic_add():
+    # We cannot test if the function is really atomic, this also depends
+    # on the used database.  But we check if the results are as expected
+    obj = SlugGeneratorTestModel(name=u'cat')
+    db.session.commit()
+    eq_(obj.count, 0)
+    db.atomic_add(obj, 'count', +1)
+    eq_(obj.count, 1)
+    db.atomic_add(obj, 'count', -1)
+    eq_(obj.count, 0)
+    # check that expire is working
+    db.atomic_add(obj, 'count', +1, expire=True)
+    eq_(obj.count, 1)
+    assert_raises(AssertionError, db.atomic_add, obj, 'count', +1, primary_key_field='slug')
+    eq_(obj.count, 1)

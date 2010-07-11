@@ -12,6 +12,7 @@
 import os
 import sys
 import unittest
+import unittest2
 import warnings
 import traceback
 from functools import partial, wraps
@@ -272,7 +273,7 @@ class FixtureLoader(object):
         logger.error(msg)
 
 
-class TestCase(unittest.TestCase):
+class TestCase(unittest2.TestCase):
     """TestCase for the Inyoka test framework.
 
     A TestCase holds various test methods for unittesting and

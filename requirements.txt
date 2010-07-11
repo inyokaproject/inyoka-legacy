@@ -28,5 +28,6 @@ translitcodec==0.1
 virtualenv==1.4.9
 wsgiref==0.1.2
 celery==2.0.0
+unittest2==0.4.2
 # We use the flickzeug trunk as there's no official release yet
 http://dev.pocoo.org/hg/flickzeug-main/archive/tip.tar.gz

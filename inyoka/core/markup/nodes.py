@@ -517,7 +517,7 @@ class Ruler(Node):
         w.newline()
 
     def prepare_html(self):
-        yield u'<hr />'
+        yield u'<hr>'
 
 
 class Quote(Element):

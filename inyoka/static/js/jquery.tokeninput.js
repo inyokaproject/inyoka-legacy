@@ -195,7 +195,7 @@ $.TokenList = function (input, settings) {
     var selected_dropdown_item = null;
 
     // The list to store the token items in
-    var token_list = $("<ul />")
+    var token_list = $("<ul>")
         .addClass(settings.classes.tokenList)
         .insertAfter(hidden_input)
         .click(function (event) {
@@ -239,7 +239,7 @@ $.TokenList = function (input, settings) {
         .hide();
 
     // The token holding the input box
-    var input_token = $("<li />")
+    var input_token = $("<li>")
         .addClass(settings.classes.inputToken)
         .appendTo(token_list)
         .append(input_box);

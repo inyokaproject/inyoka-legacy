@@ -43,7 +43,7 @@
                {%- if comment.author_id == request.user.id %} owned{% endif -%}
                {%- if comment.deleted %} hidden{% endif -%}">
       <a href="{{ href(comment.author.profile) }}" class="comment_author">{{ comment.author.display_name }}</a>
-      <img src="{{ href('static', file='img/no_avatar.png') }}" class="avatar" />
+      <img src="{{ href('static', file='img/no_avatar.png') }}" class="avatar">
       <span class="meta">
         <strong><a href="#comment_{{ loop.index }}">{{ loop.index }}.</a></strong>
         <span class="written">{{ comment.pub_date|dateformat }} @ {{ comment.pub_date|timeformat('short') }}</span>

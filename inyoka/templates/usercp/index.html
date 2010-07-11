@@ -7,7 +7,7 @@
     {%- for key, name in extensions.iteritems() %}
     <li>
       <span><a href="{{ href('usercp/' + key) }}">
-        <img src="{{ href('static', file='img/usercp/%s.png'|format(key)) }}" alt="{{ name }}" /><br />
+        <img src="{{ href('static', file='img/usercp/%s.png'|format(key)) }}" alt="{{ name }}"><br>
         {{ name }}
       </a></span>
     </li>

@@ -25,7 +25,7 @@ $(function () {
        * continue with the next one.  */
       return true;
 
-    ellipsis.wrapInner('<a href="#" />')
+    ellipsis.wrapInner('<a href="#">')
     ellipsis.children('a').click(function () {
       var link = $(this);
       link.hide().after('<form action="#"><input size="2"/></form>');

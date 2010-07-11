@@ -20,10 +20,10 @@
     <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}
     {%- for style in styles %}
-    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" media="screen">
     {%- endfor %}
-    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/print.css') }}" media="print" />
-    <link rel="shortcut icon" type="image/icon" href="{{ href('static', file='img/favicon.ico') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/print.css') }}" media="print">
+    <link rel="shortcut icon" type="image/icon" href="{{ href('static', file='img/favicon.ico') }}">
     {% block html_head %}
     {% endblock %}
   </head>

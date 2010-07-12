@@ -34,7 +34,7 @@ def test_automatic_paragraphs_transformer():
     # test paragraph with block tags
     tree = nodes.Document([nodes.Text('\nYea'), nodes.Ruler(), nodes.Text('\n\nfaz')])
     transformed = transformer.transform(tree)
-    eq_(render(transformed, None, 'html'), '<p>\nYea</p><hr /><p>faz</p>')
+    eq_(render(transformed, None, 'html'), '<p>\nYea</p><hr><p>faz</p>')
 
 
 def test_headline_processor_transformer():

@@ -8,10 +8,11 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from datetime import datetime
 from inyoka.core.api import href, ctx
 from inyoka.core.auth.models import User
 from inyoka.core.test import *
-from inyoka.wiki.models import Page, Revision, Text
+from inyoka.wiki.models import Page, Revision, Text, PageExists, PageDeleted
 
 
 @refresh_database
@@ -37,7 +38,7 @@ def test_text_raw_and_rendered():
     text2r = '<p>Now\nthere is something else.</p>'
     u = User.query.first()
 
-    r = Revision(page=Page(name='foo'), change_user=u, epoch=1)
+    r = Page.create(u'foo', change_user=u, text='a').current_revision
     r.raw_text = text1
     eq_(r.raw_text, text1)
     eq_(r.rendered_text, text1r)
@@ -57,34 +58,62 @@ def test_text_raw_and_rendered():
     assert_false(tracker.check('Called Text._render()'))
 
 
+
 @refresh_database
-def test_update_current_revision():
-    u = User(username='somebody', email='some@body.invalid')
-    p1 = Page(name='one')
-    p2 = Page(name='two')
+def test_page_create_and_edit():
+    u = User.query.first()
+    u2 = User(username='user 2')
+    revs = []
 
-    r1 = Revision(raw_text='rev 1', change_user=u, epoch=1, page=p1)
-    r2 = Revision(raw_text='rev 2', change_user=u, epoch=1, page=p2)
-    r3 = Revision(raw_text='rev 3', change_user=u, epoch=1, page=p1)
-    r4 = Revision(raw_text='rev 4', change_user=u, epoch=1, page=p2)
-    db.session.commit()
+    p = Page.create(u'one', change_user=u, change_comment=u'hi', text=u'bla')
+    assert_raises(PageExists, Page.create, u'one', change_user=u)
 
-    p1 = Page.query.get(p1.id)
-    p2 = Page.query.get(p2.id)
+    eq_(p.current_revision.raw_text, u'bla')
+    eq_(p.current_revision.epoch, 1)
+    eq_(p.current_epoch, 1)
+    revs.append(p.current_revision)
 
-    eq_(p1.current_revision_id, r3.id)
-    eq_(p1.current_revision, r3)
-    eq_(p2.current_revision_id, r4.id)
-    eq_(p2.current_revision, r4)
+    p.edit(change_user=u2, text=u'spam', change_date=datetime(2000,1,1))
+    eq_(p.current_revision.raw_text, u'spam')
+    eq_(p.current_revision.change_date, datetime(2000,1,1))
+    eq_(p.current_revision.epoch, 1)
+    eq_(p.current_epoch, 1)
+    revs.append(p.current_revision)
 
-    r5 = Revision(raw_text='rev 5', change_user=u, epoch=1, page=p2)
-    r6 = Revision(raw_text='rev 6', change_user=u, epoch=1, page=p2)
-    db.session.commit()
+    p.delete()
+    eq_(p.current_epoch, 2)
+    assert_raises(PageDeleted, p.edit, change_user=u, text=u'foo')
 
-    p1 = Page.query.get(p1.id)
-    p2 = Page.query.get(p2.id)
-    eq_(p1.current_revision, r3)
-    eq_(p2.current_revision, r6)
+    p_ = p
+    p = Page.create(u'one', change_user=u2, change_comment=u'new', text=u'wb')
+    ok_(p is p_)
+    eq_(p.current_epoch, 2)
+    eq_(p.current_revision.raw_text, u'wb')
+    eq_(p.current_revision.epoch, 2)
+    eq_(p.current_revision.change_user, u2)
+    eq_(p.current_revision.change_comment, u'new')
+    revs.append(p.current_revision)
+
+    eq_(p.revisions.all(), [p.current_revision])
+    eq_(p.all_revisions.all(), revs)
+    eq_([r for r in revs if r.in_current_epoch], [p.current_revision])
+
+    p.edit(change_user=u, text=u'muh')
+    revs.append(p.current_revision)
+    p.edit(change_user=u, text=u'buh')
+    revs.append(p.current_revision)
+    eq_(p.revisions.all(), revs[-3:])
+
+    p.delete()
+    eq_(p.revisions.all(), [])
+
+    Page.create_or_edit(u'one', change_user=u, text=u'muh')
+    eq_(p.current_epoch, 3)
+    eq_(p.current_revision.raw_text, u'muh')
+    Page.create_or_edit(u'one', change_user=u, text=u'miau')
+    eq_(p.current_epoch, 3)
+    eq_(p.current_revision.raw_text, u'miau')
+
 
 
 @refresh_database
@@ -115,3 +144,14 @@ def test_url_generation():
     eq_(href(p, revision=r.id), href('wiki/show', page=p.url_name,
                                             revision=r.id))
     eq_(href(r), href('wiki/show', page=p.url_name, revision=r.id))
+
+def test_exists():
+    assert_false(Page.query.exists(u'no such page'))
+
+    p = Page(name=u'example Page')
+    r = Revision(page=p, change_user_id=1, epoch=1)
+    db.session.commit()
+
+    ok_(Page.query.exists(u'example Page'))
+    ok_(Page.query.exists(u'ExAmplE pAgE'))
+    assert_false(Page.query.exists(u'example_page'))

@@ -15,7 +15,7 @@ from inyoka.core.templating import render_template
 from inyoka.core.exceptions import NotFound
 from inyoka.wiki.forms import EditPageForm
 from inyoka.wiki.models import Page, Revision
-from inyoka.wiki.utils import find_page, urlify_page_name
+from inyoka.wiki.utils import find_page, urlify_page_name, deurlify_page_name
 
 
 class WikiController(IController):
@@ -38,12 +38,15 @@ class WikiController(IController):
     @view
     @templated('wiki/show.html')
     def show(self, request, page, revision=None):
+        url_name = page
+        page = None
         try:
-            page = find_page(page, redirect_view='wiki/show',
+            page = find_page(url_name, redirect_view='wiki/show',
                              redirect_params={'revision':revision})
         except NotFound:
             return Response(render_template('wiki/not_found.html', {
-                'page':    page,
+                'page': deurlify_page_name(url_name),
+                'url_name': url_name,
             }), status=404)
 
         if revision is not None:
@@ -64,40 +67,40 @@ class WikiController(IController):
     @view
     @templated('wiki/edit.html')
     def edit(self, request, page):
+        page_name = page
+        page = None
+
         try:
-            page = find_page(url_name=page, redirect_view='wiki/edit')
+            page = find_page(url_name=page_name, redirect_view='wiki/edit')
         except NotFound:
-            page = urlify_page_name(page)
-            url_name = urlify_page_name(page)
-            if url_name != page:
-                return redirect_to('wiki/edit', page=url_name)
+            if urlify_page_name(deurlify_page_name(page_name)) != page_name:
+                return redirect_to('wiki/edit', page=urlify_page_name(page_name))
             initial = {}
+            page_name = deurlify_page_name(page_name)
         else:
             initial = {'text': page.current_revision.raw_text}
 
 
+
         form = EditPageForm(request.form, **initial)
         if form.validate_on_submit():
-            if type(page) == unicode:
-                page = Page(name=page)
-            created = page.current_revision is None
-            if not created and form.text.data == page.current_revision.raw_text:
+            if page is not None and form.text.data == page.current_revision.raw_text:
                 request.flash(_(u"Text didn't change."))
                 return redirect_to(page)
 
-            #TODO: we definietly need a Page.edit method.
-            Revision(page=page,
-                     raw_text=form.text.data,
-                     change_comment=form.comment.data,
-                     change_user=request.user,
-                     epoch=1)
-            db.session.commit()
+            data = {'change_user': request.user,
+                    'change_comment': form.comment.data,
+                    'text': form.text.data}
+            if page is None:
+                page = Page.create(page_name, **data)
+            else:
+                page.edit(**data)
 
             request.flash(_(u'The page has been saved.'), True)
             return redirect_to(page)
 
         return {
-            'page': page,
+            'page': page_name if page is None else page,
             'form': form,
         }
 

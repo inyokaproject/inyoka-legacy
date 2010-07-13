@@ -54,7 +54,7 @@ def find_page(url_name, redirect_view=None, redirect_params=None,
 
     name = deurlify_page_name(url_name)
 
-    #TODO: only add deleted check if user may not view deleted sites
+    #TODO: only add deleted check if user may not view deleted pages
     try:
         page = Page.query.filter_by(deleted=False).filter_name(name).one()
     except db.NoResultFound:

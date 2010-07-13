@@ -17,7 +17,6 @@ from inyoka.core.auth.models import User
 from inyoka.wiki.utils import urlify_page_name
 from inyoka.portal.api import ILatestContentProvider
 
-
 class WikiLatestContentProvider(ILatestContentProvider):
 
     type = 'wiki_revisions'
@@ -33,6 +32,13 @@ class PageQuery(db.Query):
         return self.filter(db.func.lower(Page.name)==name.lower())
 
     def get(self, pk):
+        """
+        Return the page with the given name or id (None if it does not exist).
+
+        You usually should not use this function in views directly to ensure
+        proper redirection (/maIN_paGE -> /Main_Page). Use
+        wiki.utils.find_page instead.
+        """
         if isinstance(pk, basestring):
             try:
                 return Page.query.filter_name(pk).one()
@@ -44,6 +50,16 @@ class PageQuery(db.Query):
         return bool(db.session.execute(
             db.select([Page.id]).where(Page.name == name)
         ).fetchone())
+
+    def exists(self, name):
+        return bool(self.filter_name(name).count())
+
+
+class PageDeleted(ValueError):
+    pass
+
+class PageExists(ValueError):
+    pass
 
 
 class Page(db.Model):
@@ -63,6 +79,85 @@ class Page(db.Model):
 
     def __repr__(self):
         return '<Page %r>' % self.name
+
+    @staticmethod
+    def create_or_edit(name, **kwargs):
+        """
+        Like Page.create but does edit the page if it already exists.
+        """
+        try:
+            return Page.create(name, **kwargs)
+        except PageExists:
+            p = Page.query.get(name)
+            p.edit(**kwargs)
+            return p
+
+    @staticmethod
+    def create(name, **kwargs):
+        """
+        Create a new page and return it.
+
+        :param page: The name for the new page.
+        All other params are the same as for Page.edit().
+
+        If the page does not exist, create it and add a first revision with
+        the given data.
+        If the page does exist but is deleted, increment the epoch and create
+        a new revision with the given data.
+        Else raise `PageExists` exception.
+        """
+        _was_deleted = False
+
+        p = Page.query.get(name)
+        if p is None:
+            p = Page(name=name)
+            p.current_epoch = 1
+        elif p.deleted:
+            p.deleted = False
+            _was_deleted = True
+        else:
+            raise PageExists(u'A page with that name already exists.')
+
+        p.edit(_was_deleted=_was_deleted, **kwargs)
+        return p
+
+
+    def edit(self, change_user, change_comment=None, text=None,
+             change_date=None, _was_deleted=False):
+        """
+        Create a new revision for this page.
+
+        :param change_user: The user making the change.
+        :param change_comment: The user's comment on the change.
+        :param change_date: Date of the change. Defaults to utcnow.
+        :param text: New text of the page. Defaults to current text.
+        """
+        if self.deleted:
+            raise PageDeleted(u'This page is deleted and cannot be edited. '
+                              u'Use Page.create() instead.')
+
+        r = Revision(page=self, epoch=self.current_epoch)
+
+        r.change_user = change_user
+        r.change_comment = change_comment
+        r.change_date = change_date
+
+        if text is None:
+            if self.current_revision is None or _was_deleted:
+                raise ValueError('text may not be None for new page')
+            r.text_id = self.current_revision.text_id
+        else:
+            r.raw_text = text
+
+        self.current_revision = r
+        db.session.commit()
+
+
+    def delete(self):
+        self.deleted = True
+        self.current_epoch += 1
+        db.session.commit()
+
 
     @property
     def url_name(self):
@@ -97,6 +192,7 @@ class Revision(db.Model):
     __tablename__ = 'wiki_revision'
 
     id = db.Column(db.Integer, primary_key=True)
+#    revision = db.Column(db.Integer, nullable=False)
     page_id = db.Column(db.ForeignKey(Page.id), nullable=False)
     change_user_id = db.Column(db.ForeignKey(User.id), nullable=False)
     change_date = db.Column(db.DateTime, nullable=False,
@@ -105,7 +201,7 @@ class Revision(db.Model):
     text_id = db.Column(db.ForeignKey(Text.id))
     epoch = db.Column(db.Integer, nullable=False)
 
-    _page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
+    page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
         backref=db.backref('all_revisions', lazy='dynamic',
                            cascade='all, delete-orphan'))
     text = db.relationship(Text)
@@ -113,14 +209,6 @@ class Revision(db.Model):
 
     raw_text = association_proxy('text', 'text', creator=_create_text)
     rendered_text = association_proxy('text', 'rendered_text')
-
-    def _set_page(self, page):
-        if page is not None:
-            page.current_revision = self
-        self._page = page
-    page = db.synonym('_page',
-                      descriptor=property(attrgetter('_page'), _set_page))
-    del _set_page
 
     def __repr__(self):
         pn = repr(self.page.name) if self.page else None

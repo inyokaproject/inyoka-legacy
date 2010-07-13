@@ -12,6 +12,7 @@ from werkzeug.exceptions import _ProxyException
 from inyoka.core.api import href
 from inyoka.core.exceptions import NotFound
 from inyoka.core.test import *
+from inyoka.core.auth.models import User
 from inyoka.wiki.models import Page, Revision
 from inyoka.wiki.utils import find_page
 
@@ -28,9 +29,8 @@ def _find_page_test_exception(url, *args, **kwargs):
 
 
 def test_find_page():
-    p = Page(name='test page', current_epoch=1)
-    r = Revision(page=p, change_user_id=1, raw_text='foo', epoch=1)
-    db.session.commit()
+    u = User.query.first()
+    p = Page.create(u'test page', change_user=u, text=u'foo')
 
     eq_(find_page('test_page', 'wiki/show', {}), p)
     eq_(find_page('test_page', 'wiki/show'), p)
@@ -43,6 +43,7 @@ def test_find_page():
         'tEsT pAgE', 'wiki/show', {'revision': 1})
     assert_raises(NotFound, find_page, 'some inexistent page', 'wiki/show')
     assert_raises(NotFound, find_page, 'test page', redirect=False)
-    db.session.delete(r)
+
+    db.session.delete(p.current_revision)
     db.session.delete(p)
     db.session.commit()

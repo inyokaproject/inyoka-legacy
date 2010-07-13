@@ -9,10 +9,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import href, ctx
+from inyoka.core.auth.models import User
 from inyoka.core.test import *
 from inyoka.wiki.controllers import WikiController
 from inyoka.wiki.models import Page, Revision, Text
-
 
 
 class TestWikiController(ViewTestCase):
@@ -34,17 +34,15 @@ class TestWikiController(ViewTestCase):
         db.session.delete(p)
 
     def test_show(self):
-        p = Page(name='test page', current_epoch=2)
-        p2 = Page(name='other page')
-        r1 = Revision(page=p, change_user_id=1, epoch=1, raw_text='empty')
-        r2 = Revision(page=p, change_user_id=1, epoch=2, raw_text='empty')
-        r3 = Revision(page=p2, change_user_id=1, epoch=1, raw_text='empty')
-        db.session.add_all([p, p2, r1, r2, r3])
-        db.session.commit()
+        u = User.query.first()
 
-        r1 = Revision.query.get(r1.id)
-        r2 = Revision.query.get(r2.id)
-        r3 = Revision.query.get(r3.id)
+        p = Page.create(u'test page', change_user=u, text=u'empty')
+        p.delete()
+        p = Page.create(u'test page', change_user=u, text=u'empty')
+        p2 = Page.create(u'other page', change_user=u, text=u'empty')
+
+        r1, r2 = p.all_revisions
+        r3 = p2.current_revision
 
         response = self.get('/test page', follow_redirects=False)
         self.assertRedirects(response, 'test_page')
@@ -54,10 +52,43 @@ class TestWikiController(ViewTestCase):
 
         response = self.get('/test_page/+%d' % r2.id)
         self.assertResponseOK(response)
+        #TODO: test context if it's the right revision
+
+        response = self.get('/other_page/+%d' % r1.id)
+        self.assertNotFound(response)
+
+        response = self.get('/test_page/+%d' % r1.id)
+        self.assertNotFound(response)
 
         for obj in (r3, r2, r1, p2, p):
             db.session.delete(obj)
         db.session.commit()
 
         #TODO: test whether r1 is accessible as mod
-        #TODO: test context if it's the right revision
+
+    def test_edit_redirection(self):
+        u = User.query.first()
+
+        p = Page.create(u'SoMe PaGe', change_user=u, text=u'a')
+
+        r = self.get('/some_page/+edit', follow_redirects=False)
+#        self.assertRedirects(r, href('wiki/edit', page='SoMe_PaGe'))
+        eq_(r.status_code, 302)
+        eq_(r.location, href('wiki/edit', page='SoMe_PaGe'))
+
+        r = self.get('/some page/+edit', follow_redirects=False)
+#        self.assertRedirects(r, href('wiki/edit', page='SoMe_PaGe'))
+        eq_(r.status_code, 302)
+        eq_(r.location, href('wiki/edit', page='SoMe_PaGe'))
+
+        r = self.get('/SoMe_PaGe/+edit', follow_redirects=False)
+#        self.assertResponseOK(r)
+        eq_(r.status_code, 200)
+
+    def test_edit(self):
+        u = User.query.first()
+        p = Page.create(u'Main Page', change_user=u, text=u'a')
+        response = self.get('/Main_Page/+edit')
+        self.assertResponseOK(response)
+
+        #TODO

@@ -34,8 +34,33 @@ class SlugGeneratorTestModel(db.Model):
     count = db.Column(db.Integer, default=0)
 
 
+
+
+class Entry(db.Model):
+
+    __tablename__ = '_test_database_entry'
+
+    entry_id = db.Column(db.Integer, primary_key=True)
+    discriminator = db.Column('type', db.String(12))
+    view_count = db.Column(db.Integer, default=0, nullable=False)
+
+    __mapper_args__ = {'polymorphic_on': discriminator}
+
+
+class Question(Entry):
+    __tablename__ = '_test_database_question'
+    __mapper_args__ = {
+        'polymorphic_identity': u'question'
+    }
+
+    id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
+    title = db.Column(db.String(160), nullable=False)
+    answer_count = db.Column(db.Integer, default=0)
+
+
+
 class DatabaseTestSchemaController(db.ISchemaController):
-    models = [Category, SlugGeneratorTestModel]
+    models = [Category, SlugGeneratorTestModel, Entry, Question]
 
 
 @refresh_database
@@ -118,3 +143,17 @@ def test_atomic_add():
     eq_(obj.count, 1)
     assert_raises(AssertionError, db.atomic_add, obj, 'count', +1, primary_key_field='slug')
     eq_(obj.count, 1)
+
+
+@refresh_database
+def test_atomic_add_on_joined_tables():
+    obj = Question(title=u'some question')
+    db.session.commit()
+    eq_(obj.view_count, 0)
+    db.atomic_add(obj, 'view_count', +1)
+    eq_(obj.view_count, 1)
+    db.atomic_add(obj, 'view_count', -1)
+    eq_(obj.view_count, 0)
+    # check that expire is working
+    db.atomic_add(obj, 'view_count', +1, expire=True)
+    eq_(obj.view_count, 1)

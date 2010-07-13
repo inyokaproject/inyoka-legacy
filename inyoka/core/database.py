@@ -165,7 +165,7 @@ def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
     assert len(primary_key) == 1, 'atomic_add not supported for '\
         'classes with more than one primary key'
 
-    table = obj_mapper.mapped_table
+    table = obj_mapper.columns[column].table
 
     if primary_key_field:
         assert table.c[primary_key_field].primary_key == True, 'no primary key field'

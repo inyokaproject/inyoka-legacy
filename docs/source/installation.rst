@@ -17,6 +17,7 @@ To get Inyoka work properly we need those dependencies:
  * Python (at least 2.6)
  * python-setuptools
  * mercurial
+ * subversion
  * fabric
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::

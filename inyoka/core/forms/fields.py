@@ -11,7 +11,7 @@
 from wtforms.fields import BooleanField as OrigBooleanField, DecimalField, DateField, \
     DateTimeField, FieldList, FloatField, FormField, HiddenField, \
     IntegerField, PasswordField, RadioField, SelectField, SelectMultipleField, \
-    SubmitField, TextField, TextAreaField
+    SubmitField, TextField, TextAreaField, FileField
 from wtforms.fields import Field
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
 
@@ -25,19 +25,6 @@ class BooleanField(OrigBooleanField):
             return unicode(self.raw_data[0])
         else:
             return u'true'
-
-
-class FileField(TextField):
-    widget = widgets.FileInput()
-
-    def process_formdata(self, valuelist):
-        if valuelist:
-            self.data = valuelist[0]
-        else:
-            self.data = u''
-
-    def _value(self):
-        return u''
 
 
 class RecaptchaField(Field):

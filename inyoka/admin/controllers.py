@@ -9,11 +9,10 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inspect import ismethod
-from os.path import join
 from werkzeug import cached_property
 from inyoka.core.api import ctx, view, IController, Rule, templated, \
     IServiceProvider
-from inyoka.core.routing import Submount, EndpointPrefix
+from inyoka.core.routing import Submount, EndpointPrefix, get_endpoint_map
 from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
 from inyoka.utils import getmembers
 
@@ -22,18 +21,6 @@ def context_modifier(request, context):
     context.update(
         active='admin'
     )
-
-
-def get_endpoint_map(map, providers):
-    def _predicate(value):
-        return (ismethod(value) and
-                getattr(value, 'endpoint', None) is not None)
-
-    for provider in providers:
-        members = tuple(x[1] for x in getmembers(provider, _predicate))
-        map.update(dict((join(provider.name, m.endpoint), m)
-                         for m in members))
-    return map
 
 
 class AdminController(IController):
@@ -57,18 +44,8 @@ class AdminController(IController):
 
     def get_endpoint_map(self):
         """Register all view methods from remote admin providers"""
-
-        def _predicate(value):
-            return (ismethod(value) and
-                    getattr(value, 'endpoint', None) is not None)
-
         endpoint_map = super(AdminController, self).get_endpoint_map()
-
-        for provider in self.providers:
-            members = tuple(x[1] for x in getmembers(provider, _predicate))
-            endpoint_map.update(dict((join(provider.name, m.endpoint), m)
-                                      for m in members))
-        return endpoint_map
+        return get_endpoint_map(endpoint_map, self.providers)
 
     @view('index')
     @templated('admin/index.html', modifier=context_modifier)
@@ -102,15 +79,5 @@ class AdminServiceProvider(IServiceProvider):
 
     def get_endpoint_map(self):
         """Register all view methods from remote admin providers"""
-
-        def _predicate(value):
-            return (ismethod(value) and
-                    getattr(value, 'endpoint', None) is not None)
-
         endpoint_map = super(AdminServiceProvider, self).get_endpoint_map()
-
-        for provider in self.providers:
-            members = tuple(x[1] for x in getmembers(provider, _predicate))
-            endpoint_map.update(dict((u'_'.join((provider.name, m.endpoint)), m)
-                                      for m in members))
-        return endpoint_map
+        return get_endpoint_map(endpoint_map, self.providers, u'_')

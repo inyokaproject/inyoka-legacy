@@ -37,6 +37,19 @@ _date_formatter_mapping = {
 }
 
 
+
+def is_endpoint(value):
+    return (ismethod(value) and getattr(value, 'endpoint', None) is not None)
+
+
+def get_endpoint_map(map, providers, delmitter=''):
+    for provider in providers:
+        members = tuple(x[1] for x in getmembers(provider, is_endpoint))
+        map.update(dict((delmitter.join((provider.name, m.endpoint)), m)
+                                        for m in members))
+    return map
+
+
 class UrlMixin(object):
     """Mixin to make components able to implement own url rules."""
 
@@ -112,14 +125,11 @@ class UrlMixin(object):
 
     def get_endpoint_map(self, prefix=''):
         """This method returns a dictionary with a mapping out of
-        endpoint name -> bound method
+        endpoint name -> bound method.
+
+        :param prefix:  A common prefix for every endpoint.
         """
-
-        def _predicate(value):
-            return (ismethod(value) and
-                    getattr(value, 'endpoint', None) is not None)
-
-        members = tuple(x[1] for x in getmembers(self, _predicate))
+        members = tuple(x[1] for x in getmembers(self, is_endpoint))
         endpoint_map = dict((prefix + m.endpoint, m) for m in members)
         return endpoint_map
 
@@ -218,8 +228,8 @@ class IServiceProvider(Interface, UrlMixin):
         return rules
 
     def get_endpoint_map(self, prefix=''):
-        return super(IServiceProvider, self).get_endpoint_map('%s%s/' %
-                                                    (prefix, self.component))
+        prefix = u'%s%s/' % (prefix, self.component)
+        return super(IServiceProvider, self).get_endpoint_map(prefix)
 
 
 view = IController.register_view

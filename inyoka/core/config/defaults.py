@@ -157,9 +157,9 @@ DEFAULTS = {
                                u'Do never chage that value!')),
 
     # values for static and media serving
-    'routing.urls.static':          DottedField(default=u':/_static',
+    'routing.urls.static':          DottedField(default=u'static:/',
         help_text=lazy_gettext(u'Url mapping used for static file serving')),
-    'routing.urls.media':           DottedField(default=u':/_media',
+    'routing.urls.media':           DottedField(default=u'media:/',
         help_text=lazy_gettext(u'Url mapping used for media file serving')),
     'static_path':                  TextField(default=u'static',
         help_text=lazy_gettext(u'Path to the directory for static files. '

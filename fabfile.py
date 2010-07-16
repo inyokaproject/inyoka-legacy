@@ -268,6 +268,7 @@ def reindent():
     """
     local(_j('extra/reindent.py -r -B %s' % _base_dir), capture=False)
 
+
 def lsdns(basedomain=None):
     """
     Get the required DNS settings.

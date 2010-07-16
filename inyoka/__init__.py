@@ -56,10 +56,11 @@ class InterfaceMeta(type):
         else:
             # A Interface
             obj._isinterface = False
-            obj._interfaces = set(
-                cls for cls in sum(map(methodcaller('mro'), bases), [])
-                    if '_isinterface' in cls.__dict__
-            )
+            # collect all classes in the interface tree of every
+            # base class for that component.
+            mro = sum(map(methodcaller('mro'), bases), [])
+            # bind all classes that implement the interface protocol.
+            obj._interfaces = set(c for c in mro if '_isinterface' in dir(c))
 
         return obj
 
@@ -71,7 +72,7 @@ class Interface(object):
     be subclassed to implement the real features.
 
     That way a :class:`Interface` can keep track of all subclasses and
-    thanks to that knows all implemented “features” for that kind of interface.
+    knows all implemented “features” for that kind of interface.
 
     :param ctx: The current :class:`ApplicationContext`.
     """

@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from datetime import datetime
+from collections import defaultdict
 from werkzeug import cached_property
 from inyoka.core.api import _, db, SerializableObject
 from inyoka.core.models import Tag, TagCounterExtension

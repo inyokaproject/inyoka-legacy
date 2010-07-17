@@ -14,3 +14,11 @@ from werkzeug.exceptions import HTTPException, Forbidden, NotFound, \
 
 __all__ = ('abort', 'HTTPException', 'Forbidden', 'NotFound',
            'BadRequest', 'Unauthorized')
+
+
+class ImproperlyConfigured(RuntimeError):
+    """Some configuration error happend.
+
+    Use this exception only if it's a value explicitly required
+    as it will break the mainloop.
+    """

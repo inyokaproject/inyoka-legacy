@@ -378,7 +378,10 @@ class ViewTestCase(DatabaseTestCase):
         Return the template context from a view wrapped by :func:`templated`.
         """
         response = self.open(path, method=method, **kwargs)
-        return getattr(response, '_template_context', {})
+        try:
+            return response._template_context
+        except AttributeError:
+            raise ImproperlyConfigured(u'You must set inyoka.debug to \'True\'')
 
     def open(self, path, *args, **kw):
         """

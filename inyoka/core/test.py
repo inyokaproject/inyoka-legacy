@@ -326,6 +326,7 @@ class DatabaseTestCase(TestCase):
     _started = False
     data = {}
     fixtures = {}
+    custom_cleanup_factories = []
 
     def _pre_setup(self):
         super(DatabaseTestCase, self)._pre_setup()
@@ -343,6 +344,11 @@ class DatabaseTestCase(TestCase):
                     db.session.delete(cls)
             except TypeError:
                 db.session.delete(self.data[group])
+
+        for factory in self.custom_cleanup_factories:
+            for item in factory():
+                db.session.delete(item)
+
         db.session.commit()
 
         # revert all mock objects to get clear passage on the next test

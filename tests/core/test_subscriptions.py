@@ -153,6 +153,10 @@ class TestSubscriptions(DatabaseTestCase):
                    {'entry': '*e1'}, {'entry': '*e1'}, {'entry': '*e2'}]}
     ]
 
+    custom_cleanup_factories = [
+        lambda: Subscription.query.all()
+    ]
+
     def _check_sequent_state(self, user, type_name, subject_id, first_unread, count):
         """
         Check if values of `first_unread_object_id` and `count` attributes of
@@ -181,7 +185,6 @@ class TestSubscriptions(DatabaseTestCase):
             sorted([CategorySubscriptionType, BlogSubscriptionType, TagSubscriptionType]))
         eq_(SubscriptionType.by_action('__test_new_comment'), [CommentsSubscriptionType])
 
-    @future
     def test_subscription(self):
         one = self.data['User'][0]
         cat1, cat2 = self.data['Category']
@@ -200,7 +203,6 @@ class TestSubscriptions(DatabaseTestCase):
         eq_(s.type, BlogSubscriptionType)
         eq_(s.subject, None)
 
-    @future
     def test_multiple_subscriptions(self):
         """
         Test (with multiple mode) whether the subscription count and the unread

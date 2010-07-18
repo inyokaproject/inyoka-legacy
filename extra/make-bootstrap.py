@@ -25,6 +25,7 @@ from os import path
 
 pil_version = '1.1.7'
 cldr_version = '1.7.2'
+jinja_version = '2.5'
 
 
 def install_requirements(home_dir, requirements):
@@ -53,6 +54,24 @@ def pil_install(home_dir):
     cmd.extend([path.join(os.getcwd(), f1), 'install'])
     call_subprocess(cmd)
 
+    shutil.rmtree(folder)
+
+
+def install_jinja2(home_dir):
+    folder = tempfile.mkdtemp(prefix='virtualenv')
+    pypath = path.join(home_dir, 'bin', 'python')
+
+    # checkout jinja
+    #
+    call_subprocess(FETCH_CMD +
+        ['http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%s.tar.gz' % jinja_version]
+    , cwd=folder)
+    call_subprocess(['tar', '-xzf', 'Jinja2-%s.tar.gz' % jinja_version], cwd=folder)
+    jinja_folder = path.join(folder, 'Jinja2-%s' % jinja_version)
+
+    cmd = [path.abspath(path.join(home_dir, 'bin', 'python'))]
+    cmd.extend([path.join(os.getcwd(), path.join(jinja_folder, 'setup.py')), '--with-speedups', 'install'])
+    call_subprocess(cmd, cwd=jinja_folder)
     shutil.rmtree(folder)
 
 
@@ -95,6 +114,8 @@ def after_install(options, home_dir):
             sys.exit(1)
 
     easy_install('setuptools', home_dir)
+    easy_install('pip', home_dir)
+    install_jinja2(home_dir)
     babel_svn_repo_install(home_dir)
     install_requirements(home_dir, options.requirements)
     pil_install(home_dir)

@@ -29,8 +29,8 @@ class TestNewsModels(DatabaseTestCase):
         Article: [
             {'&rocks_article': {
                 'title': u'My Ubuntu rocks!!',
-                'intro': u'Well, it just rocks!!',
-                'text': u'And because you\'re so tschaka baam, you\'re using Ubuntu!!',
+                'intro': u"Well, '''it''' just rocks!!",
+                'text': u'And because you\'re __so__ tschaka baam, you\'re using Ubuntu!!',
                 'public': 'Y',
                 'tags': ['*ubuntu'],
                 'author': '*bob'
@@ -93,3 +93,10 @@ class TestNewsModels(DatabaseTestCase):
         self.assertTrue(invisible.hidden)
         self.assertEqual(Article.query.published().all(), [visible])
 
+    def test_article_text_rendering(self):
+        article = self.data['Article'][0]
+        self.assertEqual(article.intro, u"Well, '''it''' just rocks!!")
+        self.assertEqual(article.rendered_intro, u'<p>Well, <strong>it</strong> just rocks!!</p>')
+        self.assertEqual(article.text, u'And because you\'re __so__ tschaka baam, you\'re using Ubuntu!!')
+        self.assertEqual(article.rendered_text,
+            u'<p>And because you&#39;re <span class="underline">so</span> tschaka baam, you&#39;re using Ubuntu!!</p>')

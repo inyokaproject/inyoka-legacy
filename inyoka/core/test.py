@@ -269,7 +269,7 @@ class FixtureLoader(object):
         msg = 'error occured while loading fixture data with output:\n%s' % pformat(data)
         msg += '\nclass: %s' % cls
         msg += '\nitem: %s' % item
-        msg += '\n%s' % raceback.format_exc(e)
+        msg += '\n%s' % traceback.format_exc(e)
         logger.error(msg)
 
 

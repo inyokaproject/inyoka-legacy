@@ -406,7 +406,6 @@ class ModelBase(object):
 
     We use the declarative model api from sqlalchemy.
     """
-    __extendable__ = False
 
     def __eq__(self, other):
         equal = True

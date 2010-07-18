@@ -47,6 +47,11 @@ def test_escaping():
         nodes.Text("__bar__")
     ])
 
+    tree = parse("'bar'")
+    assert tree == nodes.Document([
+        nodes.Text("'bar'")
+    ])
+
 
 def test_autoclosing():
     """Check if the automatic closing works."""

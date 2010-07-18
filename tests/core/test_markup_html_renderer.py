@@ -18,6 +18,12 @@ def render(source):
     return html
 
 
+def test_escaping():
+    """Test html escaping"""
+    eq_(render('<em>blub</em>'), u'&lt;em&gt;blub&lt;/em&gt;')
+    eq_(render("you're so cool"), u"you&#39;re so cool")
+
+
 def test_simple_markup():
     """Test the simple markup."""
     html = render("''foo'', '''bar''', __baz__, ,,(foo),,, ^^(bar)^^")

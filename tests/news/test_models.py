@@ -37,7 +37,7 @@ class TestNewsModels(DatabaseTestCase):
             }}
         ]}, {
         Comment: [{'text': u'Bah, cool article!', 'author': '*bob', 'article': '*rocks_article'},
-                    {'text': u'This article sucks!', 'author': '*bob', 'article': '*rocks_article'}]
+                  {'text': u'This article sucks!', 'author': '*bob', 'article': '*rocks_article'}]
     }]
 
     def test_article_attributes(self):

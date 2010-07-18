@@ -48,18 +48,6 @@ class LatestCommentsContentProvider(ILatestContentProvider):
                       'author.profile', 'article.tags'))
 
 
-class ArticleMapperExtension(db.MapperExtension):
-
-    def before_insert(self, mapper, connection, instance):
-        if not instance.updated or instance.updated < instance.pub_date:
-            instance.updated = instance.pub_date
-
-    def after_update(self, mapper, connection, instance):
-        """Cleanup caches"""
-        cache.delete('news/article_text/%s' % instance.id)
-        cache.delete('news/article_intro/%s' % instance.id)
-
-
 class CommentMapperExtension(db.MapperExtension):
     def before_insert(self, mapper, connection, instance):
         self.before_update(mapper, connection, instance)
@@ -158,8 +146,7 @@ class ArticleQuery(db.Query):
 class Article(db.Model):
     __tablename__ = 'news_article'
     __mapper_args__ = {
-        'extension': (db.SlugGenerator('slug', 'title'),
-                      ArticleMapperExtension())
+        'extension': db.SlugGenerator('slug', 'title')
     }
     query = db.session.query_property(ArticleQuery)
 

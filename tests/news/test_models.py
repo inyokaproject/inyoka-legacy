@@ -34,7 +34,14 @@ class TestNewsModels(DatabaseTestCase):
                 'public': 'Y',
                 'tags': ['*ubuntu'],
                 'author': '*bob'
-            }}
+            }},
+            {'&hidden_article': {
+                'title': u'My hidden article',
+                'intro': u'Well, this sucks...',
+                'text': u'This is hidden because not really published?',
+                'public': 'N',
+                'author': '*bob'
+            }},
         ]}, {
         Comment: [{'text': u'Bah, cool article!', 'author': '*bob', 'article': '*rocks_article'},
                   {'text': u'This article sucks!', 'author': '*bob', 'article': '*rocks_article'}]
@@ -47,6 +54,15 @@ class TestNewsModels(DatabaseTestCase):
     def test_comment_counter(self):
         article = self.data['Article'][0]
         eq_(article.comment_count, 2)
+        comment = Comment(author=self.data['User'][0], text=u'some comment')
+        article.comments.append(comment)
+        db.session.commit()
+        eq_(article.comment_count, 3)
+        # check that decremention of the counter works
+        article.comments.remove(comment)
+        db.session.delete(comment)
+        db.session.commit()
+        eq_(article.comment_count, 2)
 
     def test_article_automatic_updated_pub_date(self):
         article = self.data['Article'][0]
@@ -54,3 +70,26 @@ class TestNewsModels(DatabaseTestCase):
         article.updated = article.pub_date + datetime.timedelta(days=2)
         db.session.commit()
         eq_(article.was_updated, True)
+
+    def test_article_view_counter(self):
+        article = self.data['Article'][0]
+        self.assertEqual(article.view_count, 0)
+        article.touch()
+        self.assertEqual(article.view_count, 1)
+        article.touch()
+        self.assertEqual(article.view_count, 2)
+
+    def test_article_visibility(self):
+        visible, invisible = self.data['Article']
+        self.assertFalse(visible.hidden)
+        self.assertTrue(invisible.hidden)
+        self.assertEqual(Article.query.published().all(), [visible])
+        self.assertEqual(Article.query.hidden().all(), [invisible])
+        invisible.public = True
+        db.session.commit()
+        self.assertEqual(Article.query.published().all(), [visible, invisible])
+        invisible.pub_date = datetime.datetime.utcnow() + datetime.timedelta(days=2)
+        db.session.commit()
+        self.assertTrue(invisible.hidden)
+        self.assertEqual(Article.query.published().all(), [visible])
+

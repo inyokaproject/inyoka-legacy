@@ -17,6 +17,8 @@ from inyoka.core.auth.models import User
 from inyoka.wiki.utils import urlify_page_name
 from inyoka.portal.api import ILatestContentProvider
 
+
+
 class WikiLatestContentProvider(ILatestContentProvider):
 
     type = 'wiki_revisions'

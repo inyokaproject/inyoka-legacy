@@ -123,8 +123,8 @@ class NewsController(IController):
                     comment.text = form.text.data
                     request.flash(_(u'The comment was successfully edited'), True)
                 else:
-                    comment = Comment(text=form.text.data, article=article,
-                                      author=request.user)
+                    comment = Comment(text=form.text.data, author=request.user)
+                    article.comments.append(comment)
                     Subscription.new(comment, 'news.comment.new')
                     request.flash(_(u'Your comment was successfully created'), True)
                 db.session.commit()

@@ -69,9 +69,6 @@ class CommentCounterExtension(db.AttributeExtension):
         instance = state.obj()
         instance.comment_count -= 1
 
-    def set(self, state, value, oldvalue, initiator):
-        return value
-
 
 class Comment(db.Model):
     __tablename__ = 'news_comment'
@@ -85,8 +82,7 @@ class Comment(db.Model):
     rendered_text = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    author = db.relationship(User, backref=db.backref('comments',
-        lazy='dynamic'))
+    author = db.relationship(User,backref=db.backref('comments', lazy='dynamic'))
     article_id = db.Column(db.Integer, db.ForeignKey('news_article.id'))
 
     def get_url_values(self, action='view'):
@@ -108,17 +104,26 @@ class Comment(db.Model):
 class ArticleQuery(db.Query):
 
     def published(self):
-        """
-        This method returns a query that shows only
-        published articles.
+        """Return a query for all published articles.
 
-        A article is either published if :attr:`Article.public` is `True`
-        or :attr:`Article.pub_date` is same and :attr:`Article.pub_time` is
-        less then or the same as the current utc date/time.
+        An article is either published if :attr:`Article.public` is `True`
+        and :attr:`Article.pub_date` is less or the same than current UTC.
         """
         q = self.filter(db.and_(
             Article.public == True,
-            Article.pub_date < datetime.utcnow(),
+            Article.pub_date <= datetime.utcnow(),
+        ))
+        return q
+
+    def hidden(self):
+        """Return a query for not yet published articles.
+
+        To hide an article set :attr:`Article.public` to `False or
+        set :attr:`Article.pub_date` to some value in the future.
+        """
+        q = self.filter(db.or_(
+            Article.public == False,
+            Article.pub_date > datetime.utcnow()
         ))
         return q
 
@@ -167,7 +172,8 @@ class Article(db.Model):
         extension=TagCounterExtension())
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     author = db.relationship(User, backref=db.backref('articles', lazy='dynamic'))
-    comments = db.relationship(Comment, backref=db.backref('article', lazy='joined'),
+    comments = db.relationship(Comment,
+        backref=db.backref('article', lazy='joined'),
         primaryjoin=id==Comment.article_id,
         order_by=[db.asc(Comment.pub_date)],
         lazy='dynamic',

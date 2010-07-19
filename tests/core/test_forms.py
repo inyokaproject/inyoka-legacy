@@ -134,3 +134,8 @@ class CsrfTester(ViewTestCase):
         assert_true(form.validate())
 
         ctx.cfg['enable_csrf_checks'] = _old_value
+
+    def test_csrf_disabled_on_local_session(self):
+        # test that csrf will not be checked if we have no request
+        form = DummyForm2(MultiDict({'name': u'foo'}))
+        self.assertTrue(form.validate())

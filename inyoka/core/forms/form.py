@@ -28,7 +28,10 @@ def get_csrf_token(request=None, force_reset=False):
     if Inyoka is configured to do so.  Set `force_reset` to True if you
     want to reset the current csrf token in the session.
     """
-    req = request or ctx.current_request
+    req = request or ctx.current_request or None
+    if not req:
+        return u''
+
     session = req.session
     if 'csrf_token' not in session or force_reset:
         session['csrf_token'] = generate_csrf_token()
@@ -49,7 +52,9 @@ class Form(BaseForm):
         super(Form, self).__init__(formdata, csrf=csrf_token, *args, **kwargs)
 
     def validate_csrf(self, field):
-        enabled = ctx.cfg['enable_csrf_checks'] and not self.csrf_disabled
+        enabled = (ctx.cfg['enable_csrf_checks'] and
+                   not self.csrf_disabled and
+                   ctx.current_request)
         if not enabled or ctx.current_request.is_xhr:
             return
 

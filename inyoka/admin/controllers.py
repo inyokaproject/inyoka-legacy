@@ -45,7 +45,7 @@ class AdminController(IController):
     def get_endpoint_map(self):
         """Register all view methods from remote admin providers"""
         endpoint_map = super(AdminController, self).get_endpoint_map()
-        return get_endpoint_map(endpoint_map, self.providers)
+        return get_endpoint_map(endpoint_map, self.providers, u'/')
 
     @view('index')
     @templated('admin/index.html', modifier=context_modifier)

@@ -14,7 +14,7 @@ from werkzeug import url_encode, url_decode, url_quote, \
      url_quote_plus, url_fix
 
 
-def make_full_domain(subdomain='', path=''):
+def make_full_domain(subdomain=None, path=None):
     """Return the full domain based on :attr:`subdomain`
 
     >>> from inyoka.core.api import ctx
@@ -29,6 +29,7 @@ def make_full_domain(subdomain='', path=''):
     >>> del ctx.cfg['base_domain_name']
 
     """
+    subdomain, path = (subdomain or u''), (path or u'')
     adapter = ctx.dispatcher.url_adapter
     path = path.strip('/')
 
@@ -55,12 +56,29 @@ def get_host_port_mapping(value):
     return host, port, url.scheme
 
 
-def get_base_url_for_controller(controller):
-    subdomain = None
+def get_base_url_for_controller(controller=None):
+    """Get the url root representing the `controller`.
+
+    Examples::
+
+        >>> ctx.cfg['routing.urls.news'] = 'news:/'
+        >>> get_base_url_for_controller('news')
+        u'http://news.inyoka.local:5000/'
+
+        # Support for empty controller name
+        >>> get_base_url_for_controller('')
+        u'http://inyoka.local:5000/'
+        >>> ctx.cfg['routing.urls.news'] = ':/_news'
+        >>> get_base_url_for_controller('news')
+        u'http://inyoka.local:5000/_news/'
+
+    """
+    subdomain, path = None, None
     if not isinstance(controller, basestring):
         controller = controller.name
 
     if controller:
-        subdomain = ctx.cfg['routing.urls.' + controller].split(':', 1)[0]
+        parts = ctx.cfg['routing.urls.' + controller].split(':', 1)
+        subdomain, path = parts
 
-    return make_full_domain(subdomain or u'')
+    return make_full_domain(subdomain or u'', path)

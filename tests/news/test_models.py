@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import datetime
+from urlparse import urljoin
 from inyoka.core.test import *
 from inyoka.core.auth.models import User
 from inyoka.news.models import Article, Tag, Comment
@@ -100,3 +101,36 @@ class TestNewsModels(DatabaseTestCase):
         self.assertEqual(article.text, u'And because you\'re __so__ tschaka baam, you\'re using Ubuntu!!')
         self.assertEqual(article.rendered_text,
             u'<p>And because you&#39;re <span class="underline">so</span> tschaka baam, you&#39;re using Ubuntu!!</p>')
+
+    def test_article_get_url_values(self):
+        article = self.data['Article'][0]
+
+        self.assertEqual(article.get_url_values(),
+            ('news/detail', {'slug': article.slug}))
+        self.assertEqual(article.get_url_values(action='subscribe'),
+            ('news/subscribe_comments',
+            {'slug': article.slug, 'action': 'subscribe'}))
+        self.assertEqual(article.get_url_values(action='unsubscribe'),
+            ('news/subscribe_comments',
+            {'slug': article.slug, 'action': 'unsubscribe'}))
+
+        actions = {'edit': 'admin/news/article_edit',
+                   'delete': 'admin/news/article_delete',
+                   'view': 'news/detail'}
+        for action, expected in actions.iteritems():
+            self.assertEqual(article.get_url_values(action=action),
+                (expected, {'slug': article.slug}))
+
+    def test_comment_get_url_values(self):
+        comment = self.data['Comment'][0]
+
+        self.assertEqual(comment.get_url_values(),
+            ('news/detail', {
+                'slug': comment.article.slug,
+                '_anchor': 'comment_%s' % comment.id}))
+
+        for action in ('hide', 'restore', 'edit'):
+            self.assertEqual(comment.get_url_values(action=action),
+                ('news/edit_comment', {
+                    'id': comment.id,
+                    'action': action}))

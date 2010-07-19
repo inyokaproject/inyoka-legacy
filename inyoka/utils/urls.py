@@ -56,7 +56,11 @@ def get_host_port_mapping(value):
 
 
 def get_base_url_for_controller(controller):
+    subdomain = None
     if not isinstance(controller, basestring):
         controller = controller.name
-    subdomain = ctx.cfg['routing.urls.' + controller].split(':', 1)[0]
-    return make_full_domain(subdomain)
+
+    if controller:
+        subdomain = ctx.cfg['routing.urls.' + controller].split(':', 1)[0]
+
+    return make_full_domain(subdomain or u'')

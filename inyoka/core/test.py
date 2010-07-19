@@ -31,7 +31,8 @@ from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.http import Response, Request, get_bound_request
 from inyoka.utils.logger import logger
-from inyoka.utils.urls import make_full_domain, get_host_port_mapping
+from inyoka.utils.urls import make_full_domain, get_host_port_mapping, \
+    get_base_url_for_controller
 
 
 logger.disabled = True
@@ -375,9 +376,7 @@ class ViewTestCase(DatabaseTestCase):
         self.client = Client(ctx.dispatcher, response_wrapper=TestResponse,
                              use_cookies=True)
         self.base_domain = ctx.cfg['base_domain_name']
-        name = 'test' if self.controller is None else self.controller.name
-        subdomain = ctx.cfg['routing.urls.' + name].split(':', 1)[0]
-        self.base_url = make_full_domain(subdomain)
+        self.base_url = get_base_url_for_controller(self.controller or 'test')
 
     def get_context(self, path, method='GET', **kwargs):
         """

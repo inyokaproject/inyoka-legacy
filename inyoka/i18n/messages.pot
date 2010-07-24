@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-10 23:46+0200\n"
+"POT-Creation-Date: 2010-07-24 22:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
+
+#: inyoka/core/notifications.py:169
+msgid "E-Mail"
+msgstr ""
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -364,7 +368,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: inyoka/forum/models.py:36
+#: inyoka/forum/models.py:37
 msgid "Questions"
 msgstr ""
 
@@ -528,7 +532,7 @@ msgstr ""
 msgid "Articles"
 msgstr ""
 
-#: inyoka/news/models.py:115
+#: inyoka/news/models.py:99
 #, python-format
 msgid "Comment by %s on %s"
 msgstr ""
@@ -748,11 +752,11 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: inyoka/templates/base.html:56
+#: inyoka/templates/base.html:56 inyoka/templates/portal/login.html:7
 msgid "Login"
 msgstr ""
 
-#: inyoka/templates/base.html:56 inyoka/templates/portal/register.html:16
+#: inyoka/templates/base.html:56 inyoka/templates/portal/register.html:22
 msgid "Register"
 msgstr ""
 
@@ -781,6 +785,16 @@ msgstr ""
 
 #: inyoka/templates/forum/ask.html:8
 msgid "Ask a Question"
+msgstr ""
+
+#: inyoka/templates/forum/ask.html:12 inyoka/templates/forum/question.html:120
+#: inyoka/templates/forum/admin/forum.html:11
+#: inyoka/templates/news/edit_comment.html:9
+#: inyoka/templates/news/admin/article_edit.html:16
+#: inyoka/templates/paste/index.html:9 inyoka/templates/paste/admin/edit.html:21
+#: inyoka/templates/portal/admin/tag_edit.html:14
+#: inyoka/templates/usercp/profile.html:9 inyoka/templates/wiki/edit.html:10
+msgid "Submit"
 msgstr ""
 
 #: inyoka/templates/forum/index.html:6
@@ -984,11 +998,11 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: inyoka/templates/news/detail.html:71 inyoka/templates/news/index.html:30
+#: inyoka/templates/news/detail.html:72 inyoka/templates/news/index.html:30
 msgid "subscribe"
 msgstr ""
 
-#: inyoka/templates/news/detail.html:73 inyoka/templates/news/index.html:32
+#: inyoka/templates/news/detail.html:74 inyoka/templates/news/index.html:32
 msgid "unsubscribe"
 msgstr ""
 
@@ -1035,12 +1049,7 @@ msgid "New Article"
 msgstr ""
 
 #: inyoka/templates/news/admin/article_edit.html:18
-#: inyoka/templates/portal/admin/tag_edit.html:14
-msgid "Submit"
-msgstr ""
-
-#: inyoka/templates/news/admin/article_edit.html:19
-#: inyoka/templates/portal/admin/tag_edit.html:15
+#: inyoka/templates/portal/admin/tag_edit.html:16
 msgid "Delete"
 msgstr ""
 
@@ -1244,19 +1253,19 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: inyoka/templates/portal/register.html:8
-#: inyoka/templates/usercp/password.html:15
+#: inyoka/templates/portal/register.html:12
+#: inyoka/templates/usercp/password.html:17
 #, python-format
 msgid "Generated password: <code id=\"random_password\">%(password)s</code> |"
 msgstr ""
 
-#: inyoka/templates/portal/register.html:11
-#: inyoka/templates/usercp/password.html:18
+#: inyoka/templates/portal/register.html:15
+#: inyoka/templates/usercp/password.html:20
 msgid "generate another"
 msgstr ""
 
-#: inyoka/templates/portal/register.html:11
-#: inyoka/templates/usercp/password.html:18
+#: inyoka/templates/portal/register.html:15
+#: inyoka/templates/usercp/password.html:20
 msgid "Generate random password"
 msgstr ""
 
@@ -1299,7 +1308,7 @@ msgid "…or <a href=\"%(link)s\">create a new tag</a>"
 msgstr ""
 
 #: inyoka/templates/usercp/password.html:5
-#: inyoka/templates/usercp/password.html:22
+#: inyoka/templates/usercp/password.html:26
 msgid "Change Password"
 msgstr ""
 
@@ -1386,15 +1395,15 @@ msgid ""
 "ordering"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:52 inyoka/wiki/controllers.py:54
+#: inyoka/wiki/controllers.py:55 inyoka/wiki/controllers.py:57
 msgid "Invalid revision specified."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:85
+#: inyoka/wiki/controllers.py:88
 msgid "Text didn't change."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:96
+#: inyoka/wiki/controllers.py:99
 msgid "The page has been saved."
 msgstr ""
 

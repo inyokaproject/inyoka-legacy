@@ -2,6 +2,7 @@
 {% from 'utils/macros.html' import form_field %}
 {% block content %}
 <form method="post" action="" id="portal_register">
+{{ form_field(form.csrf) }}
   <ol>
     <li class="horiz">{{ form_field(form.username) }}</li>
     <li class="horiz">{{ form_field(form.email) }}</li>

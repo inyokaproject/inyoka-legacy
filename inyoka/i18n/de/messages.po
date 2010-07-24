@@ -817,8 +817,8 @@ msgstr "von"
 #, python-format
 msgid "%(num)d visit"
 msgid_plural "%(num)d visits"
-msgstr[0] "%(num)s mal besucht"
-msgstr[1] "%(num)s mal besucht"
+msgstr[0] "%(num)d mal besucht"
+msgstr[1] "%(num)d mal besucht"
 
 #: inyoka/templates/forum/question.html:18 inyoka/templates/forum/question.html:28
 #: inyoka/templates/forum/question.html:82 inyoka/templates/forum/question.html:92

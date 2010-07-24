@@ -1,5 +1,5 @@
 {%- extends 'admin/base.html' %}
-{% from 'utils/macros.html' import render_fields %}
+{% from 'utils/macros.html' import form_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 
@@ -11,13 +11,13 @@
 {% endif %}
 
 <form method="post" action="" id="admin_edit_article">
-{{ render_fields(form, [form.title, form.intro, form.text,
-                 form.tags, form.author]) }}
-{{ render_fields(form, [form.public, form.csrf], true) }}
-<p class="actions">
-  <input type="submit" value="{{ _('Submit') }}">
-  {% if article.slug %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
-</p>
+  {{ form_fields(form) }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Submit') }}">
+    {% if article.slug -%}
+    <input type="submit" name="delete" value="{{ _('Delete') }}">
+    {%- endif %}
+  </fieldset>
 </form>
 
 {%- endblock %}

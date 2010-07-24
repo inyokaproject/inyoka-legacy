@@ -1,5 +1,5 @@
 {%- extends 'forum/base.html' %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {%- block content %}
 
 <div class="author">{{ _('asked') }} <strong>{{ question.date_created|timedelta }}</strong><br>
@@ -114,6 +114,11 @@
 {{ pagination }}
 
 <h2>{{ _('Your Answer') }}</h2>
-{{ render_form(form, id="forum_new_answer") }}
+<form action="" method="post" id="forum_news_answer">
+  {{ form_fields(form) }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Submit') }}">
+  </fieldset>
+</form>
 
 {%- endblock %}

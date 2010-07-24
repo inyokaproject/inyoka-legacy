@@ -1,8 +1,13 @@
 {%- extends 'paste/base.html' %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {% set tab = 'new' %}
 {%- block paste_content %}
 
-{{ render_form(form, id="paste_new_entry") }}
+<form action="" method="post" id="paste_new_entry">
+  {{ form_fields(form) }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Submit') }}">
+  </fieldset>
+</form>
 
 {%- endblock %}

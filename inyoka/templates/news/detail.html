@@ -1,5 +1,5 @@
 {%- extends 'news/base.html' %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {% set title_trace = [article.title] %}
 
 {% block content %}
@@ -55,7 +55,6 @@
         {%- endif -%}
       </span>
 
-
       <div class="text">
         {{ comment.rendered_text|safe }}
       </div>
@@ -63,9 +62,11 @@
     {%- endfor %}
     </ol>
     <div class="new_comment">
-      {{ render_form(form, id="news_new_comment") }}
+      <form action="" method="post" id="news_new_comment">
+      {{ form_fields(form, true) }}
+      </form>
     </div>
-    {%- endif %}
+    {% endif %}
     <p>
       {% if not request.user.subscribed('news.comments.by_entry', article.id) %}
       <a href="{{ href(article, action='subscribe') }}">{{ _('subscribe') }}</a>

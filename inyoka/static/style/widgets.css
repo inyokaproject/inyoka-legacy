@@ -23,7 +23,8 @@ ul.token-input-list li input {
     width: 100px;
     padding: 3px 8px;
     background-color: white;
-    margin: 2px 0;
+    margin: 2px;
+    margin-bottom: 0px;
 }
  
 li.token-input-token {

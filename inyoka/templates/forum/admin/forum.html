@@ -1,9 +1,14 @@
 {% extends 'admin/base.html' %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 
 {% block admin_content %}
 <h1>{{ _('Create new Forum') }}</h1>
-{{ render_form(form, id="admin_new_forum") }}
+<form action="" method="post" id="admin_new_forum">
+  {{ form_fields(form, class="horiz-left") }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Submit') }}">
+  </fieldset>
+</form>
 {% endblock %}

@@ -19,6 +19,7 @@ To get Inyoka work properly we need those dependencies:
  * mercurial
  * subversion
  * fabric
+ * unzip
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 

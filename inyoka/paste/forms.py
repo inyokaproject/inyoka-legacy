@@ -11,7 +11,7 @@
 from operator import itemgetter
 from pygments.lexers import get_all_lexers
 from inyoka.core.forms import Form, TextField, SelectField, BooleanField, \
-    validators, widgets, IntegerField
+    validators, widgets, IntegerField, HiddenIntegerField
 from inyoka.i18n import _
 
 
@@ -31,7 +31,7 @@ class AddPasteForm(Form):
     text = TextField(_(u'Text'), [validators.Required()],
                      widget=widgets.TextArea())
     language = SelectField(_(u'Language'), choices=_get_pygments_lexers())
-    parent = IntegerField(widget=widgets.HiddenInput())
+    parent = HiddenIntegerField()
 
 
 class EditPasteForm(AddPasteForm):

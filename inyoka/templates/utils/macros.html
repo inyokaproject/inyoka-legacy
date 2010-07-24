@@ -94,7 +94,7 @@
     {% endfor %}
     <ol>
     {% for field in fields %}
-        {% if field.type != 'HiddenField' %}
+        {% if not field.type.startswith('Hidden') %}
             <li{% if class %} class="{{ class }}{% endif %}">{{ form_field(field) }}</li>
         {% endif %}
     {% endfor %}

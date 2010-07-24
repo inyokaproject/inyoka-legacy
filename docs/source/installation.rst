@@ -13,13 +13,18 @@ on the following slides.
 Dependencies and virtual environment
 ====================================
 
-To get Inyoka work properly we need those dependencies:
+To get Inyoka work properly we need those dependencies (with headers):
  * Python (at least 2.6)
  * python-setuptools
  * mercurial
  * subversion
  * fabric
  * unzip
+ * virtualenv
+ * libmemcache
+ * zlib
+ * libxslt
+ * libxml2
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 

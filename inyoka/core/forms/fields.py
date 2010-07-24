@@ -27,6 +27,10 @@ class BooleanField(OrigBooleanField):
             return u'true'
 
 
+class HiddenIntegerField(IntegerField):
+    widget = widgets.HiddenInput()
+
+
 class RecaptchaField(Field):
     widget = widgets.RecaptchaWidget()
 

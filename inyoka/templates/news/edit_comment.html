@@ -1,8 +1,13 @@
 {%- extends 'news/base.html' %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {% block content %}
 <div class="content_sidebar_bk">
   <h2>{{ _('Edit comment') }}</h2>
-  {{ render_form(form, id="news_edit_comment") }}
+  <form action="" method="post" id="news_edit_comment">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
 </div>
 {% endblock %}

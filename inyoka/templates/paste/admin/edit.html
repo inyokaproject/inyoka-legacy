@@ -1,5 +1,5 @@
 {%- extends 'admin/base.html' %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {% set sidebar = false %}
 {% set title_trace = [_('Edit Paste')] %}
 
@@ -15,5 +15,10 @@
         <a href="{{ href('paste/browse', sort='active') }}">{{ _('Browse') }}</a></li>
 </ul>
 
-{{ render_form(form, id="admin_paste_edit") }}
+<form action="" method="post" id="admin_paste_edit">
+  {{ form_fields(form) }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Submit') }}">
+  </fieldset>
+</form>
 {%- endblock %}

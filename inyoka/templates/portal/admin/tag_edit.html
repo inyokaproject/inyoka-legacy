@@ -1,5 +1,5 @@
 {%- extends 'admin/base.html' %}
-{% from 'utils/macros.html' import render_fields %}
+{% from 'utils/macros.html' import form_fields %}
 
 {%- block admin_content %}
 {% if tag.name %}
@@ -9,11 +9,13 @@
 {% endif %}
 
 <form action="" method="post" id="admin_tag_edit">
-{{ render_fields(form) }}
-<p class="actions">
+{{ form_fields(form, class="horiz-left") }}
+<fieldset class="actions">
   <input type="submit" value="{{ _('Submit') }}">
-  {% if tag.name %}<input type="submit" name="delete" value="{{ _('Delete') }}">{% endif %}
-</div>
+  {% if tag.name %}
+  <input type="submit" name="delete" value="{{ _('Delete') }}">
+  {% endif %}
+</fieldset>
 </form>
 
 {%- endblock %}

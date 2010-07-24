@@ -1,7 +1,7 @@
 <form action="{{ href('admin/portal/tag_delete', slug=tag.slug) }}" method="post" id="admin_tag_delete">
   <p>{{ _('Do you really want to delete that tag?') }}</p>
-  <p class="actions">
+  <fieldset class="actions">
     <input type="submit" name="cancel" value="{{ _('No') }}">
     <input type="submit" name="confirm" value="{{ _('Yes') }}">
-  </p>
+  </fieldset>
 </form>

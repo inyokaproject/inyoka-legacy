@@ -1,7 +1,12 @@
 {%- extends 'usercp/base.html' %}
-{%- from 'utils/macros.html' import render_form %}
+{%- from 'utils/macros.html' import form_fields %}
 
 {%- block content %}
 <h1>{{ _('Edit Profile')  }}</h1>
-{{ render_form(form, id="usercp_profile_edit") }}
+<form action="" method="post" id="usercp_profile_edit">
+  {{ form_fields(form, class="horiz-left") }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Submit') }}">
+  </fieldset>
+</form>
 {%- endblock %}

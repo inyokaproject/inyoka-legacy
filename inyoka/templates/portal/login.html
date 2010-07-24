@@ -1,5 +1,10 @@
 {% extends "portal/base.html" %}
-{% from 'utils/macros.html' import render_form %}
+{% from 'utils/macros.html' import form_fields %}
 {% block content %}
-{{ render_form(login_form, id="portal_login") }}
+<form action="" method="post" id="portal_login">
+  {{ form_fields(login_form, class="horiz-left") }}
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Login') }}">
+  </fieldset>
+</form>
 {% endblock content %}

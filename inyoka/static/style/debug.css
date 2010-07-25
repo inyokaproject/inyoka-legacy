@@ -1,54 +1,18 @@
-/* debug stylesheet */
 div#database_debug_table {
-    z-index: 10000;
-    background: #dfe7b6;
-    font-size: 0.9em;
-    padding: 0 10px;
-    margin: 20px 0 0 0;
-    clear: both;
-    border: 1px solid #52170b;
-    font-family: 'Trebuchet MS', sans-serif;
-    font-weight: bold;
-    line-height: 20px;
-    text-align: center;
-    text-decoration: none;
-    color: #000000;
-    opacity: 0.5;
-}
-
-div#database_debug_table ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-family: 'Arial', sans-serif;
-}
-
-div#database_debug_table ul li {
-    margin: 10px 0;
-    padding: 0;
-}
-
-div#database_debug_table ul li div.detail {
-    display: block;
-    text-align: right;
-    margin: 3px 0 0 0;
-}
-
-div#database_debug_table ul li div.detail em {
-    font-style: normal;
-    color: #111;
-}
-
-div#database_debug_table ul li pre {
-    background-color: #f9f6f2;
-    border-top: 1px solid #523a0b;
-    border-bottom: 1px solid #a87818;
-    margin: 0 -10px;
-    padding: 2px 10px;
-    font-family: 'Consolas', 'Deja Vu Mono', 'Bitstream Vera Sans Mono', monospace;
-    font-size: 1em;
-    word-wrap: break-word;
-    text-align: left;
+  background: #dfe7b6;
+  border: 1px solid #52170b;
+  clear: both;
+  color: #000;
+  font-family: 'Trebuchet MS', sans-serif;
+  font-size: .9em;
+  font-weight: 700;
+  line-height: 20px;
+  margin: 20px 0 0;
+  opacity: 0.5px;
+  padding: 0 10px;
+  text-align: center;
+  text-decoration: none;
+  z-index: 10000;
 }
 
 div#database_debug_table a {
@@ -56,8 +20,42 @@ div#database_debug_table a {
 }
 
 div#database_debug_table strong {
-  margin: 0;
-  margin-top: -10px;
+  font-family: Arial, sans-serif;
+  margin: -10px 0 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
+}
+
+div#database_debug_table ul {
+  font-family: Arial, sans-serif;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+div#database_debug_table ul li {
+  margin: 10px 0;
+  padding: 0;
+}
+
+div#database_debug_table ul li div.detail {
+  display: block;
+  margin: 3px 0 0;
+  text-align: right;
+}
+
+div#database_debug_table ul li div.detail em {
+  color: #111;
+  font-style: normal;
+}
+
+div#database_debug_table ul li pre {
+  background-color: #f9f6f2;
+  border-bottom: 1px solid #a87818;
+  border-top: 1px solid #523a0b;
+  font-family: Consolas, 'Deja Vu Mono', 'Bitstream Vera Sans Mono', monospace;
+  font-size: 1em;
+  margin: 0 -10px;
+  padding: 2px 10px;
+  text-align: left;
+  word-wrap: break-word;
 }

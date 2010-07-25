@@ -1,34 +1,35 @@
-#portal .itemlist a {
-  font-size: 0.9em;
-  display: block;
-  color: #777;
-  text-decoration: none;
-  border-bottom: 1px solid #ac9471;
-  margin-bottom: 5px;
-}
-
-#portal .itemlist a:hover {
-  color: #000;
+#portal #last {
+  margin-right: 0;
 }
 
 #portal .column {
   float: left;
-  width: 280px;
   margin-right: 20px;
-}
-
-#portal #last {
-  margin-right: 0;
+  width: 280px;
 }
 
 #portal .column .block {
   margin-bottom: 30px;
 }
 
+#portal .itemlist a {
+  border-bottom: 1px solid #ac9471;
+  color: #777;
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+  text-decoration: none;
+}
+
+#portal .itemlist a:hover,
+.tagcloud a:hover {
+  color: #000;
+}
+
 #portal h2 {
+  border-bottom: #333 solid 1px;
   margin-bottom: 10px;
   padding-bottom: 5px;
-  border-bottom: #333 solid 1px;
 }
 
 #portal h3 {
@@ -45,15 +46,11 @@
 }
 
 .tagcloud {
-  white-space: normal;
   text-align: justify;
+  white-space: normal;
 }
 
 .tagcloud a.tag {
   color: #777;
   text-decoration: none;
-}
-
-.tagcloud a:hover {
-  color: #000;
 }

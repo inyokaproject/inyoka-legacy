@@ -1,96 +1,16 @@
 /* News styles */
-
 div.article {
-    background-color: #fff;
-    padding: 0.3em;
-    margin-bottom: 1.5em;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  background-color: #fff;
+  margin-bottom: 1.5em;
+  padding: 0.3em;
 }
-
-div.article h1, div.article h2, div.article h3,
-div.article h4, div.article h5, div.article h6 {
-  color: #fcb423;
-}
-
-
-div.article .title a {
-  text-decoration: none;
-  color: #a87818;
-}
-
-div.article .title a:hover {
-  color: #fc4823;
-}
-
-p.meta {
-  border-left: 10px solid #ddd;
-  border-top: 1px dotted #ddd;
-  color: #888;
-  font-size: 0.9em;
-  padding: 0.2em 0 0.2em 1em;
-  margin-bottom: 0.8em;
-  width: 80%
-}
-
-p.meta .published, p.meta .tags, p.meta .comments,
-p.meta .visits, p.meta .admin {
-  padding-left: 20px;
-  margin-right: 20px;
-}
-
-p.meta .published {
-  background: url(../img/calendar.gif) left top no-repeat;
-}
-
-p.meta .tags {
-  background: url(../img/tag.gif) left top no-repeat;
-}
-
-p.meta .comments {
-  background: url(../img/comments.gif) left top no-repeat;
-}
-
-span.description {
-  display: block;
-  padding: 0.5em;
-  margin-top: 2em;
-  text-align: center;
-  background-color: #eee;
-  letter-spacing: 0.2em;
-  text-decoration: none;
-  color: #444;
-  border-top: 1px solid #ccc;
-  font-weight: bold;
-}
-
 
 div.article .comments {
-  padding-bottom: 18px;
   list-style: none;
   margin: 0;
-}
-
-div.article .comments h2 {
-  color: #999;
-}
-
-div.article .comments li {
-  border-bottom: 1px dotted #ccc;
-  padding: 14px 0 12px 98px;
-  margin-bottom: 6px;
-  min-height: 94px;
-  position: relative;
-}
-
-div.article .comments img.avatar {
-  background: #ccc;
-  border: 1px solid #444;
-  left: 0;
-  padding: 8px;
-  position: absolute;
-  top: 16px;
-  width: 60px; height: 60px;
+  padding-bottom: 18px;
 }
 
 div.article .comments .comment_author {
@@ -102,7 +22,86 @@ div.article .comments .comment_author {
 
 div.article .comments .meta {
   color: #6f6f6f;
+  display: block;
   font-size: .8em;
   margin-bottom: 6px;
+}
+
+div.article .comments h2 {
+  color: #999;
+}
+
+div.article .comments img.avatar {
+  background: #ccc;
+  border: 1px solid #444;
+  height: 60px;
+  left: 0;
+  padding: 8px;
+  position: absolute;
+  top: 16px;
+  width: 60px;
+}
+
+div.article .comments li {
+  border-bottom: 1px dotted #ccc;
+  margin-bottom: 6px;
+  min-height: 94px;
+  padding: 14px 0 12px 98px;
+  position: relative;
+}
+
+div.article .title a {
+  color: #a87818;
+  text-decoration: none;
+}
+
+div.article .title a:hover {
+  color: #fc4823;
+}
+
+div.article h1, div.article h2, div.article h3,
+div.article h4, div.article h5, div.article h6 {
+  color: #fcb423;
+}
+
+p.meta {
+  border-left: 10px solid #ddd;
+  border-top: 1px dotted #ddd;
+  color: #888;
+  font-size: 0.9em;
+  margin-bottom: 0.8em;
+  padding: 0.2em 0 0.2em 1em;
+  width: 80%;
+}
+
+p.meta .comments {
+  background: url(../img/comments.gif) left top no-repeat;
+}
+
+p.meta .published {
+  background: url(../img/calendar.gif) left top no-repeat;
+}
+
+p.meta .published, p.meta .tags,
+p.meta .comments, p.meta .visits,
+p.meta .admin {
+  margin-right: 20px;
+  padding-left: 20px;
+}
+
+p.meta .tags {
+  background: url(../img/tag.gif) left top no-repeat;
+}
+
+span.description {
+  background-color: #eee;
+  border-top: 1px solid #ccc;
+  color: #444;
   display: block;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  margin-top: 2em;
+  padding: 0.5em;
+  text-align: center;
+  text-decoration: none;
 }

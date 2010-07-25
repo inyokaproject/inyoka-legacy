@@ -1,38 +1,38 @@
 div.usercp_control ul {
+  border: none;
   list-style: none;
   text-align: center;
-  border: none;
 }
 
 div.usercp_control ul li {
-  display: inline;
   display: inline-block;
 }
 
-div.usercp_control ul li span {
-  text-align: center;
-  display: table-cell;
-  border: 1px dotted #E3D6C4;
-  padding: 0;
-}
-
-div.usercp_control ul li span a {
-  width: 250px;
-  height: 150px;
-  padding: 5px 10px 0 10px;
-  display: block;
-  text-decoration: none;
-  color: #888;
+/* Some additional features for non ie users */
+div.usercp_control ul li a img {
+  opacity: 0.6px;
 }
 
 div.usercp_control ul li a:hover {
   color: #444;
 }
 
-/* Some additional features for non ie users */
-div.usercp_control ul li a img {
-  opacity: 0.6;
-}
 div.usercp_control ul li a:hover img {
-  opacity: 1;
+  opacity: 1px;
+}
+
+div.usercp_control ul li span {
+  border: 1px dotted #E3D6C4;
+  display: table-cell;
+  padding: 0;
+  text-align: center;
+}
+
+div.usercp_control ul li span a {
+  color: #888;
+  display: block;
+  height: 150px;
+  padding: 5px 10px 0;
+  text-decoration: none;
+  width: 250px;
 }

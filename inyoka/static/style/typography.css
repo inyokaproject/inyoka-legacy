@@ -1,108 +1,38 @@
-/* Typography */
-
-body {
-  font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
+.bottom {
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
-h1, h2, h3 {
-  color: #304800;
-  margin-bottom: .5em;
+.center {
+  text-align: center;
 }
 
-
-h2 {
-    color: #90A818;
-}
-
-h2 a {
-    color: #90A818;
-    text-decoration: none;
-}
-
-h2 a:hover, h2 a:focus {
-    text-decoration: underline;
-}
-
-p {
-    margin: .5em 0;
-}
-
-strong, th, thead td, h1, h2, h3, h4, h5, h6 {
-  font-weight: bold;
-  font-family: 'DejaVu Serif', serif;
-  letter-spacing: 0.05em;
-}
-
-cite, em, dfn {
-  font-style: italic;
-}
-
-code, kbd, samp, pre, tt, var,
-input[type='text'], input[type='password'], textarea {
-  font-size: 0.8em;
-  font-family: monaco, "Lucida Console", courier, monospace;
-}
-
-del {
-  text-decoration: line-through;
-  color: #666;
-}
-
-ins, dfn {
-  border-bottom: 1px solid #ccc;
-}
-
-small, sup, sub {
-  font-size: 0.8em;
-}
-
-abbr, acronym {
-  text-transform: uppercase;
-  font-size: 0.8em;
-  letter-spacing: .1em;
-}
-
-a abbr, a acronym {
-  border: none;
-}
-
-abbr[title], acronym[title], dfn[title] {
-  cursor: help;
-  border-bottom: 1px solid #ccc;
-}
-
-ol {
-	list-style: decimal;
-}
-
-ul {
-	list-style: disc;
-	margin-left: 2em;
-}
-
-a {
-  color: #304800;
-}
-
-a:hover, a:focus {
-  color: #909d00;
-}
-
-ul.errors {
-  list-style: none;
-  margin: 0.5em 0;
-  padding: 0.3em;
+.error {
   background: #FBE3E4;
+  border-color: #FBC2C4;
   color: #8a1f11;
-  border: #FBC2C4 2px solid;
 }
 
+.error a {
+  background: none;
+  color: #8a1f11;
+  margin: 0;
+  padding: 0;
+}
 
-/* Various text style classes */
-.small {
-  font-size: .8em;
-  margin-bottom: 1.8em;
-  line-height: 1.8em;
+.error, .notice, .success {
+  border: 2px solid #ddd;
+  display: inline-block;
+  margin-bottom: 1.6em;
+  padding: .5em;
+}
+
+.hide {
+  display: none;
+}
+
+.highlight {
+  background: #ff0;
 }
 
 .large {
@@ -111,20 +41,49 @@ ul.errors {
   margin-bottom: 1.25em;
 }
 
-.hide {
-  display: none;
+.loud {
+  color: #000;
+}
+
+.notice {
+  background: #FFF6BF;
+  border-color: #FFD324;
+  color: #514721;
+}
+
+.notice a {
+  background: none;
+  color: #514721;
+  margin: 0;
+  padding: 0;
 }
 
 .quiet {
   color: #666;
 }
 
-.loud {
-  color: #000;
+/* Various text style classes */
+.small {
+  font-size: .8em;
+  line-height: 1.8em;
+  margin-bottom: 1.8em;
 }
 
-.highlight {
-  background: #ff0;
+.success {
+  background: #E6EFC2;
+  border-color: #C6D880;
+  color: #264409;
+}
+
+.success a {
+  background: none;
+  color: #264409;
+  margin: 0;
+  padding: 0;
+}
+
+.thin {
+  font-weight: lighter;
 }
 
 .top {
@@ -132,61 +91,99 @@ ul.errors {
   padding-top: 0;
 }
 
-.bottom {
-  margin-bottom: 0;
-  padding-bottom: 0;
+a {
+  color: #304800;
 }
 
-.thin {
-  font-weight: lighter;
+a abbr, a acronym {
+  border: none;
 }
 
-.error, .notice, .success {
-  display: inline-block;
-  padding: .5em;
-  margin-bottom: 1.6em;
-  border: 2px solid #ddd;
+a:hover, a:focus {
+  color: #909d00;
 }
 
-.error {
+abbr, acronym {
+  font-size: 0.8em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+abbr[title], acronym[title], dfn[title] {
+  border-bottom: 1px solid #ccc;
+  cursor: help;
+}
+
+/* Typography */
+body {
+  font-family: 'Bitstream Vera Sans', 'DejaVu Sans', 'Verdana', sans-serif;
+}
+
+cite, em, dfn {
+  font-style: italic;
+}
+
+code, kbd, samp, pre, tt, var,
+input[type='text'], input[type='password'], textarea {
+  font-family: monaco, "Lucida Console", courier, monospace;
+  font-size: 0.8em;
+}
+
+del {
+  color: #666;
+  text-decoration: line-through;
+}
+
+h1, h2, h3 {
+  color: #304800;
+  margin-bottom: .5em;
+}
+
+h2 {
+  color: #90A818;
+}
+
+h2 a {
+  color: #90A818;
+  text-decoration: none;
+}
+
+h2 a:hover, h2 a:focus {
+  text-decoration: underline;
+}
+
+ins, dfn {
+  border-bottom: 1px solid #ccc;
+}
+
+ol {
+  list-style: decimal;
+}
+
+p {
+  margin: .5em 0;
+}
+
+small, sup, sub {
+  font-size: 0.8em;
+}
+
+strong, th, thead td, h1, h2, h3, h4, h5, h6 {
+  font-family: 'DejaVu Serif', serif;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+ul {
+  list-style: disc;
+  margin-left: 2em;
+}
+
+ul.errors {
   background: #FBE3E4;
+  border: #FBC2C4 2px solid;
   color: #8a1f11;
-  border-color: #FBC2C4;
-}
-
-.notice {
-  background: #FFF6BF;
-  color: #514721;
-  border-color: #FFD324;
-}
-
-.success {
-  background: #E6EFC2;
-  color: #264409;
-  border-color: #C6D880;
-}
-
-.error a {
-  color: #8a1f11;
-  background: none;
-  padding: 0;
-  margin: 0;
-}
-
-.notice a {
-  color: #514721;
-  background: none;
-  padding: 0;
-  margin: 0;
-}
-
-.success a {
-  color: #264409;
-  background: none;
-  padding: 0;
-  margin: 0;
-}
-
-.center {
-  text-align: center;
+  list-style: none;
+  margin: 0.5em 0;
+  padding: 0.3em;
 }

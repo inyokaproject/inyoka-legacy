@@ -1,97 +1,95 @@
 table.diff {
-    width: 100%;
-    border: 2px solid #ccc;
-    border-collapse: collapse;
-    empty-cells: show;
-    margin: 0;
+  border: 2px solid #ccc;
+  border-collapse: collapse;
+  empty-cells: show;
+  margin: 0;
+  width: 100%;
 }
 
 table.diff th.old_rev,
 table.diff th.new_rev {
-    width: 2em;
+  width: 2em;
+}
+
+table.diff th:target + td.code,
+table.diff th:target + th + td.code {
+  background: #ffffbe !important;
+}
+
+table.diff tr.add td.code {
+  background-color: #dfd;
+}
+
+table.diff tr.add td.code ins {
+  background-color: #9e9;
+  text-decoration: none;
+}
+
+table.diff tr.del td.code {
+  background-color: #fcc;
+}
+
+table.diff tr.del td.code del {
+  background-color: #e99;
+  text-decoration: none;
+}
+
+table.diff tr.ellipsis th {
+  background-color: #dfdfdf;
+  border: 1px solid #ccc;
+}
+
+table.diff tr.line td.code {
+  border: 1px solid #ddd;
+  font-family: monospace;
+  font-size: 13px;
+  padding: 0.1em 0.4em;
+  white-space: pre-wrap;
 }
 
 table.diff tr.line th.old_rev,
 table.diff tr.line th.new_rev {
-    padding: 0.2em 0.5em 0.2em 0;
-    text-align: right;
-    font-weight: normal;
-    font-size: 0.9em;
-    background-color: #eee;
-    color: #444;
-    border: 1px solid #ccc;
-    vertical-align: top;
-}
-
-table.diff tr.ellipsis th {
-    border: 1px solid #ccc;
-    background-color: #dfdfdf;
-}
-
-table.diff tr.line td.code {
-    padding: 0.1em 0.4em 0.1em 0.4em;
-    font-family: monospace;
-    font-size: 13px;
-    border: 1px solid #ddd;
-    white-space: -moz-pre-wrap;
-    white-space: -o-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: pre-wrap;
-}
-
-table.diff tr.add td.code {
-    background-color: #dfd;
-}
-
-table.diff tr.del td.code {
-    background-color: #fcc;
-}
-
-table.diff tr.add td.code ins {
-    background-color: #9e9;
-    text-decoration: none;
-}
-
-table.diff tr.del td.code del {
-    background-color: #e99;
-    text-decoration: none;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  color: #444;
+  font-size: 0.9em;
+  font-weight: normal;
+  padding: 0.2em 0.5em 0.2em 0;
+  text-align: right;
+  vertical-align: top;
 }
 
 table.diff tr.unmod {
   background-color: #fff;
 }
 
-table.diff th:target + td.code, table.diff th:target + th + td.code {
-  background: #ffffbe !important;
-}
-
 ul.revision_tree {
-    margin: 0 0 0 20px;
-    padding: 0;
+  margin: 0 0 0 20px;
+  padding: 0;
 }
 
 ul.revision_tree li {
-    padding: 0;
+  padding: 0;
 }
 
 ul.revision_tree li.highlighted {
-    background-color: #eee;
-}
-
-ul.revision_tree li.highlighted ul {
-    background-color: white;
+  background-color: #eee;
 }
 
 ul.revision_tree li.highlighted > a {
-    font-weight: bold;
+  font-weight: bold;
+}
+
+ul.revision_tree li.highlighted ul {
+  background-color: #FFF;
 }
 
 ul.revision_tree ul {
-    padding: 0 0 0 24px;
-    margin: 0;
+  margin: 0;
+  padding: 0 0 0 24px;
 }
 
 ul.revision_tree,
 ul.revision_tree ul {
-    list-style: circle;
+  list-style: circle;
 }

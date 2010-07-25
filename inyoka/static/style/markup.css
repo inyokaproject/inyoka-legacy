@@ -1,10 +1,11 @@
-:link.missing, :visited.missing {
-  color: #999 !important;
-  /* !important is needed to overwrite default :visited style */
+.image-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-span.underline {
-  text-decoration: underline;
+.image-left {
+  float: left;
 }
 
 .image-left, .image-right, .image-center {
@@ -15,23 +16,17 @@ span.underline {
   float: right;
 }
 
-.image-left {
-  float: left;
-}
-
-.image-center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+:link.missing, :visited.missing {
+  color: #999 !important;
 }
 
 div.bash {
-  color: white;
-  font-family: monospace;
   background-color: #454545;
   border: 1px solid #666;
-  margin: 0.3em 1em;
   clear: none;
+  color: #FFF;
+  font-family: monospace;
+  margin: 0.3em 1em;
   overflow: auto;
 }
 
@@ -43,13 +38,11 @@ div.bash pre {
 }
 
 /* Boxes of page templates */
-
 div.box {
-  clear: both;
-  margin: 0.5em 0em;
-  border: 1px solid #bbb;
   -moz-border-radius: 5px;
+  border: 1px solid #bbb;
   clear: none;
+  margin: 0.5em 0;
   overflow: auto;
 }
 
@@ -58,13 +51,23 @@ div.box div.contents {
 }
 
 div.box h3 {
-  margin: 0;
+  -moz-border-radius: 3px 3px 0 0;
+  background-color: #bbb;
+  color: #FFF;
   font-size: 0.9em;
   font-weight: bold;
-  color: white;
-  background-color: #bbb;
+  margin: 0;
   padding: 0 1em;
-  -moz-border-radius: 3px 3px 0px 0px;
+}
+
+div.edited {
+  border: 1px solid #597A00;
+  font-size: 0.8em;
+  padding: 0.4em;
+}
+
+div.edited strong {
+  color: #597A00;
 }
 
 div.left {
@@ -75,21 +78,10 @@ div.left h3 {
   background-color: #3E6E58;
 }
 
-
-h1:hover *, h2:hover *, h3:hover *, h4:hover *, h5:hover *, h6:hover * {
-  display: inline;
-}
-
-div.edited {
-  border: 1px solid #597A00;
-  padding: 0.4em;
-  font-size: 0.8em;
-}
-
 div.moderated {
-  border: 1px solid #cc7777;
-  padding: 0.4em;
+  border: 1px solid #c77;
   font-size: 0.8em;
+  padding: 0.4em;
 }
 
 div.moderated p, div.edited p {
@@ -97,13 +89,18 @@ div.moderated p, div.edited p {
 }
 
 div.moderated strong {
-  color: #aa3333;
+  color: #a33;
 }
 
-div.edited strong {
-  color: #597A00;
+h1:hover *, h2:hover *, h3:hover *,
+h4:hover *, h5:hover *, h6:hover * {
+  display: inline;
 }
 
 pre {
   padding: 0.5em;
+}
+
+span.underline {
+  text-decoration: underline;
 }

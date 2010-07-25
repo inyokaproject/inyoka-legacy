@@ -1,27 +1,28 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy_schemadisplay import create_uml_graph
+from sqlalchemy_schemadisplay import create_uml_graph, create_schema_graph
 from sqlalchemy.orm import class_mapper
-from inyoka.core import models as core_models
-from inyoka.core.auth import models as auth_models
-from inyoka.news import models as news_models
-from inyoka.paste import models as paste_models
-from inyoka import news, paste, forum, wiki, portal
+from sqlalchemy.orm.exc import UnmappedClassError
+from inyoka.core.api import db, ctx
+from inyoka.utils import flatten_iterator
 
-
-models = [paste_models, news_models, core_models, auth_models]
+models = list(flatten_iterator(x.models for x in ctx.get_implementations(db.ISchemaController, instances=True)))
 
 # lets find all the mappers in our model
-mappers = [class_mapper(auth_models.User)]
+mappers = []
+tables = []
 for model in models:
-    for cls in (getattr(model, attr) for attr in dir(model) if attr[0] != '_'):
-        try:
-            mappers.append(class_mapper(cls))
-        except:
-            pass
+    try:
+        mappers.append(class_mapper(model))
+        tables.extend(mappers[-1].tables)
+    except UnmappedClassError:
+        continue
 
 # pass them to the function and set some formatting options
-graph = create_uml_graph(mappers,
+uml = create_uml_graph(mappers,
     show_operations=False, # not necessary in this case
     show_multiplicity_one=False # some people like to see the ones, some don't
 )
-graph.write_png('schema.png') # write out the file
+uml.write_png('uml.png') # write out the file
+
+schema = create_schema_graph(list(set(tables)))
+schema.write_png('schema.png')

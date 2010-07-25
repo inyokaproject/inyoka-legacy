@@ -4,11 +4,13 @@ from sqlalchemy.orm.properties import PropertyLoader
 from sqlalchemy.orm import sync
 import pydot
 import types
+from inyoka.core.api import db
+
 
 __all__ = ['create_uml_graph', 'create_schema_graph', 'show_uml_graph', 'show_schema_graph']
 
 def _mk_label(mapper, show_operations, show_attributes, show_datatypes, bordersize):
-    html = '<<TABLE CELLSPACING="0" CELLPADDING="1" BORDER="0" CELLBORDER="%d" BALIGN="LEFT"><TR><TD><FONT POINT-SIZE="10">%s</FONT></TD></TR>' % (bordersize, mapper.class_.__name__)
+    html = '<<TABLE CELLSPACING="0" CELLPADDING="1" BORDER="0" CELLBORDER="%d" ALIGN="LEFT"><TR><TD><FONT POINT-SIZE="10">%s</FONT></TD></TR>' % (bordersize, mapper.class_.__name__)
     def format_col(col):
         colstr = '+%s' % (col.name)
         if show_datatypes:
@@ -93,14 +95,9 @@ from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy import Table, text
 
 def _render_table_html(table, metadata, show_indexes, show_datatypes):
-    def format_col_type(col):
-        try:
-            return col.type.get_col_spec()
-        except NotImplementedError:
-            return str(col.type)
     def format_col_str(col):
         if show_datatypes:
-            return "- %s : %s" % (col.name, format_col_type(col))
+            return "- %s : %s" % (col.name, col)
         else:
             return "- %s" % col.name
     html = '<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0"><TR><TD ALIGN="CENTER">%s</TD></TR><TR><TD BORDER="1" CELLPADDING="0"></TD></TR>' % table.name

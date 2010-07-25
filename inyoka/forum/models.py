@@ -295,6 +295,7 @@ class VoteQuery(db.Query):
                           .filter(db.and_(Vote.user_id==user_id,
                                           Vote.entry_id.in_(entry_ids)))
             ))
+            return user_votes
         else:
             return {}
 

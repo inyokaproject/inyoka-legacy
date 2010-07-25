@@ -61,8 +61,8 @@ class Forum(db.Model, SerializableObject):
     name = db.Column(db.String(80), nullable=False)
     slug = db.Column(db.String(80), unique=True, index=True)
     description = db.Column(db.String(200), nullable=False, default=u'')
-    parent_id = db.Column(db.Integer, db.ForeignKey('%s.id' % __tablename__),
-            nullable=True, index=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey(id), nullable=True,
+            index=True)
     position = db.Column(db.Integer, nullable=False, default=0,
             index=True)
 

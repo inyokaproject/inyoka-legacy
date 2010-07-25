@@ -69,9 +69,6 @@ def main():
                     f.close()
                 catalog.update(template)
 
-                # XXX: this is kinda dangerous, but as we are using a
-                # revision control system anyways that shouldn't make
-                # too many problems
                 f = file(filename, 'w')
                 try:
                     write_po(f, catalog, ignore_obsolete=True,

@@ -256,7 +256,7 @@ class FixtureLoader(object):
                     if isinstance(cls, basestring) and cls not in skip_keys:
                         cls = self.get_cls(cls)
                     new_data[cls.__name__] = self.add_clses(cls, items)
-                if not 'nocommit' in group:
+                if 'nocommit' not in group:
                     session.commit()
         except Exception:
             self.log_error(sys.exc_info()[2], data, cls, item)
@@ -555,7 +555,7 @@ class InyokaPlugin(cover.Coverage):
     def wantClass(self, cls):
         """Check if we can use a `cls` for unittest purposes.  This adds
         `ViewTestCase` to the list of possible unittest interfaces."""
-        if issubclass(cls, (DatabaseTestCase, ViewTestCase)) and not cls is ViewTestCase:
+        if issubclass(cls, (DatabaseTestCase, ViewTestCase)) and cls is not ViewTestCase:
             return True
         elif cls is ViewTestCase:
             return False

@@ -7,9 +7,9 @@
     MoinMoin wiki engine and some other diff/udiff stuff.
 
 
-    :copyright: Copyright 2007-2008 by Armin Ronacher, Florian Festi, Christopher Grebs.
-                Copyright 2010 by the Inyoka Team, see AUTHORS for more details.
-    :license: GNU GPL.
+    :copyright: 2007-2008 by Armin Ronacher, Florian Festi, Christopher Grebs.
+                2010 by the Inyoka Team, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
 """
 import re
 import heapq

@@ -98,7 +98,7 @@ def _import_modules(modules, ignore_modules=None):
         else:
             try:
                 for mod in find_modules(module[:-2], True, True):
-                    if not mod in ignore_modules:
+                    if mod not in ignore_modules:
                         yield import_string(mod)
                 # find_modules does import our package, but doesn't yield it
                 # hence we import it ourself.

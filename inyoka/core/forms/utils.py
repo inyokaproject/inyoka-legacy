@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.forms.utils
-    ~~~~~~~~~~~~~~~~~~
+    inyoka.core.forms.utils
+    ~~~~~~~~~~~~~~~~~~~~~~~
 
     Various utilities for form validation.
 

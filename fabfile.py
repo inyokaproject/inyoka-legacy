@@ -161,10 +161,9 @@ def celeryd():
     """
     Start a celery worker, using our config.
     """
-    # the inyoka celery loader is temporarily deactivated until we have worked
-    # over our import system.
-    local('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" celeryd --loglevel=INFO', capture=False)
-    #local('CELERY_LOADER="celery.loaders.default.Loader" celeryd --loglevel=INFO', capture=False)
+    cmd = ('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader"'
+           'celeryd --loglevel=INFO')
+    local(cmd, capture=False)
 
 
 def build_docs(clean='no', browse='no', builder='html'):
@@ -280,5 +279,10 @@ def lsdns(basedomain=None):
     if basedomain is not None:
         ctx.cfg['base_domain_name'] = basedomain
 
-    print u' '.join((sub +'.' if sub else sub) + splitport(ctx.dispatcher.url_adapter.server_name)[0] for sub in sorted(set(rule.subdomain for rule in ctx.dispatcher.url_map.iter_rules())))
+    print u' '.join(((sub +'.' if sub else sub) +
+                     splitport(ctx.dispatcher.url_adapter.server_name)[0])
+        for sub in sorted(set(rule.subdomain
+            for rule in ctx.dispatcher.url_map.iter_rules()))
+    )
+
     ctx.cfg['base_domain_name'] = _old

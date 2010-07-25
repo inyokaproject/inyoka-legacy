@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    inyoka.forms.fields
-    ~~~~~~~~~~~~~~~~~~~
+    inyoka.core.forms.fields
+    ~~~~~~~~~~~~~~~~~~~~~~~~
 
     Form fields based on WTForms.
 

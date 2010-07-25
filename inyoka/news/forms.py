@@ -20,8 +20,8 @@ class EditArticleForm(Form):
     intro = TextField(_(u'Intro'), [validators.Required()], widget=widgets.TextArea())
     text = TextField(_(u'Text'), [validators.Required()], widget=widgets.TextArea())
     public = BooleanField(_(u'Published'))
-    tags = AutocompleteField(_(u'Tags'), query_factory=lambda: Tag.query.autoflush(False),
-                             get_label='name')
+    tags = AutocompleteField(_(u'Tags'), get_label='name',
+                             query_factory=lambda: Tag.query.autoflush(False))
     author = QuerySelectField(_(u'Author'), [validators.Required()],
                              query_factory=lambda: User.query.autoflush(False),
                              widget=widgets.Select())

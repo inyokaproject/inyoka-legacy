@@ -13,7 +13,6 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from inyoka.core.auth.models import User
 from inyoka.core.database import db
 from inyoka.core.subscriptions import SubscriptionType, SubscriptionAction
-from inyoka.utils.datastructures import _missing
 
 
 def _create_subscriptionunreadobjects_by_object_id(id):
@@ -190,7 +189,7 @@ class Subscription(db.Model):
         return True
 
     @staticmethod
-    def unsubscribe(user_or_subscription, type_=_missing, subject=None):
+    def unsubscribe(user_or_subscription, type_=None, subject=None):
         """
         Safely unsubscribe a user from a subject.
         Returns False if the Subscription did not exist, else True.
@@ -206,7 +205,7 @@ class Subscription(db.Model):
                         if the type has not ``subject_type``.
         """
         if isinstance(user_or_subscription, Subscription):
-            assert type_ is _missing and subject is None
+            assert type_ is None and subject is None
             db.session.delete(user_or_subscription)
             db.session.commit()
             return True

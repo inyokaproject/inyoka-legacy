@@ -111,6 +111,10 @@ class TokenStream(object):
                     stream.  Although the stream object won't stop you
                     from doing so, the behavior is undefined.  Multiple
                     pushed tokens are only used internally!
+
+    The token stream is pickleable.  But note that if you pickle a stream, you
+    get the exact copy after loading it but the original stream is lost
+    since all items are rolled out.  This may be time-consuming on huge collections.
     """
 
     def __init__(self, generator):
@@ -127,17 +131,31 @@ class TokenStream(object):
     def __iter__(self):
         return TokenStreamIterator(self)
 
+    def __getstate__(self):
+        current = self.current
+        pushed = self._pushed
+        return {'items': list(self), 'current': current,
+                'pushed': pushed}
+
+    def __setstate__(self, d):
+        self._next = iter(d['items']).next
+        self._pushed = d['pushed']
+        self.current = Token('initial', '')
+        while self.current != d['current']:
+            self.next()
+
     @property
     def eof(self):
         """Are we at the end of the tokenstream?"""
         return not bool(self._pushed) and self.current.type == 'eof'
 
-    def debug(self, stream=None):
+    def debug(self, stream=None): #pragma: no cover
         """Displays the tokenized code on the stream provided or stdout."""
         if stream is None:
             stream = sys.stdout
         for token in self:
             stream.write(repr(token) + '\n')
+            stream.flush()
 
     def look(self):
         """See what's the next token."""

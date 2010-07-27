@@ -138,6 +138,26 @@
   color: #001800;
 }
 
+#page-sidebar div {
+  background-color: #EEEEEE;
+  margin-bottom: 0.4em;
+  padding: 0.5em 0.5em 0.5em 28px;
+  -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em;
+}
+
+#page-sidebar ul {
+  color:#222222;
+  list-style:disc outside url(../img/bullet.gif);
+  margin:0 0 0 1.3em;
+  padding:0;
+}
+
+#page-sidebar #download {
+  background-color: #304800;
+  color: #fff;
+}
+
 #page-navbar {
   background-color: #fff;
   color: #001800;

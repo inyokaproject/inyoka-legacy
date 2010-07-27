@@ -89,7 +89,12 @@ def _is_interface(value):
 
 
 def _import_modules(modules, ignore_modules=None):
-    """Import the components to setup the metaclass magic."""
+    """Import the components to setup the metaclass magic.
+
+    :param modules: A list of strings defining either packages or modules.
+                    You can use star-magic to setup packages recursivly.
+    :param ignore_modules: Modules to ignore if they are specified in `modules`
+    """
     ignore_modules = ignore_modules or []
     for module in modules:
         # No star at the end means a package/module/class but nothing below.
@@ -103,7 +108,7 @@ def _import_modules(modules, ignore_modules=None):
                 # find_modules does import our package, but doesn't yield it
                 # hence we import it ourself.
                 yield import_string(module[:-2])
-            except ValueError: #pragma: no cover
+            except ValueError:
                 # module is a module and not a package
                 yield import_string(module[:-2])
 

@@ -53,10 +53,10 @@ def test_component_is_activated():
     assert_true(ctx.component_is_activated(Implementation2,
                                 ['tests.core.test_components.Implementation1']))
 
-    eq_(ctx.load_packages(['tests.core.test_components.*'], ['tests.core.*']),
+    eq_(ctx.load_packages(['tests.core.test_components'], ['tests.core.*']),
                           set([]))
 
-    eq_(ctx.load_packages(['tests.core.test_components.*'],
+    eq_(ctx.load_packages(['tests.core.test_components'],
                           ['tests.core.test_components.Implementation1']),
                           set([Implementation2,Implementation3]))
 
@@ -83,6 +83,9 @@ def test_unload_components():
     ctx.unload_components(_comps)
     for comp in _comps:
         assert_false(comp in InterfaceMeta._registry)
+
+    # test that we fail silently if a component is not loaded
+    ctx.unload_components(_comps)
 
 
 def test_components():
@@ -125,7 +128,7 @@ def test_import_modules():
     # star import to definite modules not packages
     # we assert here to import the module rather than to raise a ValueError
     # as werkzeug's find_modules would do.
-    list(_import_modules(('werkzeug._internal',)))
+    list(_import_modules(('werkzeug._internal.*',)))
 
 
 def test_automatical_config_creation():

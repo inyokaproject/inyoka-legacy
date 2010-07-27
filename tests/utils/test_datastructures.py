@@ -9,7 +9,9 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import cPickle as pickle
+import copy
 from operator import itemgetter
+from itertools import imap
 from inyoka.core.test import *
 from inyoka.utils.datastructures import BidiMap, OrderedDict, TokenStream, \
     TokenStreamIterator, Token
@@ -104,6 +106,19 @@ def test_tokenstream():
     assert_equals(s.current, Token('b', 2))
 
 
+def test_tokenstream_picklable():
+    import pickle
+    s = TokenStream(iter((Token('a', 1), Token('b', 2), Token('c', 3))))
+    assert_equals(s.current, Token('a', 1))
+    s.next()
+    assert_equals(s.current, Token('b', 2))
+    dumped = pickle.dumps(s)
+    loaded = pickle.loads(dumped)
+    assert_equals(loaded.current, Token('b', 2))
+    loaded.next()
+    assert_equals(loaded.current, Token('c', 3))
+
+
 def test_ordereddict():
     # test dict inheritance
     d = OrderedDict()
@@ -152,10 +167,16 @@ def test_ordereddict():
     assert_true(isinstance(loaded, OrderedDict))
     assert_equals(loaded, d)
 
-    # keys, values, items
+    # keys, values, items, itervalues
     assert_equals(d.keys(), ['a', 'b', 'c', 'd'])
     assert_equals(d.values(), [1, 2, 3, 4])
     assert_equals(d.items(), [('a', 1), ('b', 2), ('c', 3), ('d', 4)])
+    assert_true(type(d.itervalues()) is imap)
+    assert_equals(list(d.itervalues()), [1, 2, 3, 4])
+
+    # byindex
+    assert_equals(d.byindex(0), ('a', 1))
+    assert_equals(d.byindex(2), ('c', 3))
 
     # pop
     value = d.pop('d')
@@ -207,3 +228,7 @@ def test_ordereddict():
     # get the same return value here.
     d.sort(reverse=True)
     assert_equals(d.items(), [('d', 4), ('c', 3), ('b', 2), ('a', 1)])
+
+    # copy
+    assert_equals(copy.copy(d), d)
+    assert_equals(copy.deepcopy(d), d)

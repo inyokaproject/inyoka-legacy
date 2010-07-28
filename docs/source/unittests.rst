@@ -42,7 +42,7 @@ assumed in :doc:`installation`) and type in ``fab test``.
 How to write unittests
 ======================
 
-This part shall give you some example of how to write unittest.
+This part shall give you some example of how to write unittests.
 
 There are various types of how to write unittests.  There are function tests,
 test suites and test cases.  All of them have different purposes and

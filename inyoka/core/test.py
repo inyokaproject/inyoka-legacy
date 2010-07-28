@@ -609,7 +609,7 @@ def with_fixtures(fixtures):
             pass
 
     Note that the database is refreshed right after function execution.
-    This may lead into perforamnce issues.
+    This may lead into performance issues.
     """
     def decorator(func):
         @refresh_database

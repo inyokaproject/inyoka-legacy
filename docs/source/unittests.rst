@@ -98,7 +98,7 @@ most common is the :class:`TestCase`, it's more or less the same as
             assert_false('b' in d)
 
 
-Next to tat there's the :class:`DatabaseTestCase`.
+Next to that there's the :class:`DatabaseTestCase`.
 
 This class allows you to use fixtures.  So, what are fixtures?  Did you ever
 have to write initalisation code for unittests with database models with their

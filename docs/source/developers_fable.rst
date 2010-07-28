@@ -3,7 +3,7 @@ Hacking on Inyoka
 =================
 
 Inyoka is written in Python and based on popular libraries.  The dynamic parts
-in the user interface are created using a subset HTML5 and jQuery.
+in the user interface are created using a subset of HTML5 and jQuery.
 
 This file should give you a brief overview how the code works and what
 you should keep in mind working on it.

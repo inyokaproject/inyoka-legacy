@@ -139,14 +139,14 @@ subdomain.  This will be done automatically if you use the
 
 Examples:
 
-    http://forum.inyoka.local/topic/new
-    http://forum.inyoka.local/topic/what-the-hack/edit
-    http://forum.inyoka.local/topic/what-the-hack/reply
+    - http://forum.inyoka.local/topic/new
+    - http://forum.inyoka.local/topic/what-the-hack/edit
+    - http://forum.inyoka.local/topic/what-the-hack/reply
 
     Ajax calls:
 
-    http://api.inyoka.local/forum/topic/subscribe/what-the-hack
-    http://api.inyoka.local/forum/topic/unsubscribe/what-the-hack
+    - http://api.inyoka.local/forum/topic/subscribe/what-the-hack
+    - http://api.inyoka.local/forum/topic/unsubscribe/what-the-hack
 
 
 JavaScript Scripting

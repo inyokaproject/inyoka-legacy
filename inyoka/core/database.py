@@ -444,7 +444,7 @@ class SlugGenerator(orm.MapperExtension):
     :param slugfield: The field the slug gets saved to.
     :param generate_from: Either a string or a list of fields to generate
                           the slug from.  If a list is applied they are
-                          joined with ``sep``
+                          joined with ``sep``.
     :param sep: The string to join multiple fields.  If only one field applied
                 the seperator is not used.
     """

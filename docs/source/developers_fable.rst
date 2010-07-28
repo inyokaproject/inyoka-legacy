@@ -97,7 +97,7 @@ They are generally named with Pythons PEP08 in mind::
 Providers
 ----------
 
-A “provider“ is commonly a small interface whose implementations are wrapped 
+A “provider“ is commonly a small interface whose implementations are wrapped
 within another component.  For example our admin interface is implemented with
 the help of “providers”.  A small example::
 
@@ -122,9 +122,9 @@ Controllers
 
 As seen in the examples above we have “providers” whose implementations
 are wrapped.  These wrappers are commonly called “controllers” because they
-control other provides and control the concrete flow.
+control other providers and control the concrete flow.
 
-A controll interface inherits from :class:`inyoka.Interface` and follows it's
+A controller interface inherits from :class:`inyoka.Interface` and follows it's
 naming guides.  Besides that it should contain the name ``Controller`` to
 specify that this is a special kind of interface.
 

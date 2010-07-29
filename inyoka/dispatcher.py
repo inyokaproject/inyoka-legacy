@@ -226,7 +226,7 @@ class RequestDispatcher(object):
     def get_test_client(self):
         """Creates a test client for this application.
 
-        :return:
+        :returns:
             A :class:`werkzeug.Client`, which is a :class:`Tipfy` wrapped
             for tests.
         """

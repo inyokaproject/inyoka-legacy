@@ -48,7 +48,7 @@ def stream_merge(old, other, new, allow_conflicts=True, markers=None):
     """
     Merges three strings or lists of lines.  The return values is an iterator.
     Per default conflict markers are added to the source, you can however set
-    :param allow_conflicts: to `False` which will get you a :exc:`DiffConflict`
+    `allow_conflicts` to `False` which will get you a :exc:`DiffConflict`
     exception on the first encountered conflict.
     """
     if isinstance(old, basestring):

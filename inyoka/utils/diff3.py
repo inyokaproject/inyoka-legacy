@@ -39,7 +39,7 @@ class DiffConflict(ValueError):
 
 def merge(old, other, new, allow_conflicts=True, markers=None):
     """
-    Works like `stream_merge` but returns a string.
+    Works like :func:`stream_merge` but returns a string.
     """
     return '\n'.join(stream_merge(old, other, new, allow_conflicts, markers))
 
@@ -48,7 +48,7 @@ def stream_merge(old, other, new, allow_conflicts=True, markers=None):
     """
     Merges three strings or lists of lines.  The return values is an iterator.
     Per default conflict markers are added to the source, you can however set
-    :param allow_conflicts: to `False` which will get you a `DiffConflict`
+    :param allow_conflicts: to `False` which will get you a :exc:`DiffConflict`
     exception on the first encountered conflict.
     """
     if isinstance(old, basestring):
@@ -189,7 +189,7 @@ def stream_merge(old, other, new, allow_conflicts=True, markers=None):
 def tripple_match(old, other, new, other_match, new_match):
     """
     Find next matching pattern unchanged in both other and new return the
-    position in all three lists.  Unlike `merge` this only operates on
+    position in all three lists.  Unlike :func:`merge` this only operates on
     lists.
     """
     while 1:
@@ -226,7 +226,7 @@ def tripple_match(old, other, new, other_match, new_match):
 def match(list1, list2, nr1, nr2, maxcount=3):
     """
     Return the number matching items after the given positions maximum
-    maxcount lines are are processed.  Unlike `merge` this only operates
+    maxcount lines are are processed.  Unlike :func:`merge` this only operates
     on lists.
     """
     i = 0

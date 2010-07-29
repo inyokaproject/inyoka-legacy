@@ -64,7 +64,7 @@ CSS
 Indent your CSS 2.1 valid code with 4 spaces and adapt common formatting
 styles.
 
-If widely supported you can use css3 features.
+If widely supported you can use CSS 3 features.
 
 
 Naming Guide

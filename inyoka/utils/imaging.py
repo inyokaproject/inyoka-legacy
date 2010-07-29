@@ -62,7 +62,7 @@ class BaseImage(object):
 
     def avatar(self):
         """
-        Resize image to avatar size, as definied in inoka.ini.
+        Resize image to avatar size, as defined in inyoka.ini.
         """
         self.resize(*string_to_xy(ctx.cfg["imaging.avatarsize"]))
 

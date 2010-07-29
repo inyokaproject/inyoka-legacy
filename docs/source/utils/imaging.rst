@@ -9,13 +9,13 @@ Misc Functions
 ==============
 These functions are usefull for common tasks.
 
-.. autofunction:: string_to_xy(string)
+.. autofunction:: string_to_xy
 
 Base Classes
 ============
 These classes should never used directly.
 
-.. autoclass:: BaseImage(filename)
+.. autoclass:: BaseImage
    :members:
 
 Backends

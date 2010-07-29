@@ -17,7 +17,7 @@ _function_types = (types.FunctionType, types.MethodType)
 
 
 def abstract(func):
-    """Mark a method as abstract.  Throws a ``NotImplementedError``
+    """Mark a method as abstract.  Throws a :exc:`NotImplementedError`
     if an abstract method is called.
 
     Usage::

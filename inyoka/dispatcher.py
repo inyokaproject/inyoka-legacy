@@ -78,8 +78,8 @@ class RequestDispatcher(object):
 
         Those are (in execution-order):
 
-            * `~inyoka.core.routing.IController`
-            * `~inyoka.core.routing.IServiceProvider`
+            * :class:`~inyoka.core.routing.IController`
+            * :class:`~inyoka.core.routing.IServiceProvider`
         """
         for provider in (IController, IServiceProvider):
             try:

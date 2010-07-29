@@ -32,15 +32,15 @@ Indent with 4 *spaces* only.
 Ordering of import statements is as defined in PEP 8, additionally:
  - Within the groups, `import …` statements stand above `from …` statements.
  - Within that, the statements are sorted alphabetically (shorter paths first).
- - Within `inyoka.*` imports, `inyoka.core` comes first, then `inyoka.utils`,
-   then all other components (alphabetically)
+ - Within :mod:`inyoka.*` imports, :mod:`inyoka.core` comes first, then
+   :mod:`inyoka.utils`, then all other components (alphabetically)
  - Use new language statemets instead of old backwards compatible statements,
    we require Python 2.6, so use at least the new `with` statement and the new
    `except Exception as err` instead of `except Exception, err`.
 
 No relative imports.
 
-No imports from `inyoka.core.api` in core and utils (to avoid recursive imports)
+No imports from :mod:`inyoka.core.api` in core and utils (to avoid recursive imports)
 (except middlewares)
 
 JavaScript

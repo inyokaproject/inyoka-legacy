@@ -96,12 +96,12 @@ def find_catalog(path, domain, locale, gettext_lookup=False):
 
 
 def lazy_gettext(string):
-    """A lazy version of `gettext`."""
+    """A lazy version of :func:`gettext`."""
     return LazyProxy(gettext, string)
 
 
 def lazy_ngettext(singular, plural, n):
-    """A lazy version of `ngettext`."""
+    """A lazy version of :func:`ngettext`."""
     return LazyProxy(ngettext, singular, plural, n)
 
 

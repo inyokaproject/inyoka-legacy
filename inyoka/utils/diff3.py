@@ -243,8 +243,8 @@ def match(list1, list2, nr1, nr2, maxcount=3):
 
 def find_match(list1, list2, nr1, nr2, mincount=3):
     """
-    searches next matching pattern with lenght mincount
-    if no pattern is found len of the both lists is returned
+    Searches the next matching pattern with the lenght of the `mincount`
+    if no pattern is found the length of both lists is returned.
     """
     idx1 = nr1
     idx2 = nr2

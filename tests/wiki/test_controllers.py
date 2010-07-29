@@ -60,6 +60,9 @@ class TestWikiController(ViewTestCase):
         response = self.get('/test_page/+%d' % r1.id)
         self.assertNotFound(response)
 
+        response = self.get('/not_existing_page')
+        self.assertNotFound(response)
+
         for obj in (r3, r2, r1, p2, p):
             db.session.delete(obj)
         db.session.commit()

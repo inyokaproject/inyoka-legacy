@@ -180,7 +180,7 @@ Unit Tests
 Inyoka uses `Nose <http://somethingaboutorange.com/mrl/projects/nose/>`_ for all
 tests.  If you don't use functions or doctests you must inherit either
 :class:`~inyoka.core.test.TestSuite` for common unittests or
-:class:`~inyoka.core.test.ViewTestSuite` to test view functions.  See the 
+:class:`~inyoka.core.test.ViewTestSuite` to test view functions.  See the
 :doc:`unittests` documentation for more details
 
 Well, try to write the tests first, but we don't thrash you if you don't.

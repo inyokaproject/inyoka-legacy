@@ -71,8 +71,8 @@ def gen_timestamped_slug(slug, content_type, pub_date=None, prefix='',
                          fixed=False, url_format=_default_slug_format):
     """Generate a timestamped slug, suitable for use as final URL path.
 
-    Note: `pub_date` will never be touched, neither localized nor converted
-    to any timezone.
+    .. note:: `pub_date` will never be touched, neither localized nor converted
+              to any timezone.
     """
     if pub_date is None:
         pub_date = datetime.utcnow()

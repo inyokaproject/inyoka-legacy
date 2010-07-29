@@ -3,7 +3,7 @@
     inyoka.utils.datastructures
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Datastructures used to ease our life and to implement crutial
+    Datastructures used to ease our life and to implement crucial
     parts of the `inyoka.markup` interface.
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.

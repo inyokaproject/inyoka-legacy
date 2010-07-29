@@ -20,3 +20,6 @@ These classes should never used directly.
 
 Backends
 ========
+
+.. autoclass:: PilImage
+   :members:

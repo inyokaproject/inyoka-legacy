@@ -227,7 +227,7 @@ class RequestDispatcher(object):
         """Creates a test client for this application.
 
         :return:
-            A `werkzeug.Client`, which is a :class:`Tipfy` wrapped
+            A :class:`werkzeug.Client`, which is a :class:`Tipfy` wrapped
             for tests.
         """
         from werkzeug import Client

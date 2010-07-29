@@ -126,7 +126,7 @@ leakfinder.__doc__ = u'Run a development server with activated leakfinder.'
 def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
     """Spawn a new interactive python shell
 
-    :param app: choose between common python shell, ipyhon or bpython.
+    :param app: choose between common python shell, ipython or bpython.
                 Possible values are: python, ipython and bpython.
     """
     from code import interact

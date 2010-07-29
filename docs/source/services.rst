@@ -67,9 +67,9 @@ Isn't that easy?
 Admin Service API
 =================
 
-To define an service API for the admin pages only is nearly the same API.
+To define a service API for the admin pages only is nearly the same API.
 Since our admin interface is filled by multiple applications the service API
-needs to be adapted to the common admin API.  An simple example::
+needs to be adapted to the common admin API.  A simple example::
 
     class ForumAdminServiceProvider(IAdminServiceProvider):
         name = 'forum'

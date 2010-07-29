@@ -125,7 +125,7 @@ class TokenStream(object):
 
     @classmethod
     def from_tuple_iter(cls, tupleiter):
-        """Create a new token stream fromo `tupleiter`"""
+        """Create a new token stream from `tupleiter`"""
         return cls(Token(*a) for a in tupleiter)
 
     def __iter__(self):

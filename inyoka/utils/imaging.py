@@ -48,7 +48,7 @@ class BaseImage(object):
     def resize(self, x, y):
         """
         Resizes this image object, you should overwrite this method in
-        your own backends. Take a look at PilImage for an example.
+        your own backends. Take a look at :class:`PilImage` for an example.
 
         :param x: Destination X resolution
         :param y: Destination Y resolution

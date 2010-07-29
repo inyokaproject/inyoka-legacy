@@ -31,4 +31,5 @@ Supported colors are: ``teal``, ``turquoise``, ``darkteal``,
 ``green``, ``darkgreen``, ``yellow``, ``brown``, ``darkyellow``,
 ``red``, ``darkred`` and ``white``
 
-Besides those you can use ``bold`` and ``underline`` for more advanced formating.
+Besides those you can use ``bold`` and ``underline`` for more advanced
+formatting.

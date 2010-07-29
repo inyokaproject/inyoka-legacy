@@ -15,7 +15,7 @@ from werkzeug import url_encode, url_decode, url_quote, \
 
 
 def make_full_domain(subdomain=None, path=None):
-    """Return the full domain based on :attr:`subdomain`
+    """Return the full domain based on `subdomain`
 
     >>> from inyoka.core.api import ctx
     >>> from inyoka.utils.urls import make_full_domain

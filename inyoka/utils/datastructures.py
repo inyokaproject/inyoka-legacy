@@ -4,7 +4,7 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Datastructures used to ease our life and to implement crucial
-    parts of the `inyoka.markup` interface.
+    parts of the :mod:`inyoka.markup` interface.
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -40,7 +40,7 @@ class BidiMap(dict):
         >>> map['dumb']
         1
 
-    :param items: A `dict` like object where keys are integers.
+    :param items: A :class:`dict` like object where keys are integers.
     """
 
     def __init__(self, items=None):
@@ -230,8 +230,8 @@ class OrderedDict(dict):
     The OrderedDict got some more list-like functions as sort, index, byindex
     and such stuff.
 
-    The constructor and `update()` both accept iterables of tuples as well as
-    mappings:
+    The constructor and :meth:`update()` both accept iterables of tuples as
+    well as mappings:
 
     >>> d = OrderedDict([('a', 'b'), ('c', 'd')])
     >>> d.update({'foo': 'bar'})
@@ -241,8 +241,9 @@ class OrderedDict(dict):
     Keep in mind that when updating from dict-literals the order is not
     preserved as these dicts are unsorted!
 
-    You can copy an OrderedDict like a dict by using the constructor, `copy.copy`
-    or the `copy` method and make deep copies with `copy.deepcopy`:
+    You can copy an OrderedDict like a dict by using the constructor,
+    :func:`copy.copy` or the :meth:`copy` method and make deep copies with
+    :func:`copy.deepcopy`:
 
     >>> from copy import copy, deepcopy
     >>> copy(d)
@@ -259,8 +260,9 @@ class OrderedDict(dict):
     >>> d2
     OrderedDict([('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', ['eggs'])])
 
-    All iteration methods as well as `keys`, `values` and `items` return
-    the values ordered by the the time the key-value pair is inserted:
+    All iteration methods as well as :meth:`keys`, :meth:`values` and
+    :meth:`items` return the values ordered by the the time the key-value pair
+    is inserted:
 
     >>> d.keys()
     ['a', 'c', 'foo', 'spam']
@@ -275,7 +277,7 @@ class OrderedDict(dict):
     >>> list(d.iteritems())
     [('a', 'b'), ('c', 'd'), ('foo', 'bar'), ('spam', [])]
 
-    Index based lookup is supported too by `byindex` which returns the
+    Index based lookup is supported too by :meth:`byindex` which returns the
     key/value pair for an index:
 
     >>> d.byindex(2)
@@ -339,7 +341,7 @@ class OrderedDict(dict):
 
     def copy(self):
         """Return a copy.
-        The copy is no deepcopy, use :meth:`deepcopy` for that purpose.
+        The copy is no deepcopy, use :func:`copy.deepcopy` for that purpose.
         """
         return self.__class__(self)
     __copy__ = copy
@@ -398,7 +400,9 @@ class OrderedDict(dict):
 
     def update(self, other=(), **kwds):
         """Update the ordered dict.
-        This can be either another dict, OrderedDict or iterables of tuples.
+
+        :param other: This can be either another :class:`dict`,
+                      :class:`OrderedDict` or an iterable of tuples.
         """
         if isinstance(other, (dict, OrderedDict)):
             for key in other:

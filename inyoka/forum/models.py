@@ -140,9 +140,9 @@ class EntryQuery(db.Query):
 
 
 class Entry(db.Model, SerializableObject, TextRendererMixin):
-    """The base class of a `Question` or `Answer`, which contains some general
-    information about the author and the creation date, as well as the actual
-    text and the votings."""
+    """The base class of a :class:`Question` or :class:`Answer`, which contains
+    some general information about the author and the creation date, as well as
+    the actual text and the votings."""
 
     __tablename__ = 'forum_entry'
     query = db.session.query_property(EntryQuery)
@@ -188,8 +188,8 @@ class QuestionAnswersExtension(db.AttributeExtension):
 
 
 class QuestionQuery(EntryQuery):
-    """Adds special filter methods to the `EntryQuery` which are unique to
-    questions."""
+    """Adds special filter methods to the :class:`EntryQuery` which are unique
+    to questions."""
 
     def tagged(self, tags):
         """Filter questions by tags."""
@@ -208,7 +208,8 @@ class QuestionQuery(EntryQuery):
 
 
 class Question(Entry):
-    """A `Question` is an `Entry` with a title, a slug and several tags."""
+    """A :class:`Question` is an :class:`Entry` with a title, a slug and
+    several tags."""
     __tablename__ = 'forum_question'
     __mapper_args__ = {
         'extension': db.SlugGenerator('slug', 'title'),

@@ -107,7 +107,7 @@ class TokenStream(object):
     A token stream wraps a generator and supports pushing tokens back.
     It also provides some functions to expect tokens and similar stuff.
 
-    Important note: Do never push more than one token back to the
+    .. important::  Do never push more than one token back to the
                     stream.  Although the stream object won't stop you
                     from doing so, the behavior is undefined.  Multiple
                     pushed tokens are only used internally!

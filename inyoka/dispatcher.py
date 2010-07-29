@@ -46,9 +46,9 @@ class RequestDispatcher(object):
 
         Those are:
 
-            * `~inyoka.core.routing.IController`
-            * `~inyoka.core.middlewares.IMiddleware`
-            * `~inyoka.core.routing.IServiceProvider`
+            * :class:`~inyoka.core.routing.IController`
+            * :class:`~inyoka.core.middlewares.IMiddleware`
+            * :class:`~inyoka.core.routing.IServiceProvider`
         """
         map = []
         for provider in (IController, IMiddleware, IServiceProvider):

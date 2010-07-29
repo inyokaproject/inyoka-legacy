@@ -49,11 +49,6 @@ class PageQuery(db.Query):
         return super(PageQuery, self).get(pk)
 
     def exists(self, name):
-        return bool(db.session.execute(
-            db.select([Page.id]).where(Page.name == name)
-        ).fetchone())
-
-    def exists(self, name):
         return bool(self.filter_name(name).count())
 
 

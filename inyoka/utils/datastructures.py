@@ -72,8 +72,8 @@ class Token(tuple):
     def __new__(self, type, value):
         return tuple.__new__(self, (intern(type), value))
 
-    type = property(itemgetter(0))
-    value = property(itemgetter(1))
+    type = property(itemgetter(0), doc="The type of the token.")
+    value = property(itemgetter(1), doc="The value of the token.")
 
     def __repr__(self):
         return 'Token(%r, %r)' % (

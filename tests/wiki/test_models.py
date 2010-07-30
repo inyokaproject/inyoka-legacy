@@ -25,9 +25,9 @@ def test_page_name_conversion_and_get_by_name():
     r = Revision(page=p, change_user=u, epoch=1)
     db.session.commit()
 
-    eq_(None, Page.query.get('some_name'))
-    eq_(p, Page.query.get('some name'))
-    eq_(p, Page.query.get('sOmE nAmE'))
+    eq_(None, Page.query.get(u'some_name'))
+    eq_(p, Page.query.get(u'some name'))
+    eq_(p, Page.query.get(u'sOmE nAmE'))
 
 
 @refresh_database
@@ -52,17 +52,17 @@ def test_text_raw_and_rendered():
     eq_(r_.rendered_text, text2r)
 
     # assert that we don't call the rerender method when not required
-    mock('Text._render', tracker=tracker)
+    mock(u'Text._render', tracker=tracker)
     tracker.clear()
     r_.raw_text = text2
-    assert_false(tracker.check('Called Text._render()'))
+    assert_false(tracker.check(u'Called Text._render()'))
 
 
 
 @refresh_database
 def test_page_create_and_edit():
     u = User.query.first()
-    u2 = User(username='user 2')
+    u2 = User(username=u'user 2')
     revs = []
 
     p = Page.create(u'one', change_user=u, change_comment=u'hi', text=u'bla')
@@ -119,7 +119,7 @@ def test_page_create_and_edit():
 @refresh_database
 def test_epoch_behavior():
     u = User.query.first()
-    p = Page(name='foo', current_epoch=3)
+    p = Page(name=u'foo', current_epoch=3)
     r1 = Revision(page=p, change_user=u, epoch=1)
     r2 = Revision(page=p, change_user=u, epoch=2)
     r3 = Revision(page=p, change_user=u, epoch=2)
@@ -133,7 +133,7 @@ def test_epoch_behavior():
 
 @refresh_database
 def test_url_generation():
-    p = Page(name='Page Name')
+    p = Page(name=u'Page Name')
     r = Revision(page=p, change_user_id=1, epoch=1)
     db.session.commit()
 

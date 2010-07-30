@@ -493,7 +493,7 @@ class Parser(object):
             if color in HTML_COLORS:
                 color = HTML_COLORS[color]
             else:
-                color = '#000000'
+                color = u'#000000'
         children = []
         while stream.current.type != 'color_end':
             children.append(self.parse_node(stream))

@@ -282,8 +282,8 @@ class Link(Element):
         if not children:
             if shorten and len(url) > 50:
                 children = [
-                    Span([Text(url[:36])], class_='longlink_show'),
-                    Span([Text(url[36:-14])], class_='longlink_collapse'),
+                    Span([Text(url[:36])], class_=u'longlink_show'),
+                    Span([Text(url[36:-14])], class_=u'longlink_collapse'),
                     Span([Text(url[-14:])]),
                 ]
             else:
@@ -323,10 +323,10 @@ class Link(Element):
         rel = None
         if not self.netloc or self.netloc == ctx.cfg['base_domain_name'] or \
            self.netloc.endswith('.' + ctx.cfg['base_domain_name']):
-            class_ = 'crosslink'
+            class_ = u'crosslink'
         else:
-            class_ = 'external'
-            rel = 'nofollow'
+            class_ = u'external'
+            rel = u'nofollow'
 
         yield build_html_tag(u'a',
             rel=rel,
@@ -366,7 +366,7 @@ class InternalLink(Element):
     def generate_markup(self, w):
         target = self.page
         if self.anchor:
-            target += '#' + self.anchor
+            target += u'#' + self.anchor
         w.markup(u'[:%s:' % target.replace(u':', '::'))
         w.start_escaping(u']')
         Element.generate_markup(self, w)
@@ -378,7 +378,7 @@ class InternalLink(Element):
         missing = not Page.query.exists(self.page)
         url = href('wiki/show', page=self.page)
         if self.anchor:
-            url += '#' + url_quote_plus(self.anchor)
+            url += u'#' + url_quote_plus(self.anchor)
 
         yield build_html_tag(u'a',
             href=url,
@@ -407,9 +407,9 @@ class Section(Element):
         return 'Section(%d)' % self.level
 
     def prepare_html(self):
-        class_ = 'section_%d' % self.level
+        class_ = u'section_%d' % self.level
         if self.class_:
-            class_ += ' ' + self.class_
+            class_ += u' ' + self.class_
         yield build_html_tag(u'div', id=self.id, style=self.style,
                              class_=class_)
         for item in Element.prepare_html(self):
@@ -937,7 +937,7 @@ class Color(Element):
 
     def prepare_html(self):
         style = self.style and self.style + '; ' or ''
-        style += 'color: %s' % self.value
+        style += u'color: %s' % self.value
         yield build_html_tag(u'span',
             id=self.id,
             style=style,
@@ -968,7 +968,7 @@ class Size(Element):
 
     def prepare_html(self):
         style = self.style and self.style + '; ' or ''
-        style += 'font-size: %.2f%%' % self.size
+        style += u'font-size: %.2f%%' % self.size
         yield build_html_tag(u'span',
             id=self.id,
             style=style,
@@ -1238,7 +1238,7 @@ class TableCell(Element):
     Only contained in a table row and renders to a table cell.
     """
     is_block_tag = True
-    _html_tag = 'td'
+    _html_tag = u'td'
 
     def __init__(self, children=None, colspan=None, rowspan=None, align=None,
                  valign=None, id=None, style=None, class_=None):
@@ -1283,7 +1283,7 @@ class TableHeader(TableCell):
     """
     Exactly like a table cell but renders to <th>
     """
-    _html_tag = 'th'
+    _html_tag = u'th'
 
 
 class TableHeadSection(Element):

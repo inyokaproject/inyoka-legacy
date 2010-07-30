@@ -158,7 +158,7 @@ class User(db.Model, SerializableObject):
         return USER_STATUS_MAP[self._status]
     status = db.synonym('_status', descriptor=property(_get_status, _set_status))
 
-    is_active = property(lambda self: self.status == 'normal')
+    is_active = property(lambda self: self.status == u'normal')
 
     @property
     def display_name(self):

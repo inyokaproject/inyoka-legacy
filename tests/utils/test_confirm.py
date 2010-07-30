@@ -18,11 +18,11 @@ from inyoka.utils.confirm import register_confirm, call_confirm, Expired
 
 CONFIRM_LOG = []
 
-@register_confirm('__test_store')
+@register_confirm(u'__test_store')
 def _store_data(data):
     CONFIRM_LOG.append(data)
 
-@register_confirm('__test_store2')
+@register_confirm(u'__test_store2')
 def _store_data2(data):
     CONFIRM_LOG.append((2, data))
 
@@ -33,8 +33,8 @@ def reset_log():
 @refresh_database
 @with_setup(reset_log)
 def test_base():
-    data = {'some': 'data'}
-    c = Confirm('__test_store', data, 1)
+    data = {'some': u'data'}
+    c = Confirm(u'__test_store', data, 1)
     eq_(c.expires, date.today() + timedelta(days=1))
     db.session.commit()
     call_confirm(c.key)
@@ -43,7 +43,7 @@ def test_base():
         call_confirm(c.key)
     assert_raises(KeyError, _second_run)
 
-    c = Confirm('__test_store2', data, 1)
+    c = Confirm(u'__test_store2', data, 1)
     db.session.commit()
     call_confirm(c.key)
 
@@ -52,7 +52,7 @@ def test_base():
 @refresh_database
 @with_setup(reset_log)
 def test_expiry():
-    c = Confirm('__test_store', {}, timedelta(days=3))
+    c = Confirm(u'__test_store', {}, timedelta(days=3))
     eq_(c.expires, date.today() + timedelta(days=3))
     assert_false(c.is_expired)
     db.session.commit()
@@ -71,7 +71,7 @@ def test_expiry():
 @refresh_database
 @raises(Exception) # may raise anything, is not intended for catching anyway
 def test_duplicate():
-    @register_confirm('__test_store')
+    @register_confirm(u'__test_store')
     def void(data):
         pass
 
@@ -79,4 +79,4 @@ def test_duplicate():
 @refresh_database
 @raises(KeyError)
 def test_no_handler():
-    c = Confirm('__nonexistent', {}, 1)
+    c = Confirm(u'__nonexistent', {}, 1)

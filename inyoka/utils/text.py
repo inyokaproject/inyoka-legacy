@@ -23,9 +23,9 @@ _default_slug_format = u'%year%/%month%/%day%/%slug%'
 
 def get_random_password():
     """This function returns a pronounceable word."""
-    consonants = 'bcdfghjklmnprstvwz'
-    vowels = 'aeiou'
-    numbers = '0123456789'
+    consonants = u'bcdfghjklmnprstvwz'
+    vowels = u'aeiou'
+    numbers = u'0123456789'
     all = consonants + vowels + numbers
     length = random.randrange(8, 12)
     password = u''.join(
@@ -65,7 +65,7 @@ def gen_unicode_slug(text, delim=u'-'):
     return unicode(delim.join(_punctuation_re.split(text.lower())))
 
 
-def gen_timestamped_slug(slug, content_type, pub_date=None, prefix='',
+def gen_timestamped_slug(slug, content_type, pub_date=None, prefix=u'',
                          fixed=False, url_format=_default_slug_format):
     """Generate a timestamped slug, suitable for use as final URL path.
 

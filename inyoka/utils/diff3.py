@@ -303,7 +303,7 @@ def get_close_matches(name, matches, n=10, cutoff=0.6):
     return heapq.nlargest(n, result)
 
 
-def generate_udiff(old, new, old_title='', new_title='',
+def generate_udiff(old, new, old_title=u'', new_title=u'',
                    context_lines=4):
     """
     Generate an udiff out of two texts.  If titles are given they will be
@@ -315,7 +315,7 @@ def generate_udiff(old, new, old_title='', new_title='',
         new.splitlines(),
         fromfile=old_title,
         tofile=new_title,
-        lineterm='',
+        lineterm=u'',
         n=context_lines
     ))
 

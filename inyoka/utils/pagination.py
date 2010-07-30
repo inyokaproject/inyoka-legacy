@@ -141,7 +141,7 @@ class Pagination(object):
 
     def buttons(self, left_threshold=None, inner_threshold=None,
                 right_threshold=None, prev=True, next=True,
-                class_='pagination', force=False):
+                class_=u'pagination', force=False):
         """
         Return HTML code for the page selector if there is more than one page.
 

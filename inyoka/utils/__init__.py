@@ -64,7 +64,7 @@ class classproperty(object):
         return value
 
 
-def getmembers(object, predicate=None, exclude_pattern='_'):
+def getmembers(object, predicate=None, exclude_pattern=u'_'):
     """Return all members of an object as (name, value) pairs sorted by name.
     Optionally, only return members that satisfy a given predicate.
 

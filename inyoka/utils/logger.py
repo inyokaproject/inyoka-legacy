@@ -27,8 +27,8 @@ def _level_aware_colorizer(level):
         'DEBUG':    blue,
         'NOTSET':   white
     }
-    colorized = '[%(levelname)s %(asctime)s]'
-    message = ' %(message)s'
+    colorized = u'[%(levelname)s %(asctime)s]'
+    message = u' %(message)s'
 
     return levels[level](colorized) + message
 

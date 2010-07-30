@@ -211,8 +211,8 @@ class Confirm(db.Model):
 
     @classmethod
     def _make_key(cls):
-        return ''.join(random.choice(cls._key_chars) for _
-                       in range(cls._key_length))
+        return u''.join(random.choice(cls._key_chars) for _
+                        in range(cls._key_length))
 
     @property
     def url(self):

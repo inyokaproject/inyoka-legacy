@@ -148,23 +148,6 @@ class PortalController(IController):
         }
 
 
-class CalendarController(IController):
-    name = 'calendar'
-
-    url_rules = [
-        Rule('/', endpoint='index'),
-        Rule('/<date:date>/<slug>/', endpoint='entry'),
-    ]
-
-    @view('index')
-    def index(self, request):
-        return Response(u'This is calendar index page')
-
-    @view('entry')
-    def entry(self, request, date, slug):
-        return Response(u'This is calendar entry %r from %r' % (slug, date))
-
-
 class UserCPExtension(IController):
     name = 'usercp'
 

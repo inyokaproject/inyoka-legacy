@@ -49,16 +49,16 @@ class PasteController(IController):
                 e.parent_id = form.parent.data
             db.session.commit()
             return redirect_to(e)
-        else:
-            parent_id = request.args.get('reply_to', None)
-            if parent_id is not None:
-                parent = Entry.query.get(int(parent_id))
-                form = AddPasteForm(**{
-                    'title': parent.title,
-                    'language': parent.language,
-                    'text': parent.text,
-                    'parent': parent.id
-                })
+
+        parent_id = request.args.get('reply_to', None)
+        if parent_id is not None and parent_id.isdigit():
+            parent = Entry.query.get(int(parent_id))
+            form = AddPasteForm(**{
+                'title': parent.title,
+                'language': parent.language,
+                'text': parent.text,
+                'parent': parent.id
+            })
 
         return {
             'form': form,

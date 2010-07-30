@@ -65,7 +65,7 @@ class Form(BaseForm):
         field.data = get_csrf_token()
 
         if not is_valid:
-            raise BadRequest()
+            raise BadRequest('Invalid CSRF token.')
 
     def validate_on_submit(self):
         return ctx.current_request.method in ("POST", "PUT") and self.validate()

@@ -28,9 +28,11 @@ class Pagination(object):
     :param per_page: Number of entries displayed on one page.
     """
 
-    _comma = '<span class="comma">, </span>'
+    # translatable strings for the pagination buttons
+    _comma = '<span class="comma">%s</span>' % escape(_(u', '))
     _next = escape(_(u'next »'))
     _prev = escape(_(u'« previous'))
+    _ellipsis = escape(_(u'…'))
 
     # defaults
     left_threshold = 2
@@ -171,7 +173,7 @@ class Pagination(object):
                                             right_threshold=right_threshold,
                                             prev=prev, next=next):
             if type == 'ellipsis':
-                add(u' <span class="ellipsis">%s</span> ' % escape(_(u'…')))
+                add(u' <span class="ellipsis">%s</span> ' % self._ellipsis)
                 if link:
                     add(u'<input type="hidden" class="url-template" value="%s">'
                         % escape(link))

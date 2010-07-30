@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-30 22:09+0200\n"
+"POT-Creation-Date: 2010-07-30 22:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -937,7 +937,7 @@ msgstr[1] ""
 msgid "No Comments"
 msgstr ""
 
-#: inyoka/templates/news/_article.html:18 inyoka/utils/pagination.py:174
+#: inyoka/templates/news/_article.html:18 inyoka/utils/pagination.py:35
 msgid "…"
 msgstr ""
 
@@ -1373,10 +1373,14 @@ msgid "Incorrect. Try again."
 msgstr ""
 
 #: inyoka/utils/pagination.py:32
-msgid "next »"
+msgid ", "
 msgstr ""
 
 #: inyoka/utils/pagination.py:33
+msgid "next »"
+msgstr ""
+
+#: inyoka/utils/pagination.py:34
 msgid "« previous"
 msgstr ""
 

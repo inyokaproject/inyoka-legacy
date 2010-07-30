@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-30 22:09+0200\n"
+"POT-Creation-Date: 2010-07-30 22:27+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -81,7 +81,7 @@ msgstr "Domainname"
 
 #: inyoka/core/config/defaults.py:43
 msgid "Cookie domain name"
-msgstr "Cookie Domainname"
+msgstr "Domainname für Cookies"
 
 #: inyoka/core/config/defaults.py:45
 msgid "Cookie name"
@@ -93,7 +93,7 @@ msgstr "Aktuelle Spracheinstellung"
 
 #: inyoka/core/config/defaults.py:49
 msgid "The default timezone for all users."
-msgstr "Standard Zeitzone für alle Benutzer."
+msgstr "Standard-Zeitzone für alle Benutzer."
 
 #: inyoka/core/config/defaults.py:51
 msgid "The name of the anonymous user."
@@ -101,7 +101,7 @@ msgstr "Der Name des anonymen Benutzers"
 
 #: inyoka/core/config/defaults.py:53
 msgid "Enable or disable CSRF Protection."
-msgstr "Aktiviere bzw. deaktiviere den CSRF-Schutz"
+msgstr "Aktiviert bzw. deaktiviert den CSRF-Schutz"
 
 #: inyoka/core/config/defaults.py:55
 msgid "Use SSL for ReCaptcha requests, defaults to True"
@@ -109,11 +109,11 @@ msgstr "Benutze SSL für ReCaptcha-Anfragen, standardmäßig aktiviert"
 
 #: inyoka/core/config/defaults.py:58
 msgid "Recaptcha public key"
-msgstr "Öffentlicher Recaptcha Schlüssel"
+msgstr "Öffentlicher Recaptcha-Schlüssel"
 
 #: inyoka/core/config/defaults.py:61
 msgid "Recaptcha private key"
-msgstr "Privater Recaptcha Schlüssel"
+msgstr "Privater Recaptcha-Schlüssel"
 
 #: inyoka/core/config/defaults.py:63
 msgid "The website title to show in various places"
@@ -126,7 +126,7 @@ msgstr "Die Adresse, die für ausgehende E-Mails benutzt wird"
 #: inyoka/core/config/defaults.py:67
 msgid "The duration a permanent session is valid. Defined in days, defaults to 30."
 msgstr ""
-"Die Dauer einer permanenten Session.  Definition in Tagen, Standard sind 30 "
+"Die Dauer einer permanenten Session.  Angegeben in Tagen, Standard sind 30 "
 "Tage."
 
 #: inyoka/core/config/defaults.py:72
@@ -134,16 +134,16 @@ msgid ""
 "The database URL.  For more information about database settings consult the "
 "Inyoka docs."
 msgstr ""
-"Datenbank-URL. Siehe Inyoka-Dokumentation bezüglich mehr Informationen über "
-"die Datenbankeinstellungen."
+"Datenbank-URL. Weitere Informationen über die Datenbankeinstellungen in der "
+"Inyoka-Dokumentation."
 
 #: inyoka/core/config/defaults.py:75
 msgid ""
 "If enabled the database will collect the SQL statements and add them to the "
 "bottom of the page for easier debugging."
 msgstr ""
-"Wenn aktiviert werden alle SQL-Anweisungen gesammelt und ans Ende der Seite "
-"geschrieben für eine einfache Fehlersuche. "
+"Wenn aktiviert werden alle SQL-Anweisungen gesammelt und für eine einfache "
+"Fehlersuche ans Ende der Seite geschrieben. "
 
 #: inyoka/core/config/defaults.py:79
 msgid ""
@@ -159,9 +159,9 @@ msgid ""
 "timeout is surpassed the connection will be closed and replaced with a newly"
 " opened connection."
 msgstr ""
-"Wenn nicht auf -1 gesetzt, Nummer der Sekunden zwischen Verbindungs-"
-"Erneuerungen. Wenn dieser Timeout abgelaufen ist, wird die Verbindung "
-"geschlossen und mit einer neuen ersetzt."
+"Wenn nicht auf -1 gesetzt, Anzahl der Sekunden zwischen Verbindungs-"
+"Erneuerungen. Wenn diese Zeit abgelaufen ist, wird die Verbindung "
+"geschlossen und durch eine neue ersetzt."
 
 #: inyoka/core/config/defaults.py:87
 msgid ""
@@ -173,7 +173,8 @@ msgstr ""
 #: inyoka/core/config/defaults.py:94
 #, fuzzy
 msgid "Imaging backend to use."
-msgstr "Imaging-Backend zu verwenden."
+msgstr "Zu verwendendes Backend für Imaging"
+
 
 #: inyoka/core/config/defaults.py:96
 msgid "Portal avatar size."
@@ -682,7 +683,7 @@ msgstr "Signatur"
 
 #: inyoka/portal/forms.py:32
 msgid "Jabber ID"
-msgstr "Jabber ID"
+msgstr "Jabber-ID"
 
 #: inyoka/portal/forms.py:34
 msgid "Skype"
@@ -794,7 +795,7 @@ msgstr "Abmelden"
 #: inyoka/templates/base.html:79
 #, python-format
 msgid "Powered by Inyoka %(revision)s on Python %(python)s"
-msgstr "Basiert auf Inyoka %(revision)s mit Python %(python)s"
+msgstr "Basiert auf Inyoka %(revision)s (Python %(python)s)"
 
 #: inyoka/templates/admin/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
@@ -962,7 +963,7 @@ msgstr[1] "%(human_count)s Kommentare"
 msgid "No Comments"
 msgstr "Keine Kommentare"
 
-#: inyoka/templates/news/_article.html:18 inyoka/utils/pagination.py:174
+#: inyoka/templates/news/_article.html:18 inyoka/utils/pagination.py:35
 msgid "…"
 msgstr "…"
 
@@ -1406,10 +1407,14 @@ msgid "Incorrect. Try again."
 msgstr "Falsch! Bitte versuche es nocheinmal."
 
 #: inyoka/utils/pagination.py:32
+msgid ", "
+msgstr ", "
+
+#: inyoka/utils/pagination.py:33
 msgid "next »"
 msgstr "Weiter »"
 
-#: inyoka/utils/pagination.py:33
+#: inyoka/utils/pagination.py:34
 msgid "« previous"
 msgstr "« Zurück"
 

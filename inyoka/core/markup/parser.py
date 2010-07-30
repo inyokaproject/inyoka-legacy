@@ -114,7 +114,7 @@ def unescape_string(string):
                     except KeyError:
                         pass
                 else:
-                    write('\\' + char)
+                    write(u'\\' + char)
             else:
                 write(char)
     except StopIteration:

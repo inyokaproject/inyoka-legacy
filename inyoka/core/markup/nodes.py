@@ -310,8 +310,8 @@ class Link(Element):
             return w.markup(self.href)
         else:
             w.markup(u'[%s' % self.href)
-            w.markup(' ')
-            w.start_escaping(']')
+            w.markup(u' ')
+            w.start_escaping(u']')
             Element.generate_markup(self, w)
             w.stop_escaping()
             w.markup(u']')
@@ -367,8 +367,8 @@ class InternalLink(Element):
         target = self.page
         if self.anchor:
             target += '#' + self.anchor
-        w.markup(u'[:%s:' % target.replace(':', '::'))
-        w.start_escaping(']')
+        w.markup(u'[:%s:' % target.replace(u':', '::'))
+        w.start_escaping(u']')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u']')
@@ -384,7 +384,7 @@ class InternalLink(Element):
             href=url,
             id=self.id,
             style=self.style,
-            classes=('internal', missing and u'missing' or u'', self.class_),
+            classes=(u'internal', missing and u'missing' or u'', self.class_),
         )
         for item in Element.prepare_html(self):
             yield item
@@ -467,7 +467,7 @@ class Error(Element):
         yield build_html_tag(u'div',
             id=self.id,
             style=self.style,
-            classes=('error', self.class_)
+            classes=(u'error', self.class_)
         )
         for item in Element.prepare_html(self):
             yield item
@@ -483,7 +483,7 @@ class Footnote(Element):
 
     def generate_markup(self, w):
         w.markup(u"((")
-        w.start_escaping('))')
+        w.start_escaping(u'))')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u"))")
@@ -493,7 +493,7 @@ class Footnote(Element):
             yield build_html_tag(u'small',
                 id=self.id,
                 style=self.style,
-                classes=('note', self.class_)
+                classes=(u'note', self.class_)
             )
             for item in Element.prepare_html(self):
                 yield item
@@ -513,7 +513,7 @@ class Ruler(Node):
 
     def generate_markup(self, w):
         w.newline()
-        w.markup('----')
+        w.markup(u'----')
         w.newline()
 
     def prepare_html(self):
@@ -559,7 +559,7 @@ class Preformatted(Element):
     def generate_markup(self, w):
         w.markup(u'{{{')
         w.raw()
-        w.start_escaping('}}}')
+        w.start_escaping(u'}}}')
         Element.generate_markup(self, w)
         if w._result[-1][-1] == u'}':
             # prevent four }s
@@ -653,11 +653,11 @@ class Highlighted(Strong):
     """
 
     def generate_markup(self, w):
-        w.markup('[mark]')
-        w.start_escaping('[/mark]')
+        w.markup(u'[mark]')
+        w.start_escaping(u'[/mark]')
         Element.generate_markup(self, w)
         w.stop_escaping()
-        w.markup('[/mark]')
+        w.markup(u'[/mark]')
 
     def prepare_html(self):
         classes = ['highlighted']
@@ -705,7 +705,7 @@ class SourceLink(Element):
 
     def __init__(self, target, children=None, id=None, style=None, class_=None):
         if children is None:
-            children = [Text('[%d]' % target)]
+            children = [Text(u'[%d]' % target)]
         Element.__init__(self, children, id, style, class_)
         self.target = target
 
@@ -739,7 +739,7 @@ class Code(Element):
 
     def generate_markup(self, w):
         w.markup(u"``")
-        w.start_escaping('``')
+        w.start_escaping(u'``')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u"``")
@@ -770,7 +770,7 @@ class Underline(Element):
 
     def generate_markup(self, w):
         w.markup(u"__")
-        w.start_escaping('__')
+        w.start_escaping(u'__')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u"__")
@@ -779,7 +779,7 @@ class Underline(Element):
         yield build_html_tag(u'span',
             id=self.id,
             style=self.style,
-            classes=('underline', self.class_)
+            classes=(u'underline', self.class_)
         )
         for item in Element.prepare_html(self):
             yield item
@@ -801,7 +801,7 @@ class Stroke(Element):
 
     def generate_markup(self, w):
         w.markup(u"--(")
-        w.start_escaping(')--')
+        w.start_escaping(u')--')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u")--")
@@ -824,7 +824,7 @@ class Small(Element):
 
     def generate_markup(self, w):
         w.markup(u"~-(")
-        w.start_escaping(')-~')
+        w.start_escaping(u')-~')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u")-~")
@@ -846,7 +846,7 @@ class Big(Element):
 
     def generate_markup(self, w):
         w.markup(u"~+(")
-        w.start_escaping(')+~')
+        w.start_escaping(u')+~')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u")+~")
@@ -868,7 +868,7 @@ class Sub(Element):
 
     def generate_markup(self, w):
         w.markup(u',,(')
-        w.start_escaping('),,')
+        w.start_escaping(u'),,')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u'),,')
@@ -896,7 +896,7 @@ class Sup(Element):
 
     def generate_markup(self, w):
         w.markup(u'^^(')
-        w.start_escaping(')^^')
+        w.start_escaping(u')^^')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u')^^')
@@ -930,7 +930,7 @@ class Color(Element):
 
     def generate_markup(self, w):
         w.markup(u'[color=%s]' % self.value)
-        w.start_escaping('[/color]')
+        w.start_escaping(u'[/color]')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u'[/color]')
@@ -961,7 +961,7 @@ class Size(Element):
 
     def generate_markup(self, w):
         w.markup(u'[size=%s]' % self.size)
-        w.start_escaping('[/size]')
+        w.start_escaping(u'[/size]')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u'[/size]')
@@ -994,15 +994,15 @@ class Font(Element):
 
     def generate_markup(self, w):
         w.markup(u'[font=%s]' % self.value)
-        w.start_escaping('[/font]')
+        w.start_escaping(u'[/font]')
         Element.generate_markup(self, w)
         w.stop_escaping()
         w.markup(u'[/font]')
 
     def prepare_html(self):
         style = self.style and self.style + '; ' or ''
-        style += "font-family: %s" % ', '.join(
-            x in ('serif', 'sans-serif', 'fantasy') and x or "'%s'" % x
+        style += u"font-family: %s" % u', '.join(
+            x in ('serif', 'sans-serif', 'fantasy') and x or u"'%s'" % x
             for x in self.faces
         )
         yield build_html_tag(u'span',
@@ -1042,7 +1042,7 @@ class DefinitionTerm(Element):
         self.term = term
 
     def generate_markup(self, w):
-        w.markup('  %s:: ' % self.term)
+        w.markup(u'  %s:: ' % self.term)
         w.oneline()
         Element.generate_markup(self, w)
         w.endblock()
@@ -1270,7 +1270,7 @@ class TableCell(Element):
         yield u'</%s>' % self._html_tag
 
     def prepare_docbook(self):
-        yield build_html_tag('entry',
+        yield build_html_tag(u'entry',
             morerows=(self.rowspan and self.rowspan - 1) or None,
             align=self.align,
         )
@@ -1292,7 +1292,7 @@ class TableHeadSection(Element):
     """
 
     def prepare_html(self):
-        yield build_html_tag('thead', style=self.style,
+        yield build_html_tag(u'thead', style=self.style,
                              id=self.id, class_=self.class_)
         for item in Element.prepare_html(self):
             yield item
@@ -1305,7 +1305,7 @@ class TableBodySection(Element):
     """
 
     def prepare_html(self):
-        yield build_html_tag('tbody', style=self.style,
+        yield build_html_tag(u'tbody', style=self.style,
                              id=self.id, class_=self.class_)
         for item in Element.prepare_html(self):
             yield item

@@ -468,28 +468,28 @@ class Lexer(object):
                     break
             else:
                 char = string[pos]
-                if char == '\\':
+                if char == u'\\':
                     if escaped:
                         # this is a fix for the problem that two backslashes
                         # inside are displayed as one, even in code blocks
-                        if string[pos - 1] == '\\':
-                            char = '\\\\'
+                        if string[pos - 1] == u'\\':
+                            char = u'\\\\'
                         else:
-                            char = ''
+                            char = u''
                         escaped = False
                     else:
                         escaped = True
-                        char = ''
+                        char = u''
                 else:
                     if escaped:
-                        char = '\\' + char
+                        char = u'\\' + char
                     escaped = False
                 add_text(char)
                 pos += 1
 
         # if there is a bogus escaped push a backslash
         if escaped:
-            add_text('\\')
+            add_text(u'\\')
 
         # if the text buffer is left filled, we flush it
         if text_buffer:
@@ -511,6 +511,6 @@ class Lexer(object):
         offset = 0
         for pos in escapes:
             pos = pos + offset
-            text = text[:pos] + '\\' + text[pos:]
+            text = text[:pos] + u'\\' + text[pos:]
             offset += 1
         return text

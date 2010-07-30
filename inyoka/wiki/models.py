@@ -69,7 +69,7 @@ class Page(db.Model):
     query = db.session.query_property(PageQuery)
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), index=True, nullable=False)
+    name = db.Column(db.Unicode(200), index=True, nullable=False)
     current_revision_id = db.Column(db.Integer,
         db.ForeignKey('wiki_revision.id', name='current_revision_id',
                       use_alter=True)) # avoid circular dependency
@@ -199,7 +199,7 @@ class Revision(db.Model):
     change_user_id = db.Column(db.ForeignKey(User.id), nullable=False)
     change_date = db.Column(db.DateTime, nullable=False,
                             default=datetime.utcnow)
-    change_comment = db.Column(db.String(512))
+    change_comment = db.Column(db.Unicode(512))
     text_id = db.Column(db.ForeignKey(Text.id))
     epoch = db.Column(db.Integer, nullable=False)
 

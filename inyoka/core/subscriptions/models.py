@@ -24,7 +24,7 @@ class Subscription(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.ForeignKey(User.id), nullable=False)
-    type_name = db.Column('type', db.String(20), nullable=False)
+    type_name = db.Column('type', db.Unicode(20), nullable=False)
     count = db.Column(db.Integer, nullable=False, default=0)
     subject_id = db.Column(db.Integer)
     first_unread_object_id = db.Column(db.Integer)

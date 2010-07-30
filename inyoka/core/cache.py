@@ -29,7 +29,7 @@ cache = (type('UnconfiguredCache', (NullCache,), {}))()
 class Cache(db.Model):
     __tablename__ = 'core_cache'
 
-    key = db.Column(db.String(60), primary_key=True, nullable=False)
+    key = db.Column(db.Unicode(60), primary_key=True, nullable=False)
     value = db.Column(db.PickleType, nullable=False)
     expires = db.Column(db.DateTime, nullable=False)
 

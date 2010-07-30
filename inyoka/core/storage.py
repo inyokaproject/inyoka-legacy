@@ -26,11 +26,11 @@ from inyoka.core.database import db
 class Storage(db.Model):
     __tablename__ = 'core_storage'
 
-    key = db.Column(db.String(200), primary_key=True, index=True)
+    key = db.Column(db.Unicode(200), primary_key=True, index=True)
     value = db.Column(db.PickleType)
 
 
-class storageSchemaController(db.ISchemaController):
+class StorageSchemaController(db.ISchemaController):
     models = [Storage]
 
 

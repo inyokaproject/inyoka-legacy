@@ -115,8 +115,8 @@ class Tag(db.Model, SerializableObject):
     public_fields = ('id', 'name', 'slug')
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, index=True)
-    slug = db.Column(db.String(20), nullable=False, unique=True)
+    name = db.Column(db.Unicode(20), nullable=False, index=True)
+    slug = db.Column(db.Unicode(20), nullable=False, unique=True)
     #: Number of items tagged
     tagged = db.Column(db.Integer, nullable=False, default=0)
     #: Flag if the tag is public or internal.  If a tag is not public
@@ -187,8 +187,8 @@ class Confirm(db.Model):
     _key_chars = string.ascii_letters + string.digits
 
     id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.String(32), unique=True)
-    action = db.Column(db.String(40))
+    key = db.Column(db.Unicode(32), unique=True)
+    action = db.Column(db.Unicode(40))
     data = db.Column(db.PickleType)
     expires = db.Column(db.Date)
 

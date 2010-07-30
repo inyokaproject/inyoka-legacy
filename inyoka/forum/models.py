@@ -58,9 +58,9 @@ class Forum(db.Model, SerializableObject):
                      'position', 'subforums')
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    slug = db.Column(db.String(80), unique=True, index=True)
-    description = db.Column(db.String(200), nullable=False, default=u'')
+    name = db.Column(db.Unicode(80), nullable=False)
+    slug = db.Column(db.Unicode(80), unique=True, index=True)
+    description = db.Column(db.Unicode(200), nullable=False, default=u'')
     parent_id = db.Column(db.Integer, db.ForeignKey(id), nullable=True,
             index=True)
     position = db.Column(db.Integer, nullable=False, default=0,
@@ -153,7 +153,7 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
                      'date_active', 'score', 'text', 'votes')
 
     entry_id = db.Column(db.Integer, primary_key=True)
-    discriminator = db.Column('type', db.String(12))
+    discriminator = db.Column('type', db.Unicode(12))
     author_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_active = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -224,8 +224,8 @@ class Question(Entry):
                      'id', 'title', 'slug')
 
     id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
-    title = db.Column(db.String(160), nullable=False)
-    slug = db.Column(db.String(160), nullable=False, index=True)
+    title = db.Column(db.Unicode(160), nullable=False)
+    slug = db.Column(db.Unicode(160), nullable=False, index=True)
     answer_count = db.Column(db.Integer, default=0)
 
     tags = db.relationship(Tag, secondary=question_tag, lazy='subquery',

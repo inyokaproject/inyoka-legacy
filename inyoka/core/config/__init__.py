@@ -81,7 +81,7 @@ class ListField(ConfigField):
     data type. `:` is used as a separator character between the items.
     """
 
-    conversion_field = TextField('','')
+    conversion_field = TextField(u'', u'')
 
     def __init__(self, default, help_text, field=None):
         ConfigField.__init__(self, default, help_text)

@@ -61,6 +61,7 @@ def get_base_url_for_controller(controller=None):
 
     Examples::
 
+        >>> ctx.cfg['base_domain_name'] = 'inyoka.local:5000'
         >>> ctx.cfg['routing.urls.news'] = 'news:/'
         >>> get_base_url_for_controller(u'news')
         u'http://news.inyoka.local:5000/'

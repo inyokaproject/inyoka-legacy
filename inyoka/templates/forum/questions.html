@@ -98,7 +98,7 @@
 {% else %}
 <p>{{ _('No questions found.') }}</p>
 {% endfor %}
-{{ pagination }}
+{{ pagination|safe }}
 
 {% endblock %}
 

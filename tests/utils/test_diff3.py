@@ -127,7 +127,7 @@ BBB 002'''
     assert_raises(DiffConflict, merge, old, other, new, False)
 
 
-def test_successfull_merge():
+def test_successful_merge():
     old = '''
 AAA 001
 AAA 002

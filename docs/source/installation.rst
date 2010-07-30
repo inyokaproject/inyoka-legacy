@@ -8,7 +8,7 @@ on the following slides.
 
 .. todo:
 
-   This documentation is a bit distribution dependend, try to abstract it.
+   This documentation is a bit distribution dependent, try to abstract it.
 
 Dependencies and virtual environment
 ====================================
@@ -91,7 +91,7 @@ Now start the development server::
 Inyoka should accessible at http://inyoka.local:5000. Otherwise comment out the
 IPv6 lines in your ``/etc/hosts`` and try again.
 
-Almost ready!
+Almost done!
 
 AMQP Messaging and Celery
 =========================
@@ -104,12 +104,9 @@ the hotness factor of various contents.
 In order to use celery you need to setup a AMQP Server, we're using RabbitMQ
 here for demonstration reasons.
 
-Install RabbitMQ::
+Install and start RabbitMQ::
 
     sudo apt-get rabbitmq-server
-
-And now setup the server::
-
     sudo /etc/init.d/rabbitmq-server start
 
 The server now runs fine and only needs to be configured to create a new
@@ -129,4 +126,4 @@ on the inyoka virtual host domain::
 
     sudo rabbitmqctl set_permissions -p inyoka inyoka "" ".*" ".*"
 
-Now you can use ``fab celeryd`` to start you're celery server.
+Now you can use ``fab celeryd`` to start your celery server.

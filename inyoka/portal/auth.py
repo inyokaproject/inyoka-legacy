@@ -29,7 +29,7 @@ def activate_user(data):
     u.status = 'normal'
     db.session.commit()
     ctx.current_request.flash(_(
-        u'Activation successfull, you can now login with your credentials'
+        u'Activation successful, you can now login with your credentials'
     ))
     return redirect_to('portal/login')
 

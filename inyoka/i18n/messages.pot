@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-24 22:44+0200\n"
+"POT-Creation-Date: 2010-07-30 22:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
-
-#: inyoka/core/notifications.py:169
-msgid "E-Mail"
-msgstr ""
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -222,68 +218,64 @@ msgid "Url mapping used for the usercp application"
 msgstr ""
 
 #: inyoka/core/config/defaults.py:138
-msgid "Url mapping used for the calendar application"
-msgstr ""
-
-#: inyoka/core/config/defaults.py:140
 msgid "Url mapping used for the news application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:142
+#: inyoka/core/config/defaults.py:140
 msgid "Url mapping used for the forum application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:144
+#: inyoka/core/config/defaults.py:142
 msgid "Url mapping used for the wiki application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:146
+#: inyoka/core/config/defaults.py:144
 msgid "Url mapping used for the paste application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:148
+#: inyoka/core/config/defaults.py:146
 msgid "Url mapping used for the planet application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:150
+#: inyoka/core/config/defaults.py:148
 msgid "Url mapping used for the admin application"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:152
+#: inyoka/core/config/defaults.py:150
 msgid "Url mapping used for the API"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:156
+#: inyoka/core/config/defaults.py:154
 msgid "Url mapping used for the testing system.  Do never chage that value!"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:161
+#: inyoka/core/config/defaults.py:159
 msgid "Url mapping used for static file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:163
+#: inyoka/core/config/defaults.py:161
 msgid "Url mapping used for media file serving"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:165
+#: inyoka/core/config/defaults.py:163
 msgid ""
 "Path to the directory for static files. Relative to the directory where the "
 "inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:169
+#: inyoka/core/config/defaults.py:167
 msgid ""
 "Path to the directory for shared static files, aka media. Relative to the "
 "directory where the inyoka package lies in."
 msgstr ""
 
-#: inyoka/core/config/defaults.py:175
+#: inyoka/core/config/defaults.py:173
 msgid ""
 "Name of the wiki index page (the one a user accessing the wiki's / is "
 "redirected to)"
 msgstr ""
 
-#: inyoka/core/config/defaults.py:180
+#: inyoka/core/config/defaults.py:178
 msgid ""
 "Files with lines greater than this number will not have syntax highlighting."
 " Enter 0 for no limit."
@@ -584,7 +576,7 @@ msgid "The tag “%s” was deleted successfully."
 msgstr ""
 
 #: inyoka/portal/auth.py:31
-msgid "Activation successfull, you can now login with your credentials"
+msgid "Activation successful, you can now login with your credentials"
 msgstr ""
 
 #: inyoka/portal/auth.py:45
@@ -619,23 +611,23 @@ msgstr ""
 msgid "The supplied key is not valid anymore."
 msgstr ""
 
-#: inyoka/portal/controllers.py:173
+#: inyoka/portal/controllers.py:156
 msgid "Edit profile"
 msgstr ""
 
-#: inyoka/portal/controllers.py:189
+#: inyoka/portal/controllers.py:172
 msgid "Your profile was saved successfully"
 msgstr ""
 
-#: inyoka/portal/controllers.py:197
+#: inyoka/portal/controllers.py:180
 msgid "Change password"
 msgstr ""
 
-#: inyoka/portal/controllers.py:212
+#: inyoka/portal/controllers.py:195
 msgid "The password you entered doesn't match your old one."
 msgstr ""
 
-#: inyoka/portal/controllers.py:217
+#: inyoka/portal/controllers.py:200
 msgid "Your password was changed successfully"
 msgstr ""
 

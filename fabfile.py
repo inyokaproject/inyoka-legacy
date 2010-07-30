@@ -161,7 +161,7 @@ def celeryd():
     """
     Start a celery worker, using our config.
     """
-    cmd = ('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader"'
+    cmd = ('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" '
            'celeryd --loglevel=INFO')
     local(cmd, capture=False)
 

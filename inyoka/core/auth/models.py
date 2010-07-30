@@ -23,10 +23,10 @@ from inyoka.utils.crypt import get_hexdigest
 
 
 USER_STATUS_MAP = BidiMap({
-    0: _('inactive'), #not yet activated
-    1: _('normal'),
-    2: _('banned'),
-    3: _('deleted'), #deleted itself
+    0: _(u'inactive'), #not yet activated
+    1: _(u'normal'),
+    2: _(u'banned'),
+    3: _(u'deleted'), #deleted itself
 })
 
 
@@ -141,7 +141,7 @@ class User(db.Model, SerializableObject):
 
     def set_password(self, raw_password):
         """Set a new sha1 generated password hash"""
-        salt = '%05x' % random.getrandbits(20)
+        salt = u'%05x' % random.getrandbits(20)
         hsh = get_hexdigest(salt, raw_password)
         self.pw_hash = u'%s$%s' % (salt, hsh)
 
@@ -149,9 +149,7 @@ class User(db.Model, SerializableObject):
         """
         Returns a boolean of whether the raw_password was correct.
         """
-        if isinstance(raw_password, unicode):
-            raw_password = raw_password.encode('utf-8')
-        salt, hsh = self.pw_hash.split('$')
+        salt, hsh = self.pw_hash.split(u'$')
         return hsh == get_hexdigest(salt, raw_password)
 
     def _set_status(self, status):

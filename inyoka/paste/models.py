@@ -74,7 +74,7 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
     def display_title(self):
         if self.title:
             return self.title
-        return _('Paste #%d') % self.id
+        return _(u'Paste #%d') % self.id
 
     @property
     def has_tree(self):

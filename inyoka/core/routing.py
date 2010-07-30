@@ -258,7 +258,7 @@ def href(endpoint, **values):
                                            force_external=_external)
     if _anchor is not None:
         url += '#' + url_quote(_anchor)
-    return url
+    return unicode(url)
 
 
 class DateConverter(BaseConverter):

@@ -14,11 +14,11 @@ from inyoka.core.exceptions import NotFound
 
 
 def urlify_page_name(name):
-    return name.replace(' ', '_').strip('_')
+    return name.replace(u' ', u'_').strip(u'_')
 
 
 def deurlify_page_name(name):
-    return name.replace('_', ' ').strip(' ')
+    return name.replace(u'_', u' ').strip(u' ')
 
 
 def find_page(url_name, redirect_view=None, redirect_params=None,
@@ -58,13 +58,13 @@ def find_page(url_name, redirect_view=None, redirect_params=None,
     try:
         page = Page.query.filter_by(deleted=False).filter_name(name).one()
     except db.NoResultFound:
-        raise NotFound(_('No such page.'))
+        raise NotFound(_(u'No such page.'))
 
     if url_name != page.url_name:
         if redirect:
             redirect_params[redirect_params_page_key] = page.url_name
             abort(redirect_to(redirect_view, **redirect_params))
         else:
-            raise NotFound(_('No such page.'))
+            raise NotFound(_(u'No such page.'))
 
     return page

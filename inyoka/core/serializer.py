@@ -90,7 +90,7 @@ def debug_dump(obj):
     """Dumps the data into a HTML page for debugging."""
     from inyoka.core.templating import render_template
     dump = json.dumps(obj, ensure_ascii=False, indent=2)
-    escaped = _escaped_newline_re.sub('\n', dump)
+    escaped = _escaped_newline_re.sub(u'\n', dump)
     return render_template('_debug_dump.html', dict(dump=escaped))
 
 

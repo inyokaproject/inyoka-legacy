@@ -120,12 +120,12 @@ class PortalController(IController):
         try:
             ret = call_confirm(key)
         except KeyError:
-            ret = _('Key not found. Maybe it has already been used?'), False
+            ret = _(u'Key not found. Maybe it has already been used?'), False
         except Expired:
-            ret = _('The supplied key is not valid anymore.'), False
+            ret = _(u'The supplied key is not valid anymore.'), False
 
         if isinstance(ret, tuple) and len(ret) == 2:
-            return Response('%s: %s' % (['success', 'fail'][not ret[1]],
+            return Response(u'%s: %s' % (['success', 'fail'][not ret[1]],
                                         ret[0]), mimetype='text/plain')
         return ret
 
@@ -158,11 +158,11 @@ class CalendarController(IController):
 
     @view('index')
     def index(self, request):
-        return Response('this is calendar index page')
+        return Response(u'This is calendar index page')
 
     @view('entry')
     def entry(self, request, date, slug):
-        return Response('this is calendar entry %r from %r' % (slug, date))
+        return Response(u'This is calendar entry %r from %r' % (slug, date))
 
 
 class UserCPExtension(IController):

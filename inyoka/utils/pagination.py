@@ -203,7 +203,7 @@ class Pagination(object):
                     add(u'<strong class="page%s">%d</strong>'
                         % (_pageclass, type))
 
-        add('</div>')
+        add(u'</div>')
         return Markup(u''.join(ret))
 
     def __unicode__(self):
@@ -220,7 +220,7 @@ class URLPagination(Pagination):
             if self.page == 1:
                 href = Href()
             else:
-                href = Href('../')
+                href = Href(u'../')
         else:
             href = Href(self.link)
 
@@ -250,7 +250,7 @@ class PageURLPagination(Pagination):
             if self.page == 1:
                 href = Href()
             else:
-                href = Href('../../')
+                href = Href(u'../../')
         else:
             href = Href(self.link)
 

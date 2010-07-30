@@ -156,13 +156,13 @@ def humanize_number(number):
         u'six'
         >>> humanize_number(13)
         u'13'
-        >>> humanize_number('some_string')
+        >>> humanize_number(u'some_string')
         u'some_string'
 
     """
-    strings = [_('zero'), _('one'), _('two'), _('three'), _('four'),
-               _('five'), _('six'), _('seven'), _('eight'),
-               _('nine'), _('ten'), _('eleven'), _('twelve')
+    strings = [_(u'zero'), _(u'one'), _(u'two'), _(u'three'), _(u'four'),
+               _(u'five'), _(u'six'), _(u'seven'), _(u'eight'),
+               _(u'nine'), _(u'ten'), _(u'eleven'), _(u'twelve')
               ]
     return strings[number] if number in xrange(13) else unicode(number)
 
@@ -191,7 +191,7 @@ def _format_timedelta(delta, granularity='second', threshold=.85, locale=None):
             value = int(round(value))
             plural_form = locale.plural_form(value)
             pattern = locale._data['unit_patterns'][unit][plural_form]
-            return pattern.replace('{0}', humanize_number(value))
+            return pattern.replace(u'{0}', humanize_number(value))
 
     return u''
 
@@ -238,7 +238,7 @@ def timedeltaformat(datetime_or_timedelta, threshold=.85, granularity='second'):
         datetime_or_timedelta = datetime.utcnow() - datetime_or_timedelta
 
     if datetime_or_timedelta <= timedelta(seconds=3):
-        return _('just now')
+        return _(u'just now')
 
     timedelta_ = _format_timedelta(datetime_or_timedelta, granularity,
                                   threshold=threshold)

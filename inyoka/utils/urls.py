@@ -22,9 +22,9 @@ def make_full_domain(subdomain=None, path=None):
     >>> ctx.cfg['base_domain_name'] = 'example.com'
     >>> make_full_domain()
     u'http://example.com/'
-    >>> make_full_domain('www')
+    >>> make_full_domain(u'www')
     u'http://www.example.com/'
-    >>> make_full_domain('www', 'faz')
+    >>> make_full_domain(u'www', 'faz')
     u'http://www.example.com/faz/'
     >>> del ctx.cfg['base_domain_name']
 
@@ -33,13 +33,13 @@ def make_full_domain(subdomain=None, path=None):
     adapter = ctx.dispatcher.url_adapter
     path = path.strip('/')
 
-    return unicode('%s://%s%s%s/%s' % (
+    return u'%s://%s%s%s/%s' % (
         adapter.url_scheme,
         subdomain and subdomain + '.' or '',
         adapter.server_name,
         adapter.script_name[:-1],
         path + '/' if path else ''
-    ))
+    )
 
 
 def get_host_port_mapping(value):
@@ -62,14 +62,14 @@ def get_base_url_for_controller(controller=None):
     Examples::
 
         >>> ctx.cfg['routing.urls.news'] = 'news:/'
-        >>> get_base_url_for_controller('news')
+        >>> get_base_url_for_controller(u'news')
         u'http://news.inyoka.local:5000/'
 
         # Support for empty controller name
-        >>> get_base_url_for_controller('')
+        >>> get_base_url_for_controller(u'')
         u'http://inyoka.local:5000/'
         >>> ctx.cfg['routing.urls.news'] = ':/_news'
-        >>> get_base_url_for_controller('news')
+        >>> get_base_url_for_controller(u'news')
         u'http://inyoka.local:5000/_news/'
 
     """

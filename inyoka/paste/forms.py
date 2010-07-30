@@ -19,7 +19,7 @@ from inyoka.i18n import _
 def _get_pygments_lexers(add_empty=True):
     r = []
     if add_empty:
-        r.append(('', ''),)
+        r.append((u'', u''),)
     for lexer in get_all_lexers():
         r.append((lexer[1][0], _(lexer[0])),)
     r.sort(key=itemgetter(1))

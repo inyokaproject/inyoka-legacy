@@ -63,9 +63,9 @@ def call_confirm(key):
     """
     c = Confirm.query.get(key)
     if c is None:
-        raise KeyError('No such key: %s' % key)
+        raise KeyError(u'No such key: %s' % key)
     if c.is_expired:
-        raise Expired('Expired on %s' % c.expires.strftime('%F'))
+        raise Expired(u'Expired on %s' % c.expires.strftime('%F'))
     ret = CONFIRM_ACTIONS[c.action](c.data)
     db.session.delete(c)
     db.session.commit()

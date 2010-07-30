@@ -71,8 +71,6 @@ class TestResponse(Response, ContentAccessors):
 class FixtureLoader(object):
     """This class is responsible of loading fixtures."""
 
-    default_encoding = 'utf-8'
-
     def cast(type_, cast_func, value):
         if type(value) == type_:
             return value
@@ -81,7 +79,7 @@ class FixtureLoader(object):
 
     default_casts = {
         db.Integer:int,
-        db.Unicode: partial(cast, unicode, lambda x: unicode(x, default_encoding)),
+        db.Unicode: partial(cast, unicode, lambda x: unicode(x, 'utf-8')),
         db.Date: parse_timestamp,
         db.DateTime: parse_timestamp,
         db.Time: parse_timeonly,

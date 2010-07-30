@@ -7,12 +7,12 @@
     data is cached for increased performance. Accessing it is quite simple::
 
         >>> from inyoka.core.storage import storage
-        >>> storage.set('foo', 'bar')
-        >>> storage.get('foo')
-        'bar'
-        >>> storage.set('bar', 'foo')
+        >>> storage.set(u'foo', u'bar')
+        >>> storage.get(u'foo')
+        u'bar'
+        >>> storage.set(u'bar', u'foo')
         >>> storage.get_many(['foo', 'bar'])
-        {'foo': 'bar', 'bar': 'foo'}
+        {'foo': u'bar', 'bar': u'foo'}
 
     :copyright: 2007-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.

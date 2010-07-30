@@ -43,6 +43,7 @@ def test_find_page():
         'tEsT pAgE', 'wiki/show', {'revision': 1})
     assert_raises(NotFound, find_page, 'some inexistent page', 'wiki/show')
     assert_raises(NotFound, find_page, 'test page', redirect=False)
+    assert_raises(TypeError, find_page, 'test_page')
 
     db.session.delete(p.current_revision)
     db.session.delete(p)

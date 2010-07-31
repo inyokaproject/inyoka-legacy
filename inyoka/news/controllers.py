@@ -150,7 +150,7 @@ class NewsController(IController):
     def change_comment(self, request, id, action):
         comment = Comment.query.get(id)
         if action in ('hide', 'restore'):
-            comment.deleted = False if action == 'restore' else True
+            comment.deleted = action == 'hide'
             db.session.commit()
             request.flash(_(u'The comment was hidden') if action == 'hide' \
                 else _(u'The comment was restored'))

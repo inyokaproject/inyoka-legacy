@@ -21,7 +21,7 @@ def render(source):
 def test_escaping():
     """Test html escaping"""
     eq_(render('<em>blub</em>'), u'&lt;em&gt;blub&lt;/em&gt;')
-    eq_(render("you're so cool"), u"you&#39;re so cool")
+    eq_(render('me&you\'re so "cool'), u"me&amp;you&#39;re so &#34;cool")
 
 
 def test_simple_markup():

@@ -1,16 +1,16 @@
 a.tag {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
-  background: #D5E19D;
-  color: #304800;
+  background: #dee6b8;
+  color: #46520b;
   font-size: .8em;
   padding: .2em .5em;
   text-decoration: none;
 }
 
 a.tag:hover {
-  background: #304800;
-  color: #D5E19D;
+  background: #46520b;
+  color: #dee6b8;
 }
 
 div.answer {
@@ -56,7 +56,7 @@ div.stats div.status {
 }
 
 div.stats div.status.unanswered {
-  background: #9a4444;
+  background: #a83018;
 }
 
 div.stats div.votes {

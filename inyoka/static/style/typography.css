@@ -91,18 +91,6 @@
   padding-top: 0;
 }
 
-a {
-  color: #304800;
-}
-
-a abbr, a acronym {
-  border: none;
-}
-
-a:hover, a:focus {
-  color: #909d00;
-}
-
 abbr, acronym {
   font-size: 0.8em;
   letter-spacing: .1em;

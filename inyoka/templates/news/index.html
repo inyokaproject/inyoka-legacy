@@ -11,9 +11,9 @@
 
 {% block content %}
   {%- if tag %}
-    <h3>{{ _('Articles for “%(tag)s”', tag=tag) }}</h3>
+    <h1>{{ _('Articles for “%(tag)s”', tag=tag) }}</h1>
   {% else %}
-    <h3>{{ _('Latest News') }}</h3>
+    <h1>{{ _('Latest News') }}</h1>
   {%- endif %}
   {%- if articles %}
   {%- for article in articles %}

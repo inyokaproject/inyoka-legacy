@@ -135,21 +135,21 @@ del {
 }
 
 h1, h2, h3 {
-  color: #304800;
+  color: #23520b;
   margin-bottom: .5em;
 }
 
-h2 {
-  color: #90A818;
+h2, h3 {
+  margin-top: .5em;
 }
 
-h2 a {
-  color: #90A818;
+a {
+  color: #90a818;
   text-decoration: none;
 }
 
-h2 a:hover, h2 a:focus {
-  text-decoration: underline;
+a:hover {
+  color: #46520b;
 }
 
 ins, dfn {

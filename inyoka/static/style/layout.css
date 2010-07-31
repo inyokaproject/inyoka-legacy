@@ -286,39 +286,42 @@ div.not_found p {
 
 /* Pagination */
 div.pagination {
-  background: #eee;
   clear: both;
   font-size: .9em;
-  margin: 0.5em;
-  padding: 0.5em;
+  margin-top: 2em;
   text-align: center;
 }
 
 div.pagination a {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
-  background-color: #dedede;
-  border-bottom: none;
-  color: #666;
-  margin-right: 0;
+  background: #90a818;
+  color: #fff;
+  margin: 0.2em;
   padding: 4px 8px;
   text-decoration: none;
 }
 
+div.pagination a:hover {
+  background: #46520b;
+}
+
 div.pagination span.comma {
-  visibility: hidden;
+  display: none;
 }
 
 div.pagination strong {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
-  background-color: #fff;
-  border-bottom: none;
-  border-top: 0.5em solid #fff;
-  color: #000;
-  margin-right: 0;
-  padding: 4px 8px;
+  background-color: #23520b;
+  color: #fff;
+  margin: 0.2em;
+  padding: 6px 10px;
   text-decoration: none;
+}
+
+div.pagination span.disabled {
+  display: none;
 }
 
 /* Pagetabs */
@@ -351,8 +354,7 @@ ul.pagetabs li a {
 }
 
 ul.pagetabs li a:hover,
-ul.pagetabs li a:focus,
-div.pagination a:hover {
+ul.pagetabs li a:focus {
   background: #fff;
 }
 

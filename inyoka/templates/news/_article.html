@@ -1,6 +1,6 @@
 {% macro render_article(article) -%}
   <div class="article {{ article.hidden and ' hidden' or '' }}">
-    <h3 class="title"><a href="{{ href(article) }}">{{ article.title }}</a></h3>
+    <h2 class="title"><a href="{{ href(article) }}">{{ article.title }}</a></h2>
     <p class="meta">
       <span class="published">{{ article.updated|dateformat }} {{ article.updated|timeformat('short') }}</span>
       <span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>

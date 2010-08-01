@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="article">
-    <h3 class="title"><a href="{{ href(article) }}">{{ article.title }}</a></h3>
+    <h1 class="title">{{ article.title }}</h1>
     <p class="meta">
       <span class="published">
         {%- trans author_url=href(article.author.profile), author_name=article.author.username,

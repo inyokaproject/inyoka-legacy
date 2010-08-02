@@ -163,8 +163,13 @@
 }
 
 #page-sidebar #download {
-  background-color: #23520b;
+  background: url(../img/download.png) no-repeat 0.4em center #23520b;
   color: #fff;
+  padding: 0.8em 0.5em 0.5em 4em;
+}
+
+#page-sidebar #download a:hover {
+  color: #DEE6B8;
 }
 
 #page-sidebar ul {

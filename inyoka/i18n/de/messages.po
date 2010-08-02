@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-30 22:27+0200\n"
+"POT-Creation-Date: 2010-07-31 15:43+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -174,7 +174,6 @@ msgstr ""
 #, fuzzy
 msgid "Imaging backend to use."
 msgstr "Zu verwendendes Backend für Imaging"
-
 
 #: inyoka/core/config/defaults.py:96
 msgid "Portal avatar size."
@@ -552,7 +551,7 @@ msgstr "Artikel"
 #: inyoka/news/models.py:99
 #, python-format
 msgid "Comment by %s on %s"
-msgstr "Kommentar von% s auf %s"
+msgstr "Kommentar von %s zu %s"
 
 #: inyoka/paste/admin.py:20 inyoka/templates/paste/base.html:2
 msgid "Paste"
@@ -603,7 +602,7 @@ msgstr "Das Schlagwort „%s“ wurde erfolgreich gelöscht."
 #: inyoka/portal/auth.py:31
 #, fuzzy
 msgid "Activation successful, you can now login with your credentials"
-msgstr "Aktivierung erfolgreich, du kannst dich anmelden"
+msgstr "Aktivierung erfolgreich, du kannst dich nun anmelden"
 
 #: inyoka/portal/auth.py:45
 msgid "User is unknown or the password is not correct."
@@ -619,7 +618,7 @@ msgstr "Du hast dich erfolgreich abgemeldet."
 
 #: inyoka/portal/auth.py:176
 msgid "Please log in."
-msgstr "Bitte anmelden."
+msgstr "Bitte melde dich an."
 
 #: inyoka/portal/auth.py:191
 msgid "Invalid login."
@@ -1258,6 +1257,10 @@ msgstr ""
 "Bulletin Board System integriert neben einem Kalender und einer Pastebin "
 "Anwendung. Es ist geschrieben in  <a href=\"%(python_link)s\">Python</a> "
 "geschrieben und nutzt verschiedene OpenSource Technologien."
+
+#: inyoka/templates/portal/index.html:11
+msgid "Latest Content"
+msgstr "Gerade geschrieben"
 
 #: inyoka/templates/portal/index.html:20
 msgid "There's no content yet!"

@@ -431,17 +431,14 @@ def create_wiki_test_data():
     from inyoka.wiki.models import Page, Revision
 
     u = User.query.first()
-    a = Revision(
-        page=Page(name=ctx.cfg['wiki.index.name']), epoch=1,
-        raw_text=u'This is the wiki index page!',
-        change_user=u, change_comment=u'hello world.',
-    )
+    a = Page.create(ctx.cfg['wiki.index.name'],
+                    change_user=u, change_comment=u'hello world.',
+                    text=u'This is the wiki index page!')
 
-    b = Revision(
-        page=Page(name=u'Installation'), epoch=1,
-        raw_text=u"Type:\n ./configure\n make\n '''make install'''\nThat\'s it.",
-        change_user=u, change_comment=u'started installation page',
-    )
+    b = Page.create(u'Installation',
+                    text=u"Type:\n ./configure\n make\n '''make install'''\n"
+                         u"That\'s it.", change_user=u,
+                    change_comment=u'started installation page')
     db.session.commit()
 
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from sqlalchemy_schemadisplay import create_uml_graph, create_schema_graph
 from sqlalchemy.orm import class_mapper

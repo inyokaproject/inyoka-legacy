@@ -100,12 +100,18 @@ def _action(*args, **kwargs):
             from gevent.wsgi import WSGIServer
             WSGIServer((hostname, port), app).serve_forever()
 
+        def _meinheld():
+            from meinheld import server
+            server.listen((hostname, port))
+            server.run(app)
+
         mapping = {
             'simple': _simple,
             'eventlet': _eventlet,
             'cherrypy': _cherrypy,
             'tornado': _tornado,
-            'gevent': _gevent
+            'gevent': _gevent,
+            'meinheld': _meinheld
         }
 
         # run actually the server

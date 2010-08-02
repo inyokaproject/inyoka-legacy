@@ -136,6 +136,11 @@
 #page-introduction {
   background-color: #EEE;
   color: #001800;
+  padding: 1em;
+}
+
+#page-introduction h1 {
+  font-size: 1em;
 }
 
 #page-navbar {

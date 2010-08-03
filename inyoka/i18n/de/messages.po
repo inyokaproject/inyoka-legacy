@@ -1447,18 +1447,16 @@ msgid "Attaching files to an attachment is not permitted!"
 msgstr "Eine Datei kann nicht an einen Anhang angehängt werden!"
 
 #: inyoka/wiki/controllers.py:91
-#, fuzzy
 msgid "The attachment was created successfully."
-msgstr "Der Artikel „%s“ wurde erfolgreich gelöscht."
+msgstr "Der Anhang wurde erfolgreich erstellt."
 
 #: inyoka/wiki/controllers.py:97
 msgid "The file was attached successfully by overwriting an old one."
 msgstr "Eine alte Datei wurde erfolgreich mit der neuen ersetzt."
 
 #: inyoka/wiki/controllers.py:100
-#, fuzzy
 msgid "An attachment with this name does already exist!"
-msgstr "Dieser Benutzer existiert bereits"
+msgstr "Es existiert bereits ein Anhang mit diesem Namen!"
 
 #: inyoka/wiki/controllers.py:135
 msgid "Text didn't change."
@@ -1469,14 +1467,12 @@ msgid "The page has been saved."
 msgstr "Die Seite wurde gespeichert"
 
 #: inyoka/wiki/forms.py:22
-#, fuzzy
 msgid "File"
-msgstr "fünf"
+msgstr "Datei"
 
 #: inyoka/wiki/forms.py:23
-#, fuzzy
 msgid "Rename to"
-msgstr "Ersteller"
+msgstr "Umbenennen nach"
 
 #: inyoka/wiki/forms.py:26
 msgid "Overwrite existing attachment with the same name"

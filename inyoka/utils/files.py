@@ -22,7 +22,6 @@ def find_unused_filename(folder, filename):
     max_id = 1
     base, ext = splitext(filename)
     # XXX: Escape base
-    # XXX: to utils
     r = re.compile('%s(\d+)%s' % (base, ext))
     for f in listdir(folder):
         match = r.match(f)

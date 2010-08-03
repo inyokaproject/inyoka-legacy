@@ -75,12 +75,15 @@
 """
 import sys
 import time
+from os import remove, path, environ
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
 from datetime import datetime
+from werkzeug import FileStorage
+from mimetypes import guess_type
 import sqlalchemy
-from sqlalchemy import MetaData, create_engine, Table
+from sqlalchemy import MetaData, create_engine, Table, Unicode
 from sqlalchemy import orm, sql, exc
 from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.orm.session import Session as SASession
@@ -91,15 +94,18 @@ from sqlalchemy.orm.attributes import get_attribute, set_attribute
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta, _declarative_constructor
+from sqlalchemy.types import MutableType, TypeDecorator
 from inyoka import Interface
 from inyoka.context import ctx
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
+from inyoka.utils.files import find_unused_filename
 
 
 _engine = None
 _engine_lock = Lock()
+MEDIA_PATH = path.join(environ['INYOKA_MODULE'], ctx.cfg['media_path'])
 
 
 def get_engine():
@@ -467,6 +473,87 @@ class SlugGenerator(orm.MapperExtension):
                 getattr(instance.__class__, self.slugfield), slug))
 
 
+class FileObject(FileStorage):
+
+    def __init__(self, filename, stream=None, *args, **kwargs):
+        if not stream and filename:
+            self.filename = filename
+            stream = open(self.path)
+        super(FileObject, self).__init__(stream, filename, *args, **kwargs)
+
+    @property
+    def size(self):
+        """The size of the attachment in bytes."""
+        return path.getsize(self.path)
+
+    @property
+    def path(self):
+        return path.join(MEDIA_PATH, self.filename)
+
+    @property
+    def mimetype(self):
+        """The mimetype of the attachment."""
+        return guess_type(self.path)[0] or 'application/octet-stream'
+
+    @property
+    def contents(self):
+        """
+        The raw contents of the file.  This is unsafe because
+        it can cause the memory limit to be reached if the file is too
+        big.
+        """
+        f = self.open()
+        try:
+            return f.read()
+        finally:
+            f.close()
+
+    def open(self, mode='rb'):
+        """
+        Open the file as file descriptor.  Don't forget to close this file
+        descriptor accordingly.
+        """
+        return file(self.path, mode)
+
+    def delete(self):
+        if path.exists(self.filename):
+            remove(self.path)
+
+    def __del__(self):
+        self.close()
+
+
+class File(MutableType, TypeDecorator):
+    impl = sqlalchemy.String
+    save_to = None
+
+    def __init__(self, save_to=None):
+        self.save_to = save_to
+        super(File, self).__init__()
+
+    def bind_processor(self, dialect):
+        def process(value):
+            folder = path.join(MEDIA_PATH, self.save_to)
+            if path.exists(path.join(folder, value.filename)):
+                filename = find_unused_filename(folder, value.filename)
+            else:
+                filename = value.filename
+            value.save(path.join(folder, filename))
+            return filename
+        return process
+
+    def result_processor(self, dialect, coltype):
+        def process(value):
+            return FileObject(path.join(self.save_to, value))
+        return process
+
+    def copy_value(self, value):
+        return value
+
+    def is_mutable(self):
+        return True
+
+
 def init_db(**kwargs):
     kwargs['tables'] = list(ISchemaController.get_models(tables=True))
     is_test = kwargs.pop('is_test', False)
@@ -507,6 +594,7 @@ def _make_module():
     db.find_next_increment = find_next_increment
     db.Model = Model
     db.Query = Query
+    db.File = File
     db.SlugGenerator = SlugGenerator
     db.AttributeExtension = AttributeExtension
     db.ColumnProperty = orm.ColumnProperty

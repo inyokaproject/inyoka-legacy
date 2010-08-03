@@ -11,11 +11,12 @@
 from datetime import datetime
 from operator import attrgetter
 from sqlalchemy.ext.associationproxy import association_proxy
-from inyoka.core.api import db
+from inyoka.core.api import db, href, _
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.wiki.utils import urlify_page_name
 from inyoka.portal.api import ILatestContentProvider
+from inyoka.utils.highlight import highlight_text
 
 
 
@@ -118,9 +119,8 @@ class Page(db.Model):
         p.edit(_was_deleted=_was_deleted, **kwargs)
         return p
 
-
     def edit(self, change_user, change_comment=None, text=None,
-             change_date=None, _was_deleted=False):
+             change_date=None, _was_deleted=False, attachment=None):
         """
         Create a new revision for this page.
 
@@ -128,6 +128,8 @@ class Page(db.Model):
         :param change_comment: The user's comment on the change.
         :param change_date: Date of the change. Defaults to utcnow.
         :param text: New text of the page. Defaults to current text.
+        :param attachment: A FileStorage object pointing to a file that shall
+                           be attached to the page.
         """
         if self.deleted:
             raise PageDeleted(u'This page is deleted and cannot be edited. '
@@ -146,15 +148,33 @@ class Page(db.Model):
         else:
             r.raw_text = text
 
+        if attachment:
+            att = Attachment(file=attachment)
+
         self.current_revision = r
         db.session.commit()
 
+        if attachment:
+            r.attachment_id = att.id
+            db.session.commit()
 
     def delete(self):
         self.deleted = True
         self.current_epoch += 1
         db.session.commit()
 
+    def get_attachment_pages(self):
+        """
+        Return a list of the pages that contain files attached to this page.
+        """
+        return Page.query.join(Page.current_revision).filter(
+            Page.name.startswith(self.name + u'/') &
+            (Revision.attachment_id > 0)
+        )
+
+    @property
+    def is_attachment_page(self):
+        return self.current_revision.attachment_id is not None
 
     @property
     def url_name(self):
@@ -166,7 +186,7 @@ class Page(db.Model):
                 'page': self.url_name,
                 'revision': getattr(revision, 'id', revision)
             }
-        elif action in ('history', 'edit'):
+        elif action in ('history', 'edit', 'attachments'):
             return 'wiki/%s' % action, {'page': self.url_name}
 
 
@@ -179,6 +199,41 @@ class Text(db.Model, TextRendererMixin):
 
     def __repr__(self):
         return '<Text #%r>' % self.id
+
+
+class Attachment(db.Model):
+    """
+    Revisions can have uploaded data associated, this table holds the
+    mapping to the uploaded file on the file system.
+    """
+    __tablename__ = 'wiki_attachment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    file = db.Column(db.File(save_to='wiki/attachments'))
+
+    @property
+    def html_representation(self):
+        """
+        This method returns a `HTML` representation of the attachment for the
+        `show_action` page.  If this method does not know about an internal
+        representation for the object the return value will be an download
+        link to the raw attachment.
+        """
+        url = href(self)
+        t = u'<a href="%s">%s</a>' % (url, _(u'Download attachment'))
+        if self.file.mimetype.startswith('image/'):
+            # TODO: This should be thumbnailed
+            return u'<a href="%s"><img class="attachment" src="%s" ' \
+                   u'alt="%s"></a>' % ((url,) * 3)
+        elif self.file.mimetype.startswith('text/'):
+            # TODO: This loads the whole file into memory
+            return highlight_text(self.file.contents,
+                                  filename=self.file.filename) + t
+        else:
+            return t
+
+    def get_url_values(self, action='show'):
+        return 'media', {'file': self.file.filename}
 
 
 def _create_text(value):
@@ -197,12 +252,14 @@ class Revision(db.Model):
     change_comment = db.Column(db.Unicode(512))
     text_id = db.Column(db.ForeignKey(Text.id))
     epoch = db.Column(db.Integer, nullable=False)
+    attachment_id = db.Column(db.ForeignKey(Attachment.id))
 
     page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
         backref=db.backref('all_revisions', lazy='dynamic',
                            cascade='all, delete-orphan'))
     text = db.relationship(Text)
     change_user = db.relationship(User)
+    attachment = db.relationship(Attachment)
 
     raw_text = association_proxy('text', 'text', creator=_create_text)
     rendered_text = association_proxy('text', 'rendered_text')
@@ -233,4 +290,4 @@ Page.revisions = db.relationship(Revision, lazy='dynamic',
 
 
 class WikiSchemaController(db.ISchemaController):
-    models = [Page, Revision, Text]
+    models = [Page, Revision, Text, Attachment]

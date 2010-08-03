@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-07-31 15:43+0200\n"
+"POT-Creation-Date: 2010-08-03 17:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,6 +313,10 @@ msgstr ""
 msgid "There's no user with this email"
 msgstr ""
 
+#: inyoka/core/forms/validators.py:175
+msgid "The name must not contain slashes."
+msgstr ""
+
 #: inyoka/core/markup/parser.py:46
 msgid "Internal parser error: "
 msgstr ""
@@ -334,7 +338,7 @@ msgid "Title"
 msgstr ""
 
 #: inyoka/forum/forms.py:21 inyoka/forum/forms.py:29 inyoka/news/forms.py:21
-#: inyoka/news/forms.py:31 inyoka/paste/forms.py:31 inyoka/wiki/forms.py:16
+#: inyoka/news/forms.py:31 inyoka/paste/forms.py:31 inyoka/wiki/forms.py:17
 msgid "Text"
 msgstr ""
 
@@ -356,7 +360,7 @@ msgstr ""
 msgid "Parent"
 msgstr ""
 
-#: inyoka/forum/forms.py:41
+#: inyoka/forum/forms.py:41 inyoka/wiki/forms.py:24
 msgid "Description"
 msgstr ""
 
@@ -999,7 +1003,7 @@ msgid "unsubscribe"
 msgstr ""
 
 #: inyoka/templates/news/edit_comment.html:5 inyoka/templates/wiki/history.html:13
-#: inyoka/wiki/forms.py:17
+#: inyoka/wiki/forms.py:18 inyoka/wiki/forms.py:25
 msgid "Edit comment"
 msgstr ""
 
@@ -1170,8 +1174,12 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
+#: inyoka/templates/portal/base.html:21
+msgid "Get Inyoka!"
+msgstr ""
+
 #: inyoka/templates/portal/base.html:22
-msgid "Download"
+msgid "Download preview \"when it's done\""
 msgstr ""
 
 #: inyoka/templates/portal/group.html:4
@@ -1399,12 +1407,44 @@ msgstr ""
 msgid "Invalid revision specified."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:88
+#: inyoka/wiki/controllers.py:73
+msgid "Attaching files to an attachment is not permitted!"
+msgstr ""
+
+#: inyoka/wiki/controllers.py:91
+msgid "The attachment was created successfully."
+msgstr ""
+
+#: inyoka/wiki/controllers.py:97
+msgid "The file was attached successfully by overwriting an old one."
+msgstr ""
+
+#: inyoka/wiki/controllers.py:100
+msgid "An attachment with this name does already exist!"
+msgstr ""
+
+#: inyoka/wiki/controllers.py:135
 msgid "Text didn't change."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:99
+#: inyoka/wiki/controllers.py:146
 msgid "The page has been saved."
+msgstr ""
+
+#: inyoka/wiki/forms.py:22
+msgid "File"
+msgstr ""
+
+#: inyoka/wiki/forms.py:23
+msgid "Rename to"
+msgstr ""
+
+#: inyoka/wiki/forms.py:26
+msgid "Overwrite existing attachment with the same name"
+msgstr ""
+
+#: inyoka/wiki/models.py:223
+msgid "Download attachment"
 msgstr ""
 
 #: inyoka/wiki/utils.py:61 inyoka/wiki/utils.py:68

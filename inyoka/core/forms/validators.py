@@ -167,3 +167,11 @@ def is_user(message=None, key='username', negative=False):
             raise ValidationError(message)
 
     return validator
+
+
+def is_valid_attachment_name():
+    def validator(form, field):
+        if u'/' in field.data:
+            raise ValidationError(lazy_gettext(u'The name must not contain '
+                                               u'slashes.'))
+    return validator

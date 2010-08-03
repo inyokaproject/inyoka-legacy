@@ -13,8 +13,8 @@ from inyoka.core.api import IController, Rule, view, templated, redirect_to, \
 from inyoka.core.http import Response
 from inyoka.core.templating import render_template
 from inyoka.core.exceptions import NotFound
-from inyoka.wiki.forms import EditPageForm
-from inyoka.wiki.models import Page, Revision
+from inyoka.wiki.forms import EditPageForm, AttachmentForm
+from inyoka.wiki.models import Page, Revision, PageExists
 from inyoka.wiki.utils import find_page, urlify_page_name, deurlify_page_name
 
 
@@ -25,6 +25,7 @@ class WikiController(IController):
         Rule('/', endpoint='index'),
         Rule('/<path:page>/+edit', endpoint='edit'),
         Rule('/<path:page>/+history', endpoint='history'),
+        Rule('/<path:page>/+attachments', endpoint='attachments'),
         Rule('/<path:page>/+<int:revision>', endpoint='show'),
         Rule('/<path:page>', endpoint='show'),
     ]
@@ -33,7 +34,6 @@ class WikiController(IController):
     def index(self, request):
         return redirect_to('wiki/show',
             page=urlify_page_name(ctx.cfg['wiki.index.name']))
-
 
     @view
     @templated('wiki/show.html')
@@ -62,6 +62,53 @@ class WikiController(IController):
         return {
             'page': page,
             'revision': revision,
+        }
+
+    @view
+    @templated('wiki/attachments.html')
+    def attachments(self, request, page):
+        page = find_page(url_name=page, redirect_view='wiki/attachments')
+
+        if page.is_attachment_page:
+            request.flash(_(u'Attaching files to an attachment is not '
+                            u'permitted!'), False)
+            return redirect_to(page)
+
+        form = AttachmentForm(request.form)
+
+        if request.method == 'POST' and form.validate():
+            name = u'%s/%s' % (page.name, form.data['rename_to'] or 
+                                          request.files['file'].filename)
+            kwargs = {
+                'change_user':      request.user,
+                'change_comment':   form.data['comment'],
+                'text':             form.data['description'],
+                'attachment':       request.files['file'],
+            }
+
+            try:
+                att_page = Page.create(name, **kwargs)
+                request.flash(_(u'The attachment was created successfully.'),
+                               True)
+            except PageExists:
+                if form.data['overwrite']:
+                    att_page = Page.query.get(name)
+                    att_page.edit(**kwargs)
+                    request.flash(_(u'The file was attached successfully by '
+                                    u'overwriting an old one.'), True)
+                else:
+                    request.flash(_(u'An attachment with this name does already'
+                                    u' exist!'), False)
+                    return redirect_to(page, action='attachments')
+
+            return redirect_to(att_page)
+
+        attachment_pages = page.get_attachment_pages()
+
+        return {
+            'page': page,
+            'form': form,
+            'attachment_pages': list(attachment_pages),
         }
 
     @view

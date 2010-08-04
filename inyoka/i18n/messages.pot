@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-03 17:46+0200\n"
+"POT-Creation-Date: 2010-08-04 02:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1322,6 +1322,27 @@ msgstr ""
 
 #: inyoka/templates/usercp/password.html:8
 msgid "For security reasons you've to enter your old password once again."
+msgstr ""
+
+#: inyoka/templates/wiki/attachments.html:3 inyoka/templates/wiki/base.html:20
+msgid "Attachments"
+msgstr ""
+
+#: inyoka/templates/wiki/attachments.html:7
+msgid "Add attachment"
+msgstr ""
+
+#: inyoka/templates/wiki/attachments.html:12
+msgid "Existing attachments"
+msgstr ""
+
+#: inyoka/templates/wiki/attachments.html:14
+#, python-format
+msgid "There are currently %(number)s files attached to this page."
+msgstr ""
+
+#: inyoka/templates/wiki/attachments.html:21
+msgid "There are currently no files attached to this page."
 msgstr ""
 
 #: inyoka/templates/wiki/base.html:17

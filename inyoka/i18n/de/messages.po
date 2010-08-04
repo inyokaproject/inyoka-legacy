@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-03 17:46+0200\n"
+"POT-Creation-Date: 2010-08-04 02:04+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -1356,6 +1356,27 @@ msgstr "Hier kannst du das Passwort von deinem Benutzer ändern."
 #: inyoka/templates/usercp/password.html:8
 msgid "For security reasons you've to enter your old password once again."
 msgstr "Zur Sicherheit musst du dazu dein altes Passwort nocheinmal eingeben."
+
+#: inyoka/templates/wiki/attachments.html:3 inyoka/templates/wiki/base.html:20
+msgid "Attachments"
+msgstr "Dateianhänge"
+
+#: inyoka/templates/wiki/attachments.html:7
+msgid "Add attachment"
+msgstr "Neuer Anhang"
+
+#: inyoka/templates/wiki/attachments.html:12
+msgid "Existing attachments"
+msgstr "Bestehende Anhänge"
+
+#: inyoka/templates/wiki/attachments.html:14
+#, python-format
+msgid "There are currently %(number)s files attached to this page."
+msgstr "Im Moment hat diese Seite %(number)s Dateianhänge."
+
+#: inyoka/templates/wiki/attachments.html:21
+msgid "There are currently no files attached to this page."
+msgstr "Im Moment hat diese Seite keine Dateianhänge."
 
 #: inyoka/templates/wiki/base.html:17
 msgid "Show"

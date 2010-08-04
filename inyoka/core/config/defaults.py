@@ -16,6 +16,7 @@ from inyoka.i18n import lazy_gettext
 
 
 _default_media_data_path = join(os.environ['INYOKA_MODULE'], 'media')
+_default_templates_path = join(os.environ['INYOKA_MODULE'], 'templates')
 
 
 DEFAULTS = {
@@ -98,7 +99,7 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Portal thumbnail size.')),
 
     # template specific values
-    'templates.path':               TextField(default=u'',
+    'templates.path':               TextField(default=_default_templates_path,
         help_text=lazy_gettext(u'Custom template path which is '
             u'searched before the default path.')),
     'templates.auto_reload':        BooleanField(default=True,
@@ -111,6 +112,14 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Use Memcached for bytecode caching')),
     'templates.use_filesystem_cache':     BooleanField(default=False,
         help_text=lazy_gettext(u'Use filesystem for bytecode caching')),
+
+    #TODO: yet a hack untill we have proper information about what an app is
+    'templates.packages.portal':    TextField(default=u'inyoka.portal'),
+    'templates.packages.news':    TextField(default=u'inyoka.news'),
+    'templates.packages.forum':    TextField(default=u'inyoka.forum'),
+    'templates.packages.wiki':    TextField(default=u'inyoka.wiki'),
+    'templates.packages.paste':    TextField(default=u'inyoka.paste'),
+    'templates.packages.planet':    TextField(default=u'inyoka.planet'),
 
     # caching
     'caching.system':               TextField(default=u'null',

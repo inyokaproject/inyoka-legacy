@@ -12,8 +12,12 @@ import os
 import sys
 import json
 import functools
+from pkg_resources import DefaultProvider, ResourceManager, \
+    get_provider
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
-    ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache
+    ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache, \
+    PackageLoader, PrefixLoader
+from jinja2.loaders import split_template_path
 from inyoka import INYOKA_REVISION, l10n, i18n
 from inyoka.context import ctx
 from inyoka.core.http import Response
@@ -106,6 +110,60 @@ def templated(template_name, modifier=None, stream=False):
     return decorator
 
 
+class LazyPackageLoader(PackageLoader):
+    """Works like the jinja2 package loader but loads packages
+    lazily to not break our import system on startup.
+    """
+
+    def __init__(self, package_name, package_path='templates',
+                 encoding='utf-8'):
+        self.package_name = package_name
+        self.encoding = encoding
+        self.manager = ResourceManager()
+        self.package_path = package_path
+
+    def get_source(self, environment, template):
+        provider = get_provider(self.package_name)
+        pieces = split_template_path(template)
+        p = '/'.join((self.package_path,) + tuple(pieces))
+        if not provider.has_resource(p):
+            raise TemplateNotFound(template)
+
+        filename = uptodate = None
+        if isinstance(provider, DefaultProvider):
+            filename = provider.get_resource_filename(self.manager, p)
+            mtime = os.path.getmtime(filename)
+            def uptodate():
+                try:
+                    return os.path.getmtime(filename) == mtime
+                except OSError:
+                    return False
+
+        source = provider.get_resource_string(self.manager, p)
+        return source.decode(self.encoding), filename, uptodate
+
+    def list_templates(self):
+        provider = get_provider(self.package_name)
+        path = self.package_path
+        if path[:2] == './':
+            path = path[2:]
+        elif path == '.':
+            path = ''
+        offset = len(path)
+        results = []
+        def _walk(path):
+            for filename in provider.resource_listdir(path):
+                fullname = path + '/' + filename
+                if provider.resource_isdir(fullname):
+                    for item in _walk(fullname):
+                        results.append(item)
+                else:
+                    results.append(fullname[offset:].lstrip('/'))
+        _walk(path)
+        results.sort()
+        return results
+
+
 class InyokaEnvironment(Environment):
     """
     Beefed up version of the jinja environment but without security features
@@ -113,18 +171,13 @@ class InyokaEnvironment(Environment):
     """
 
     def __init__(self):
-        template_paths = [os.path.join(os.path.dirname(__file__), os.pardir,
-                                       'templates')]
-        if ctx.cfg['templates.path']:
-            template_paths.insert(0,  ctx.cfg['templates.path'])
+        loaders = {}
+        for key, package in ctx.cfg.itersection('templates.packages'):
+            loaders[key.split('.')[-1]] = LazyPackageLoader(package)
 
-        loaders = []
-        for path in template_paths:
-            loaders.append(FileSystemLoader(
-                searchpath=path
-            ))
+        loader = ChoiceLoader([FileSystemLoader(ctx.cfg['templates.path']),
+                               PrefixLoader(loaders)])
 
-        loader = ChoiceLoader(loaders)
         cache_obj = None
         if ctx.cfg['templates.use_cache']:
             if ctx.cfg['templates.use_memcached_cache']:

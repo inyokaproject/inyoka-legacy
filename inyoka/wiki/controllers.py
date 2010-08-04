@@ -77,7 +77,7 @@ class WikiController(IController):
         form = AttachmentForm(request.form)
 
         if request.method == 'POST' and form.validate():
-            name = u'%s/%s' % (page.name, form.data['rename_to'] or 
+            name = u'%s/%s' % (page.name, form.data['rename_to'] or
                                           request.files['file'].filename)
             kwargs = {
                 'change_user':      request.user,

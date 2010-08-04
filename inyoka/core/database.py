@@ -529,7 +529,7 @@ class File(MutableType, TypeDecorator):
 
     def __init__(self, save_to=None):
         self.save_to = save_to
-        super(File, self).__init__()
+        super(File, self).__init__(200)
 
     def bind_processor(self, dialect):
         def process(value):

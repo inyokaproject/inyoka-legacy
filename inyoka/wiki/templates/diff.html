@@ -1,0 +1,27 @@
+{%- extends 'wiki/base.html' %}
+{%- from 'utils/macros.html' import render_diff_part %}
+{%- set title_trace = [_('Compare revisions'), page.name] %}
+{%- set styles = ['diff.css'] + styles|default([]) %}
+{%- set current_tab = 'history' %}
+
+{%- block wiki_content %}
+<p>
+  {%- trans date1=old_rev.change_date|datetimeformat,
+            date2=new_rev.change_date|datetimeformat,
+            user1=old_rev.change_user.username,
+            user2=new_rev.change_user.username,
+            userlink1=href(old_rev.change_user),
+            userlink2=href(new_rev.change_user),
+            revlink1=href(old_rev),
+            revlink2=href(new_rev) -%}
+  The following table shows the article's differences between <a href="{{ revlink1 }}">the revision of {{ date1 }}</a> (created by <a href="{{ userlink1 }}">{{ user1 }}</a>) and <a href="{{ revlink2 }}">the revision of {{ date2 }}</a> (created by <a href="{{ userlink2 }}">{{ user2 }}</a>).
+  {%- endtrans -%}
+</p>
+<p>
+  {%- trans udiff=href(page, action='udiff', old_rev=old_rev.id, new_rev=new_rev.id),
+            history=href(page, action='history') -%}
+  You may also download a <a href="{{ udiff }}">Unified Diff</a> of these changes or see the <a href="{{ history }}">list of recent changes</a>.
+  {%- endtrans -%}
+</p>
+{{ render_diff_part(diff) }}
+{%- endblock %}

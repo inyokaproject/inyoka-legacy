@@ -81,7 +81,7 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
         return bool(self.children) or bool(self.parent_id)
 
     def compare_to(self, other, column, context_lines=4, template=False):
-        """Compare the mdoel with another revision.
+        """Compare the model with another revision.
 
         Special version to enable highlighting between files.
 

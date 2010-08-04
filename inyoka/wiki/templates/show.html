@@ -1,7 +1,11 @@
 {%- extends 'wiki/base.html' %}
 {%- set title_trace = [page.name] %}
+{%- set styles = ['highlighting.css'] + styles|default([]) %}
 {%- set current_tab = 'show' %}
 
 {%- block wiki_content %}
+{%- if page.is_attachment_page %}
+{{ revision.attachment.html_representation|safe }}
+{%- endif %}
 {{ revision.rendered_text|safe }}
 {%- endblock %}

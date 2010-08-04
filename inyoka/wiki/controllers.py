@@ -16,6 +16,7 @@ from inyoka.core.exceptions import NotFound
 from inyoka.wiki.forms import EditPageForm, AttachmentForm
 from inyoka.wiki.models import Page, Revision, PageExists
 from inyoka.wiki.utils import find_page, urlify_page_name, deurlify_page_name
+from inyoka.utils.diff3 import generate_udiff, prepare_udiff
 
 
 class WikiController(IController):
@@ -26,6 +27,8 @@ class WikiController(IController):
         Rule('/<path:page>/+edit', endpoint='edit'),
         Rule('/<path:page>/+history', endpoint='history'),
         Rule('/<path:page>/+attachments', endpoint='attachments'),
+        Rule('/<path:page>/+diff', endpoint='diff'),
+        Rule('/<path:page>/+udiff', endpoint='diff', defaults={'format': 'udiff'}),
         Rule('/<path:page>/+<int:revision>', endpoint='show'),
         Rule('/<path:page>', endpoint='show'),
     ]
@@ -109,6 +112,28 @@ class WikiController(IController):
             'page': page,
             'form': form,
             'attachment_pages': list(attachment_pages),
+        }
+
+    @view
+    @templated('wiki/diff.html')
+    def diff(self, request, page, format='html'):
+        page = find_page(url_name=page, redirect_view='wiki/diff')
+        try:
+            old_rev = Revision.query.get(int(request.args['old_rev']))
+            new_rev = Revision.query.get(int(request.args['new_rev']))
+            assert old_rev.page_id == new_rev.page_id == page.id
+        except (KeyError, ValueError, AssertionError):
+            raise NotFound()
+
+        udiff = generate_udiff(old=old_rev.text._text, new=new_rev.text._text)
+        if format == 'udiff':
+            return Response(udiff, mimetype='text/plain; charset=utf-8')
+        diff = prepare_udiff(udiff)
+        return {
+            'page': page,
+            'old_rev': old_rev,
+            'new_rev': new_rev,
+            'diff': diff and diff[0] or {}
         }
 
     @view

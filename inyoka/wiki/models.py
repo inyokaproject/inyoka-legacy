@@ -180,7 +180,8 @@ class Page(db.Model):
     def url_name(self):
         return urlify_page_name(self.name)
 
-    def get_url_values(self, action='show', revision=None):
+    def get_url_values(self, action='show', revision=None, old_rev=None,
+                       new_rev=None):
         if action == 'show':
             return 'wiki/show', {
                 'page': self.url_name,
@@ -188,6 +189,9 @@ class Page(db.Model):
             }
         elif action in ('history', 'edit', 'attachments'):
             return 'wiki/%s' % action, {'page': self.url_name}
+        elif action in ('diff', 'udiff'):
+            return 'wiki/diff', {'page': self.url_name, 'old_rev': old_rev,
+                                 'new_rev': new_rev, 'format': action}
 
 
 class Text(db.Model, TextRendererMixin):

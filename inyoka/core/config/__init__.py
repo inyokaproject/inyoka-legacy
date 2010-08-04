@@ -21,7 +21,7 @@ class ConfigField(object):
     :meth:`converter` to match your needs.
     """
 
-    def __init__(self, default, help_text):
+    def __init__(self, default, help_text=None):
         self.default = default
         self.help_text = help_text
 
@@ -38,7 +38,7 @@ class ConfigField(object):
 class IntegerField(ConfigField):
     """A field representing integer values"""
 
-    def __init__(self, default, help_text, min_value=-1):
+    def __init__(self, default, help_text=None, min_value=-1):
         ConfigField.__init__(self, default, help_text)
         self.min_value = min_value
 
@@ -83,7 +83,7 @@ class ListField(ConfigField):
 
     conversion_field = TextField(u'', u'')
 
-    def __init__(self, default, help_text, field=None):
+    def __init__(self, default, help_text=None, field=None):
         ConfigField.__init__(self, default, help_text)
         if field is not None:
             self.conversion_field = field

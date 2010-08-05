@@ -170,7 +170,7 @@ class Page(db.Model):
         return Page.query.join(Page.current_revision).filter(
             Page.name.startswith(self.name + u'/') &
             (Revision.attachment_id > 0)
-        )
+        ).options(db.joinedload_all(Page.current_revision, Revision.attachment))
 
     @property
     def is_attachment_page(self):

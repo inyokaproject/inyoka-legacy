@@ -119,8 +119,9 @@ class WikiController(IController):
     def diff(self, request, page, format='html'):
         page = find_page(url_name=page, redirect_view='wiki/diff')
         try:
-            old_rev = Revision.query.get(int(request.args['old_rev']))
-            new_rev = Revision.query.get(int(request.args['new_rev']))
+            query = Revision.query.options(db.joinedload(Revision.text))
+            old_rev = query.get(int(request.args['old_rev']))
+            new_rev = query.get(int(request.args['new_rev']))
             assert old_rev.page_id == new_rev.page_id == page.id
         except (KeyError, ValueError, AssertionError):
             raise NotFound()

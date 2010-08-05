@@ -59,8 +59,9 @@ def find_page(url_name, redirect_view=None, redirect_params=None,
 
     #TODO: only add deleted check if user may not view deleted pages
     try:
-        page = Page.query.options(db.joinedload_all(Page.current_revision,
-            Revision.text)).filter_by(deleted=False).filter_name(name).one()
+        query = joinedload and Page.query.options(db.joinedload_all(
+            Page.current_revision, Revision.text)) or Page.query
+        page = query.filter_by(deleted=False).filter_name(name).one()
     except db.NoResultFound:
         raise NotFound(_(u'No such page.'))
 

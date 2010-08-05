@@ -12,6 +12,7 @@
 import os
 from os import path
 from threading import Lock
+from wtforms.validators import ValidationError
 
 
 class ConfigField(object):
@@ -151,7 +152,6 @@ def quote_value(value):
 
 def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
-    from inyoka.core.forms.validators import ValidationError
     try:
         return field(value)
     except ValidationError:

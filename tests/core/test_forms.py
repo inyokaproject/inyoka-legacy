@@ -33,7 +33,7 @@ class DummyForm2(Form):
     name = TextField(u'name')
 
 
-class TestFormsSchemaController(db.ISchemaController):
+class TestFormsSchemaController(IResource):
     models = [DummyModel]
 
 

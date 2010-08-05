@@ -34,8 +34,6 @@ class SlugGeneratorTestModel(db.Model):
     count = db.Column(db.Integer, default=0)
 
 
-
-
 class Entry(db.Model):
 
     __tablename__ = '_test_database_entry'
@@ -59,7 +57,7 @@ class Question(Entry):
 
 
 
-class DatabaseTestSchemaController(db.ISchemaController):
+class DatabaseTestSchemaController(IResource):
     models = [Category, SlugGeneratorTestModel, Entry, Question]
 
 

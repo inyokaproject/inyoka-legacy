@@ -97,6 +97,7 @@ from sqlalchemy.ext.declarative import declarative_base, \
 from sqlalchemy.types import MutableType, TypeDecorator
 from inyoka import Interface
 from inyoka.context import ctx
+from inyoka.core.resource import IResource
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
@@ -368,31 +369,6 @@ class Query(orm.Query):
         return self.options(*args)
 
 
-class ISchemaController(Interface):
-    """A schemacontroller, which takes care of models and migrations.
-
-    Only models for now…
-    """
-
-    models = []
-
-    @classmethod
-    def get_models(cls, tables=False):
-        """Generator that yields all registered models.  Yields tables
-        if `tables` is set to True.
-        """
-        for component in ctx.get_implementations(cls, instances=True):
-            for model in component.models:
-                is_table = isinstance(model, Table)
-                if is_table and not tables:
-                    continue
-
-                if is_table and tables:
-                    yield model
-                else:
-                    yield model.__table__ if tables else model
-
-
 class DeclarativeMeta(SADeclarativeMeta):
     """Our own metaclass to register all model classes
     so that we are able to hook up our model property extension
@@ -555,7 +531,7 @@ class File(MutableType, TypeDecorator):
 
 
 def init_db(**kwargs):
-    kwargs['tables'] = list(ISchemaController.get_models(tables=True))
+    kwargs['tables'] = list(IResource.get_models(tables=True))
     is_test = kwargs.pop('is_test', False)
 
     if kwargs['tables']:
@@ -600,7 +576,6 @@ def _make_module():
     db.ColumnProperty = orm.ColumnProperty
     db.NoResultFound = orm.exc.NoResultFound
     db.SQLAlchemyError = exc.SQLAlchemyError
-    db.ISchemaController = ISchemaController
     return db
 
 sys.modules['inyoka.core.database.db'] = db = _make_module()

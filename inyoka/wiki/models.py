@@ -291,7 +291,3 @@ Page.revisions = db.relationship(Revision, lazy='dynamic',
     ),
     foreign_keys=[Page.id, Page.current_epoch]
 )
-
-
-class WikiSchemaController(db.ISchemaController):
-    models = [Page, Revision, Text, Attachment]

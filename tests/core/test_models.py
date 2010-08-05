@@ -28,7 +28,7 @@ class FancyModel(db.Model, RevisionedModelMixin):
         return '#%s' % self.id
 
 
-class CoreTestSchemaController(db.ISchemaController):
+class CoreTestSchemaController(IResource):
     models = [FancyModel]
 
 

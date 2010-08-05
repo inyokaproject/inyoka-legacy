@@ -223,7 +223,3 @@ class UserProfile(db.Model):
         }
 
         return values[action][0], values[action][1]
-
-
-class AuthSchemaController(db.ISchemaController):
-    models = [User, UserProfile, Group, group_group, user_group]

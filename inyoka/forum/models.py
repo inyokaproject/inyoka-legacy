@@ -324,8 +324,3 @@ class Vote(db.Model, SerializableObject):
     favorite = db.Column(db.Boolean, nullable=False, default=False)
 
     user = db.relationship(User, backref='votes', lazy='joined', innerjoin=True)
-
-
-class ForumSchemaController(db.ISchemaController):
-    models = [Forum, Vote, question_tag, forum_tag,
-              Entry, Question, Answer]

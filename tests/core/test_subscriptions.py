@@ -65,7 +65,7 @@ class Other(db.Model):
     wrapper = db.relationship(Wrapper)
 
 
-class SubscriptionTestSchemaController(db.ISchemaController):
+class SubscriptionTestSchemaController(IResource):
     models = [Category, Entry, Comment, Wrapper,
               Other, Tag, _entry_tag]
 

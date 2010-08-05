@@ -30,10 +30,6 @@ class Storage(db.Model):
     value = db.Column(db.PickleType)
 
 
-class StorageSchemaController(db.ISchemaController):
-    models = [Storage]
-
-
 class CachedStorage(object):
     """
     This is a dict like interface for the `Storage` model.

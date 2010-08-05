@@ -12,6 +12,7 @@
 from uuid import uuid4
 from operator import itemgetter
 from functools import update_wrapper
+from collections import namedtuple
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
@@ -20,28 +21,13 @@ from inyoka.core.routing import href
 from inyoka.utils.html import escape
 
 
-class FlashMessage(tuple):
+class FlashMessage(namedtuple('FlashMessage', 'text success id html')):
     __slots__ = ()
-
-    def __new__(self, text, success=None, id=None, html=False):
-        return tuple.__new__(self, (text, success, intern(str(id)), html))
-
-    text = property(itemgetter(0))
-    success = property(itemgetter(1))
-    id = property(itemgetter(2))
-    html = property(itemgetter(3))
 
     def __unicode__(self):
         if not self.html:
             return escape(self.text)
         return self.text
-
-    def __repr__(self):
-        return '<%s(%s:%s)>' % (
-            self.__class__.__name__,
-            self.text,
-            self.success
-        )
 
 
 def get_bound_request(cls, environ):
@@ -108,7 +94,7 @@ class Request(BaseRequest):
     def unflash(self, id):
         """Remove all messages with a given id from the flash buffer"""
         messages = [msg for msg in self.session.get('flash_buffer', ())
-                    if msg.id != str(id)]
+                    if msg.id != id]
         self.session['flash_buffer'] = messages
         self.session.modified = True
 

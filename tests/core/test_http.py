@@ -17,7 +17,7 @@ class TestRequest(ViewTestCase):
     def test_flash_messages(self):
         req = self.get_new_request()
         req.flash(u'Message1', False, 1)
-        eq_(req.flash_messages, [FlashMessage(u'Message1', False, 1)])
+        eq_(req.flash_messages, [FlashMessage(u'Message1', False, 1, False)])
         # we automatically clear the flash messages buffer by
         # accessing the `messages` property.
         eq_(req.flash_messages, [])
@@ -25,8 +25,8 @@ class TestRequest(ViewTestCase):
         req.flash(u'Message3', True, 3)
         req.flash(u'Message4', id=4)
         req.unflash(3)
-        eq_(req.flash_messages, [FlashMessage(u'Message2', False, 2),
-            FlashMessage(u'Message4', None, 4)])
+        self.assertEqual(req.flash_messages, [FlashMessage(u'Message2', False, 2, False),
+            FlashMessage(u'Message4', None, 4, False)])
         # test automatic id generation
         id = req.flash(u'Message5')
         assert_false(id is None)

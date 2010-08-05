@@ -238,7 +238,3 @@ class Article(db.Model):
 
     def __unicode__(self):
         return self.title
-
-
-class NewsSchemaController(db.ISchemaController):
-    models = [Article, Comment, article_tag]

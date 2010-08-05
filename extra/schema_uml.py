@@ -3,10 +3,10 @@
 from sqlalchemy_schemadisplay import create_uml_graph, create_schema_graph
 from sqlalchemy.orm import class_mapper
 from sqlalchemy.orm.exc import UnmappedClassError
-from inyoka.core.api import db, ctx
+from inyoka.core.api import db, ctx, IResource
 from inyoka.utils import flatten_iterator
 
-models = list(flatten_iterator(x.models for x in ctx.get_implementations(db.ISchemaController, instances=True)))
+models = list(flatten_iterator(x.models for x in ctx.get_implementations(IResource, instances=True)))
 
 # lets find all the mappers in our model
 mappers = []

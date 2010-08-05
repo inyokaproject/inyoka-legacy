@@ -10,6 +10,7 @@
 # Imports for easy API access and our import system
 from inyoka import Interface
 from inyoka.context import ctx
+from inyoka.core.resource import IResource
 from inyoka.core.database import db
 from inyoka.core.auth import login_required
 from inyoka.core.http import Request, Response, redirect_to, redirect, get_bound_request
@@ -22,3 +23,24 @@ from inyoka.core.cache import cache
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.logger import logger
 from inyoka.i18n import *
+
+
+
+from inyoka.core.cache import Cache
+from inyoka.core.models import Confirm, Tag
+from inyoka.core.subscriptions.models import SubscriptionUnreadObjects, \
+    Subscription
+from inyoka.core.storage import Storage
+from inyoka.core.auth.models import User, UserProfile, Group, group_group, \
+    user_group
+
+class ICoreResource(IResource):
+    """Register core models globally."""
+    models = [
+        # core utility models
+        Storage, Confirm, Tag, Cache,
+        # subscription models
+        SubscriptionUnreadObjects, Subscription,
+        # auth models
+        User, UserProfile, Group, group_group, user_group,
+    ]

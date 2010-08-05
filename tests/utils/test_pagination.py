@@ -40,7 +40,7 @@ class PaginationTest1(db.Model):
     group = db.Column(db.Integer)
 
 
-class PaginationTestSchemaController(db.ISchemaController):
+class PaginationTestSchemaController(IResource):
     models = [PaginationTest1]
 
 

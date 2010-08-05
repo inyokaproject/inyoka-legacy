@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-05 16:39+0200\n"
+"POT-Creation-Date: 2010-08-05 18:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1401,11 +1401,15 @@ msgstr ""
 msgid "An attachment with this name does already exist!"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:160
+#: inyoka/wiki/controllers.py:135
+msgid "There are no differences between these two revisions."
+msgstr ""
+
+#: inyoka/wiki/controllers.py:167
 msgid "Text didn't change."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:171
+#: inyoka/wiki/controllers.py:178
 msgid "The page has been saved."
 msgstr ""
 

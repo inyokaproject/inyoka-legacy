@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-05 16:39+0200\n"
+"POT-Creation-Date: 2010-08-05 18:00+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -1435,11 +1435,15 @@ msgstr "Eine alte Datei wurde erfolgreich mit der neuen ersetzt."
 msgid "An attachment with this name does already exist!"
 msgstr "Es existiert bereits ein Anhang mit diesem Namen!"
 
-#: inyoka/wiki/controllers.py:160
+#: inyoka/wiki/controllers.py:135
+msgid "There are no differences between these two revisions."
+msgstr "Es gibt keine Unterschiede zwischen diesen beiden Versionen."
+
+#: inyoka/wiki/controllers.py:167
 msgid "Text didn't change."
 msgstr "Der Text hat sich nicht geändert."
 
-#: inyoka/wiki/controllers.py:171
+#: inyoka/wiki/controllers.py:178
 msgid "The page has been saved."
 msgstr "Die Seite wurde gespeichert"
 

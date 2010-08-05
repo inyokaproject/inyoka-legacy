@@ -126,14 +126,21 @@ class WikiController(IController):
             raise NotFound()
 
         udiff = generate_udiff(old=old_rev.text._text, new=new_rev.text._text)
+
         if format == 'udiff':
             return Response(udiff, mimetype='text/plain; charset=utf-8')
+
         diff = prepare_udiff(udiff)
+        if not diff:
+            request.flash(_(u'There are no differences between these two '
+                            u'revisions.'))
+            return redirect_to(page, action='history')
+
         return {
             'page': page,
             'old_rev': old_rev,
             'new_rev': new_rev,
-            'diff': diff and diff[0] or {}
+            'diff': diff[0]
         }
 
     @view

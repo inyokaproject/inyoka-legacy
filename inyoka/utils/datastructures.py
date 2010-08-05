@@ -13,6 +13,12 @@ import sys
 from copy import deepcopy
 from operator import itemgetter
 from itertools import imap
+from collections import namedtuple
+
+
+
+#: Represents one token.
+Token = namedtuple('Token', 'type value')
 
 
 class _Missing(object):
@@ -61,25 +67,6 @@ class BidiMap(dict):
 
     def __repr__(self):
         return 'BidiMap(%s)' % dict.__repr__(self)
-
-
-class Token(tuple):
-    """
-    Represents one token.
-    """
-    __slots__ = ()
-
-    def __new__(self, type, value):
-        return tuple.__new__(self, (intern(type), value))
-
-    type = property(itemgetter(0), doc="The type of the token.")
-    value = property(itemgetter(1), doc="The value of the token.")
-
-    def __repr__(self):
-        return 'Token(%r, %r)' % (
-            self.type,
-            self.value
-        )
 
 
 class TokenStreamIterator(object):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-04 13:57+0200\n"
+"POT-Creation-Date: 2010-08-05 16:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,10 +23,6 @@ msgstr ""
 
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
-msgstr ""
-
-#: inyoka/core/notifications.py:169
-msgid "E-Mail"
 msgstr ""
 
 #: inyoka/core/serializer.py:139
@@ -770,7 +766,7 @@ msgid "unsubscribe"
 msgstr ""
 
 #: inyoka/news/templates/edit_comment.html:5 inyoka/wiki/forms.py:18
-#: inyoka/wiki/forms.py:25 inyoka/wiki/templates/history.html:13
+#: inyoka/wiki/forms.py:25 inyoka/wiki/templates/history.html:12
 msgid "Edit comment"
 msgstr ""
 
@@ -1385,31 +1381,31 @@ msgid ""
 "ordering"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:55 inyoka/wiki/controllers.py:57
+#: inyoka/wiki/controllers.py:58 inyoka/wiki/controllers.py:60
 msgid "Invalid revision specified."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:73
+#: inyoka/wiki/controllers.py:76
 msgid "Attaching files to an attachment is not permitted!"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:91
+#: inyoka/wiki/controllers.py:94
 msgid "The attachment was created successfully."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:97
+#: inyoka/wiki/controllers.py:100
 msgid "The file was attached successfully by overwriting an old one."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:100
+#: inyoka/wiki/controllers.py:103
 msgid "An attachment with this name does already exist!"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:135
+#: inyoka/wiki/controllers.py:160
 msgid "Text didn't change."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:146
+#: inyoka/wiki/controllers.py:171
 msgid "The page has been saved."
 msgstr ""
 
@@ -1425,7 +1421,7 @@ msgstr ""
 msgid "Overwrite existing attachment with the same name"
 msgstr ""
 
-#: inyoka/wiki/models.py:223
+#: inyoka/wiki/models.py:227
 msgid "Download attachment"
 msgstr ""
 
@@ -1462,12 +1458,37 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: inyoka/wiki/templates/history.html:11
+#: inyoka/wiki/templates/diff.html:3
+msgid "Compare revisions"
+msgstr ""
+
+#: inyoka/wiki/templates/diff.html:9
+#, python-format
+msgid ""
+"The following table shows the article's differences between <a "
+"href=\"%(revlink1)s\">the revision of %(date1)s</a> (created by <a "
+"href=\"%(userlink1)s\">%(user1)s</a>) and <a href=\"%(revlink2)s\">the "
+"revision of %(date2)s</a> (created by <a "
+"href=\"%(userlink2)s\">%(user2)s</a>)."
+msgstr ""
+
+#: inyoka/wiki/templates/diff.html:21
+#, python-format
+msgid ""
+"You may also download a <a href=\"%(udiff)s\">Unified Diff</a> of these "
+"changes or see the <a href=\"%(history)s\">list of recent changes</a>."
+msgstr ""
+
+#: inyoka/wiki/templates/history.html:10
 msgid "Created at"
 msgstr ""
 
-#: inyoka/wiki/templates/history.html:12
+#: inyoka/wiki/templates/history.html:11
 msgid "Creator"
+msgstr ""
+
+#: inyoka/wiki/templates/history.html:13
+msgid "Compare"
 msgstr ""
 
 #: inyoka/wiki/templates/not_found.html:7

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-04 13:57+0200\n"
+"POT-Creation-Date: 2010-08-05 16:39+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -24,11 +24,6 @@ msgstr "Administration"
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
 msgstr "Willkommen in der Inyoka-Administration!"
-
-#: inyoka/core/notifications.py:169
-#, fuzzy
-msgid "E-Mail"
-msgstr "Email"
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -797,7 +792,7 @@ msgid "unsubscribe"
 msgstr "abbestellen"
 
 #: inyoka/news/templates/edit_comment.html:5 inyoka/wiki/forms.py:18
-#: inyoka/wiki/forms.py:25 inyoka/wiki/templates/history.html:13
+#: inyoka/wiki/forms.py:25 inyoka/wiki/templates/history.html:12
 msgid "Edit comment"
 msgstr "Bearbeitungskommentar"
 
@@ -1001,7 +996,6 @@ msgid "The tag “%s” was deleted successfully."
 msgstr "Das Schlagwort „%s“ wurde erfolgreich gelöscht."
 
 #: inyoka/portal/auth.py:31
-#, fuzzy
 msgid "Activation successful, you can now login with your credentials"
 msgstr "Aktivierung erfolgreich, du kannst dich nun anmelden"
 
@@ -1366,15 +1360,15 @@ msgstr "Basiert auf Inyoka %(revision)s (Python %(python)s)"
 
 #: inyoka/utils/captcha.py:47
 msgid "Get a visual challenge"
-msgstr "neue visuelle Herausforderung"
+msgstr "neue visuelle Aufgabe"
 
 #: inyoka/utils/captcha.py:48
 msgid "Get an audio challenge"
-msgstr "neue Audio-Herausforderung"
+msgstr "neue Audio-Aufgabe"
 
 #: inyoka/utils/captcha.py:49
 msgid "Get a new challenge"
-msgstr "neue Herausforderung"
+msgstr "neue Aufgabe"
 
 #: inyoka/utils/captcha.py:50
 msgid "Type the two words:"
@@ -1421,31 +1415,31 @@ msgstr ""
 "Das ausgewählte Kriterium „%s” ist nicht verfügbar, benutze "
 "Standardsortierung"
 
-#: inyoka/wiki/controllers.py:55 inyoka/wiki/controllers.py:57
+#: inyoka/wiki/controllers.py:58 inyoka/wiki/controllers.py:60
 msgid "Invalid revision specified."
 msgstr "Ungültige Version angegeben."
 
-#: inyoka/wiki/controllers.py:73
+#: inyoka/wiki/controllers.py:76
 msgid "Attaching files to an attachment is not permitted!"
 msgstr "Eine Datei kann nicht an einen Anhang angehängt werden!"
 
-#: inyoka/wiki/controllers.py:91
+#: inyoka/wiki/controllers.py:94
 msgid "The attachment was created successfully."
 msgstr "Der Anhang wurde erfolgreich erstellt."
 
-#: inyoka/wiki/controllers.py:97
+#: inyoka/wiki/controllers.py:100
 msgid "The file was attached successfully by overwriting an old one."
 msgstr "Eine alte Datei wurde erfolgreich mit der neuen ersetzt."
 
-#: inyoka/wiki/controllers.py:100
+#: inyoka/wiki/controllers.py:103
 msgid "An attachment with this name does already exist!"
 msgstr "Es existiert bereits ein Anhang mit diesem Namen!"
 
-#: inyoka/wiki/controllers.py:135
+#: inyoka/wiki/controllers.py:160
 msgid "Text didn't change."
 msgstr "Der Text hat sich nicht geändert."
 
-#: inyoka/wiki/controllers.py:146
+#: inyoka/wiki/controllers.py:171
 msgid "The page has been saved."
 msgstr "Die Seite wurde gespeichert"
 
@@ -1461,7 +1455,7 @@ msgstr "Umbenennen nach"
 msgid "Overwrite existing attachment with the same name"
 msgstr "Existierenden Anhang mit gleichem Namen überschreiben"
 
-#: inyoka/wiki/models.py:223
+#: inyoka/wiki/models.py:227
 msgid "Download attachment"
 msgstr "Anhang herunterladen"
 
@@ -1498,13 +1492,46 @@ msgstr "Artikel"
 msgid "History"
 msgstr "Versionen"
 
-#: inyoka/wiki/templates/history.html:11
+#: inyoka/wiki/templates/diff.html:3
+msgid "Compare revisions"
+msgstr "Versionen vergleichen"
+
+#: inyoka/wiki/templates/diff.html:9
+#, python-format
+msgid ""
+"The following table shows the article's differences between <a "
+"href=\"%(revlink1)s\">the revision of %(date1)s</a> (created by <a "
+"href=\"%(userlink1)s\">%(user1)s</a>) and <a href=\"%(revlink2)s\">the "
+"revision of %(date2)s</a> (created by <a "
+"href=\"%(userlink2)s\">%(user2)s</a>)."
+msgstr ""
+"Die folgende Tabelle zeigt die Unterschiede des Artikels zwischen der <a "
+"href=\"%(revlink1)s\">Version vom %(date1)s</a> (erstellt von <a "
+"href=\"%(userlink1)s\">%(user1)s</a>) und <a href=\"%(revlink2)s\">der "
+"Version vom %(date2)s</a> (erstellt von <a "
+"href=\"%(userlink2)s\">%(user2)s</a>)."
+
+#: inyoka/wiki/templates/diff.html:21
+#, python-format
+msgid ""
+"You may also download a <a href=\"%(udiff)s\">Unified Diff</a> of these "
+"changes or see the <a href=\"%(history)s\">list of recent changes</a>."
+msgstr ""
+"Sie können die Änderungen auch als <a href=\"%(udiff)s\">Unified Diff</a> "
+"herunterladen oder die <a href=\"%(history)s\">letzten Änderungen</a> "
+"ansehen."
+
+#: inyoka/wiki/templates/history.html:10
 msgid "Created at"
 msgstr "Erstellt am"
 
-#: inyoka/wiki/templates/history.html:12
+#: inyoka/wiki/templates/history.html:11
 msgid "Creator"
 msgstr "Ersteller"
+
+#: inyoka/wiki/templates/history.html:13
+msgid "Compare"
+msgstr "Vergleichen"
 
 #: inyoka/wiki/templates/not_found.html:7
 msgid "The requested page was not found."

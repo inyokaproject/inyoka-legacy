@@ -25,7 +25,7 @@ DEFAULTS = {
         help_text=lazy_gettext(u'Enable debug mode')),
     'activated_components':         ListField(['inyoka.core.*',
         'inyoka.admin',
-        'inyoka.portal.api',
+        'inyoka.portal',
         'inyoka.news.api',
         'inyoka.forum.api',
         'inyoka.paste.api',

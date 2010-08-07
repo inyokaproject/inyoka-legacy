@@ -15,7 +15,7 @@ from inyoka import Interface
 from inyoka.context import ctx
 
 
-class IResource(Interface):
+class IResourceManager(Interface):
     """An interface to load resource specific items such as models, templates
     or even components.  This allow you to define your application behaviour
     more deeply without getting in our (or inyokas...) way.

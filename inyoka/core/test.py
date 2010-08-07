@@ -30,7 +30,7 @@ from inyoka.context import ctx
 from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.http import Response, Request, get_bound_request
-from inyoka.core.resource import IResource
+from inyoka.core.resource import IResourceManager
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import make_full_domain, get_host_port_mapping, \
     get_base_url_for_controller
@@ -44,7 +44,7 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
            'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database',
-           'IResource')
+           'IResourceManager')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -184,7 +184,7 @@ class FixtureLoader(object):
     def get_cls(self, name):
         """Try to find the right class for `name`"""
         cls = None
-        models = list(IResource.get_models())
+        models = list(IResourceManager.get_models())
         names = [m.__name__ for m in models]
         if name in names:
             cls = models[names.index(name)]

@@ -10,7 +10,7 @@
 # Imports for easy API access and our import system
 from inyoka import Interface
 from inyoka.context import ctx
-from inyoka.core.resource import IResource
+from inyoka.core.resource import IResourceManager
 from inyoka.core.database import db
 from inyoka.core.auth import login_required
 from inyoka.core.http import Request, Response, redirect_to, redirect, get_bound_request
@@ -34,7 +34,7 @@ from inyoka.core.storage import Storage
 from inyoka.core.auth.models import User, UserProfile, Group, group_group, \
     user_group
 
-class ICoreResource(IResource):
+class ICoreResourceManager(IResourceManager):
     """Register core models globally."""
     models = [
         # core utility models

@@ -8,7 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import IResource
+from inyoka.core.api import IResourceManager
 from inyoka.paste.admin import PasteAdminProvider
 from inyoka.paste.services import PasteServices
 from inyoka.paste.controllers import PasteController
@@ -16,5 +16,5 @@ from inyoka.paste.controllers import PasteController
 from inyoka.paste.models import Entry
 
 
-class PasteResource(IResource):
+class PasteResourceManager(IResourceManager):
     models = [Entry]

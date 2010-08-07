@@ -97,7 +97,7 @@ from sqlalchemy.ext.declarative import declarative_base, \
 from sqlalchemy.types import MutableType, TypeDecorator
 from inyoka import Interface
 from inyoka.context import ctx
-from inyoka.core.resource import IResource
+from inyoka.core.resource import IResourceManager
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
@@ -531,7 +531,7 @@ class File(MutableType, TypeDecorator):
 
 
 def init_db(**kwargs):
-    kwargs['tables'] = list(IResource.get_models(tables=True))
+    kwargs['tables'] = list(IResourceManager.get_models(tables=True))
     is_test = kwargs.pop('is_test', False)
 
     if kwargs['tables']:

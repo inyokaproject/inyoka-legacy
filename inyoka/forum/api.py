@@ -8,13 +8,13 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.api import IResource
+from inyoka.core.api import IResourceManager
 from inyoka.forum.admin import ForumAdminProvider
 from inyoka.forum.controllers import ForumController
 from inyoka.forum.models import QuestionsContentProvider, Forum, Vote, Entry, \
     Question, Answer, question_tag, forum_tag
 
 
-class ForumResoruce(IResource):
+class ForumResoruceManager(IResourceManager):
     models = [Forum, Vote, question_tag, forum_tag,
               Entry, Question, Answer]

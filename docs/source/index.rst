@@ -36,6 +36,7 @@ References
     :maxdepth: 2
 
     components
+    resources
     dispatcher
     services
     internationalisation

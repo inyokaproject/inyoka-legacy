@@ -64,7 +64,8 @@ class TestResponse(Response, ContentAccessors):
 
 
 class TestResourceManager(IResourceManager):
-    """:class:`IResourceManager` implementation to manage unittest models.
+    """:class:`~inyoka.core.resource.IResourceManager` implementation to
+    manage unittest models.
 
     Sometimes it's required to implement your own models in unittests
     to ensure your unittests can rely on a not-changing interface.  To register

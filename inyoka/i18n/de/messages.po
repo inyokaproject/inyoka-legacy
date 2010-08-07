@@ -148,7 +148,6 @@ msgid "The number of seconds to wait before giving up on returning a connection.
 msgstr "Die Anzahl der Sekunden, die auf eine erfolgreiche Verbindung gewartet wird. Dies wird nicht verwendet, wenn SQLite, Informix oder Access als Datenbank verwendet werden, da diese kein „Connection Pooling” unterstützen."
 
 #: inyoka/core/config/defaults.py:94
-#, fuzzy
 msgid "Imaging backend to use."
 msgstr "Imaging-Backend zu verwenden."
 
@@ -157,7 +156,6 @@ msgid "Portal avatar size."
 msgstr "Portal Avatar Größe."
 
 #: inyoka/core/config/defaults.py:98
-#, fuzzy
 msgid "Portal thumbnail size."
 msgstr "Portal Thumbnail-Größe."
 
@@ -194,7 +192,6 @@ msgid "The timeout for the caching system"
 msgstr "Das Zeitlimit für das Caching-System"
 
 #: inyoka/core/config/defaults.py:124
-#, fuzzy
 msgid "Comma seperated list of memcached servers"
 msgstr "Durch Komma getrennte Liste von Memcached Servern"
 
@@ -255,17 +252,14 @@ msgid "Url mapping used for media file serving"
 msgstr "URL-Mapping für das Ausliefern von Medien-Dateien"
 
 #: inyoka/core/config/defaults.py:165
-#, fuzzy
 msgid "Path to the directory for static files. Relative to the directory where the inyoka package lies in."
 msgstr "Pfad zu dem Verzeichnis für statische Dateien. Bezogen auf das Verzeichnis, in dem inyoka Paket liegt in."
 
 #: inyoka/core/config/defaults.py:169
-#, fuzzy
 msgid "Path to the directory for shared static files, aka media. Relative to the directory where the inyoka package lies in."
 msgstr "Pfad zu dem Verzeichnis für gemeinsam genutzte statische Dateien, aka Medien. Bezogen auf das Verzeichnis, in dem inyoka Paket liegt in."
 
 #: inyoka/core/config/defaults.py:175
-#, fuzzy
 msgid "Name of the wiki index page (the one a user accessing the wiki's / is redirected to)"
 msgstr "Name der Wiki-Index-Seite (die ein Benutzer Zugriff auf die Wiki's / wird umgeleitet)"
 

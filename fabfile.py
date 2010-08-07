@@ -66,7 +66,7 @@ def _action(*args, **kwargs):
         from inyoka.utils.urls import get_host_port_mapping
 
         _hostname, _port = get_host_port_mapping(
-            ctx.cfg['base_domain_name'])[1:]
+            ctx.cfg['base_domain_name'])[:-1]
         if hostname is None:
             hostname = _hostname
         if port is None:

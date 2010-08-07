@@ -63,10 +63,9 @@ def reset(no_testdata=False):
 def _action(*args, **kwargs):
     def _inner(app_factory, hostname=None, port=None, server='simple'):
         from inyoka.core.api import ctx
-        from inyoka.utils.urls import get_host_port_mapping
+        from inyoka.utils.urls import get_host_port_mapping, make_full_domain
 
-        _hostname, _port = get_host_port_mapping(
-            ctx.cfg['base_domain_name'])[:-1]
+        _hostname, _port = get_host_port_mapping(make_full_domain())[:-1]
         if hostname is None:
             hostname = _hostname
         if port is None:

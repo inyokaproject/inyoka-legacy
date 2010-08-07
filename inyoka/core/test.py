@@ -64,6 +64,35 @@ class TestResponse(Response, ContentAccessors):
 
 
 class TestResourceManager(IResourceManager):
+    """:cls:`IResourceManager` implementation to manage unittest models.
+
+    Sometimes it's required to implement your own models in unittests
+    to ensure your unittests can rely on a not-changing interface.  To register
+    those models with the rest of Inyoka you can use the new :cls:`IResourceManager`
+    interface implemented by :cls:`~inyoka.core.test.TestResourceManager`.
+
+    There are two ways to register your models.  The first one is via the
+    :attr:`manager` attribute::
+
+        class MyModel(db.Model):
+            __tablename__ = '__test_mymodel'
+
+            # resource manager model
+            manager = TestResourceManager
+
+            name = db.Column(db.String(200))
+
+    The other way to register your models is via the
+    :meth:`TestResourceManager.register_models` method.  This approach is also
+    helpful if you do not have a model but a table to register::
+
+        my_table = db.Table('__test_mytable', db.metadata,
+            db.Column('id', db.Integer, primary_key=True),
+            db.Column('name', db.String(200))
+        )
+        TestResourceManager.register_models(my_table)
+
+    """
 
     models = []
 

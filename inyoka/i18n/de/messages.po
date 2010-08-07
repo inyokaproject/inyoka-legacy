@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-05 18:00+0200\n"
+"POT-Creation-Date: 2010-08-07 14:00+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -24,6 +24,11 @@ msgstr "Administration"
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
 msgstr "Willkommen in der Inyoka-Administration!"
+
+#: inyoka/core/notifications.py:169
+#, fuzzy
+msgid "E-Mail"
+msgstr "Email"
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -1435,15 +1440,15 @@ msgstr "Eine alte Datei wurde erfolgreich mit der neuen ersetzt."
 msgid "An attachment with this name does already exist!"
 msgstr "Es existiert bereits ein Anhang mit diesem Namen!"
 
-#: inyoka/wiki/controllers.py:135
+#: inyoka/wiki/controllers.py:136
 msgid "There are no differences between these two revisions."
 msgstr "Es gibt keine Unterschiede zwischen diesen beiden Versionen."
 
-#: inyoka/wiki/controllers.py:167
+#: inyoka/wiki/controllers.py:168
 msgid "Text didn't change."
 msgstr "Der Text hat sich nicht geändert."
 
-#: inyoka/wiki/controllers.py:178
+#: inyoka/wiki/controllers.py:179
 msgid "The page has been saved."
 msgstr "Die Seite wurde gespeichert"
 
@@ -1463,7 +1468,7 @@ msgstr "Existierenden Anhang mit gleichem Namen überschreiben"
 msgid "Download attachment"
 msgstr "Anhang herunterladen"
 
-#: inyoka/wiki/utils.py:61 inyoka/wiki/utils.py:68
+#: inyoka/wiki/utils.py:66 inyoka/wiki/utils.py:73
 msgid "No such page."
 msgstr "Diese Seite existiert nicht."
 

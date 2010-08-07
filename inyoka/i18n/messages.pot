@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-05 18:00+0200\n"
+"POT-Creation-Date: 2010-08-07 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,10 @@ msgstr ""
 
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
+msgstr ""
+
+#: inyoka/core/notifications.py:169
+msgid "E-Mail"
 msgstr ""
 
 #: inyoka/core/serializer.py:139
@@ -1401,15 +1405,15 @@ msgstr ""
 msgid "An attachment with this name does already exist!"
 msgstr ""
 
-#: inyoka/wiki/controllers.py:135
+#: inyoka/wiki/controllers.py:136
 msgid "There are no differences between these two revisions."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:167
+#: inyoka/wiki/controllers.py:168
 msgid "Text didn't change."
 msgstr ""
 
-#: inyoka/wiki/controllers.py:178
+#: inyoka/wiki/controllers.py:179
 msgid "The page has been saved."
 msgstr ""
 
@@ -1429,7 +1433,7 @@ msgstr ""
 msgid "Download attachment"
 msgstr ""
 
-#: inyoka/wiki/utils.py:61 inyoka/wiki/utils.py:68
+#: inyoka/wiki/utils.py:66 inyoka/wiki/utils.py:73
 msgid "No such page."
 msgstr ""
 

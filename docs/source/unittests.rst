@@ -223,8 +223,23 @@ Of course the `bob` object is created much earlier.  But you can see another
 speciality in here, see the `public` attribute.  It was converted from `Y` to
 `True`.  The reversed way would be from `N` to `False`, cool isn't it?
 
-Okay, if you have any further questions you may have a look at already
+If you have any further questions you may have a look at already
 existing unittests as they use the fixture system quite often.
+
+
+Implement models in unittests
+-----------------------------
+
+Sometimes it's required to implement your own models in unittests to ensure
+you rely on an interface that's not going to change, or to add some
+mocking-features required to properly test your functions.
+
+The way you implement models is the same as you do by writing applications.
+You inherit from :class:`~inyoka.core.database.Model` or write tables by using
+:class:`~inyoka.core.database.Table`.  To register those models use the
+:class:`inyoka.core.test.TestResourceManager`.  See it's docstring for more
+examples.
+
 
 
 Unittest Helpers
@@ -250,6 +265,9 @@ Test Cases
    :members:
 
 .. autoclass:: ViewTestCase
+   :members:
+
+.. autoclass:: TestResourceManager
    :members:
 
 .. autoclass:: FixtureLoader

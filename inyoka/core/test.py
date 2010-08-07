@@ -64,12 +64,12 @@ class TestResponse(Response, ContentAccessors):
 
 
 class TestResourceManager(IResourceManager):
-    """:cls:`IResourceManager` implementation to manage unittest models.
+    """:class:`IResourceManager` implementation to manage unittest models.
 
     Sometimes it's required to implement your own models in unittests
     to ensure your unittests can rely on a not-changing interface.  To register
-    those models with the rest of Inyoka you can use the new :cls:`IResourceManager`
-    interface implemented by :cls:`~inyoka.core.test.TestResourceManager`.
+    those models with the rest of Inyoka you can use the new :class:`IResourceManager`
+    interface implemented by :class:`~inyoka.core.test.TestResourceManager`.
 
     There are two ways to register your models.  The first one is via the
     :attr:`manager` attribute::

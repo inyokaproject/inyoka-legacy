@@ -10,7 +10,8 @@
 """
 from inyoka import Interface, InterfaceMeta, _is_interface, _import_modules
 from inyoka.core.api import ctx
-from inyoka.core.test import *
+from inyoka.core.test import with_setup, eq_, assert_false, assert_true, \
+    raises
 
 
 class Interface1(Interface):

@@ -6,7 +6,7 @@
     {%- trans old_title=old.display_title, old_date=old.pub_date|datetimeformat,
               new_title=new.display_title, new_date=new.pub_date|datetimeformat,
               udiff_link=href('paste/unidiff_paste', old_id=old.id, new_id=new.id),
-              old_link=href(old), new_link=href(new) %}
+              old_link=href(old), new_link=href(new) -%}
     Differences between the pastes <a href="{{ old_link }}">{{ old_title }}</a> ({{ old_date }})
     and <a href="{{ new_link }}">{{ new_title }}</a> ({{ new_date }}). Download as <a href="{{ udiff_link }}">unified diff</a>.
     {%- endtrans -%}

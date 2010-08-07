@@ -43,6 +43,16 @@ def make_full_domain(subdomain=None, path=None):
 
 
 def get_host_port_mapping(value):
+    """
+    Returns the host, port and scheme of the given `value`::
+
+        >>> get_host_port_mapping(u'http://local')
+        (u'local', 80, u'http')
+        >>> get_host_port_mapping(u'https://local')
+        (u'local', 448, u'https')
+        >>> get_host_port_mapping(u'https://local:5000')
+        (u'local', 5000, u'https')
+    """
     url = urlparse.urlsplit(value)
     pieces = url.netloc.split(':')
     host = pieces[0]

@@ -44,7 +44,7 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
            'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database',
-           'IResourceManager')
+           'TestResourceManager')
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -61,6 +61,17 @@ _iterables = (list, tuple, set, frozenset)
 
 class TestResponse(Response, ContentAccessors):
     """Responses for the test client."""
+
+
+class TestResourceManager(IResourceManager):
+
+    models = []
+
+    @classmethod
+    def register_models(cls, models):
+        if not isinstance(models, (list, tuple, set, frozenset)):
+            models = [models]
+        cls.models.extend(models)
 
 
 # Fixture Framework

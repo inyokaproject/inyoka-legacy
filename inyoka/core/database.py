@@ -371,15 +371,13 @@ class Query(orm.Query):
 
 class DeclarativeMeta(SADeclarativeMeta):
     """Our own metaclass to register all model classes
-    so that we are able to hook up our model property extension
-    system
     """
-
-    _models = []
 
     def __init__(mcs, classname, bases, dict_):
         SADeclarativeMeta.__init__(mcs, classname, bases, dict_)
-        DeclarativeMeta._models.append(mcs)
+        # load the model into the correct resource manager
+        if 'manager' in dict_:
+            dict_['manager'].models.append(mcs)
 
 
 class ModelBase(object):

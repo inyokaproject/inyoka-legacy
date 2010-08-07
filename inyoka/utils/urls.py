@@ -49,7 +49,7 @@ def get_host_port_mapping(value):
         >>> get_host_port_mapping(u'http://local')
         (u'local', 80, u'http')
         >>> get_host_port_mapping(u'https://local')
-        (u'local', 448, u'https')
+        (u'local', 443, u'https')
         >>> get_host_port_mapping(u'https://local:5000')
         (u'local', 5000, u'https')
     """

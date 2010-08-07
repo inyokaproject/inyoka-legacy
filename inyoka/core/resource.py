@@ -3,7 +3,6 @@
     inyoka.core.resource
     ~~~~~~~~~~~~~~~~~~~~
 
-
     The resource system of Inyoka.  This abstract interface implements
     various ways to interact with the Inyoka core.
 

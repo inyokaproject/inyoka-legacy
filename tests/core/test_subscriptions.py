@@ -21,17 +21,26 @@ from inyoka.core.test import *
 
 class Category(db.Model):
     __tablename__ = '_test_subscription_category'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
 
 
 class Wrapper(db.Model):
     __tablename__ = '_test_subscription_wrapper'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
 
 
 class Entry(db.Model):
     __tablename__ = '_test_subscription_entry'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     category_id = db.Column(db.ForeignKey(Category.id))
     category = db.relationship(Category)
@@ -40,6 +49,9 @@ class Entry(db.Model):
 
 class Comment(db.Model):
     __tablename__ = '_test_subscription_comment'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     entry_id = db.Column(db.ForeignKey(Entry.id), nullable=False)
     entry = db.relationship(Entry)
@@ -50,9 +62,14 @@ _entry_tag = db.Table('_test_subscription_entry_tag', db.metadata,
     db.Column('tag_id', db.Integer,
               db.ForeignKey('_test_subscription_tag.id')),
 )
+TestResourceManager.register_models(_entry_tag)
+
 
 class Tag(db.Model):
     __tablename__ = '_test_subscription_tag'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     entries = db.relationship(Entry, secondary=_entry_tag, backref='tags',
                               lazy='joined')
@@ -60,14 +77,12 @@ class Tag(db.Model):
 
 class Other(db.Model):
     __tablename__ = '_test_subscription_other'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     wrapper_id = db.Column(db.ForeignKey(Wrapper.id))
     wrapper = db.relationship(Wrapper)
-
-
-class SubscriptionTestSchemaController(IResource):
-    models = [Category, Entry, Comment, Wrapper,
-              Other, Tag, _entry_tag]
 
 
 class NotifyTrackerMixin(object):

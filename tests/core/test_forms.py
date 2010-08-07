@@ -19,6 +19,9 @@ from inyoka.portal.controllers import PortalController
 
 class DummyModel(db.Model):
     __tablename__ = '__test_forms_dummy'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     value = db.Column(db.String(500))
@@ -31,10 +34,6 @@ class DummyForm(object):
 
 class DummyForm2(Form):
     name = TextField(u'name')
-
-
-class TestFormsSchemaController(IResource):
-    models = [DummyModel]
 
 
 class TestFormUtils(DatabaseTestCase):

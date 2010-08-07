@@ -17,6 +17,8 @@ from inyoka.core.cache import cache
 class Category(db.Model):
     __tablename__ = '_test_database_category'
 
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     slug = db.Column(db.String(100), unique=True, nullable=False)
 
@@ -24,6 +26,8 @@ class Category(db.Model):
 class SlugGeneratorTestModel(db.Model):
     __tablename__ = '_test_database_slug_generator'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', ('name', 'title'))}
+
+    manager = TestResourceManager
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -35,8 +39,9 @@ class SlugGeneratorTestModel(db.Model):
 
 
 class Entry(db.Model):
-
     __tablename__ = '_test_database_entry'
+
+    manager = TestResourceManager
 
     entry_id = db.Column(db.Integer, primary_key=True)
     discriminator = db.Column('type', db.String(12))
@@ -51,14 +56,11 @@ class Question(Entry):
         'polymorphic_identity': u'question'
     }
 
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
     title = db.Column(db.String(160), nullable=False)
     answer_count = db.Column(db.Integer, default=0)
-
-
-
-class DatabaseTestSchemaController(IResource):
-    models = [Category, SlugGeneratorTestModel, Entry, Question]
 
 
 @refresh_database

@@ -16,6 +16,8 @@ from inyoka.core.auth.models import User
 class FancyModel(db.Model, RevisionedModelMixin):
     __tablename__ = '_test_core_models_fancy_model'
 
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     code = db.Column(db.Text)
@@ -26,10 +28,6 @@ class FancyModel(db.Model, RevisionedModelMixin):
 
     def __unicode__(self):
         return '#%s' % self.id
-
-
-class CoreTestSchemaController(IResource):
-    models = [FancyModel]
 
 
 class TestRevisionedModelMixin(DatabaseTestCase):

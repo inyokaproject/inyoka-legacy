@@ -36,12 +36,11 @@ def _setup_tables(model):
 
 class PaginationTest1(db.Model):
     __tablename__ = '_test_utils_pagination1'
+
+    manager = TestResourceManager
+
     id = db.Column(db.Integer, primary_key=True)
     group = db.Column(db.Integer)
-
-
-class PaginationTestSchemaController(IResource):
-    models = [PaginationTest1]
 
 
 class QueryMock(object):

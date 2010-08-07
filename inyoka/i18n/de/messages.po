@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-07 14:25+0200\n"
+"POT-Creation-Date: 2010-08-07 14:32+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -355,7 +355,7 @@ msgstr "Es existiert kein Benutzer mit dieser E-Mail"
 
 #: inyoka/core/forms/validators.py:175
 msgid "The name must not contain slashes."
-msgstr ""
+msgstr "Der Name darf keinn Slash enthalten."
 
 #: inyoka/core/markup/parser.py:46
 msgid "Internal parser error: "
@@ -925,6 +925,10 @@ msgid ""
 "    and <a href=\"%(new_link)s\">%(new_title)s</a> (%(new_date)s). Download "
 "as <a href=\"%(udiff_link)s\">unified diff</a>."
 msgstr ""
+"Unterschiede zwischen den Einträgen <a "
+"href=\"%(old_link)s\">%(old_title)s</a> (%(old_date)s)\n"
+"    und <a href=\"%(new_link)s\">%(new_title)s</a> (%(new_date)s).  Lade "
+"diese als <a href=\"%(udiff_link)s\">Unified Diff</a> herunter."
 
 #: inyoka/paste/templates/compare_paste.html:17
 msgid "The two pastes are identical."
@@ -1161,11 +1165,11 @@ msgstr "Gruppen"
 
 #: inyoka/portal/templates/base.html:21
 msgid "Get Inyoka!"
-msgstr ""
+msgstr "Hold ir Inyoka!"
 
 #: inyoka/portal/templates/base.html:22
 msgid "Download preview \"when it's done\""
-msgstr ""
+msgstr "Lade dir die Preview \"when it's done\""
 
 #: inyoka/portal/templates/group.html:4
 #, python-format
@@ -1411,7 +1415,7 @@ msgstr "Falsch! Bitte versuche es nocheinmal."
 
 #: inyoka/utils/pagination.py:32
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: inyoka/utils/pagination.py:33
 msgid "next »"
@@ -1436,7 +1440,7 @@ msgstr "Ungültige Version angegeben."
 
 #: inyoka/wiki/controllers.py:76
 msgid "Attaching files to an attachment is not permitted!"
-msgstr ""
+msgstr "Du kannst keine neuen Dateien an einen Ahnhang hinzuügen!"
 
 #: inyoka/wiki/controllers.py:94
 msgid "The attachment was created successfully."
@@ -1444,7 +1448,7 @@ msgstr "Der Anhang wurde erfolgreich erstellt."
 
 #: inyoka/wiki/controllers.py:100
 msgid "The file was attached successfully by overwriting an old one."
-msgstr ""
+msgstr "The Datei wurde erfolgreich angehangen, die alte wurde überschrieben."
 
 #: inyoka/wiki/controllers.py:103
 msgid "An attachment with this name does already exist!"

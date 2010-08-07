@@ -14,7 +14,7 @@ from operator import itemgetter
 from itertools import imap
 from inyoka.core.test import *
 from inyoka.utils.datastructures import BidiMap, OrderedDict, TokenStream, \
-    TokenStreamIterator, Token
+    TokenStreamIterator, Token, _missing
 
 
 def test_bidimap():
@@ -232,3 +232,7 @@ def test_ordereddict():
     # copy
     assert_equals(copy.copy(d), d)
     assert_equals(copy.deepcopy(d), d)
+
+
+def test_missing_picklable():
+    assert_true(pickle.loads(pickle.dumps(_missing)) is _missing)

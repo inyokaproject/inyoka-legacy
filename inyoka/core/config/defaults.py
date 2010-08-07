@@ -161,7 +161,7 @@ DEFAULTS = {
     # Do never change that value!!!!
     'routing.urls.test':             DottedField(default=u'_test_:/',
         help_text=lazy_gettext(u'Url mapping used for the testing system.  '
-                               u'Do never chage that value!')),
+                               u'Do never change that value!')),
 
     # values for static and media serving
     'routing.urls.static':          DottedField(default=u'static:/',

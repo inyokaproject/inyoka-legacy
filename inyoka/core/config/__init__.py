@@ -419,7 +419,8 @@ class ConfigTransaction(object):
                         f.write('\n')
                     f.write('[%s]\n' % section.encode('utf-8'))
                     for key, value in items:
-                        f.write('%s = %s\n' % (key, quote_value(value)))
+                        f.write('%s = %s\n' % (key.encode('utf8'),
+                                               quote_value(value)))
             finally:
                 f.close()
             self.cfg._values.update(self._values)

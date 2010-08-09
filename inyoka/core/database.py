@@ -101,7 +101,7 @@ from inyoka.core.resource import IResourceManager
 from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
-from inyoka.utils.files import find_unused_filename
+from inyoka.utils.files import find_unused_filename, obfuscate_filename
 
 
 _engine = None
@@ -498,20 +498,38 @@ class FileObject(FileStorage):
 
 
 class File(MutableType, TypeDecorator):
+    """
+    A database field that can be used for file uploads. You can directly pass a
+    werkzeug FileStorage object to it that will be saved to the file system.
+    On file name collisions, an index automatically is appended. Its file name
+    is stored in the database.
+
+        db.Column(db.File(save_to='images', obfuscate=True))
+
+    :param save_to: The path (relative to the media folder) where the uploaded
+                    file should be saved.
+    :param obfuscate: When this parameter is set to True, the file gets a new
+                      "obfuscated" file name, but the file ending remains the
+                      same.
+                      Don't forget to turn directory listing off when using this
+                      feature.
+    """
     impl = sqlalchemy.String
     save_to = None
+    obfuscate = None
 
-    def __init__(self, save_to=None):
+    def __init__(self, save_to=None, obfuscate=False):
         self.save_to = save_to
+        self.obfuscate = obfuscate
         super(File, self).__init__(200)
 
     def bind_processor(self, dialect):
         def process(value):
             folder = path.join(MEDIA_PATH, self.save_to)
-            if path.exists(path.join(folder, value.filename)):
+            filename = self.obfuscate and obfuscate_filename(value.filename) \
+                                      or value.filename
+            if path.exists(path.join(folder, filename)):
                 filename = find_unused_filename(folder, value.filename)
-            else:
-                filename = value.filename
             value.save(path.join(folder, filename))
             return filename
         return process

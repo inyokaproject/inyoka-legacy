@@ -11,6 +11,10 @@
 import re
 from os import listdir
 from os.path import join, splitext
+from time import time
+from hashlib import sha1
+from inyoka.core.api import ctx
+
 
 def find_unused_filename(folder, filename):
     """
@@ -30,3 +34,13 @@ def find_unused_filename(folder, filename):
             if i > max_id:
                 max_id = i
     return '%s%d%s' % (base, max_id + 1, ext)
+
+
+def obfuscate_filename(filename):
+    """
+    Generate a new "obfuscated" filename and append the original file ending.
+    """
+    return '%s%s' % (
+        sha1(str(time()) + ctx.cfg['secret_key']).hexdigest(),
+        splitext(filename)[1]
+    )

@@ -1,13 +1,21 @@
 {%- extends 'portal/base.html' %}
+{%- set fields = [
+    ['real_name', _('Real name')],
+    ['website', _('Website')],
+    ['location', _('Location')],
+    ['interests', _('Interests')],
+    ['occupation', _('Occupation')],
+    ['signature', _('Signature')],
+    ['jabber', _('Jabber')],
+    ['skype', _('Skype')],
+] %}
 
 {%- block content %}
 <h1>{{ user }}</h1>
-
 <ul>
-{% for field in fields %}
-  {# {{ field }} is just for now… #}
-  <li>{{ field }}: {{ profile[field] or '–' }}</li>
-{% endfor %}
+  {%- for key, name in fields %}
+  <li>{{ name }}: {{ user.profile[key] or '–' }}</li>
+  {%- endfor %}
 </ul>
 {% if user == request.user %}<a href="{{ href('portal/profile_edit') }}">{{ _('Edit Profile') }}</a>{% endif %}
 

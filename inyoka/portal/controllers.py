@@ -94,10 +94,10 @@ class PortalController(IController):
     @view
     @templated('portal/profile.html', modifier=context_modifier)
     def profile(self, request, username):
-        user, profile = db.session.query(User, UserProfile).innerjoin(UserProfile).\
-                            filter(User.username==username).one()
-        return {'user': user,
-                'profile': profile}
+        user = User.query.options(db.joinedload(User.profile)).get(username)
+        return {
+            'user': user,
+        }
 
     @view
     @templated('portal/login.html', modifier=context_modifier)

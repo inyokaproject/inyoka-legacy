@@ -168,7 +168,7 @@ class Configuration(object):
 
         from inyoka.core.config.defaults import DEFAULTS
         config_defaults = defaults if defaults is not None else DEFAULTS
-        self.config_vars = config_defaults.copy()
+        self.defined_vars = config_defaults.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()
@@ -182,7 +182,7 @@ class Configuration(object):
 
         # otherwise parse the file and copy all values into the internal
         # values dict.  Do that also for values not covered by the current
-        # `config_vars` dict to preserve variables of disabled plugins
+        # `defined_vars` dict to preserve variables of disabled plugins
         self._load_time = path.getmtime(self.filename)
         self.exists = True
         section = 'inyoka'
@@ -211,7 +211,7 @@ class Configuration(object):
         try:
             return self._converted_values[key]
         except KeyError:
-            field = self.config_vars[key]
+            field = self.defined_vars[key]
         try:
             value = from_string(self._values[key], field)
         except KeyError:
@@ -278,13 +278,13 @@ class Configuration(object):
 
     def __iter__(self):
         """Iterate over all keys"""
-        return iter(self.config_vars)
+        return iter(self.defined_vars)
 
     iterkeys = __iter__
 
     def __contains__(self, key):
         """Check if a given key exists."""
-        return key in self.config_vars
+        return key in self.defined_vars
 
     def itersection(self, section):
         """Iterate over all values."""
@@ -315,7 +315,7 @@ class Configuration(object):
         return list(self.iteritems())
 
     def __len__(self):
-        return len(self.config_vars)
+        return len(self.defined_vars)
 
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, dict(self.items()))
@@ -340,7 +340,7 @@ class ConfigTransaction(object):
         if key in self._converted_values:
             return self._converted_values[key]
         elif key in self._remove:
-            return self.cfg.config_vars[key].value
+            return self.cfg.defined_vars[key].value
         return self.cfg[key]
 
     def __setitem__(self, key, value):
@@ -349,11 +349,11 @@ class ConfigTransaction(object):
 
         if value == self[key]:
             return
-        if key not in self.cfg.config_vars:
+        if key not in self.cfg.defined_vars:
             raise KeyError(key)
         if isinstance(value, str):
             value = value.decode('utf-8')
-        field = self.cfg.config_vars[key]
+        field = self.cfg.defined_vars[key]
         self._values[key] = field(value)
         self._converted_values[key] = value
 
@@ -364,7 +364,7 @@ class ConfigTransaction(object):
     def set_from_string(self, key, value, override=False):
         """Set the value for a key from a string."""
         self._assert_uncommitted()
-        field = self.cfg.config_vars[key]
+        field = self.cfg.defined_vars[key]
         new = from_string(value, field)
         old = self._converted_values.get(key, None) or self.cfg[key]
         if override or unicode(old) != unicode(new):

@@ -15,6 +15,9 @@ from threading import Lock
 from wtforms.validators import ValidationError
 
 
+DEFAULTS = {}
+
+
 class ConfigField(object):
     """A field representing a configuration entry.
 
@@ -22,25 +25,41 @@ class ConfigField(object):
     :meth:`converter` to match your needs.
     """
 
-    def __init__(self, default, help_text=None):
+    def __init__(self, name, default):
         self.default = default
-        self.help_text = help_text
+        # Register that field only if ’name’ is not ’None’.
+        # This makes it easy to create new fields for unittesting
+        # or to play around in the interactive shell.
+        if name is not None:
+            self.__name__ = name
+            DEFAULTS[name] = self
 
     def get_default(self):
         return self.default
 
     def converter(self, value=None):
-        return self.default
+        return self.get_default()
 
     def __call__(self, value=None):
         return self.converter(value)
+
+#    def __get__(self, obj, type=None):
+#        if obj is None:
+#            return self
+#
+#        from inyoka.context import ctx
+#        return ctx.cfg[self.__name__]
+#
+#    def __set__(self, obj, value):
+#        from inyoka.context import ctx
+#        return ctx.cfg[self.__name__]
 
 
 class IntegerField(ConfigField):
     """A field representing integer values"""
 
-    def __init__(self, default, help_text=None, min_value=-1):
-        ConfigField.__init__(self, default, help_text)
+    def __init__(self, name, default, min_value=-1):
+        ConfigField.__init__(self, name, default)
         self.min_value = min_value
 
     def converter(self, value=None):
@@ -84,8 +103,8 @@ class ListField(ConfigField):
 
     conversion_field = TextField(u'', u'')
 
-    def __init__(self, default, help_text=None, field=None):
-        ConfigField.__init__(self, default, help_text)
+    def __init__(self, name, default, field=None):
+        ConfigField.__init__(self, name, default)
         if field is not None:
             self.conversion_field = field
 
@@ -166,7 +185,6 @@ class Configuration(object):
     def __init__(self, filename, defaults=None):
         self.filename = filename
 
-        from inyoka.core.config.defaults import DEFAULTS
         config_defaults = defaults if defaults is not None else DEFAULTS
         self.defined_vars = config_defaults.copy()
         self._values = {}
@@ -431,3 +449,5 @@ class ConfigTransaction(object):
         finally:
             self.cfg._lock.release()
         self._committed = True
+
+from inyoka.core.config import defaults

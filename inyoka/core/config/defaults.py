@@ -19,183 +19,187 @@ _default_media_data_path = join(os.environ['INYOKA_MODULE'], 'media')
 _default_templates_path = join(os.environ['INYOKA_MODULE'], 'templates')
 
 
-DEFAULTS = {
-    # common config values
-    'debug':                        BooleanField(default=False,
-        help_text=lazy_gettext(u'Enable debug mode')),
-    'activated_components':         ListField(['inyoka.core.*',
-        'inyoka.admin',
-        'inyoka.portal',
-        'inyoka.news.api',
-        'inyoka.forum.api',
-        'inyoka.paste.api',
-        'inyoka.wiki.api'],
-        lazy_gettext(u'List of activated components')),
-    'deactivated_components':       ListField(['inyoka.core.tasks'],
-        lazy_gettext(u'List of deactivted components')),
-    'media_root':                   TextField(default=_default_media_data_path,
-        help_text=lazy_gettext(u'The path to the media folder')),
-    'secret_key':                TextField(default=u'CHANGEME',
-        help_text=lazy_gettext(u'The secret used for hashing the cookies and '
-                               u'other security salting')),
-    'base_domain_name':             TextField(default=u'inyoka.local:5000',
-        help_text=lazy_gettext(u'Base domain name')),
-    'cookie_domain_name':           TextField(default=u'.inyoka.local',
-        help_text=lazy_gettext(u'Cookie domain name')),
-    'cookie_name':                  TextField(default=u'inyoka-session',
-        help_text=lazy_gettext(u'Cookie name')),
-    'language':                     TextField(default=u'en',
-        help_text=lazy_gettext(u'The current language locale')),
-    'default_timezone':             TextField(default=u'Europe/Berlin',
-        help_text=lazy_gettext(u'The default timezone for all users.')),
-    'anonymous_name':               TextField(default=u'anonymous',
-        help_text=lazy_gettext(u'The name of the anonymous user.')),
-    'enable_csrf_checks':           BooleanField(default=True,
-        help_text=lazy_gettext(u'Enable or disable CSRF Protection.')),
-    'recaptcha.use_ssl':            BooleanField(default=True,
-        help_text=lazy_gettext(u'Use SSL for ReCaptcha requests, defaults to True')),
-    'recaptcha.public_key':         TextField(
-        default=u'6Lc1LwsAAAAAAPSQ4FcfLKJVcwzicnZl8v-RmeLj',
-        help_text=lazy_gettext(u'Recaptcha public key')),
-    'recaptcha.private_key':        TextField(
-        default=u'6Lc1LwsAAAAAAAKaGUBaEpTOfXKDWe6QjIlmMM9b',
-        help_text=lazy_gettext(u'Recaptcha private key')),
-    'website_title':                 TextField(default=u'Inyoka Portal',
-        help_text=lazy_gettext(u'The website title to show in various places')),
-    'mail_address':                  TextField(default=u'system@inyoka.local',
-        help_text=lazy_gettext(u'The mail address used for sending mails')),
-    'permanent_session_lifetime':    IntegerField(default=30,
-        help_text=lazy_gettext(u'The duration a permanent session is valid. '
-                               u'Defined in days, defaults to 30.')),
+#: Enable debug mode
+debug = BooleanField('debug', default=False)
 
-    # database specific values
-    'database.url':                 TextField(default=u'sqlite:///dev.db',
-        help_text=lazy_gettext(u'The database URL.  For more information '
-            u'about database settings consult the Inyoka docs.')),
-    'database.debug':               BooleanField(default=False,
-        help_text=lazy_gettext(u'If enabled the database will collect '
-            u'the SQL statements and add them to the bottom of the page '
-            u'for easier debugging.')),
-    'database.echo':                BooleanField(default=False,
-        help_text=lazy_gettext(u'If enabled the database will echo '
-            u'all submitted statements to the default logger.  That defaults '
-            u'to stdout.')),
-    'database.pool_recycle':        IntegerField(default=-1, min_value=-1,
-        help_text=lazy_gettext(u'If set to non -1, number of seconds between '
-            u'connection recycling. If this timeout is surpassed the '
-            u'connection will be closed and replaced with a newly opened connection.')),
-    'database.pool_timeout':        IntegerField(default=30, min_value=5,
-        help_text=lazy_gettext(u'The number of seconds to wait before giving '
-            u'up on returning a connection.  This will not be used if the used'
-            u' database is one of SQLite, Access or Informix as those don\'t '
-            u'support queued connection pools.')),
+#: List of activasted components
+activated_components = ListField('activated_components', [
+    'inyoka.core.*',
+    'inyoka.admin',
+    'inyoka.portal',
+    'inyoka.news.api',
+    'inyoka.forum.api',
+    'inyoka.paste.api',
+    'inyoka.wiki.api'])
 
-    # imaging specific values
-    'imaging.backend':              TextField(default=u'pil',
-        help_text=lazy_gettext(u'Imaging backend to use.')),
-    'imaging.avatarsize':           TextField(default=u'50x50',
-        help_text=lazy_gettext(u'Portal avatar size.')),
-    'imaging.thumbnailsize':            TextField(default=u'100x100',
-        help_text=lazy_gettext(u'Portal thumbnail size.')),
+#: List of deactivated components
+deactivated_components = ListField('deactivated_components', ['inyoka.core.tasks'])
 
-    # template specific values
-    'templates.path':               TextField(default=_default_templates_path,
-        help_text=lazy_gettext(u'Custom template path which is '
-            u'searched before the default path.')),
-    'templates.auto_reload':        BooleanField(default=True,
-        help_text=lazy_gettext(u'Auto reload template files if they changed '
-                               u'their contents.')),
-    'templates.use_cache':          BooleanField(default=False,
-        help_text=lazy_gettext(u'Use either memory, filesystem or memcached '
-                               u'bytecode caches')),
-    'templates.use_memcached_cache':      BooleanField(default=False,
-        help_text=lazy_gettext(u'Use Memcached for bytecode caching')),
-    'templates.use_filesystem_cache':     BooleanField(default=False,
-        help_text=lazy_gettext(u'Use filesystem for bytecode caching')),
+#: The path to the media folder
+media_root = TextField('media_root', default=_default_templates_path)
 
-    #TODO: yet a hack untill we have proper information about what an app is
-    'templates.packages.portal':    TextField(default=u'inyoka.portal'),
-    'templates.packages.news':    TextField(default=u'inyoka.news'),
-    'templates.packages.forum':    TextField(default=u'inyoka.forum'),
-    'templates.packages.wiki':    TextField(default=u'inyoka.wiki'),
-    'templates.packages.paste':    TextField(default=u'inyoka.paste'),
-    'templates.packages.planet':    TextField(default=u'inyoka.planet'),
+#: The secret key used for hashing the cookies and other
+#: security salting.
+secret_key = TextField('secret_key', default=u'CHANGEME')
 
-    # caching
-    'caching.system':               TextField(default=u'null',
-        help_text=lazy_gettext(u'Choose one of null, simple, memcached or filesystem '
-            u'for the caching system.')),
-    'caching.filesystem_cache_path': TextField(default=u'/tmp/_inyoka_cache',
-        help_text=lazy_gettext(u'The path for the filesystem caches')),
-    'caching.timeout':              IntegerField(default=300, min_value=10,
-        help_text=lazy_gettext(u'The timeout for the caching system')),
-    'caching.memcached_servers':    TextField(default=u'',
-        help_text=lazy_gettext(u'Comma seperated list of memcached servers')),
+#: Base domain name
+base_domain_name = TextField('base_domain_name', default=u'inyoka.local:5000')
 
-    # auth system specific values
-    'auth.system':                  TextField(default=u'inyoka.portal.auth.EasyAuth',
-        help_text=lazy_gettext(u'The Authsystem which should get used')),
+#: Cookie domain name
+cookie_domain_name = TextField('cookie_domain_name', default=u'.inyoka.local')
 
-    # routing specific config values
-    # values are in the form of `subdomain:/submount`
-    # if you only apply the submount use `/submount` the `:` will be completed
-    'routing.urls.portal':          DottedField(default=u':/',
-        help_text=lazy_gettext(u'Url mapping used for the portal application')),
-    'routing.urls.usercp':          DottedField(default=u':/usercp',
-        help_text=lazy_gettext(u'Url mapping used for the usercp application')),
-    'routing.urls.news':            DottedField(default=u'news:/',
-        help_text=lazy_gettext(u'Url mapping used for the news application')),
-    'routing.urls.forum':           DottedField(default=u'forum:/',
-        help_text=lazy_gettext(u'Url mapping used for the forum application')),
-    'routing.urls.wiki':            DottedField(default=u'wiki:/',
-        help_text=lazy_gettext(u'Url mapping used for the wiki application')),
-    'routing.urls.paste':           DottedField(default=u'paste:/',
-        help_text=lazy_gettext(u'Url mapping used for the paste application')),
-    'routing.urls.planet':          DottedField(default=u'planet:/',
-        help_text=lazy_gettext(u'Url mapping used for the planet application')),
-    'routing.urls.admin':           DottedField(default=u'admin:/',
-        help_text=lazy_gettext(u'Url mapping used for the admin application')),
-    'routing.urls.api':           DottedField(default=u'api:/',
-        help_text=lazy_gettext(u'Url mapping used for the API')),
+#: Cookie name
+cookie_name = TextField('cookie_name', default=u'inyoka-session')
 
-    # Do never change that value!!!!
-    'routing.urls.test':             DottedField(default=u'_test_:/',
-        help_text=lazy_gettext(u'Url mapping used for the testing system.  '
-                               u'Do never change that value!')),
+#: The current language locale
+language = TextField('language', default=u'en')
 
-    # values for static and media serving
-    'routing.urls.static':          DottedField(default=u'static:/',
-        help_text=lazy_gettext(u'Url mapping used for static file serving')),
-    'routing.urls.media':           DottedField(default=u'media:/',
-        help_text=lazy_gettext(u'Url mapping used for media file serving')),
-    'static_path':                  TextField(default=u'static',
-        help_text=lazy_gettext(u'Path to the directory for static files. '
-                               u'Relative to the directory where '
-                               u'the inyoka package lies in.')),
-    'media_path':                   TextField(default=u'media',
-        help_text=lazy_gettext(u'Path to the directory for shared static files, '
-                               u'aka media. Relative to '
-                               u'the directory where the inyoka package lies in.')),
+#: The default timezone for all users
+default_timezone = TextField('default_timezone', default=u'Europe/Berlin')
 
-    # wiki specific values
-    'wiki.index.name':              TextField(default=u'Main Page',
-        help_text=lazy_gettext(u'Name of the wiki index page (the one a user '
-                               u"accessing the wiki's / is redirected to)")),
+#: THe name of the anonymous user
+anonymous_name = TextField('anonymous_name', default=u'anonymous')
 
-    # various paste settings
-    'paste.diffviewer_syntax_highlighting_threshold': IntegerField(default=0,
-        help_text=lazy_gettext(u'Files with lines greater than this number '
-                               u'will not have syntax highlighting. '
-                               u'Enter 0 for no limit.')),
+#: Enable or disable CSRF Protection
+enable_csrf_checks = BooleanField('enable_csrf_checks', default=True)
 
-    # celery settings
-    'celery.result_backend':        TextField(u'amqp',''),
-    'celery.imports':               ListField(['inyoka.core.tasks'],''),
+#: The website title to show in various places
+website_title = TextField('website_title', default=u'Inyoka Portal')
 
-    # ampq broker settings
-    'broker.host':                  TextField(u'localhost', ''),
-    'broker.port':                  IntegerField(5672, ''),
-    'broker.user':                  TextField(u'inyoka', ''),
-    'broker.password':              TextField(u'default', ''),
-    'broker.vhost':                 TextField(u'inyoka', ''),
-}
+#: The mail address used for sending mails
+mail_address = TextField('mail_address', default=u'system@inyoka.local')
+
+#: The duration a permanent session is valid.  Defined in days, defaults to 30
+permanent_session_lifetime = IntegerField('permanent_session_life', default=30)
+
+#: Use SSL for ReCaptcha requests, defaults to True
+recaptcha_use_ssl = BooleanField('recaptcha.use_ssl', default=True)
+
+#: ReCaptcha public key
+recaptcha_public_key = TextField('recaptcha.public_key',
+    default=u'6Lc1LwsAAAAAAPSQ4FcfLKJVcwzicnZl8v-RmeLj')
+
+#: ReCaptcha private key
+recaptcha_private_key = TextField('recaptcha.private_key',
+    default=u'6Lc1LwsAAAAAAAKaGUBaEpTOfXKDWe6QjIlmMM9b')
+
+#: The database URL.  For more information about database settings
+#: consult the Inyoka docs.
+database_url = TextField('database.url', default=u'sqlite:///dev.db')
+
+#: Set database debug.  If enabled the database will collect the SQL
+#: statements and add them to the bottom of the page for easier debugging.
+database_debug = BooleanField('database.debug', default=False)
+
+#: Set database echo.  If enabled the database will echo all submitted
+#: statements to the default logger.  That defaults to stdout.
+database_echo = BooleanField('database.echo', default=False)
+
+#: Set database pool recycle.  If set to non -1, used as number of seconds
+#: between connection recycling.  If this timeout is surpassed, the connection
+#: will be closed and replaced with a newly opened connection.
+database_pool_recycle = IntegerField('database.pool_recycle', default=-1, min_value=-1)
+
+#: Set database pool timeout.  The number of seconds to wait before giving
+#: up on a returning connection.  This will not be used if the used database
+#: is one of SQLite, Access or Informix as those don't support
+#: queued connection pools.
+database_pool_timeout = IntegerField('database.pool_timeout', default=30, min_value=5)
+
+
+#: Set imaging backend to use.
+imaging_backend = TextField('imaging.backend', default=u'pil')
+
+#: Portal avatar size.
+imaging_avatarsize = TextField('imaging.avatarsize', default=u'50x50')
+
+#: Portal thumbnail size.
+imaging_thumbnailsize = TextField('imaging.thumbnailsize', default=u'100x100')
+
+#: Custom template path which is searched before the default path
+templates_path = TextField('templates.path', default=_default_templates_path)
+
+#: Auto reload template files if they changed
+templates_auto_reload = BooleanField('templates.auto_reload', default=True)
+
+#: Use either ’memory’, ’filesystem’, or ’memcached’ bytecode caches
+templates_use_cache = BooleanField('templates.use_cache', default=False)
+
+#: Use memcached for bytecode caching
+templates_use_memcached_cache = BooleanField('templates.use_memcached_cache', default=False)
+
+#: Use filesystem for bytecode caching
+templates_use_filesystem_cache = BooleanField('templates.use_filesystem_cache', default=False)
+
+
+#TODO: yet a hack untill we have proper information about what an app is
+
+templates_packages_portal = TextField('templates.packages.portal', default=u'inyoka.portal')
+templates_packages_news = TextField('templates.packages.news', default=u'inyoka.news')
+templates_packages_forum = TextField('templates.packages.forum', default=u'inyoka.forum')
+templates_packages_wiki = TextField('templates.packages.wiki', default=u'inyoka.wiki')
+templates_packages_paste = TextField('templates.packages.paste', default=u'inyoka.paste')
+templates_packages_planet = TextField('templates.packages.planet', default=u'inyoka.planet')
+
+#: Set the caching system.  Choose one of ’null’, ’simple’, ’memcached’ or ’filesystem’.
+caching_system = TextField('caching.system', default=u'null')
+
+#: Set the path for the filesystem caches
+caching_filesystem_cache_path = TextField('caching.filesystem_cache_path',
+                                          default=u'/tmp/_inyoka_cache')
+
+#: Set the timeout for the caching system
+caching_timeout = IntegerField('caching.timeout', default=300, min_value=10)
+
+#: Set the memcached servers.  Comma seperated list of memcached servers
+caching_memcached_servers = TextField('caching.memcached_servers', default=u'')
+
+#: Set the authsystem to be used.
+auth_system = TextField('auth.system', default=u'inyoka.portal.auth.EasyAuth')
+
+# routing specific config values
+# values are in the form of `subdomain:/submount`
+# if you only apply the submount use `/submount` the `:` will be completed
+routing_urls_portal = DottedField('routing.urls.portal', default=u':/')
+routing_urls_usercp = DottedField('routing.urls.usercp', default=u':/usercp')
+routing_urls_news = DottedField('routing.urls.news', default=u'news:/')
+routing_urls_forum = DottedField('routing.urls.forum', default=u'forum:/')
+routing_urls_wiki = DottedField('routing.urls.wiki', default=u'wiki:/')
+routing_urls_paste = DottedField('routing.urls.paste', default=u'paste:/')
+routing_urls_planet = DottedField('routing.urls.planet', default=u'planet:/')
+routing_urls_admin = DottedField('routing.urls.admin', default=u'admin:/')
+routing_urls_api = DottedField('routing.urls.api', default=u'api:/')
+# NEVER CHANGE THAT VALUE!!! TODO: Find a better solution to implement testing
+# Url prefixes...
+routing_urls_test = DottedField('routing.urls.test', default=u'test:/')
+routing_urls_static = DottedField('routing.urls.static', default=u'static:/')
+routing_urls_media = DottedField('routing.urls.media', default=u'media:/')
+
+
+#: Path to the directory that includes static files.  Relative to the inyoka
+#: package path.
+static_path = TextField('static_path', default=u'static')
+
+#: Path to the directory for shared static files, aka media.  Relative to
+#: the inyoka package path.
+media_path = TextField('media_path', default=u'media')
+
+#: Name to the wiki index page (the one a user accessing the wiki's ’/’
+#: is redirected to)
+wiki_index_name = TextField('wiki.index.name', default=u'Main Page')
+
+#: Files with lines greater than this number will not have syntax highlighting.
+#: Set zero for no limit.
+paste_diffviewer_syntax_highlighting_threshold = IntegerField(
+    'paste.diffviewer_syntax_highlighting_threshold', default=0)
+
+# celery broker settings
+celery_result_backend = TextField('celery.result_backend', default=u'amqp')
+celery_imports = ListField('celery.imports', default=['inyoka.core.tasks'])
+
+# ampq broker settings
+broker_host = TextField('broker.host', u'localhost')
+broker_port = IntegerField('broker.port', 5672)
+broker_user = TextField('broker.user', u'inyoka')
+broker_password = TextField('broker.password', u'default')
+broker_vhost = TextField('broker.vhost', u'inyoka')

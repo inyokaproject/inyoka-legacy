@@ -32,56 +32,61 @@ def _setup_config_test():
 
 def _teardown_config_test():
     global _config
-    os.remove(_config_file_name)
+    if os.path.exists(_config_file_name):
+        os.remove(_config_file_name)
     _config = None
 
 
+@with_setup(teardown=_teardown_config_test)
 def test_non_existing_config():
     conf = Configuration(_config_file_name)
     assert_false(conf.exists, False)
     eq_(conf._load_time, 0)
 
 
+@with_setup(_setup_config_test, _teardown_config_test)
 def test_base_config_field():
-    field = ConfigField('value', 'Help')
+    field = ConfigField(None, 'value')
     eq_(field.get_default(), 'value')
-    eq_(field.help_text, 'Help')
     eq_(field.converter(), 'value')
     eq_(field(), 'value')
 
 
+@with_setup(_setup_config_test, _teardown_config_test)
 def test_list_config_field():
-    field = ListField([1,2,3],'Help', IntegerField(0,''))
+    field = ListField(None, [1,2,3], IntegerField(0, ''))
     eq_(field.get_default(), [1,2,3])
     eq_(field('2:3:4'), [2,3,4])
     eq_(field([99,99]), [99,99])
 
 
+@with_setup(_setup_config_test, _teardown_config_test)
 def test_integer_config_field():
-    field = IntegerField(20, 'Help', min_value=10)
+    field = IntegerField(None, 20, min_value=10)
     eq_(field.min_value, 10)
     eq_(field.get_default(), 20)
-    eq_(field.help_text, 'Help')
     eq_(field('20'), 20)
     eq_(field(5), 10)
 
 
+@with_setup(_setup_config_test, _teardown_config_test)
 def test_text_config_field():
-    field = TextField('text', 'Help')
+    field = TextField(None, 'text')
     eq_(field.get_default(), 'text')
-    eq_(field.help_text, 'Help')
     eq_(field('value'), u'value')
     eq_(field(' value   '), u'value')
     assert_true(isinstance(field('value'), unicode))
 
 
+@with_setup(_setup_config_test, _teardown_config_test)
 def test_dotted_config_field():
-    field = DottedField('default:', 'Help')
+    field = DottedField(None, 'default:')
     eq_(field('value'), ':value')
 
 
+@with_setup(_setup_config_test, _teardown_config_test)
 def test_boolean_config_field():
-    field = BooleanField(False, 'Help')
+    field = BooleanField(None, False)
     # check true states
     assert_true(field('1'))
     assert_true(field('yes'))

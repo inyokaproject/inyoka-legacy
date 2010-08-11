@@ -10,8 +10,8 @@
 """
 import os
 from inyoka.core.test import *
-from inyoka.core.config import Configuration, IntegerField, TextField, \
-    DottedField, BooleanField, ConfigField, ListField
+from inyoka.core.config import Configuration, IntegerConfigField, TextConfigField, \
+    DottedConfigField, BooleanConfigField, ConfigField, ListConfigField
 
 
 _config = None
@@ -54,7 +54,7 @@ def test_base_config_field():
 
 @with_setup(_setup_config_test, _teardown_config_test)
 def test_list_config_field():
-    field = ListField(None, [1,2,3], IntegerField(0, ''))
+    field = ListConfigField(None, [1,2,3], IntegerConfigField(0, ''))
     eq_(field.get_default(), [1,2,3])
     eq_(field('2:3:4'), [2,3,4])
     eq_(field([99,99]), [99,99])
@@ -62,7 +62,7 @@ def test_list_config_field():
 
 @with_setup(_setup_config_test, _teardown_config_test)
 def test_integer_config_field():
-    field = IntegerField(None, 20, min_value=10)
+    field = IntegerConfigField(None, 20, min_value=10)
     eq_(field.min_value, 10)
     eq_(field.get_default(), 20)
     eq_(field('20'), 20)
@@ -71,7 +71,7 @@ def test_integer_config_field():
 
 @with_setup(_setup_config_test, _teardown_config_test)
 def test_text_config_field():
-    field = TextField(None, 'text')
+    field = TextConfigField(None, 'text')
     eq_(field.get_default(), 'text')
     eq_(field('value'), u'value')
     eq_(field(' value   '), u'value')
@@ -80,13 +80,13 @@ def test_text_config_field():
 
 @with_setup(_setup_config_test, _teardown_config_test)
 def test_dotted_config_field():
-    field = DottedField(None, 'default:')
+    field = DottedConfigField(None, 'default:')
     eq_(field('value'), ':value')
 
 
 @with_setup(_setup_config_test, _teardown_config_test)
 def test_boolean_config_field():
-    field = BooleanField(None, False)
+    field = BooleanConfigField(None, False)
     # check true states
     assert_true(field('1'))
     assert_true(field('yes'))

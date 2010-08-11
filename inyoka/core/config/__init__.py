@@ -55,7 +55,7 @@ class ConfigField(object):
 #        return ctx.cfg[self.__name__]
 
 
-class IntegerField(ConfigField):
+class IntegerConfigField(ConfigField):
     """A field representing integer values"""
 
     def __init__(self, name, default, min_value=-1):
@@ -72,7 +72,7 @@ class IntegerField(ConfigField):
             return int(value)
 
 
-class TextField(ConfigField):
+class TextConfigField(ConfigField):
     """A field representing unicode values"""
 
     def converter(self, value=None):
@@ -83,7 +83,7 @@ class TextField(ConfigField):
         return value
 
 
-class DottedField(ConfigField):
+class DottedConfigField(ConfigField):
     """A field representing many values but at least two.
     This converter only fixes values that does not contain
     a doublepoint so applications can safely split on it.
@@ -96,12 +96,12 @@ class DottedField(ConfigField):
         return value
 
 
-class ListField(ConfigField):
+class ListConfigField(ConfigField):
     """A field representing a list. The list can contain any other supported
     data type. `:` is used as a separator character between the items.
     """
 
-    conversion_field = TextField(u'', u'')
+    conversion_field = TextConfigField(u'', u'')
 
     def __init__(self, name, default, field=None):
         ConfigField.__init__(self, name, default)
@@ -117,7 +117,7 @@ class ListField(ConfigField):
         return erg
 
 
-class BooleanField(ConfigField):
+class BooleanConfigField(ConfigField):
     """A field representing boolean values"""
 
     TRUE_STATES = ['1', 'yes', 'true', 'on']
@@ -125,9 +125,9 @@ class BooleanField(ConfigField):
 
     def converter(self, value=None):
         if isinstance(value, basestring):
-            if value.lower() in BooleanField.TRUE_STATES:
+            if value.lower() in BooleanConfigField.TRUE_STATES:
                 return True
-            elif value.lower() in BooleanField.FALSE_STATES:
+            elif value.lower() in BooleanConfigField.FALSE_STATES:
                 return False
         else:
             return bool(value)

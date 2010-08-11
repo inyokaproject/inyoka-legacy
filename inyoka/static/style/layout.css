@@ -1,4 +1,5 @@
 #content {
+  height: 100%;
   background-color: #FFF;
   color: #2b2422;
   padding: 1em;
@@ -280,7 +281,6 @@ div.flash_message {
 }
 
 div.not_found {
-  display: block;
   height: 60px;
   margin: 0 50px;
 }

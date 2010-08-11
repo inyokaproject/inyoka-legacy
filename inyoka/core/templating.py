@@ -204,6 +204,7 @@ class InyokaEnvironment(Environment):
         self.globals.update(
             INYOKA_REVISION=INYOKA_REVISION,
             PYTHON_VERSION='%d.%d.%d' % sys.version_info[:3],
+            DEBUG=ctx.cfg['debug'],
             href=href,
         )
         self.filters.update(

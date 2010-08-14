@@ -16,7 +16,7 @@ from pkg_resources import DefaultProvider, ResourceManager, \
     get_provider
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
     ChoiceLoader, FileSystemBytecodeCache, MemcachedBytecodeCache, \
-    PackageLoader, PrefixLoader
+    PackageLoader, PrefixLoader, TemplateNotFound
 from jinja2.loaders import split_template_path
 from inyoka import INYOKA_REVISION, l10n, i18n
 from inyoka.context import ctx

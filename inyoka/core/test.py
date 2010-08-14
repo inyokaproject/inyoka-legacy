@@ -11,7 +11,6 @@
 """
 import os
 import sys
-import unittest
 import unittest2
 import warnings
 import traceback
@@ -31,9 +30,9 @@ from inyoka.core import database
 from inyoka.core.database import db
 from inyoka.core.http import Response, Request, get_bound_request
 from inyoka.core.resource import IResourceManager
+from inyoka.core.exceptions import ImproperlyConfigured
 from inyoka.utils.logger import logger
-from inyoka.utils.urls import make_full_domain, get_host_port_mapping, \
-    get_base_url_for_controller
+from inyoka.utils.urls import get_base_url_for_controller
 
 
 logger.disabled = True

@@ -136,8 +136,7 @@ class ApplicationContext(object):
         from inyoka.core.config import Configuration
         cfile = os.environ.get('INYOKA_CONFIG', 'inyoka.ini')
         self.cfg = cfg = Configuration(join(realpath(
-            os.environ['INYOKA_INSTANCE']), cfile
-        ))
+            os.environ['INYOKA_INSTANCE']), cfile))
 
         if not cfg.exists:
             trans = cfg.edit()
@@ -265,7 +264,10 @@ class ApplicationContext(object):
         return self._instances[compcls]
 
     def __call__(self, environ, start_response): #pragma: no cover
-        """Wrap the WSGI stack.  This only forwards to the respective dispatcher"""
+        """Wrap the WSGI stack.
+
+        This method forwards the call to the respective dispatcher.
+        """
         return self.dispatcher(environ, start_response)
 
 

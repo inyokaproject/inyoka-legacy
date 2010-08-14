@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from datetime import date, datetime
+from datetime import date
 from werkzeug import cached_property
 from inyoka.i18n import _
 from inyoka.l10n import get_month_names
@@ -205,9 +205,9 @@ class NewsController(IController):
             'subscribe': [_(u'You had already been subscribed before.'),
                           _(u'You have successfully been subscribed to '
                             u'new News articles.')],
-            'unsubscribe':[_(u'You had not been subscribed before.'),
-                           _(u'You have successfully been unsubscribed from '
-                             u'new News articles.')],
+            'unsubscribe': [_(u'You had not been subscribed before.'),
+                            _(u'You have successfully been unsubscribed from '
+                              u'new News articles.')],
         }
         request.flash(msg[action][existed], True if not existed else None)
 

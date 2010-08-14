@@ -174,7 +174,7 @@ class Article(db.Model):
     author = db.relationship(User, backref=db.backref('articles', lazy='dynamic'))
     comments = db.relationship(Comment,
         backref=db.backref('article', lazy='joined'),
-        primaryjoin=id==Comment.article_id,
+        primaryjoin=id == Comment.article_id,
         order_by=[db.asc(Comment.pub_date)],
         lazy='dynamic',
         cascade='all, delete, delete-orphan',

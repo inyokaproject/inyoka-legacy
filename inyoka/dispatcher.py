@@ -26,9 +26,10 @@ from inyoka.core.routing import Map
 from inyoka.utils.http import notfound
 
 
-
 class RequestDispatcher(object):
-    """The main dispatcher that handles all the dispatching and routing stuff."""
+    """The main dispatcher that handles all the dispatching
+    and routing stuff.
+    """
 
     #: Default class for requests.
     request_class = Request

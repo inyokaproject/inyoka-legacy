@@ -85,7 +85,7 @@ class PortalAdminController(IAdminProvider):
         tag = Tag.query.filter_by(slug=slug).one()
         if 'cancel' in request.form:
             request.flash(_(u'Action canceled'))
-        elif 'confirm' in request.form and form.validate_on_submit():
+        elif 'confirm' in request.form:
             db.session.delete(tag)
             db.session.commit()
             request.flash(_(u'The tag “%s” was deleted successfully.'

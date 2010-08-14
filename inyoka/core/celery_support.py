@@ -30,7 +30,7 @@ class CeleryLoader(BaseLoader):
 
         settings = map(conv, celeryd_vars + celery_vars + broker_vars)
         settings.append(('DEBUG', ctx.cfg['debug']))
-        self.configured  = True
+        self.configured = True
 
         return Settings(settings)
 

@@ -83,7 +83,7 @@ from datetime import datetime
 from werkzeug import FileStorage
 from mimetypes import guess_type
 import sqlalchemy
-from sqlalchemy import MetaData, create_engine, Table, Unicode
+from sqlalchemy import MetaData, create_engine, Table
 from sqlalchemy import orm, sql, exc
 from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.orm.session import Session as SASession
@@ -95,7 +95,6 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta, _declarative_constructor
 from sqlalchemy.types import MutableType, TypeDecorator
-from inyoka import Interface
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
 from inyoka.utils import flatten_iterator

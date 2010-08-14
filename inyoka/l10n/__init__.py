@@ -19,7 +19,7 @@
 from __future__ import division
 import re
 from functools import wraps
-from datetime import date, datetime, timedelta, time
+from datetime import date, datetime, timedelta
 import pytz
 from babel import dates
 from babel.dates import TIMEDELTA_UNITS
@@ -111,12 +111,14 @@ def to_datetime(obj):
 
 _timezone_aware = ('format_datetime', 'format_time')
 
+
 def get_dummy(func):
     #: avoid failing doctest from the original docstring
     if func.func_name in _timezone_aware:
         w = wraps(func, ('__module__', '__name__'))
     else:
         w = wraps(func, ('__module__', '__name__', '__doc__'))
+
     @w
     def _inner(*args, **kwargs):
         if 'locale' not in kwargs or kwargs['locale'] is dates.LC_TIME:

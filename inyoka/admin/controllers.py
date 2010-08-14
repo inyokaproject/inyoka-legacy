@@ -8,13 +8,11 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inspect import ismethod
 from werkzeug import cached_property
 from inyoka.core.api import ctx, view, IController, Rule, templated, \
     IServiceProvider
 from inyoka.core.routing import Submount, EndpointPrefix, get_endpoint_map
 from inyoka.admin.api import IAdminProvider, IAdminServiceProvider
-from inyoka.utils import getmembers
 
 
 def context_modifier(request, context):

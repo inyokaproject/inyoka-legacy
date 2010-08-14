@@ -10,7 +10,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from uuid import uuid4
-from operator import itemgetter
 from functools import update_wrapper
 from collections import namedtuple
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \

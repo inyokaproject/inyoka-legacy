@@ -7,11 +7,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-from uuid import uuid4
-from StringIO import StringIO
 from inyoka.core.middlewares import IMiddleware
 from inyoka.utils.debug import inject_query_info
-from inyoka.utils.logger import logger
 
 
 re_htmlmime = re.compile(r'^text/x?html')

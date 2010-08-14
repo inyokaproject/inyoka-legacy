@@ -9,7 +9,7 @@
 import re
 from inyoka.i18n import _
 from inyoka.context import ctx
-from inyoka.core.markup.lexer import escape, Lexer
+from inyoka.core.markup.lexer import Lexer
 from inyoka.core.markup.machine import Renderer, RenderContext
 from inyoka.core.markup.transformers import ITransformer
 from inyoka.core.markup.constants import HTML_COLORS

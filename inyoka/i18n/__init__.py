@@ -15,7 +15,6 @@
 import os
 import re
 import json
-from cStringIO import StringIO
 from os.path import realpath, dirname
 from gettext import NullTranslations
 from weakref import WeakKeyDictionary

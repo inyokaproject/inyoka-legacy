@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from datetime import datetime
-from operator import attrgetter
 from sqlalchemy.ext.associationproxy import association_proxy
 from inyoka.core.api import db, href, _
 from inyoka.core.mixins import TextRendererMixin

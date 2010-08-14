@@ -6,6 +6,11 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+#TODO: Sort everything here a bit and define the API properly.
+#      Maybe this module should not do anything more than all other
+#      apps `api` modules but define the interfaces and the resource-components
+#      and should not import other core packages.
+#      This way we don't get cluttered
 
 # Imports for easy API access and our import system
 from inyoka import Interface

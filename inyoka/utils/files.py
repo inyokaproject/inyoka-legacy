@@ -10,7 +10,7 @@
 """
 import re
 from os import listdir
-from os.path import join, splitext
+from os.path import splitext
 from time import time
 from hashlib import sha1
 from inyoka.core.api import ctx

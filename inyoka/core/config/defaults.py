@@ -12,7 +12,6 @@ import os
 from os.path import join
 from inyoka.core.config import BooleanConfigField, TextConfigField, \
     IntegerConfigField, DottedConfigField, ListConfigField
-from inyoka.i18n import lazy_gettext
 
 
 _default_media_data_path = join(os.environ['INYOKA_MODULE'], 'media')

@@ -11,9 +11,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-import sys
-import xmlrpclib
-from datetime import datetime
 from htmlentitydefs import name2codepoint
 from jinja2.utils import escape
 

@@ -11,7 +11,6 @@
 """
 import sys
 from copy import deepcopy
-from operator import itemgetter
 from itertools import imap
 from collections import namedtuple
 

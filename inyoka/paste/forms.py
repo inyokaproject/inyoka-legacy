@@ -11,7 +11,7 @@
 from operator import itemgetter
 from pygments.lexers import get_all_lexers
 from inyoka.core.forms import Form, TextField, SelectField, BooleanField, \
-    validators, widgets, IntegerField, HiddenIntegerField
+    validators, widgets, HiddenIntegerField
 from inyoka.i18n import _
 
 

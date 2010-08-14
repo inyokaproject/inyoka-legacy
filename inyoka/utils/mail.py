@@ -22,7 +22,7 @@ def send_mail(subject, message_, from_, to):
     Don't use this function directly inside controllers, but create a task for
     it.
     """
-    message = u'From: %s\nTo: %s' % (from_ , to)
+    message = u'From: %s\nTo: %s' % (from_, to)
     message += '\nSubject: ' + Header(subject, 'utf-8', header_name='Subject').encode() + '\n'
     message += MIMEText(message_.encode('utf-8'), _charset='utf-8').as_string()
     proc = Popen(['/usr/sbin/sendmail', '-t'], stdin=PIPE)

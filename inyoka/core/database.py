@@ -405,15 +405,9 @@ class ModelBase(object):
         return self.__class__.__name__ + '(' + ', '.join(x[0] + '=' +
                                             repr(x[1]) for x in attrs) + ')'
 
-def _constructor(self, **kwargs):
-    """A constructor that adds the model automatically to a session"""
-    _declarative_constructor(self, **kwargs)
-
-
 # configure the declarative base
 Model = declarative_base(name='Model', cls=ModelBase,
-    mapper=mapper, metadata=metadata, metaclass=DeclarativeMeta,
-    constructor=_constructor)
+    mapper=mapper, metadata=metadata, metaclass=DeclarativeMeta)
 ModelBase.query = session.query_property(Query)
 
 

@@ -102,8 +102,6 @@ import inspect
 import sys
 import re
 
-# For profiling
-import pstats
 
 # For hotshot profiling (inaccurate!)
 try:
@@ -353,6 +351,7 @@ class FuncProfile(object):
     def reset_stats(self):
         """Reset accumulated profiler statistics."""
         # Note: not using self.Profile, since pstats.Stats() fails then
+        import pstats
         self.stats = pstats.Stats(Profile())
         self.ncalls = 0
         self.skipped = 0

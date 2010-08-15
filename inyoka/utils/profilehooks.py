@@ -103,7 +103,6 @@ import sys
 import re
 
 # For profiling
-from profile import Profile
 import pstats
 
 # For hotshot profiling (inaccurate!)
@@ -121,11 +120,10 @@ if hotshot is not None:
     import _hotshot
     import hotshot.log
 
-# For cProfile profiling (best)
 try:
-    import cProfile
+    from cProfile import Profile
 except ImportError:
-    cProfile = None
+    from profile import Profile
 
 # For timecall
 import time
@@ -137,7 +135,7 @@ AVAILABLE_PROFILERS = {}
 
 def profile(fn=None, skip=0, filename=None, immediate=False, dirs=False,
             sort=None, entries=40,
-            profiler=('cProfile', 'profile', 'hotshot')):
+            profiler=('cProfile', 'hotshot')):
     """Mark `fn` for profiling.
 
     If `skip` is > 0, first `skip` calls to `fn` will not be profiled.
@@ -368,17 +366,7 @@ class FuncProfile(object):
             self.print_stats()
 
 
-AVAILABLE_PROFILERS['profile'] = FuncProfile
-
-
-if cProfile is not None:
-
-    class CProfileFuncProfile(FuncProfile):
-        """Profiler for a function (uses cProfile)."""
-
-        Profile = cProfile.Profile
-
-    AVAILABLE_PROFILERS['cProfile'] = CProfileFuncProfile
+AVAILABLE_PROFILERS['cProfile'] = FuncProfile
 
 
 if hotshot is not None:

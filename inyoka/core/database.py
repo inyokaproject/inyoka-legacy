@@ -199,8 +199,7 @@ def find_next_increment(column, string, max_length=None):
         find_next_increment(Category.slug, 'category name')
     """
     existing = session.query(column).filter(column.like('%s%%' % string)).all()
-    i = get_next_increment(flatten_iterator(existing), string, max_length)
-    return i
+    return get_next_increment(flatten_iterator(existing), string, max_length)
 
 
 def select_blocks(query, column, block_size=1000, start_with=0, max_fails=10):

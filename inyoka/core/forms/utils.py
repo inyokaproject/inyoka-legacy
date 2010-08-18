@@ -49,7 +49,6 @@ def update_model(instance, form, includes=None):
 
         if form.validate_on_submit():
             user = update_model(user, form)
-            db.session.update(user)
             db.session.commit()
 
     If `includes` is applied only these fields will be updated.  This function

@@ -40,7 +40,6 @@ class PasteAdminProvider(IAdminProvider):
         if form.validate_on_submit():
             entry = update_model(entry, form,
                 ('text', 'language', 'title', 'author', 'hidden'))
-            db.session.update(entry)
             db.session.commit()
             return redirect_to(entry)
 

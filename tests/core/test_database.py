@@ -91,6 +91,16 @@ def test_slug_generator():
     # multiple fields are joined with `sep`
     eq_(c3.slug, u'cat/drei')
 
+    # test that models with max_length are stripped properly
+    name = (u'This is just a test category with awesome features.  '
+            u'But this string is more than 100 chars long and needs to be stripped properly')
+    c4 = SlugGeneratorTestModel(name=name)
+    db.session.commit()
+    eq_(c4.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-')
+    c5 = SlugGeneratorTestModel(name=name)
+    db.session.commit()
+    eq_(c5.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-2')
+
 
 @refresh_database
 def test_cached_query():

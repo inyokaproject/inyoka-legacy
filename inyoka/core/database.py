@@ -191,16 +191,16 @@ def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
         orm.attributes.set_committed_value(obj, column, val + delta)
 
 
-def find_next_increment(column, string):
+def find_next_increment(column, string, max_length=None):
     """Get the next incremented string based on `column` and `string`.
 
     Example::
 
         find_next_increment(Category.slug, 'category name')
     """
-
     existing = session.query(column).filter(column.like('%s%%' % string)).all()
-    return get_next_increment(flatten_iterator(existing), string)
+    i = get_next_increment(flatten_iterator(existing), string, max_length)
+    return i
 
 
 def select_blocks(query, column, block_size=1000, start_with=0, max_fails=10):
@@ -414,6 +414,11 @@ ModelBase.query = session.query_property(Query)
 class SlugGenerator(orm.MapperExtension):
     """This MapperExtension can generate unique slugs automatically.
 
+    .. note::
+
+        If you apply a max_length to the slug field that length is
+        decreased by 10 to get enough space for increment strings.
+
     :param slugfield: The field the slug gets saved to.
     :param generate_from: Either a string or a list of fields to generate
                           the slug from.  If a list is applied they are
@@ -431,14 +436,22 @@ class SlugGenerator(orm.MapperExtension):
 
     def before_insert(self, mapper, connection, instance):
         fields = [get_attribute(instance, f) for f in self.generate_from]
+
+        table = mapper.columns[self.slugfield].table
+        column = table.c[self.slugfield]
+        assert isinstance(column.type, (db.Unicode, db.String))
+        max_length = column.type.length
+
         # filter out fields with no value as we cannot join them they are
         # not relevant for slug generation.
         fields = filter(None, fields)
         slug = self.separator.join(map(gen_ascii_slug, fields))
+        # strip the string if max_length is applied
+        slug = slug[:max_length-10] if max_length is not None else slug
 
-        set_attribute(instance, self.slugfield, find_next_increment(
-                getattr(instance.__class__, self.slugfield), slug))
-
+        set_attribute(instance, self.slugfield,
+            find_next_increment(getattr(instance.__class__, self.slugfield),
+                                slug, max_length))
 
 class FileObject(FileStorage):
 

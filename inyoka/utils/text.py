@@ -132,7 +132,7 @@ def get_next_increment(values, string, max_length=None):
     """
     values = list(values)
     if not values:
-        return string
+        return string[:max_length] if max_length is not None else string
 
     base = None
     for value in values:

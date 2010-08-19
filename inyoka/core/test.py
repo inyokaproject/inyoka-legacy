@@ -18,7 +18,7 @@ from functools import partial, wraps
 from pprint import pformat
 
 import nose
-from nose.plugins import cover, base, errorclass
+from nose.plugins import cover, base, errorclass, testid
 
 from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
@@ -535,6 +535,25 @@ class ViewTestCase(DatabaseTestCase):
             raise AssertionError(u'Expected context:\n%r\n\nActual Context:\n%r'
                                  % (value, tctx))
         return True
+
+
+class FixedTestIdPlugin(testid.TestId):
+    """Integrates a small bugfix for nose integrated TestId plugin.
+
+    If running in multiprocess mode the output-stream is not set
+    properly somehow, so we do that on __init__ ourself.
+    """
+    name = 'fixedid'
+
+    def options(self, parser, env):
+        testid.Plugin.options(self, parser, env)
+        # Don't register anything more, we're using the testid.TestId
+        # options so everything's fine here.
+        return
+
+    def write(self, output):
+        if self._write_hashes and hasattr(self, 'stream'):
+            self.stream.write(output)
 
 
 class InyokaPlugin(cover.Coverage):

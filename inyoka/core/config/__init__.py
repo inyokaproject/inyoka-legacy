@@ -17,6 +17,13 @@ from wtforms.validators import ValidationError
 
 DEFAULTS = {}
 
+_quote_table = {
+    ord('\\'): u'\\\\',
+    ord('\n'): u'\\n',
+    ord('\r'): u'\\r',
+    ord('"'): u'\\"'
+}
+
 
 class ConfigField(object):
     """A field representing a configuration entry.
@@ -149,7 +156,11 @@ def unquote_value(value):
 
 
 def quote_value(value):
-    """Quote a configuration value."""
+    """Quote a configuration value.
+
+    Takes either an bytestring or unicode and returns
+    an escaped utf-8 encoded bytestring.
+    """
     if isinstance(value, bool):
         value = u'1' if value else u'0'
     if isinstance(value, (int, long)):
@@ -162,11 +173,7 @@ def quote_value(value):
     if value.strip() == value and value[0] not in '"\'' and \
        value[-1] not in '"\'' and len(value.splitlines()) == 1:
         return value.encode('utf-8')
-    return '"%s"' % value.replace('\\', '\\\\') \
-                         .replace('\n', '\\n') \
-                         .replace('\r', '\\r') \
-                         .replace('\t', '\\t') \
-                         .replace('"', '\\"').encode('utf-8')
+    return (u'"%s"' % value.translate(_quote_table)).encode('utf-8')
 
 
 def from_string(value, field):

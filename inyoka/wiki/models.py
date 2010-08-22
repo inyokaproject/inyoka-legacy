@@ -39,7 +39,7 @@ class PageQuery(db.Query):
 
         You usually should not use this function in views directly to ensure
         proper redirection (/maIN_paGE -> /Main_Page). Use
-        wiki.utils.find_page instead.
+        :meth:`wiki.utils.find_page` instead.
         """
         if isinstance(pk, basestring):
             try:

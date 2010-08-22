@@ -243,13 +243,15 @@ def i18n():
     local("python %s" % _j("extra/compile-translations"), capture=False)
 
 
-def test(file='', clean='yes'):
+def test(file='', clean='yes', processes=None):
     """
     Run all unit tests and doctests.
 
     Specify clean=no if you don't want to remove old .coverage/.noseid files.
     To only run tests from specific files, use test:tests/foo/test_bar.py,
     separate multiple files by spaces (don't forget to escape it on the shell)
+    To overwrite the number of processes used (defaults to $numcpu * 2),
+    use processes=int
     """
 
     clean = True if clean == 'yes' else False
@@ -265,7 +267,16 @@ def test(file='', clean='yes'):
         with settings(hide('running')):
             _clean()
 
-    local('python %s %s' % (_j('extra/runtests.py'), file), capture=False)
+    if processes is None:
+        try:
+            import multiprocessing
+            processes = multiprocessing.cpu_count() * 2
+        except (ImportError, NotImplementedError):
+            processes = 2
+    processes = '--processes %d' % int(processes) or 2
+
+    local('python %s %s %s' % (_j('extra/runtests.py'), file, processes),
+          capture=False)
 
 
 def reindent():

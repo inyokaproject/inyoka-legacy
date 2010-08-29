@@ -131,12 +131,12 @@ h2, h3 {
   margin-top: .5em;
 }
 
-a {
+:link, :visited {
   color: #90a818;
   text-decoration: none;
 }
 
-a:hover {
+:link:hover, :visited:hover {
   color: #46520b;
 }
 

@@ -1,7 +1,7 @@
 {% extends "paste/base.html" %}
 {% set title_trace = [_('Paste Tree')] %}
 {% block paste_content %}
-  <p>{{ _('Here you can see the requested tree of paste replies. The paste you\'re coming from is highlighted.') }}</p>
+  <p>{{ _('Here you can see the tree of paste replies. The paste you\'re coming from is highlighted.') }}</p>
   <ul class="revision_tree">
   {%- for paste in [paste] recursive %}
     <li{% if paste.id == current %} class="highlighted"{% endif %}>

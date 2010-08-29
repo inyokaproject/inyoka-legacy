@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-07 14:32+0200\n"
+"POT-Creation-Date: 2010-08-27 02:59+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -24,10 +24,6 @@ msgstr "Administration"
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
 msgstr "Willkommen in der Inyoka-Administration!"
-
-#: inyoka/core/notifications.py:169
-msgid "E-Mail"
-msgstr "E-Mail"
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -66,260 +62,6 @@ msgstr "gebannt"
 #: inyoka/core/auth/models.py:29
 msgid "deleted"
 msgstr "gelöscht"
-
-#: inyoka/core/config/defaults.py:25
-msgid "Enable debug mode"
-msgstr "Debugmodus aktivieren"
-
-#: inyoka/core/config/defaults.py:33
-msgid "List of activated components"
-msgstr "Liste der aktivierten Komponenten"
-
-#: inyoka/core/config/defaults.py:35
-msgid "List of deactivted components"
-msgstr "Liste der deaktivierten Komponenten"
-
-#: inyoka/core/config/defaults.py:37
-msgid "The path to the media folder"
-msgstr "Pfad zum Medienordner"
-
-#: inyoka/core/config/defaults.py:39
-msgid "The secret used for hashing the cookies and other security salting"
-msgstr "Der Sicherheitsschlüssel für Cookies "
-
-#: inyoka/core/config/defaults.py:42
-msgid "Base domain name"
-msgstr "Domainname"
-
-#: inyoka/core/config/defaults.py:44
-msgid "Cookie domain name"
-msgstr "Cookie Domainname"
-
-#: inyoka/core/config/defaults.py:46
-msgid "Cookie name"
-msgstr "Cookiename"
-
-#: inyoka/core/config/defaults.py:48
-msgid "The current language locale"
-msgstr "Aktuelle Spracheinstellung"
-
-#: inyoka/core/config/defaults.py:50
-msgid "The default timezone for all users."
-msgstr "Standard Zeitzone für alle Benutzer."
-
-#: inyoka/core/config/defaults.py:52
-msgid "The name of the anonymous user."
-msgstr "Der Name des anonymen Benutzers"
-
-#: inyoka/core/config/defaults.py:54
-msgid "Enable or disable CSRF Protection."
-msgstr "Aktiviere bzw. deaktiviere den CSRF-Schutz"
-
-#: inyoka/core/config/defaults.py:56
-msgid "Use SSL for ReCaptcha requests, defaults to True"
-msgstr "Benutze SSL für ReCaptcha-Anfragen, standardmäßig aktiviert"
-
-#: inyoka/core/config/defaults.py:59
-msgid "Recaptcha public key"
-msgstr "Öffentlicher Recaptcha Schlüssel"
-
-#: inyoka/core/config/defaults.py:62
-msgid "Recaptcha private key"
-msgstr "Privater Recaptcha Schlüssel"
-
-#: inyoka/core/config/defaults.py:64
-msgid "The website title to show in various places"
-msgstr "Der Name der Webseite, der an verschiedenen Stellen angezeigt wird"
-
-#: inyoka/core/config/defaults.py:66
-msgid "The mail address used for sending mails"
-msgstr "Die Adresse, die für ausgehende E-Mails benutzt wird"
-
-#: inyoka/core/config/defaults.py:68
-msgid "The duration a permanent session is valid. Defined in days, defaults to 30."
-msgstr ""
-"Die Dauer einer permanenten Session.  Definition in Tagen, Standard sind 30 "
-"Tage."
-
-#: inyoka/core/config/defaults.py:73
-msgid ""
-"The database URL.  For more information about database settings consult the "
-"Inyoka docs."
-msgstr ""
-"Datenbank-URL. Siehe Inyoka-Dokumentation bezüglich mehr Informationen über "
-"die Datenbankeinstellungen."
-
-#: inyoka/core/config/defaults.py:76
-msgid ""
-"If enabled the database will collect the SQL statements and add them to the "
-"bottom of the page for easier debugging."
-msgstr ""
-"Wenn aktiviert werden alle SQL-Anweisungen gesammelt und ans Ende der Seite "
-"geschrieben für eine einfache Fehlersuche. "
-
-#: inyoka/core/config/defaults.py:80
-msgid ""
-"If enabled the database will echo all submitted statements to the default "
-"logger.  That defaults to stdout."
-msgstr ""
-"Wenn aktiviert werden alle SQL-Anweisungen an den Standard-Logger "
-"ausgegeben. Standard ist stdout."
-
-#: inyoka/core/config/defaults.py:84
-msgid ""
-"If set to non -1, number of seconds between connection recycling. If this "
-"timeout is surpassed the connection will be closed and replaced with a newly"
-" opened connection."
-msgstr ""
-"Wenn nicht auf -1 gesetzt, Nummer der Sekunden zwischen Verbindungs-"
-"Erneuerungen. Wenn dieser Timeout abgelaufen ist, wird die Verbindung "
-"geschlossen und mit einer neuen ersetzt."
-
-#: inyoka/core/config/defaults.py:88
-msgid ""
-"The number of seconds to wait before giving up on returning a connection.  "
-"This will not be used if the used database is one of SQLite, Access or "
-"Informix as those don't support queued connection pools."
-msgstr ""
-"Die Anzahl der Sekunden, die auf eine erfolgreiche Verbindung gewartet wird."
-" Dies wird nicht verwendet, wenn SQLite, Informix oder Access als Datenbank "
-"verwendet werden, da diese kein „Connection Pooling” unterstützen."
-
-#: inyoka/core/config/defaults.py:95
-msgid "Imaging backend to use."
-msgstr "Imaging-Backend zu verwenden."
-
-#: inyoka/core/config/defaults.py:97
-msgid "Portal avatar size."
-msgstr "Portal Avatar Größe."
-
-#: inyoka/core/config/defaults.py:99
-msgid "Portal thumbnail size."
-msgstr "Portal Thumbnail-Größe."
-
-#: inyoka/core/config/defaults.py:103
-msgid "Custom template path which is searched before the default path."
-msgstr ""
-"Benutzerdefinierter Pfad, in welchem Templates gesucht werden bevor der "
-"Standardpfad benutzt wird."
-
-#: inyoka/core/config/defaults.py:106
-msgid "Auto reload template files if they changed their contents."
-msgstr "Automatisches neuladen von Template-Dateien, wenn sie ihre Inhalte ändern."
-
-#: inyoka/core/config/defaults.py:109
-msgid "Use either memory, filesystem or memcached bytecode caches"
-msgstr "Benutze entweder Arbeitsspeicher, Dateisystem oder memcached Bytecode Caches"
-
-#: inyoka/core/config/defaults.py:112
-msgid "Use Memcached for bytecode caching"
-msgstr "Memcached Bytecode-Caching verwenden"
-
-#: inyoka/core/config/defaults.py:114
-msgid "Use filesystem for bytecode caching"
-msgstr "Dateisystem für Bytecode-Caching verwenden"
-
-#: inyoka/core/config/defaults.py:126
-msgid "Choose one of null, simple, memcached or filesystem for the caching system."
-msgstr ""
-"Wähle endweder „null”, „simple”, „memcached” oder „filesystem” für das "
-"Caching-System."
-
-#: inyoka/core/config/defaults.py:129
-msgid "The path for the filesystem caches"
-msgstr "Der Pfad für die Dateisystem-Caches"
-
-#: inyoka/core/config/defaults.py:131
-msgid "The timeout for the caching system"
-msgstr "Das Zeitlimit für das Caching-System"
-
-#: inyoka/core/config/defaults.py:133
-msgid "Comma seperated list of memcached servers"
-msgstr "Durch Komma getrennte Liste von Memcached Servern"
-
-#: inyoka/core/config/defaults.py:137
-msgid "The Authsystem which should get used"
-msgstr "Das Autentifizierungssystem, welches benutzt werden soll."
-
-#: inyoka/core/config/defaults.py:143
-msgid "Url mapping used for the portal application"
-msgstr "URL-Mapping für die Portal-Anwendung"
-
-#: inyoka/core/config/defaults.py:145
-msgid "Url mapping used for the usercp application"
-msgstr "URL-Mapping für das UserCP"
-
-#: inyoka/core/config/defaults.py:147
-msgid "Url mapping used for the news application"
-msgstr "URL-Mapping für die News-Anwendung"
-
-#: inyoka/core/config/defaults.py:149
-msgid "Url mapping used for the forum application"
-msgstr "URL-Mapping für das Forum"
-
-#: inyoka/core/config/defaults.py:151
-msgid "Url mapping used for the wiki application"
-msgstr "URL-Mapping für das Wiki"
-
-#: inyoka/core/config/defaults.py:153
-msgid "Url mapping used for the paste application"
-msgstr "URL-Mapping für den Pastebin"
-
-#: inyoka/core/config/defaults.py:155
-msgid "Url mapping used for the planet application"
-msgstr "URL-Mapping für den Planeten"
-
-#: inyoka/core/config/defaults.py:157
-msgid "Url mapping used for the admin application"
-msgstr "URL-Mapping für das Admininterface"
-
-#: inyoka/core/config/defaults.py:159
-msgid "Url mapping used for the API"
-msgstr "URL-Mapping für die API"
-
-#: inyoka/core/config/defaults.py:163
-msgid "Url mapping used for the testing system.  Do never change that value!"
-msgstr "URL-Mapping für das Testsystem. Verändere niemals diesen Wert!"
-
-#: inyoka/core/config/defaults.py:168
-msgid "Url mapping used for static file serving"
-msgstr "URL-Mapping für das Ausliefern statischer Dateien"
-
-#: inyoka/core/config/defaults.py:170
-msgid "Url mapping used for media file serving"
-msgstr "URL-Mapping für das Ausliefern von Medien-Dateien"
-
-#: inyoka/core/config/defaults.py:172
-msgid ""
-"Path to the directory for static files. Relative to the directory where the "
-"inyoka package lies in."
-msgstr ""
-"Pfad zu dem Verzeichnis für statische Dateien. Bezogen auf das Verzeichnis, "
-"in dem inyoka Paket liegt in."
-
-#: inyoka/core/config/defaults.py:176
-msgid ""
-"Path to the directory for shared static files, aka media. Relative to the "
-"directory where the inyoka package lies in."
-msgstr ""
-"Pfad zu dem Verzeichnis für gemeinsam genutzte statische Dateien, aka "
-"Medien. Bezogen auf das Verzeichnis, in dem inyoka Paket liegt in."
-
-#: inyoka/core/config/defaults.py:182
-msgid ""
-"Name of the wiki index page (the one a user accessing the wiki's / is "
-"redirected to)"
-msgstr ""
-"Name der Wiki-Index-Seite (die ein Benutzer Zugriff auf die Wiki's / wird "
-"umgeleitet)"
-
-#: inyoka/core/config/defaults.py:187
-msgid ""
-"Files with lines greater than this number will not have syntax highlighting."
-" Enter 0 for no limit."
-msgstr ""
-"In Dateien mit einer größeren Zahl an Zeilen als hier angegeben wird nicht "
-"die Syntax hervorgehoben. Benutze 0 für kein Limit."
 
 #: inyoka/core/forms/validators.py:75
 msgid "You have to enter a valid email address."
@@ -560,63 +302,63 @@ msgstr "Keine Fragen gefunden."
 msgid "Create new Forum"
 msgstr "Erstelle ein neues Forum"
 
-#: inyoka/l10n/__init__.py:163
+#: inyoka/l10n/__init__.py:165
 msgid "zero"
 msgstr "Null"
 
-#: inyoka/l10n/__init__.py:163
+#: inyoka/l10n/__init__.py:165
 msgid "one"
 msgstr "eins"
 
-#: inyoka/l10n/__init__.py:163
+#: inyoka/l10n/__init__.py:165
 msgid "two"
 msgstr "zwei"
 
-#: inyoka/l10n/__init__.py:163
+#: inyoka/l10n/__init__.py:165
 msgid "three"
 msgstr "drei"
 
-#: inyoka/l10n/__init__.py:163
+#: inyoka/l10n/__init__.py:165
 msgid "four"
 msgstr "view"
 
-#: inyoka/l10n/__init__.py:164
+#: inyoka/l10n/__init__.py:166
 msgid "five"
 msgstr "fünf"
 
-#: inyoka/l10n/__init__.py:164
+#: inyoka/l10n/__init__.py:166
 msgid "six"
 msgstr "sechs"
 
-#: inyoka/l10n/__init__.py:164
+#: inyoka/l10n/__init__.py:166
 msgid "seven"
 msgstr "sieben"
 
-#: inyoka/l10n/__init__.py:164
+#: inyoka/l10n/__init__.py:166
 msgid "eight"
 msgstr "acht"
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:167
 msgid "nine"
 msgstr "neun"
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:167
 msgid "ten"
 msgstr "zehn"
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:167
 msgid "eleven"
 msgstr "elf"
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:167
 msgid "twelve"
 msgstr "zwölf"
 
-#: inyoka/l10n/__init__.py:241
+#: inyoka/l10n/__init__.py:243
 msgid "just now"
 msgstr "gerade eben"
 
-#: inyoka/l10n/__init__.py:245
+#: inyoka/l10n/__init__.py:247
 #, python-format
 msgid "%(timedelta)s ago"
 msgstr "vor %(timedelta)s"
@@ -939,12 +681,13 @@ msgid "Paste Tree"
 msgstr "Paste-Baum"
 
 #: inyoka/paste/templates/paste_tree.html:4
+#, fuzzy
 msgid ""
-"Here you can see the requested tree of paste replies. The paste you're "
-"coming from is highlighted."
+"Here you can see the tree of paste replies. The paste you're coming from is "
+"highlighted."
 msgstr ""
-"Hier siehst du den Baum aller Paste-Antworten. Der Paste, vom dem aus du "
-"kamst ist hervorgehoben."
+"Hier siehst du den Baum aller Paste-Antworten. Der Paste, von dem du kamst, "
+"ist hervorgehoben."
 
 #: inyoka/paste/templates/view.html:6
 #, python-format
@@ -962,19 +705,17 @@ msgstr "Antworten"
 #: inyoka/paste/templates/view.html:23
 #, python-format
 msgid "Created on %(date)s."
-msgstr "Erstellt am %(date)s"
+msgstr "Erstellt am %(date)s."
 
 #: inyoka/paste/templates/view.html:25
-msgid "Answer to"
+#, fuzzy
+msgid "Reply to"
 msgstr "Antwort auf"
 
 #: inyoka/paste/templates/view.html:26
-msgid "or"
-msgstr "oder"
-
-#: inyoka/paste/templates/view.html:26
-msgid "compare with parent"
-msgstr "mit vorherigem vergleichen"
+#, fuzzy
+msgid "compare them"
+msgstr "beide vergleichen"
 
 #: inyoka/paste/templates/admin/edit.html:4
 msgid "Edit Paste"
@@ -1074,23 +815,23 @@ msgstr "Dein Passwort wurde erfolgreich geändert"
 msgid "Realname"
 msgstr "Name"
 
-#: inyoka/portal/forms.py:24
+#: inyoka/portal/forms.py:24 inyoka/portal/templates/profile.html:4
 msgid "Website"
 msgstr "Website"
 
-#: inyoka/portal/forms.py:26
+#: inyoka/portal/forms.py:26 inyoka/portal/templates/profile.html:5
 msgid "Location"
 msgstr "Ort"
 
-#: inyoka/portal/forms.py:27
+#: inyoka/portal/forms.py:27 inyoka/portal/templates/profile.html:6
 msgid "Interests"
 msgstr "Interessen"
 
-#: inyoka/portal/forms.py:28
+#: inyoka/portal/forms.py:28 inyoka/portal/templates/profile.html:7
 msgid "Occupation"
 msgstr "Beruf"
 
-#: inyoka/portal/forms.py:29
+#: inyoka/portal/forms.py:29 inyoka/portal/templates/profile.html:8
 msgid "Signature"
 msgstr "Signatur"
 
@@ -1098,7 +839,7 @@ msgstr "Signatur"
 msgid "Jabber ID"
 msgstr "Jabber ID"
 
-#: inyoka/portal/forms.py:34
+#: inyoka/portal/forms.py:34 inyoka/portal/templates/profile.html:10
 msgid "Skype"
 msgstr "Skype"
 
@@ -1154,6 +895,10 @@ msgstr "Die gesuchte Seite wurde nicht gefunden."
 #: inyoka/portal/templates/404.html:7
 msgid "Not Found"
 msgstr "Nicht gefunden"
+
+#: inyoka/portal/templates/404.html:11
+msgid "We tried these urls:"
+msgstr ""
 
 #: inyoka/portal/templates/base.html:12
 msgid "Users"
@@ -1250,7 +995,17 @@ msgstr "mehr Schlagwörter"
 msgid "Login"
 msgstr "Login"
 
-#: inyoka/portal/templates/profile.html:12
+#: inyoka/portal/templates/profile.html:3
+#, fuzzy
+msgid "Real name"
+msgstr "Name"
+
+#: inyoka/portal/templates/profile.html:9
+#, fuzzy
+msgid "Jabber"
+msgstr "Jabber ID"
+
+#: inyoka/portal/templates/profile.html:20
 #: inyoka/portal/templates/usercp/profile.html:5
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
@@ -1478,7 +1233,7 @@ msgstr "Umbenennen"
 msgid "Overwrite existing attachment with the same name"
 msgstr "Überschreibe einen existierenden Anhang mit dem selben Namen"
 
-#: inyoka/wiki/models.py:227
+#: inyoka/wiki/models.py:226
 msgid "Download attachment"
 msgstr "Anhang herunterladen"
 

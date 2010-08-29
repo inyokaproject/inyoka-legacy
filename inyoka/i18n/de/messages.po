@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-27 02:59+0200\n"
+"POT-Creation-Date: 2010-08-29 21:21+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -526,7 +526,7 @@ msgid ""
 "%(article_pubdate)s %(article_pubtime)s"
 msgstr ""
 "geschrieben von <a href=\"%(author_url)s\">%(author_name)s</a> "
-"%(article_pubdate)s\\ %(article_pubtime)s"
+"%(article_pubdate)s %(article_pubtime)s"
 
 #: inyoka/news/templates/detail.html:27 inyoka/news/templates/detail.html:50
 #: inyoka/paste/templates/browse.html:24

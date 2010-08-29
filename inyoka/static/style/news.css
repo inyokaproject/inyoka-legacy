@@ -36,10 +36,12 @@ div.article .comments img.avatar {
 
 div.article .comments li {
   border-bottom: 1px dotted #ccc;
-  margin-bottom: 6px;
   min-height: 94px;
   padding: 14px 0 12px 98px;
   position: relative;
+}
+div.article .comments li:target {
+  background-color: #FFB;
 }
 
 p.meta {

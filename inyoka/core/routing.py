@@ -248,11 +248,14 @@ def href(endpoint, **values):
         If set to `True` the URL will be generated with the full server name
         and `http://` prefix.
     """
-    if hasattr(endpoint, 'get_url_values'):
-        endpoint, values = endpoint.get_url_values(**values)
-
     _external = values.pop('_external', False)
     _anchor = values.pop('_anchor', None)
+
+    if hasattr(endpoint, 'get_url_values'):
+        print `values`
+        endpoint, values = endpoint.get_url_values(**values)
+        _anchor = values.pop('_anchor', None)
+
 
     url = ctx.dispatcher.url_adapter.build(endpoint, values,
                                            force_external=_external)

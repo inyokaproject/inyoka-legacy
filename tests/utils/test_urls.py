@@ -18,3 +18,14 @@ def test_href():
     eq_(href('portal/index', _external=True), 'http://%s/' % domain)
     eq_(href('portal/index', _anchor='News'), '/#News')
     eq_(href('portal/index', _external=True, _anchor='News'), 'http://%s/#News' % domain)
+
+    class HrefTester():
+        def get_url_values(self, kw):
+            if kw == 'foo':
+                return 'portal/index', {'kw':'foo', '_anchor':'heydiho'}
+            elif kw == 'bar':
+                return 'portal/index', {'foo':'bar'}
+    ht = HrefTester()
+    eq_(href(ht, kw='foo'), '/?kw=foo#heydiho')
+    eq_(href(ht, kw='foo', _anchor='bar'), '/?kw=foo#heydiho')
+    eq_(href(ht, kw='bar'), '/?foo=bar')

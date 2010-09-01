@@ -141,7 +141,8 @@ def get_engine():
         return _engine
 
 
-def refresh_engine():
+@ctx.cfg.reload_signal.connect
+def refresh_engine(*args, **kwargs):
     """Gets rid of the existing engine.  Useful for unittesting, use with care.
     Do not call this function if there are multiple threads accessing the
     engine.  Only do that in single-threaded test environments or console

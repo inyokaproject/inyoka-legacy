@@ -178,13 +178,14 @@ class Configuration(object):
 
     def __init__(self, filename, defaults=None):
         self.filename = filename
-
         config_defaults = defaults if defaults is not None else DEFAULTS
         self.defined_vars = config_defaults.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()
+        self._load_config()
 
+    def _load_config(self):
         # if the path does not exist yet set the existing flag to none and
         # set the time timetamp for the filename to something in the past
         if not path.exists(self.filename):
@@ -428,11 +429,10 @@ class ConfigTransaction(object):
             try:
                 for idx, (section, items) in enumerate(reversed(sections)):
                     if idx:
-                        f.write('\n')
-                    f.write('[%s]\n' % section.encode('utf-8'))
+                        f.write(u'\n')
+                    f.write(u'[%s]\n' % section)
                     for key, value in items:
-                        f.write('%s = %s\n' % (key.encode('utf8'),
-                                               quote_value(value)))
+                        f.write(u'%s = %s\n' % (key, quote_value(value)))
             finally:
                 f.close()
             self.cfg._values.update(self._values)

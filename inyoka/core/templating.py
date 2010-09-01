@@ -223,3 +223,10 @@ class InyokaEnvironment(Environment):
 
 
 jinja_env = InyokaEnvironment()
+
+
+@i18n.translations_reloaded.connect
+def reload_environment(sender):
+    jinja_env.install_gettext_translations(
+        i18n.get_translations(), newstyle=True
+    )

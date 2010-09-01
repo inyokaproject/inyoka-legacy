@@ -14,7 +14,7 @@
 import re
 import heapq
 import difflib
-from inyoka.utils.html import escape
+from markupsafe import escape
 
 
 DEFAULT_MARKERS = (
@@ -168,7 +168,7 @@ def stream_merge(old, other, new, allow_conflicts=True, markers=None):
          match(old, other, old_lineno, other_lineno, old_len - old_lineno)
          == old_len - old_lineno) and
         (other_lineno == other_len and
-         (old_len - old_lineno == new_len-new_lineno) and
+         (old_len - old_lineno == new_len - new_lineno) and
          match(old, new, old_lineno, new_lineno, old_len - old_lineno)
          == old_len - old_lineno)):
         if new == other:

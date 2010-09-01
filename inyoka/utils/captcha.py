@@ -11,7 +11,7 @@
 import json
 import urllib2
 from urllib import urlencode
-from jinja2.utils import Markup
+from markupsafe import Markup
 
 
 RECAPTCHA_API_SERVER = 'http://api.recaptcha.net/'
@@ -24,9 +24,9 @@ def get_recaptcha_html(public_key=None, use_ssl=True, error=None,
     """Returns the recaptcha input HTML."""
     _ = translations and translations.ugettext or (lambda x: x)
     server = RECAPTCHA_SSL_API_SERVER if use_ssl else RECAPTCHA_API_SERVER
-    options = dict(k=public_key.encode('utf-8'))
+    options = dict(k=public_key)
     if error is not None:
-        options['error'] = unicode(error).encode('utf-8')
+        options['error'] = unicode(error)
     query = urlencode(options)
     return Markup(u'''
     <script type="text/javascript">var RecaptchaOptions = %(options)s;</script>
@@ -63,10 +63,10 @@ def validate_recaptcha(private_key, challenge, response, remote_ip):
     a `RecaptchaValidationFailed` error is raised.
     """
     request = urllib2.Request(RECAPTCHA_VERIFY_SERVER, data=urlencode({
-        'privatekey':       private_key.encode('utf-8'),
-        'remoteip':         remote_ip.encode('utf-8'),
-        'challenge':        challenge.encode('utf-8'),
-        'response':         response.encode('utf-8')
+        'privatekey':       private_key,
+        'remoteip':         remote_ip,
+        'challenge':        challenge,
+        'response':         response
     }))
     response = urllib2.urlopen(request)
     rv = response.read().splitlines()

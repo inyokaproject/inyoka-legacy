@@ -234,9 +234,13 @@ class RequestDispatcher(object):
         """The main dispatching interface of the Inyoka WSGI application.
 
         You shall not (never ever) access stuff like the db-session and locals
-        in outer WSGI middlewares.
+        in outer WSGI middlewares.  This method also keeps track of config
+        changes and emits the proper `config-changed` signal.
         """
         try:
+            # reload the configuration if it was changed
+            if self.ctx.cfg.changed_external:
+                self.ctx.cfg.reload()
             return self.dispatch_wsgi(environ, start_response)
         finally:
             for callback in self.cleanup_callbacks:

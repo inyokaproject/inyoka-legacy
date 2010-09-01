@@ -13,6 +13,8 @@ import os
 from os import path
 from threading import Lock
 from wtforms.validators import ValidationError
+from markupsafe import soft_unicode
+from blinker import signal
 
 
 DEFAULTS = {}
@@ -23,6 +25,7 @@ _quote_table = {
     ord('\r'): u'\\r',
     ord('"'): u'\\"'
 }
+
 
 
 class ConfigField(object):
@@ -50,17 +53,6 @@ class ConfigField(object):
     def __call__(self, value=None):
         return self.converter(value)
 
-#    def __get__(self, obj, type=None):
-#        if obj is None:
-#            return self
-#
-#        from inyoka.context import ctx
-#        return ctx.cfg[self.__name__]
-#
-#    def __set__(self, obj, value):
-#        from inyoka.context import ctx
-#        return ctx.cfg[self.__name__]
-
 
 class IntegerConfigField(ConfigField):
     """A field representing integer values"""
@@ -84,10 +76,7 @@ class TextConfigField(ConfigField):
 
     def converter(self, value=None):
         """Convert values to stripped unicode values"""
-        if not isinstance(value, unicode):
-            value = value.decode('utf-8')
-        value = value.strip()
-        return value
+        return soft_unicode(value).strip()
 
 
 class DottedConfigField(ConfigField):
@@ -152,7 +141,7 @@ def unquote_value(value):
         return ''
     if value[0] in '"\'' and value[0] == value[-1]:
         value = value[1:-1].decode('string-escape')
-    return value.decode('utf-8')
+    return soft_unicode(value)
 
 
 def quote_value(value):
@@ -189,15 +178,21 @@ class Configuration(object):
     file.
     """
 
+    reload_signal = signal('config-changed',
+        u'This signal will be emitted everytime the configuration will go'
+        u' through the reloading process')
+
     def __init__(self, filename, defaults=None):
         self.filename = filename
-
         config_defaults = defaults if defaults is not None else DEFAULTS
         self.defined_vars = config_defaults.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()
+        with self._lock:
+            self._load_config()
 
+    def _load_config(self):
         # if the path does not exist yet set the existing flag to none and
         # set the time timetamp for the filename to something in the past
         if not path.exists(self.filename):
@@ -294,6 +289,14 @@ class Configuration(object):
         """Touch the file to trigger a reload."""
         os.utime(self.filename, None)
 
+    def reload(self):
+        with self._lock:
+            self._values = {}
+            self._converted_values = {}
+            self._load_config()
+        Configuration.reload_signal.send('config-changed', config=self)
+        return self
+
     @property
     def changed_external(self):
         """True if there are changes on the file system."""
@@ -371,13 +374,13 @@ class ConfigTransaction(object):
     def __setitem__(self, key, value):
         """Set the value for a key by a python value."""
         self._assert_uncommitted()
-
         if value == self[key]:
             return
         if key not in self.cfg.defined_vars:
             raise KeyError(key)
         if isinstance(value, str):
-            value = value.decode('utf-8')
+            value = unicode(value, 'utf-8')
+
         field = self.cfg.defined_vars[key]
         self._values[key] = field(value)
         self._converted_values[key] = value
@@ -441,11 +444,10 @@ class ConfigTransaction(object):
             try:
                 for idx, (section, items) in enumerate(reversed(sections)):
                     if idx:
-                        f.write('\n')
-                    f.write('[%s]\n' % section.encode('utf-8'))
+                        f.write(u'\n')
+                    f.write(u'[%s]\n' % section)
                     for key, value in items:
-                        f.write('%s = %s\n' % (key.encode('utf8'),
-                                               quote_value(value)))
+                        f.write(u'%s = %s\n' % (key, quote_value(value)))
             finally:
                 f.close()
             self.cfg._values.update(self._values)

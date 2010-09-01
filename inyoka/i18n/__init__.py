@@ -20,6 +20,7 @@ from gettext import NullTranslations
 from weakref import WeakKeyDictionary
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
+from blinker import signal
 from inyoka.context import ctx
 
 
@@ -28,6 +29,7 @@ __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
 
 _translations = None
 _js_translations = WeakKeyDictionary()
+translations_reloaded = signal('translations-reloaded')
 
 
 def load_core_translations(locale):
@@ -36,6 +38,13 @@ def load_core_translations(locale):
     base = realpath(dirname(__file__))
     ret = _translations = Translations.load(base, locale)
     return ret
+
+
+@ctx.cfg.reload_signal.connect
+def reload_translations(sender, config):
+    global _translations
+    load_core_translations(config['language'])
+    translations_reloaded.send('translations-reloaded')
 
 
 def get_translations():
@@ -76,6 +85,9 @@ class Translations(TranslationsBase):
         if catalog:
             return Translations(fileobj=open(catalog))
         return NullTranslations()
+
+    def __repr__(self):
+        return '<%s: "%s">' % (type(self).__name__, get_locale())
 
     # Always use the unicode versions, we don't support byte strings
     gettext = TranslationsBase.ugettext
@@ -186,7 +198,7 @@ def serve_javascript(request):
         code = u''.join((
             ('// Generated messages javascript file from compiled MO file\n'),
             ('babel.Translations.load('),
-            (json.dumps(data).encode('utf-8')),
+            (json.dumps(data)),
             (').install();\n')
         ))
         _js_translations[ctx.dispatcher] = code

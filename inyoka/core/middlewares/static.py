@@ -41,10 +41,9 @@ class StaticMiddlewareBase(object):
 
     def __init__(self, ctx):
         # Convert paths and ids to utf-8, otherwise werkzeug will break
-        self.exports = dict(
-            map(lambda x: (x[0].encode('utf-8'), x[1].encode('utf-8')),
-                self.exports.items())
-        )
+        self.exports = dict(map(
+            lambda x: (x[0].encode('utf-8'), x[1].encode('utf-8')),
+            self.exports.items()))
         IMiddleware.__init__(self, ctx)
         SharedDataMiddleware.__init__(self, self.application, self.exports)
 

@@ -59,7 +59,7 @@ class Form(BaseForm):
             return
 
         csrf_token = get_csrf_token()
-        is_valid = field.data and field.data == csrf_token
+        is_valid = field.data and unicode(field.data) == csrf_token
 
         # reset this field, otherwise stale token is displayed
         field.data = get_csrf_token()

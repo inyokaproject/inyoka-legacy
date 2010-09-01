@@ -12,6 +12,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from cPickle import loads, dumps, HIGHEST_PROTOCOL
+from markupsafe import soft_unicode
 
 
 class NodeCompiler(object):
@@ -164,7 +165,7 @@ class Renderer(object):
             if obj[0] == '!':
                 pos = obj.index('\0')
                 self.format = obj[1:pos]
-                self.instructions = [obj[pos + 1:].decode('utf-8')]
+                self.instructions = [soft_unicode(obj[pos + 1:])]
             elif obj[0] == '@':
                 self.format, self.instructions = loads(obj[1:])
         else:

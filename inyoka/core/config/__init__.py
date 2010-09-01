@@ -13,6 +13,7 @@ import os
 from os import path
 from threading import Lock
 from wtforms.validators import ValidationError
+from markupsafe import soft_unicode
 
 
 DEFAULTS = {}
@@ -50,17 +51,6 @@ class ConfigField(object):
     def __call__(self, value=None):
         return self.converter(value)
 
-#    def __get__(self, obj, type=None):
-#        if obj is None:
-#            return self
-#
-#        from inyoka.context import ctx
-#        return ctx.cfg[self.__name__]
-#
-#    def __set__(self, obj, value):
-#        from inyoka.context import ctx
-#        return ctx.cfg[self.__name__]
-
 
 class IntegerConfigField(ConfigField):
     """A field representing integer values"""
@@ -84,10 +74,7 @@ class TextConfigField(ConfigField):
 
     def converter(self, value=None):
         """Convert values to stripped unicode values"""
-        if not isinstance(value, unicode):
-            value = value.decode('utf-8')
-        value = value.strip()
-        return value
+        return soft_unicode(value).strip()
 
 
 class DottedConfigField(ConfigField):
@@ -152,7 +139,7 @@ def unquote_value(value):
         return ''
     if value[0] in '"\'' and value[0] == value[-1]:
         value = value[1:-1].decode('string-escape')
-    return value.decode('utf-8')
+    return soft_unicode(value)
 
 
 def quote_value(value):
@@ -371,13 +358,13 @@ class ConfigTransaction(object):
     def __setitem__(self, key, value):
         """Set the value for a key by a python value."""
         self._assert_uncommitted()
-
         if value == self[key]:
             return
         if key not in self.cfg.defined_vars:
             raise KeyError(key)
         if isinstance(value, str):
-            value = value.decode('utf-8')
+            value = unicode(value, 'utf-8')
+
         field = self.cfg.defined_vars[key]
         self._values[key] = field(value)
         self._converted_values[key] = value

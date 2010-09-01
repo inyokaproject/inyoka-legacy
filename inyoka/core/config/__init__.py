@@ -14,6 +14,7 @@ from os import path
 from threading import Lock
 from wtforms.validators import ValidationError
 from markupsafe import soft_unicode
+from blinker import signal
 
 
 DEFAULTS = {}
@@ -24,6 +25,7 @@ _quote_table = {
     ord('\r'): u'\\r',
     ord('"'): u'\\"'
 }
+
 
 
 class ConfigField(object):
@@ -176,6 +178,10 @@ class Configuration(object):
     file.
     """
 
+    reload_signal = signal('config-changed',
+        u'This signal will be emitted everytime the configuration will go'
+        u' through the reloading process')
+
     def __init__(self, filename, defaults=None):
         self.filename = filename
         config_defaults = defaults if defaults is not None else DEFAULTS
@@ -183,7 +189,8 @@ class Configuration(object):
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()
-        self._load_config()
+        with self._lock:
+            self._load_config()
 
     def _load_config(self):
         # if the path does not exist yet set the existing flag to none and
@@ -281,6 +288,14 @@ class Configuration(object):
     def touch(self):
         """Touch the file to trigger a reload."""
         os.utime(self.filename, None)
+
+    def reload(self):
+        with self._lock:
+            self._values = {}
+            self._converted_values = {}
+            self._load_config()
+        Configuration.reload_signal.send('config-changed', config=self)
+        return self
 
     @property
     def changed_external(self):

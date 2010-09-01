@@ -537,25 +537,6 @@ class ViewTestCase(DatabaseTestCase):
         return True
 
 
-class FixedTestIdPlugin(testid.TestId):
-    """Integrates a small bugfix for nose integrated TestId plugin.
-
-    If running in multiprocess mode the output-stream is not set
-    properly somehow, so we do that on __init__ ourself.
-    """
-    name = 'fixedid'
-
-    def options(self, parser, env):
-        testid.Plugin.options(self, parser, env)
-        # Don't register anything more, we're using the testid.TestId
-        # options so everything's fine here.
-        return
-
-    def write(self, output):
-        if self._write_hashes and hasattr(self, 'stream'):
-            self.stream.write(output)
-
-
 class InyokaPlugin(cover.Coverage):
     """Nose plugin extension
 

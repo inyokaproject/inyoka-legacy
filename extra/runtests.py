@@ -20,7 +20,7 @@ coverage.start()
 
 # set the configuration file
 os.environ['INYOKA_CONFIG'] = 'inyoka_tests.ini'
-from inyoka.core.test import InyokaPlugin, FuturePlugin, FixedTestIdPlugin
+from inyoka.core.test import InyokaPlugin, FuturePlugin
 from inyoka.core.database import refresh_engine
 
 
@@ -32,7 +32,7 @@ def run_suite(module='inyoka'):
     # force the engine to be bound to the new database
     refresh_engine()
 
-    plugins = [InyokaPlugin(), FuturePlugin(), FixedTestIdPlugin()]
+    plugins = [InyokaPlugin(), FuturePlugin()]
 
     nose.main(addplugins=plugins, module=module, argv=sys.argv)
 

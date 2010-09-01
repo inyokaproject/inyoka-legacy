@@ -23,29 +23,32 @@ from inyoka.core.routing import IController, IServiceProvider
 from inyoka.core.routing import view, service, Rule, href
 from inyoka.core.templating import templated, render_template
 from inyoka.core.middlewares import IMiddleware
-from inyoka.core.exceptions import *
 from inyoka.core.cache import cache
 from inyoka.core.serializer import SerializableObject
 from inyoka.utils.logger import logger
-from inyoka.i18n import *
+from inyoka.i18n import _, gettext, ngettext, lazy_gettext, lazy_ngettext
+from inyoka.core import exceptions as exc
 
 
+def get_core_models():
+    from inyoka.core.cache import Cache
+    from inyoka.core.models import Confirm, Tag
+    from inyoka.core.subscriptions.models import SubscriptionUnreadObjects, \
+        Subscription
+    from inyoka.core.storage import Storage
+    from inyoka.core.auth.models import User, UserProfile, Group, group_group, \
+        user_group
 
-from inyoka.core.cache import Cache
-from inyoka.core.models import Confirm, Tag
-from inyoka.core.subscriptions.models import SubscriptionUnreadObjects, \
-    Subscription
-from inyoka.core.storage import Storage
-from inyoka.core.auth.models import User, UserProfile, Group, group_group, \
-    user_group
+    models = [# core utility models
+              Storage, Confirm, Tag, Cache,
+              # subscription models
+              SubscriptionUnreadObjects, Subscription,
+              # auth models
+              User, UserProfile, Group, group_group, user_group]
+
+    return models
+
 
 class ICoreResourceManager(IResourceManager):
     """Register core models globally."""
-    models = [
-        # core utility models
-        Storage, Confirm, Tag, Cache,
-        # subscription models
-        SubscriptionUnreadObjects, Subscription,
-        # auth models
-        User, UserProfile, Group, group_group, user_group,
-    ]
+    models = get_core_models()

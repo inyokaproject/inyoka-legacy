@@ -16,12 +16,11 @@
 from datetime import timedelta, datetime
 
 from werkzeug import redirect, cached_property
-from werkzeug.exceptions import NotFound
 
 from inyoka.context import ctx, local_manager
 from inyoka.core.api import db, IController, Request, Response, \
     IMiddleware, IServiceProvider, get_bound_request
-from inyoka.core.exceptions import HTTPException
+from inyoka.core.exceptions import HTTPException, NotFound
 from inyoka.core.routing import Map
 from inyoka.utils.http import notfound
 

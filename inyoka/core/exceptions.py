@@ -13,7 +13,8 @@ from werkzeug.exceptions import HTTPException, Forbidden, NotFound, \
     BadRequest, Unauthorized, InternalServerError, MethodNotAllowed
 
 __all__ = ('abort', 'HTTPException', 'Forbidden', 'NotFound',
-           'BadRequest', 'Unauthorized')
+           'BadRequest', 'Unauthorized', 'ImproperlyConfigured',
+           'InternalServerError', 'MethodNotAllowed')
 
 
 class ImproperlyConfigured(RuntimeError):

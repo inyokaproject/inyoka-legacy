@@ -8,8 +8,9 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, db, redirect_to, NotFound
+    templated, db, redirect_to
 from inyoka.utils.pagination import URLPagination
 from inyoka.paste.forms import AddPasteForm
 from inyoka.paste.models import Entry
@@ -93,7 +94,7 @@ class PasteController(IController):
         """Display the tree of some related pastes."""
         paste = Entry.resolve_root(id)
         if paste is None:
-            raise NotFound()
+            raise exc.NotFound()
         return {
             'paste': paste,
             'current': id
@@ -106,7 +107,7 @@ class PasteController(IController):
         old = Entry.query.get(old_id)
         new = Entry.query.get(new_id)
         if old is None or new is None:
-            raise NotFound()
+            raise exc.NotFound()
 
         return {
             'old': old,
@@ -121,6 +122,6 @@ class PasteController(IController):
         new = Entry.query.get(new_id)
 
         if old is None or new is None:
-            raise NotFound()
+            raise exc.NotFound()
 
         return Response(old.compare_to(new, 'text'), mimetype='text/plain')

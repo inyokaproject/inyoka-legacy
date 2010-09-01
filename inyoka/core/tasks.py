@@ -33,7 +33,6 @@ def send_activation_mail(user_id, activation_url):
 
 @task
 def send_notifications(object, action_name, subscriptions):
-    print >>open('/tmp/testout', 'a'), 'send_notifications(%r, %r, %r)' % (object, action_name, subscriptions)
     action = SubscriptionAction.by_name(action_name)
     if action is None:
         raise ValueError('no action found with %r' % action_name)

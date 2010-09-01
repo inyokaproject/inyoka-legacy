@@ -252,7 +252,6 @@ def href(endpoint, **values):
     _anchor = values.pop('_anchor', None)
 
     if hasattr(endpoint, 'get_url_values'):
-        print `values`
         endpoint, values = endpoint.get_url_values(**values)
         _anchor = values.pop('_anchor', None)
 

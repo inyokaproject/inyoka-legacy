@@ -162,7 +162,7 @@ class ApplicationContext(object):
         """Checks whether a component should be added to the registry or not.
 
         :param component: The component to check.
-        :param deactivated_packages: List of packages to not load components from.
+        :param deactivated_packages: List of packages not to load.
         """
         component_path = component.__module__ + '.' + component.__name__
         for path in deactivated_packages:
@@ -238,8 +238,8 @@ class ApplicationContext(object):
         modules = _import_modules(packages, deactivated_packages)
         components = list(m[1] for m in
             sum((getmembers(mod, _is_interface) for mod in modules), [])
-            if self.component_is_activated(m[1], deactivated_packages)
-        )
+            if self.component_is_activated(m[1], deactivated_packages))
+
         return self.load_components(components)
 
     def get_implementations(self, interface, instances=False):
@@ -263,7 +263,7 @@ class ApplicationContext(object):
             self._instances[compcls] = compcls(self)
         return self._instances[compcls]
 
-    def __call__(self, environ, start_response): #pragma: no cover
+    def __call__(self, environ, start_response):
         """Wrap the WSGI stack.
 
         This method forwards the call to the respective dispatcher.

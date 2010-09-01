@@ -29,5 +29,6 @@ wsgiref==0.1.2
 celery==2.0.0
 unittest2==0.5
 markupsafe==0.9.3
+blinker==1.1
 # We use the flickzeug trunk as there's no official release yet
 http://bitbucket.org/s0undt3ch/flickzeug/get/tip.gz

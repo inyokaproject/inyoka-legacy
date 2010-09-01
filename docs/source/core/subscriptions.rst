@@ -67,7 +67,7 @@ whether a notification needs to be sent:
 
 * The **count** of unread objects. This is only vital for the sequent mode,
   where it controls whether to send out a message or not; in multiple mode it
-  is just used to allow displaying a number of unread objects.
+  is just used to allow displaying the number of unread objects.
 * For sequent types: The **first unread object**. This is the one the message
   is sent out for and is used to allow linking directly to it in the list.
 * For multiple types: A list of **unread objects**, to make it possible to
@@ -77,7 +77,7 @@ Usage
 =====
 
 There are only two ways to use subscriptions, via staticmethods of
-:class:`~inyoka.core.subscriptions.models.Subscription` and by creating new
+:class:`~inyoka.core.subscriptions.models.Subscription` and by defining new
 subscription types and actions. Both are explained in the following sections.
 
 Managing Subscriptions

@@ -3,7 +3,8 @@
     inyoka.core.config.defaults
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    This module implements and documents the default values for our configuration.
+    This module implements and documents the default values for our
+    configuration.
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -29,7 +30,8 @@ activated_components = ListConfigField('activated_components', [
     'inyoka.news.api',
     'inyoka.forum.api',
     'inyoka.paste.api',
-    'inyoka.wiki.api'])
+    'inyoka.wiki.api',
+])
 
 #: List of deactivated components
 deactivated_components = ListConfigField('deactivated_components', ['inyoka.core.tasks'])

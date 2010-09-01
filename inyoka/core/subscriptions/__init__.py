@@ -136,12 +136,16 @@ class SubscriptionAction(Interface):
     notify(cls, user, object, subjects)
         A classmethod sending out notifications to the given user.
         It is called by :meth:`Subscription.new` once for every user
-        and passes the new object and the matching (only those!) subjects,
-        grouped by type name, e.g::
+        and passes the new object and the matching subjects (this means: all
+        subjects the user is subscribed to, not all the object has), grouped
+        by type name, e.g::
 
             NewQuestionSubscriptionAction.notify(user23, entry1,
-                {'blog.entry.tag': [tag1, tag2],
-                 'blog.entry.author': [user42]})
+                {'blog.entry.by_tag': [tag1, tag2],
+                 'blog.entry.by_author': [user42]})
+
+        It must then create a suitable text and subject for the notification
+        mail, honoring the different matching types.
     """
 
     @classmethod
@@ -152,6 +156,7 @@ class SubscriptionAction(Interface):
         for c in ctx.get_implementations(cls):
             if c.name == name:
                 return c
+        raise Exception('Found no action with name %r. actions: %r' % (name, [x.name for x in ctx.get_implementations(cls)]))
 
     @classmethod
     def notify(cls, user, object, subjects):

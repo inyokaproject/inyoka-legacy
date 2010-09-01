@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from collections import defaultdict
+import functools
 from sqlalchemy.ext.associationproxy import association_proxy
 from inyoka.core.auth.models import User
 from inyoka.core.database import db
@@ -50,11 +50,14 @@ class Subscription(db.Model):
                        be considered and the action's :meth:`notify` method is
                        called.
         """
+        #XXX: if `object` is removed before the task is run, subscriptions are
+        #     marked as notified though the user didn't receive a notification
+
         if isinstance(action, basestring):
             action = SubscriptionAction.by_name(action)
 
-        #: store notifications grouped by user and type
-        notifications = defaultdict(lambda: defaultdict(list))
+        #: store ids of Subscription objects for which we need to notify
+        subscriptions = []
 
         for t in SubscriptionType.by_action(action):
             subjects = t.get_subjects(object)
@@ -78,20 +81,23 @@ class Subscription(db.Model):
                 #: where there were no new objects since the last visit
                 cond = base_cond & (Subscription.count == 0)
                 for s in Subscription.query.filter(cond):
-                    notifications[s.user][t.name].append(s.subject)
+                    subscriptions.append(s.id)
                     s.first_unread_object_id = object.id
                     s.count = 1
                 db.session.commit()
 
             if t.mode == 'multiple':
                 for s in Subscription.query.filter(base_cond):
-                    notifications[s.user][t.name].append(s.subject)
+                    subscriptions.append(s.id)
                     s.unread_object_ids.add(object.id)
                     s.count = len(s.unread_object_ids)
                 db.session.commit()
 
-        for user in notifications:
-            action.notify(user, object, notifications[user])
+
+        import inyoka.core.tasks
+        from celery.execute import send_task, apply
+        send_task('inyoka.core.tasks.send_notifications',
+                  (object, action.name, subscriptions), {})
 
     @staticmethod
     def accessed(user, **kwargs):

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-29 21:21+0200\n"
+"POT-Creation-Date: 2010-08-30 18:02+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Unknown format \"%s\""
 msgstr "Unbekanntes Format „%s\\”"
 
-#: inyoka/core/tasks.py:23
+#: inyoka/core/tasks.py:28
 #, python-format
 msgid "Registration at %s"
 msgstr "Registrierung bei %s"
@@ -543,7 +543,7 @@ msgstr "verstecken"
 
 #: inyoka/news/templates/detail.html:72 inyoka/news/templates/index.html:30
 msgid "subscribe"
-msgstr "abbonieren"
+msgstr "abonnieren"
 
 #: inyoka/news/templates/detail.html:74 inyoka/news/templates/index.html:32
 msgid "unsubscribe"

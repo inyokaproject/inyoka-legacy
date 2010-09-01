@@ -186,7 +186,7 @@ def serve_javascript(request):
         code = u''.join((
             ('// Generated messages javascript file from compiled MO file\n'),
             ('babel.Translations.load('),
-            (json.dumps(data).encode('utf-8')),
+            (json.dumps(data)),
             (').install();\n')
         ))
         _js_translations[ctx.dispatcher] = code

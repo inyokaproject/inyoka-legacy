@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import difflib
-from jinja2.utils import Markup
+from markupsafe import Markup
 from inyoka.core.api import ctx
 from inyoka.utils.highlight import highlight_text
 

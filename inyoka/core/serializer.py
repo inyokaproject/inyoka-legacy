@@ -19,10 +19,10 @@ from functools import partial
 from xml.sax.saxutils import quoteattr
 from datetime import datetime
 from babel import Locale
+from markupsafe import escape
 from inyoka.i18n import _
 from inyoka.context import ctx
 from inyoka.core.exceptions import BadRequest
-from inyoka.utils.html import escape
 
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'

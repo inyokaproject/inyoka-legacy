@@ -48,7 +48,6 @@ timeonly_regexp = re.compile(
             (?:\.(?P<fraction>[0-9]*))?$''', re.X)
 
 
-
 UTC = pytz.timezone('UTC')
 
 

@@ -10,9 +10,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from werkzeug import Href, url_encode
-from jinja2.utils import Markup
+from markupsafe import Markup, escape
 from inyoka.core.exceptions import NotFound
-from inyoka.utils.html import escape
 from inyoka.utils.decorators import abstract
 from inyoka.i18n import _
 

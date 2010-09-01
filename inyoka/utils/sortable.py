@@ -9,12 +9,12 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from jinja2.utils import Markup
+from markupsafe import Markup, escape
 from inyoka.i18n import _
 from inyoka.core.database import db
 from inyoka.core.routing import href
 from inyoka.context import ctx
-from inyoka.utils.html import build_html_tag, escape
+from inyoka.utils.html import build_html_tag
 
 
 class Sortable(object):

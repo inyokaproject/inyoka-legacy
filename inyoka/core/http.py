@@ -15,9 +15,9 @@ from collections import namedtuple
 from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
+from markupsafe import escape
 from inyoka.context import ctx, local
 from inyoka.core.routing import href
-from inyoka.utils.html import escape
 
 
 class FlashMessage(namedtuple('FlashMessage', 'text success id html')):

@@ -11,7 +11,7 @@
 import json
 import urllib2
 from urllib import urlencode
-from jinja2.utils import Markup
+from markupsafe import Markup
 
 
 RECAPTCHA_API_SERVER = 'http://api.recaptcha.net/'

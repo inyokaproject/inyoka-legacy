@@ -3,8 +3,26 @@
     inyoka.utils.pagination
     ~~~~~~~~~~~~~~~~~~~~~~~
 
-    This file helps creating a pagination.  It's able to generate the HTML
-    source for the selector and to select the right database entries.
+    Helps creating a pagination to split content over several pages.
+    Generates the HTML source for the selector and selects the right database
+    entries.
+
+    Subclasses of :class:`Pagination` (see below) define different link
+    schemes.
+
+    Common usage::
+
+        posts = Posts.query.all()
+        pagination = GETPagination(posts, int(request.args.get(page, 1)),
+                                   link=u'/posts/', args={'foo':'bar'})
+        render_template('posts.html', {'pagination': pagination})
+
+    Template::
+
+        {% for post in pagination.query %}
+        {{ post.text }}
+        {% endfor %}
+        {{ pagination() }}
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
@@ -25,6 +43,10 @@ class Pagination(object):
     :param args: URL parameters, that, if given, are included in the generated
                  urls.
     :param per_page: Number of entries displayed on one page.
+
+    After initialisation, ``pagination.query`` is a list of the matching
+    objects.  Call the pagination object for html code of links to the other
+    pages.
     """
 
     # translatable strings for the pagination buttons
@@ -64,15 +86,17 @@ class Pagination(object):
     @abstract
     def make_link(self, page):
         """
-        Create a link to the given page.
+        Create a link to the given page. Usually used internally only.
 
         Subclasses must implement this.
         """
 
     def make_template(self):
         """
-        Return a template for creating links. It contains a '!' at the place
-        where the page number is to be inserted. This is used by JavaScript.
+        Return a template for creating links. Usually used internally only.
+
+        The template must contain a ``!`` at the place where the page number is
+        to be inserted. This is used by JavaScript.
 
         Subclasses may implement this to enable a JavaScript page selector.
         """
@@ -146,6 +170,8 @@ class Pagination(object):
         """
         Return HTML code for the page selector if there is more than one page.
 
+        For convenience, the ``__call__`` method is an alias for this.
+
         :param left_threshold: The number of pages to be shown after the
                                `prev` button.
         :param inner_threshold: The number of pages to be shown before and
@@ -160,7 +186,7 @@ class Pagination(object):
         """
 
         if self.pages == 1 and not force:
-            return u''
+            return Markup(u'')
 
         ret = []
         add = ret.append
@@ -207,8 +233,9 @@ class Pagination(object):
         add(u'</div>')
         return Markup(u''.join(ret))
 
-    def __unicode__(self):
-        return self.buttons()
+    def __call__(self, *args, **kwargs):
+        """Alias for :meth:`buttons()`."""
+        return self.buttons(*args, **kwargs)
 
 
 class URLPagination(Pagination):

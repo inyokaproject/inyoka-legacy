@@ -23,7 +23,7 @@
   <p>{{ _('No articles written yet.') }}</p>
   {%- endif %}
 
-  {{ pagination }}
+  {{ pagination() }}
 
   <p>
     {% if not request.user.subscribed('news.article.all') %}

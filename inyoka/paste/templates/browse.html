@@ -6,7 +6,7 @@
 {%- block paste_content %}
 <p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
 
-{{ pagination }}
+{{ pagination() }}
 
 <table>
   <thead>
@@ -32,5 +32,5 @@
   </tbody>
 </table>
 
-{{ pagination }}
+{{ pagination() }}
 {%- endblock %}

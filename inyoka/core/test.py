@@ -628,8 +628,9 @@ def refresh_database(func):
     def decorator(*args, **kwargs):
         ret = func(*args, **kwargs)
         # drop all data afterwards and initialize the database again.
-        database.metadata.drop_all(bind=database.get_engine())
-        database.init_db(bind=database.get_engine(), is_test=True)
+        _engine = database.get_engine()
+        database.metadata.drop_all(bind=_engine)
+        database.init_db(bind=_engine, is_test=True)
         return ret
     return decorator
 

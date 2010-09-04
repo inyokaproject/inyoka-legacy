@@ -142,6 +142,13 @@ def get_engine():
 
 
 @ctx.cfg.reload_signal.connect
+def reload_engine_on_uri_change(sender, config):
+    current_uri = unicode(get_engine().url.url)
+    if current_uri != config['database.url']:
+        refresh_engine()
+        get_engine()
+
+
 def refresh_engine(*args, **kwargs):
     """Gets rid of the existing engine.  Useful for unittesting, use with care.
     Do not call this function if there are multiple threads accessing the

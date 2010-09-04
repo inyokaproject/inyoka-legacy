@@ -365,7 +365,6 @@ class TestCase(unittest2.TestCase):
 class DatabaseTestCase(TestCase):
     """This class provides fixture support."""
 
-    _started = False
     data = {}
     fixtures = {}
     custom_cleanup_factories = []

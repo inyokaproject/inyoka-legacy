@@ -174,7 +174,7 @@ class FixtureLoader(object):
                 if isinstance(items, dict):
                     return self.add_cls_with_values(cls, items)
                 elif isinstance(items, (list, set)):
-                    return self.add_clses(cls, items)
+                    return self.add_classes(cls, items)
                 else:
                     raise TypeError('You can only give a nested value a list or a dict. '
                                     'You tried to feed a %s into a %s.'
@@ -269,7 +269,7 @@ class FixtureLoader(object):
 
         return obj
 
-    def add_clses(self, cls, items):
+    def add_classes(self, cls, items):
         """Returns a list of the new objects.
         These objects are already in session, so you don't
         *need* to do anything with them.
@@ -296,7 +296,7 @@ class FixtureLoader(object):
                         continue
                     if isinstance(cls, basestring) and cls not in skip_keys:
                         cls = self.get_cls(cls)
-                    new_data[cls.__name__] = self.add_clses(cls, items)
+                    new_data[cls.__name__] = self.add_classes(cls, items)
                 if 'nocommit' not in group:
                     session.commit()
         except Exception:

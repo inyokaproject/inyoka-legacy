@@ -314,6 +314,7 @@ div.pagination a {
 
 div.pagination a:hover {
   background: #46520b;
+  color: white;
 }
 
 div.pagination span.comma {
@@ -333,6 +334,7 @@ div.pagination strong {
 div.pagination span.disabled {
   display: none;
 }
+
 
 /* Pagetabs */
 ul.pagetabs {

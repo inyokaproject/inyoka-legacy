@@ -2,12 +2,12 @@
 {%- set introduction = introduction|default(False) %}
 {%- set styles = ['typography.css', 'layout.css', 'debug.css'] + styles|default([]) %}
 {%- set styles = ['reset.css', 'table.css', 'forms.css', 'markup.css'] + styles|default([]) %}
-{%- set scripts = ['pagination.js'] + scripts|default([]) %}
+{%- set scripts = ['overall.js'] + scripts|default([]) %}
 <!DOCTYPE HTML>
 <html>
   <head>
     <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
-    {# Commonly used javascript files needs to included first #}
+    {#- Commonly used javascript files that need to included first #}
     {%- for script in ['jquery.js', 'jquery.ui.js', 'babel.js', 'Inyoka.js'] %}
     <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}

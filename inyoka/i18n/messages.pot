@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-08-30 18:02+0200\n"
+"POT-Creation-Date: 2010-09-05 16:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -298,63 +298,63 @@ msgstr ""
 msgid "Create new Forum"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:164
 msgid "zero"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:164
 msgid "one"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:164
 msgid "two"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:164
 msgid "three"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:165
+#: inyoka/l10n/__init__.py:164
 msgid "four"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:166
+#: inyoka/l10n/__init__.py:165
 msgid "five"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:166
+#: inyoka/l10n/__init__.py:165
 msgid "six"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:166
+#: inyoka/l10n/__init__.py:165
 msgid "seven"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:166
+#: inyoka/l10n/__init__.py:165
 msgid "eight"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:167
+#: inyoka/l10n/__init__.py:166
 msgid "nine"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:167
+#: inyoka/l10n/__init__.py:166
 msgid "ten"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:167
+#: inyoka/l10n/__init__.py:166
 msgid "eleven"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:167
+#: inyoka/l10n/__init__.py:166
 msgid "twelve"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:243
+#: inyoka/l10n/__init__.py:242
 msgid "just now"
 msgstr ""
 
-#: inyoka/l10n/__init__.py:247
+#: inyoka/l10n/__init__.py:246
 #, python-format
 msgid "%(timedelta)s ago"
 msgstr ""
@@ -476,7 +476,7 @@ msgstr[1] ""
 msgid "No Comments"
 msgstr ""
 
-#: inyoka/news/templates/_article.html:18 inyoka/utils/pagination.py:35
+#: inyoka/news/templates/_article.html:18 inyoka/utils/pagination.py:56
 msgid "…"
 msgstr ""
 
@@ -1059,6 +1059,10 @@ msgstr ""
 msgid "For security reasons you've to enter your old password once again."
 msgstr ""
 
+#: inyoka/static/js/overall.js:35
+msgid "Enter an arbitrary page number"
+msgstr ""
+
 #: inyoka/static/js/portal.js:10
 msgid "Generate another"
 msgstr ""
@@ -1141,15 +1145,15 @@ msgstr ""
 msgid "Incorrect. Try again."
 msgstr ""
 
-#: inyoka/utils/pagination.py:32
+#: inyoka/utils/pagination.py:53
 msgid ", "
 msgstr ""
 
-#: inyoka/utils/pagination.py:33
+#: inyoka/utils/pagination.py:54
 msgid "next »"
 msgstr ""
 
-#: inyoka/utils/pagination.py:34
+#: inyoka/utils/pagination.py:55
 msgid "« previous"
 msgstr ""
 

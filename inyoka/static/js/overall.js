@@ -1,4 +1,13 @@
-/* Change ellipsis elements of a pagination to a link, which when clicked
+/* overall.js
+ *
+ * Functions that are used everywhere, not specific to one app.
+ *
+ */
+
+
+/* PAGINATION
+ *
+ * Change ellipsis elements of a pagination to a link, which when clicked
  * turns into an input field where any page number to be changed to can be
  * entered.
  *
@@ -8,10 +17,8 @@
  * no link is created.
  */
 
-
 $(function () {
   $('.pagination .ellipsis').each(function (i) {
-
     var restore_ellipsis = (function (ellipsis) {
       /* restore the ellipsis to its original state */
       ellipsis.children('form').remove();
@@ -25,7 +32,7 @@ $(function () {
        * continue with the next one.  */
       return true;
 
-    ellipsis.wrapInner('<a href="#">')
+    ellipsis.wrapInner('<a href="#" title="' + _('Enter an arbitrary page number') + '">')
     ellipsis.children('a').click(function () {
       var link = $(this);
       link.hide().after('<form action="#"><input size="2"/></form>');
@@ -60,7 +67,13 @@ $(function () {
       $(document).click(function() {
         restore_ellipsis(ellipsis);
       });
+      // Hide when esc presesd
+      $(document).keypress(function(event) {
+        if (event.keyCode == 27)
+          restore_ellipsis(ellipsis);
+      });
       return false;
     });
   });
 });
+

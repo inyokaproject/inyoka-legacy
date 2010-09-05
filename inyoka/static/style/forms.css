@@ -10,8 +10,6 @@
 
 /* Styles for various form elements */
 form {
-  font: x-small;
-  font-size: small;
   width: 100%;
 }
 
@@ -24,6 +22,10 @@ form .half {
   width: 50% !important;
 }
 
+form .third {
+  width: 33% !important;
+}
+
 form .large {
   width: 400px !important;
 }
@@ -34,10 +36,6 @@ form .medium {
 
 form .small {
   width: 100px !important;
-}
-
-form .third {
-  width: 33% !important;
 }
 
 /* Fieldset, legend, label */

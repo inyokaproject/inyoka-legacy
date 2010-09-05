@@ -63,7 +63,7 @@
 }
 
 /* Various text style classes */
-.small {
+small, .small {
   font-size: .8em;
   line-height: 1.8em;
   margin-bottom: 1.8em;
@@ -152,7 +152,7 @@ p {
   margin: .5em 0;
 }
 
-small, sup, sub {
+sup, sub {
   font-size: 0.8em;
 }
 

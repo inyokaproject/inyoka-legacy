@@ -11,6 +11,18 @@
 from inyoka.context import ctx
 from inyoka.utils.decorators import abstract
 
+# Try to import PyGame
+try:
+    import pygame
+except ImportError:
+    pass
+
+# Try to import PIL
+try:
+    from PIL import Image as PilBackend
+except ImportError:
+    pass
+
 
 def string_to_xy(string):
     """
@@ -38,14 +50,27 @@ class BaseImage(object):
         thumbnail.resize(100, 100)
         thumbnail.save('/tmp/avatar-100-100.png')
 
-    :param filename: Either a filelike object or a filename.
+    :param filename: Image filename
     """
 
     def __init__(self, filename):
         raise NotImplementedError
 
+    @classmethod
+    def init(cls):
+        """
+        A beautifull way to load class dependecies like python modules and
+        global configuration things.
+
+        You should overwrite this method if your own instance needs some
+        more python modules. If your imaging backend only uses things like
+        os.Popen() you should move these imports to the global namespace
+        instead.
+        """
+        return cls
+
     @abstract
-    def resize(self, x, y):
+    def scale(self, x, y):
         """
         Resizes this image object, you should overwrite this method in
         your own backends. Take a look at :class:`PilImage` for an example.
@@ -58,13 +83,13 @@ class BaseImage(object):
         """
         Resize image to thumbnail size, as definied in inyoka.ini.
         """
-        self.resize(*string_to_xy(ctx.cfg["imaging.thumbnailsize"]))
+        self.scale(*string_to_xy(ctx.cfg["imaging.thumbnailsize"]))
 
     def avatar(self):
         """
         Resize image to avatar size, as defined in inyoka.ini.
         """
-        self.resize(*string_to_xy(ctx.cfg["imaging.avatarsize"]))
+        self.scale(*string_to_xy(ctx.cfg["imaging.avatarsize"]))
 
     @abstract
     def size(self):
@@ -77,14 +102,13 @@ class BaseImage(object):
         """
 
     @abstract
-    def save(self, filename, format=None):
+    def save(self, filename):
         """
         Saves this image object to a new file named `filename`.
 
         It is required to override this method on your own backends.
 
         :param filename: Either a filelike object or a filename.
-        :param format: The format to save the image if supported by the backend.
         """
         raise NotImplementedError
 
@@ -95,45 +119,37 @@ class PilImage(BaseImage):
     """
 
     def __init__(self, filename):
-        from PIL import Image
-        self.__antialias = Image.ANTIALIAS
-        self.image = Image.open(filename)
+        self.image = PilBackend.open(filename)
 
-    def resize(self, x, y):
-        """Returns a resized copy of an image."""
-        self.image = self.image.resize((x, y), self.__antialias)
-        return self.image
-
-    def thumbnail(self):
-        """
-        Resize image to thumbnail size, as definied in inyoka.ini.
-        """
-        self.image.thumbnail(string_to_xy(
-            ctx.cfg['imaging.thumbnailsize']), self.__antialias)
-        return self.image
-
-    def avatar(self):
-        """
-        Resize image to avatar size, as definied in inoka.ini.
-        """
-        self.image.thumbnail(string_to_xy(
-            ctx.cfg['imaging.avatarsize']), self.__antialias)
-        return self.image
+    def scale(self, x, y):
+        self.image = self.image.resize((x, y), PilBackend.ANTIALIAS)
 
     def size(self):
         return self.image.size
 
-    def save(self, filename, format=None):
-        if format:
-            self.image.save(filename, format)
-        else:
-            self.image.save(filename)
+    def save(self, filename):
+        self.image.save(filename)
 
 
-# Setup Backend
-_backend = ctx.cfg["imaging.backend"]
-supported_backends = {
-    'pil': PilImage,
-}
-# shortcut for easy module usage.
-Image = supported_backends[_backend]
+class PyGameImage(BaseImage):
+    """
+    PyGame based imaging backend.
+    """
+
+    def __init__(self, filename):
+        self.image = pygame.image.load(filename)
+
+    def scale(self, x, y):
+        self.image = pygame.transform.smoothscale(self.image, (x, y))
+
+    def size(self):
+        return self.image.get_size()
+
+    def save(self, filename):
+        pygame.image.save(self.image, filename)
+
+
+if 'pygame' in globals():
+    Image = PyGameImage
+else:
+    Image = PilImage

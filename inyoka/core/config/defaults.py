@@ -108,9 +108,6 @@ database_pool_recycle = IntegerConfigField('database.pool_recycle', default=-1, 
 database_pool_timeout = IntegerConfigField('database.pool_timeout', default=30, min_value=5)
 
 
-#: Set imaging backend to use.
-imaging_backend = TextConfigField('imaging.backend', default=u'pil')
-
 #: Portal avatar size.
 imaging_avatarsize = TextConfigField('imaging.avatarsize', default=u'50x50')
 

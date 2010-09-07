@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-09-05 16:12+0200\n"
+"POT-Creation-Date: 2010-09-08 00:38+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -1320,6 +1320,6 @@ msgid "The requested page was not found."
 msgstr "Die gesuchte Seite wurde nicht gefunden."
 
 #: inyoka/wiki/templates/not_found.html:11
-msgid "If you want, you can create it"
-msgstr "Wenn du willst kannst du sie erstellen"
+msgid "Create it."
+msgstr "Erstellen."
 

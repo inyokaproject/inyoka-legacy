@@ -124,6 +124,6 @@ Now we're more or less able to use that server.  But for development reasons
 we need unlimited powers, as always.  So give the inyoka user all permissions
 on the inyoka virtual host domain::
 
-    sudo rabbitmqctl set_permissions -p inyoka inyoka "" ".*" ".*"
+    sudo rabbitmqctl set_permissions -p inyoka inyoka ".*" ".*" ".*"
 
 Now you can use ``fab celeryd`` to start your celery server.

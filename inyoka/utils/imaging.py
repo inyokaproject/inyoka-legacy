@@ -185,7 +185,7 @@ class PGMagickImage(BaseImage):
         return 'pgmagick' in globals()
 
     def scale(self, x, y):
-        self.image.scale('x'.join((x, y)))
+        self.image.scale('%sx%s' % (x, y))
 
     def size(self):
         return string_to_xy(self.image.geometry)

@@ -10,6 +10,7 @@
 """
 from inyoka.context import ctx
 from inyoka.utils.decorators import abstract
+from inyoka.utils.datastructures import OrderedDict
 
 # Try to import PyGame
 try:
@@ -40,6 +41,11 @@ def string_to_xy(string):
     return tuple([int(x) for x in string.strip().split(u'x')[:2]])
 
 
+class NoBackendFound(Exception):
+    """This exceptions is raised once we cannot find a suitable backend"""
+    pass
+
+
 class BaseImage(object):
     """
     Base class for all imaging related stuff, you never use this class directly.
@@ -66,6 +72,9 @@ class BaseImage(object):
         more python modules. If your imaging backend only uses things like
         os.Popen() you should move these imports to the global namespace
         instead.
+
+        This method must return either `True` or `False` describing whether
+        it's loaded or not.  This method must not raise exceptions!
         """
         return cls
 
@@ -121,6 +130,10 @@ class PilImage(BaseImage):
     def __init__(self, filename):
         self.image = PilBackend.open(filename)
 
+    @classmethod
+    def init(cls):
+        return 'PilBackend' in globals()
+
     def scale(self, x, y):
         self.image = self.image.resize((x, y), PilBackend.ANTIALIAS)
 
@@ -139,6 +152,10 @@ class PyGameImage(BaseImage):
     def __init__(self, filename):
         self.image = pygame.image.load(filename)
 
+    @classmethod
+    def init(cls):
+        return 'pygame' in globals()
+
     def scale(self, x, y):
         self.image = pygame.transform.smoothscale(self.image, (x, y))
 
@@ -149,7 +166,22 @@ class PyGameImage(BaseImage):
         pygame.image.save(self.image, filename)
 
 
-if 'pygame' in globals():
-    Image = PyGameImage
-else:
-    Image = PilImage
+# backends ordered by priority.  The higher the faster
+# the backend, keep it sorted!
+BACKENDS = OrderedDict([
+    ('pygame', PyGameImage),
+    ('pil', PilImage),
+])
+
+def get_imaging_backend(name=None):
+    if name:
+        try:
+            return BACKENDS[name]
+        except KeyError:
+            raise NoBackendFound(u'Backend %s is not available. '
+                u'Available backends: %s' % (name, u', '.join(BACKENDS.keys()))
+            )
+    for backend in BACKENDS.itervalues():
+        if backend.init():
+            return backend
+    raise NoBackendFound(u'No suitable backend found, please install the dependencies!')

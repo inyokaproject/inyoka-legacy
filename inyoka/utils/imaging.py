@@ -18,6 +18,12 @@ try:
 except ImportError:
     pass
 
+# Try to import pgmagick
+try:
+    import pgmagick
+except ImportError:
+    pass
+
 # Try to import PIL
 try:
     from PIL import Image as PilBackend
@@ -166,10 +172,33 @@ class PyGameImage(BaseImage):
         pygame.image.save(self.image, filename)
 
 
+class PGMagickImage(BaseImage):
+    """
+    pgmagick based imaging backend.  Requires `pgmagick` to be installed.
+    """
+
+    def __init__(self, filename):
+        self.image = pgmagick.Image(filename)
+
+    @classmethod
+    def init(cls):
+        return 'pgmagick' in globals()
+
+    def scale(self, x, y):
+        self.image.scale('x'.join((x, y)))
+
+    def size(self):
+        return string_to_xy(self.image.geometry)
+
+    def save(self, filename):
+        self.image.write(filename)
+
+
 # backends ordered by priority.  The higher the faster
 # the backend, keep it sorted!
 BACKENDS = OrderedDict([
     ('pygame', PyGameImage),
+    ('pgmagick', PGMagickImage),
     ('pil', PilImage),
 ])
 

@@ -13,7 +13,7 @@
 #      This way we don't get cluttered
 
 # Imports for easy API access and our import system
-from inyoka import Interface
+from inyoka import Interface, deactivated_components
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
 
@@ -79,6 +79,9 @@ class ICoreResourceManager(IResourceManager):
     #: Path to the directory for shared static files, aka media.  Relative to
     #: the inyoka package path.
     media_path = TextConfigField('media_path', default=u'media')
+
+    #: Exclude inyoka.core.tasks per default to fix the celery loader
+    deactivated_components.default.append('inyoka.core.tasks')
 
     models = [Cache, Confirm, Tag, Storage]
 

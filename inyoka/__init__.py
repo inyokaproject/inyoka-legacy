@@ -23,20 +23,14 @@ from inyoka.core.config import ListConfigField
 #: Inyoka revision present in the current mercurial working copy
 INYOKA_REVISION = 'unknown'
 
-#TODO: find some solution to remove this hack and "let it be automatically"
-#: List of activasted components
-activated_components = ListConfigField('activated_components', [
-    'inyoka.core.*',
-    'inyoka.admin',
-    'inyoka.portal',
-    'inyoka.news.api',
-    'inyoka.forum.api',
-    'inyoka.paste.api',
-    'inyoka.wiki.api',
-])
+#: List of activated components.  This defaults to load all components
+#  from the inyoka.* namespace.
+activated_components = ListConfigField('activated_components',
+    ['inyoka.core.*', 'inyoka.*'])
 
 #: List of deactivated components
-deactivated_components = ListConfigField('deactivated_components', ['inyoka.core.tasks'])
+deactivated_components = ListConfigField('deactivated_components', [])
+
 
 class InterfaceMeta(type):
     """Metaclass that keeps track of all derived interface implementations.
@@ -321,7 +315,7 @@ def _bootstrap():
     ctx.bind()
 
     # setup components
-    ctx.load_packages(['inyoka.core.api', 'inyoka.*'])
+    ctx.load_packages(ctx.cfg['activated_components'])
 
 
 _bootstrap()

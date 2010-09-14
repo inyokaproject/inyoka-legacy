@@ -27,7 +27,6 @@ _quote_table = {
 }
 
 
-
 class ConfigField(object):
     """A field representing a configuration entry.
 
@@ -42,7 +41,7 @@ class ConfigField(object):
         # or to play around in the interactive shell.
         if name is not None:
             self.__name__ = name
-            DEFAULTS[name] = self
+            Configuration.defined_vars[name] = self
 
     def get_default(self):
         return self.default
@@ -97,12 +96,13 @@ class ListConfigField(ConfigField):
     data type. `:` is used as a separator character between the items.
     """
 
-    conversion_field = TextConfigField(u'', u'')
 
     def __init__(self, name, default, field=None):
         ConfigField.__init__(self, name, default)
         if field is not None:
             self.conversion_field = field
+        else:
+            self.conversion_field = TextConfigField(u'', u'')
 
     def converter(self, value=[]):
         if not isinstance(value, basestring):
@@ -182,10 +182,10 @@ class Configuration(object):
         u'This signal will be emitted everytime the configuration will go'
         u' through the reloading process')
 
+    defined_vars = {}
+
     def __init__(self, filename, defaults=None):
         self.filename = filename
-        config_defaults = defaults if defaults is not None else DEFAULTS
-        self.defined_vars = config_defaults.copy()
         self._values = {}
         self._converted_values = {}
         self._lock = Lock()

@@ -23,6 +23,36 @@ from inyoka.context import ctx
 from inyoka.core.http import Response
 from inyoka.core.routing import href, IServiceProvider
 from inyoka.core.cache import cache as inyoka_cache
+from inyoka.core.config import TextConfigField, BooleanConfigField
+
+
+_default_templates_path = os.path.join(os.environ['INYOKA_MODULE'], 'templates')
+
+#: Custom template path which is searched before the default path
+templates_path = TextConfigField('templates.path', default=_default_templates_path)
+
+#: Auto reload template files if they changed
+templates_auto_reload = BooleanConfigField('templates.auto_reload', default=True)
+
+#: Use either ’memory’, ’filesystem’, or ’memcached’ bytecode caches
+templates_use_cache = BooleanConfigField('templates.use_cache', default=False)
+
+#: Use memcached for bytecode caching
+templates_use_memcached_cache = BooleanConfigField('templates.use_memcached_cache', default=False)
+
+#: Use filesystem for bytecode caching
+templates_use_filesystem_cache = BooleanConfigField('templates.use_filesystem_cache', default=False)
+
+#TODO: yet a hack untill we have proper information about what an app is
+templates_packages_portal = TextConfigField('templates.packages.portal', default=u'inyoka.portal')
+templates_packages_news = TextConfigField('templates.packages.news', default=u'inyoka.news')
+templates_packages_forum = TextConfigField('templates.packages.forum', default=u'inyoka.forum')
+templates_packages_wiki = TextConfigField('templates.packages.wiki', default=u'inyoka.wiki')
+templates_packages_paste = TextConfigField('templates.packages.paste', default=u'inyoka.paste')
+templates_packages_planet = TextConfigField('templates.packages.planet', default=u'inyoka.planet')
+templates_packages_admin = TextConfigField('templates.packages.admin', default=u'inyoka.admin')
+
+
 
 
 def populate_context_defaults(context):

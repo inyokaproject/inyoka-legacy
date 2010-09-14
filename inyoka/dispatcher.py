@@ -221,12 +221,7 @@ class RequestDispatcher(object):
         return self.response_class.force_type(rv, request.environ)
 
     def get_test_client(self):
-        """Creates a test client for this application.
-
-        :returns:
-            A :class:`werkzeug.Client`, which is a :class:`Tipfy` wrapped
-            for tests.
-        """
+        """Creates a test client for this application."""
         from werkzeug import Client
         return Client(self, self.response_class, use_cookies=True)
 

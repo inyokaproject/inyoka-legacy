@@ -17,11 +17,26 @@ from inspect import getmembers, isclass
 from operator import methodcaller
 from werkzeug import find_modules, import_string, cached_property
 from inyoka.context import LocalProperty
+from inyoka.core.config import ListConfigField
 
 
 #: Inyoka revision present in the current mercurial working copy
 INYOKA_REVISION = 'unknown'
 
+#TODO: find some solution to remove this hack and "let it be automatically"
+#: List of activasted components
+activated_components = ListConfigField('activated_components', [
+    'inyoka.core.*',
+    'inyoka.admin',
+    'inyoka.portal',
+    'inyoka.news.api',
+    'inyoka.forum.api',
+    'inyoka.paste.api',
+    'inyoka.wiki.api',
+])
+
+#: List of deactivated components
+deactivated_components = ListConfigField('deactivated_components', ['inyoka.core.tasks'])
 
 class InterfaceMeta(type):
     """Metaclass that keeps track of all derived interface implementations.
@@ -306,7 +321,7 @@ def _bootstrap():
     ctx.bind()
 
     # setup components
-    ctx.load_packages(ctx.cfg['activated_components'])
+    ctx.load_packages(['inyoka.core.api', 'inyoka.*'])
 
 
 _bootstrap()

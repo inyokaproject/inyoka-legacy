@@ -21,10 +21,25 @@ from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
 from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.core.models import Cache
+from inyoka.core.config import TextConfigField, IntegerConfigField
 
 __all__ = ('cache',)
 
 cache = (type('UnconfiguredCache', (NullCache,), {}))()
+
+#: Set the caching system.  Choose one of ’null’, ’simple’, ’memcached’ or ’filesystem’.
+caching_system = TextConfigField('caching.system', default=u'null')
+
+#: Set the path for the filesystem caches
+caching_filesystem_cache_path = TextConfigField('caching.filesystem_cache_path',
+                                          default=u'/tmp/_inyoka_cache')
+
+#: Set the timeout for the caching system
+caching_timeout = IntegerConfigField('caching.timeout', default=300, min_value=10)
+
+#: Set the memcached servers.  Comma seperated list of memcached servers
+caching_memcached_servers = TextConfigField('caching.memcached_servers', default=u'')
+
 
 
 class DatabaseCache(BaseCache):

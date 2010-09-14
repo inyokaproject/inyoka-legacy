@@ -21,6 +21,7 @@ from inyoka.core.serializer import send_service_response
 from inyoka.utils import getmembers
 from inyoka.utils.urls import make_full_domain
 from inyoka.utils.decorators import make_decorator, update_wrapper
+from inyoka.core.config import DottedConfigField
 
 
 _date_formatter_split_re = re.compile('(%.)')
@@ -35,6 +36,24 @@ _date_formatter_mapping = {
     'Y': r'\d{4}',
     '%': r'%',
 }
+
+# routing specific config values
+# values are in the form of `subdomain:/submount`
+# if you only apply the submount use `/submount` the `:` will be completed
+routing_urls_portal = DottedConfigField('routing.urls.portal', default=u':/')
+routing_urls_usercp = DottedConfigField('routing.urls.usercp', default=u':/usercp')
+routing_urls_news = DottedConfigField('routing.urls.news', default=u'news:/')
+routing_urls_forum = DottedConfigField('routing.urls.forum', default=u'forum:/')
+routing_urls_wiki = DottedConfigField('routing.urls.wiki', default=u'wiki:/')
+routing_urls_paste = DottedConfigField('routing.urls.paste', default=u'paste:/')
+routing_urls_planet = DottedConfigField('routing.urls.planet', default=u'planet:/')
+routing_urls_admin = DottedConfigField('routing.urls.admin', default=u'admin:/')
+routing_urls_api = DottedConfigField('routing.urls.api', default=u'api:/')
+# NEVER CHANGE THAT VALUE!!! TODO: Find a better solution to implement testing
+# Url prefixes...
+routing_urls_test = DottedConfigField('routing.urls.test', default=u'test:/')
+routing_urls_static = DottedConfigField('routing.urls.static', default=u'static:/')
+routing_urls_media = DottedConfigField('routing.urls.media', default=u'media:/')
 
 
 

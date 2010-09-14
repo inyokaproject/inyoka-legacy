@@ -9,9 +9,15 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IResourceManager
+from inyoka.core.config import TextConfigField
 from inyoka.wiki.models import WikiLatestContentProvider, Page, Revision, \
     Text, Attachment
 from inyoka.wiki.controllers import WikiController
 
 class WikiResourceManager(IResourceManager):
+
+    #: Name to the wiki index page (the one a user accessing the wiki's ’/’
+    #: is redirected to)
+    wiki_index_name = TextConfigField('wiki.index.name', default=u'Main Page')
+
     models = [Page, Revision, Text, Attachment]

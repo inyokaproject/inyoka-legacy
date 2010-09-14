@@ -12,11 +12,23 @@ import json
 import urllib2
 from urllib import urlencode
 from markupsafe import Markup
+from inyoka.core.config import TextConfigField, BooleanConfigField
 
 
 RECAPTCHA_API_SERVER = 'http://api.recaptcha.net/'
 RECAPTCHA_SSL_API_SERVER = 'https://api-secure.recaptcha.net/'
 RECAPTCHA_VERIFY_SERVER = 'http://api-verify.recaptcha.net/verify'
+
+#: Use SSL for ReCaptcha requests, defaults to True
+recaptcha_use_ssl = BooleanConfigField('recaptcha.use_ssl', default=True)
+
+#: ReCaptcha public key
+recaptcha_public_key = TextConfigField('recaptcha.public_key',
+    default=u'6Lc1LwsAAAAAAPSQ4FcfLKJVcwzicnZl8v-RmeLj')
+
+#: ReCaptcha private key
+recaptcha_private_key = TextConfigField('recaptcha.private_key',
+    default=u'6Lc1LwsAAAAAAAKaGUBaEpTOfXKDWe6QjIlmMM9b')
 
 
 def get_recaptcha_html(public_key=None, use_ssl=True, error=None,

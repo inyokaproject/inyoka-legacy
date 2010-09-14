@@ -11,6 +11,8 @@
 from inyoka.context import ctx
 from inyoka.utils.decorators import abstract
 from inyoka.utils.datastructures import OrderedDict
+from inyoka.core.resource import IResourceManager
+from inyoka.core.config import TextConfigField
 
 # Try to import PyGame
 try:
@@ -29,6 +31,13 @@ try:
     from PIL import Image as PilBackend
 except ImportError:
     pass
+
+
+#: Portal avatar size.
+imaging_avatarsize = TextConfigField('imaging.avatarsize', default=u'50x50')
+
+#: Portal thumbnail size.
+imaging_thumbnailsize = TextConfigField('imaging.thumbnailsize', default=u'100x100')
 
 
 def string_to_xy(string):

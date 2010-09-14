@@ -12,6 +12,19 @@ from celery.loaders.base import BaseLoader
 from celery.loaders.default import Settings
 
 from inyoka.context import ctx
+from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigField
+
+
+# celery broker settings
+celery_result_backend = TextConfigField('celery.result_backend', default=u'amqp')
+celery_imports = ListConfigField('celery.imports', default=['inyoka.core.tasks'])
+
+# ampq broker settings
+broker_host = TextConfigField('broker.host', u'localhost')
+broker_port = IntegerConfigField('broker.port', 5672)
+broker_user = TextConfigField('broker.user', u'inyoka')
+broker_password = TextConfigField('broker.password', u'default')
+broker_vhost = TextConfigField('broker.vhost', u'inyoka')
 
 
 class CeleryLoader(BaseLoader):

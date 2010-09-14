@@ -101,11 +101,35 @@ from inyoka.utils import flatten_iterator
 from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
 from inyoka.utils.files import find_unused_filename, obfuscate_filename
-
+from inyoka.core.config import BooleanConfigField, TextConfigField, \
+    IntegerConfigField, DottedConfigField, ListConfigField
 
 _engine = None
 _engine_lock = Lock()
-MEDIA_PATH = path.join(environ['INYOKA_MODULE'], ctx.cfg['media_path'])
+
+
+#: The database URL.  For more information about database settings
+#: consult the Inyoka docs.
+database_url = TextConfigField('database.url', default=u'sqlite:///dev.db')
+
+#: Set database debug.  If enabled the database will collect the SQL
+#: statements and add them to the bottom of the page for easier debugging.
+database_debug = BooleanConfigField('database.debug', default=False)
+
+#: Set database echo.  If enabled the database will echo all submitted
+#: statements to the default logger.  That defaults to stdout.
+database_echo = BooleanConfigField('database.echo', default=False)
+
+#: Set database pool recycle.  If set to non -1, used as number of seconds
+#: between connection recycling.  If this timeout is surpassed, the connection
+#: will be closed and replaced with a newly opened connection.
+database_pool_recycle = IntegerConfigField('database.pool_recycle', default=-1, min_value=-1)
+
+#: Set database pool timeout.  The number of seconds to wait before giving
+#: up on a returning connection.  This will not be used if the used database
+#: is one of SQLite, Access or Informix as those don't support
+#: queued connection pools.
+database_pool_timeout = IntegerConfigField('database.pool_timeout', default=30, min_value=5)
 
 
 def get_engine():
@@ -475,7 +499,7 @@ class FileObject(FileStorage):
 
     @property
     def path(self):
-        return path.join(MEDIA_PATH, self.filename)
+        return path.join(ctx.cfg['media_path'], self.filename)
 
     @property
     def mimetype(self):
@@ -538,7 +562,7 @@ class File(MutableType, TypeDecorator):
 
     def bind_processor(self, dialect):
         def process(value):
-            folder = path.join(MEDIA_PATH, self.save_to)
+            folder = path.join(ctx.cfg['media_path'], self.save_to)
             filename = self.obfuscate and obfuscate_filename(value.filename) \
                                       or value.filename
             if path.exists(path.join(folder, filename)):

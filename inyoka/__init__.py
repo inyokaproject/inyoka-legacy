@@ -26,7 +26,7 @@ INYOKA_REVISION = 'unknown'
 #: List of activated components.  This defaults to load all components
 #  from the inyoka.* namespace.
 activated_components = ListConfigField('activated_components',
-    ['inyoka.core.*', 'inyoka.*'])
+    ['inyoka.core.api', 'inyoka.core.*', 'inyoka.*'])
 
 #: List of deactivated components
 deactivated_components = ListConfigField('deactivated_components', [])
@@ -97,29 +97,28 @@ def _is_interface(value):
             value is not Interface)
 
 
-def _import_modules(modules, ignore_modules=None):
+def _import_module(module, ignore_modules=None):
     """Import the components to setup the metaclass magic.
 
-    :param modules: A list of strings defining either packages or modules.
-                    You can use star-magic to setup packages recursivly.
+    :param module: A string defining either a package or a module.
+                   You can use star-magic to setup packages recursivly.
     :param ignore_modules: Modules to ignore if they are specified in `modules`
     """
     ignore_modules = ignore_modules or []
-    for module in modules:
-        # No star at the end means a package/module/class but nothing below.
-        if module[-1] != '*':
-            yield import_string(module)
-        else:
-            try:
-                for mod in find_modules(module[:-2], True, True):
-                    if mod not in ignore_modules:
-                        yield import_string(mod)
-                # find_modules does import our package, but doesn't yield it
-                # hence we import it ourself.
-                yield import_string(module[:-2])
-            except ValueError:
-                # module is a module and not a package
-                yield import_string(module[:-2])
+    # No star at the end means a package/module/class but nothing below.
+    if module[-1] != '*':
+        yield import_string(module)
+    else:
+        try:
+            for mod in find_modules(module[:-2], True, True):
+                if mod not in ignore_modules:
+                    yield import_string(mod)
+            # find_modules does import our package, but doesn't yield it
+            # hence we import it ourself.
+            yield import_string(module[:-2])
+        except ValueError:
+            # module is a module and not a package
+            yield import_string(module[:-2])
 
 
 class ApplicationContext(object):
@@ -242,12 +241,18 @@ class ApplicationContext(object):
                                     import.
         :returns: A list of loaded component classes.
         """
-        deactivated_packages = (deactivated_packages or
-                                self.cfg['deactivated_components'])
-        modules = _import_modules(packages, deactivated_packages)
-        components = list(m[1] for m in
-            sum((getmembers(mod, _is_interface) for mod in modules), [])
-            if self.component_is_activated(m[1], deactivated_packages))
+        deactivated_components = []
+        deactivated_components = (deactivated_components or
+                                  self.cfg['deactivated_components'])
+        components = set()
+        for package in packages:
+            modules = _import_module(package, deactivated_components)
+            components.update(set(m[1] for m in
+                sum((getmembers(mod, _is_interface) for mod in modules), [])
+                if self.component_is_activated(m[1], deactivated_components)))
+            # get aware of on-component loading config changes so that
+            # we can act if there are new deactivaated components.
+            deactivated_components.extend(self.cfg['deactivated_components'])
 
         return self.load_components(components)
 

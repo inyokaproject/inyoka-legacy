@@ -106,3 +106,11 @@ def test_boolean_config_field():
     assert_false(field('false'))
     assert_false(field('FaLse'))
     assert_false(field('off'))
+
+
+@with_setup(_setup_config_test, _teardown_config_test)
+def test_on_load_config_field_loading():
+    assert_false('_test_runtime_value' in _config.defined_vars)
+    runtime_value = TextConfigField('_test_runtime_value', default=u'yea')
+    assert_true('_test_runtime_value' in _config.defined_vars)
+    assert_equal(_config['_test_runtime_value'], u'yea')

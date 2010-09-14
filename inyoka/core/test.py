@@ -742,5 +742,3 @@ def log_tasks():
         yield log
     finally:
         celery.execute.send_task = orig
-
-

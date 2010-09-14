@@ -9,10 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IResourceManager
-from inyoka.news.admin import NewsAdminProvider
-from inyoka.news.controllers import NewsController
-from inyoka.news.subscriptions import ArticleSubscriptionType, TagSubscriptionType, \
-    CommentSubscriptionType, NewArticleSubscriptionAction, NewCommentSubscriptionAction
 from inyoka.news.models import Article, Comment, article_tag
 
 

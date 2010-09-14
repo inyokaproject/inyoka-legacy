@@ -45,8 +45,8 @@ class TokenInput(TextInput):
             Tag.object_type: ('id', 'name')
         })
         tags_json = serializer(ro)
-        js =  TOKEN_INPUT % (field.id, href('api/core/get_tags', format='json'),
-                             tags_json)
+        js = TOKEN_INPUT % (field.id, href('api/core/get_tags', format='json'),
+                            tags_json)
         return HTMLString(input_html + js)
 
 

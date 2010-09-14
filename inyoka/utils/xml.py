@@ -15,7 +15,7 @@ from htmlentitydefs import name2codepoint
 from jinja2.utils import escape
 
 
-_entities = {'\n': '&#10;', '\r': '&#13;', '\t':'&#9;'}
+_entities = {'\n': '&#10;', '\r': '&#13;', '\t': '&#9;'}
 _entity_re = re.compile(r'&([^;]+);')
 _striptags_re = re.compile(r'(<!--.*?-->|<[^>]*>)')
 

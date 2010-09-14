@@ -163,8 +163,7 @@ def humanize_number(number):
     """
     strings = [_(u'zero'), _(u'one'), _(u'two'), _(u'three'), _(u'four'),
                _(u'five'), _(u'six'), _(u'seven'), _(u'eight'),
-               _(u'nine'), _(u'ten'), _(u'eleven'), _(u'twelve')
-              ]
+               _(u'nine'), _(u'ten'), _(u'eleven'), _(u'twelve')]
     return strings[number] if number in xrange(13) else unicode(number)
 
 

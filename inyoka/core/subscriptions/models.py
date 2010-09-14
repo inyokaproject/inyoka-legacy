@@ -8,7 +8,6 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import functools
 from sqlalchemy.ext.associationproxy import association_proxy
 from inyoka.core.auth.models import User
 from inyoka.core.database import db
@@ -93,11 +92,8 @@ class Subscription(db.Model):
                     s.count = len(s.unread_object_ids)
                 db.session.commit()
 
-
-        import inyoka.core.tasks
-        from celery.execute import send_task, apply
-        send_task('inyoka.core.tasks.send_notifications',
-                  (object, action.name, subscriptions), {})
+        from inyoka.core.tasks import send_notifications
+        send_notifications(object, action.name, subscriptions)
 
     @staticmethod
     def accessed(user, **kwargs):

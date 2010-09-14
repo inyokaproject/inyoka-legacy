@@ -10,10 +10,6 @@
 """
 from inyoka.core.api import IResourceManager
 from inyoka.core.config import IntegerConfigField
-from inyoka.paste.admin import PasteAdminProvider
-from inyoka.paste.services import PasteServices
-from inyoka.paste.controllers import PasteController
-
 from inyoka.paste.models import Entry
 
 

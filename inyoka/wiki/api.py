@@ -10,9 +10,8 @@
 """
 from inyoka.core.api import IResourceManager
 from inyoka.core.config import TextConfigField
-from inyoka.wiki.models import WikiLatestContentProvider, Page, Revision, \
-    Text, Attachment
-from inyoka.wiki.controllers import WikiController
+from inyoka.wiki.models import Page, Revision, Text, Attachment
+
 
 class WikiResourceManager(IResourceManager):
 

@@ -8,7 +8,6 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import sys
 from celery.decorators import task
 from collections import defaultdict
 from sqlalchemy.orm.exc import NoResultFound
@@ -42,7 +41,7 @@ def send_notifications(object, action_name, subscriptions):
     for s in subscriptions:
         try:
             s = Subscription.query.get(s)
-        except NoResultFound, e:
+        except NoResultFound:
             raise ValueError('no subscription found with id %r' % s)
         notifications[s.user][s.type.name].append(s.subject)
 

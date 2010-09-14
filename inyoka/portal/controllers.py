@@ -9,8 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, href, redirect, _
-from inyoka.core.auth import get_auth_system, login_required
+    templated, href, redirect, _, login_required
+from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User, UserProfile, Group
 from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag

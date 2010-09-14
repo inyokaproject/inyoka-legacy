@@ -75,7 +75,7 @@
 """
 import sys
 import time
-from os import remove, path, environ
+from os import remove, path
 from types import ModuleType
 from threading import Lock
 from contextlib import contextmanager
@@ -83,7 +83,7 @@ from datetime import datetime
 from werkzeug import FileStorage
 from mimetypes import guess_type
 import sqlalchemy
-from sqlalchemy import MetaData, create_engine, Table
+from sqlalchemy import MetaData, create_engine
 from sqlalchemy import orm, sql, exc
 from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.orm.session import Session as SASession
@@ -93,7 +93,7 @@ from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.orm.attributes import get_attribute, set_attribute
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
-    DeclarativeMeta as SADeclarativeMeta, _declarative_constructor
+    DeclarativeMeta as SADeclarativeMeta
 from sqlalchemy.types import MutableType, TypeDecorator
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
@@ -102,7 +102,7 @@ from inyoka.utils.text import get_next_increment, gen_ascii_slug
 from inyoka.utils.debug import find_calling_context
 from inyoka.utils.files import find_unused_filename, obfuscate_filename
 from inyoka.core.config import BooleanConfigField, TextConfigField, \
-    IntegerConfigField, DottedConfigField, ListConfigField
+    IntegerConfigField
 
 _engine = None
 _engine_lock = Lock()

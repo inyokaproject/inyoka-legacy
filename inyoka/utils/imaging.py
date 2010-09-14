@@ -11,7 +11,6 @@
 from inyoka.context import ctx
 from inyoka.utils.decorators import abstract
 from inyoka.utils.datastructures import OrderedDict
-from inyoka.core.resource import IResourceManager
 from inyoka.core.config import TextConfigField
 
 # Try to import PyGame
@@ -210,6 +209,7 @@ BACKENDS = OrderedDict([
     ('pgmagick', PGMagickImage),
     ('pil', PilImage),
 ])
+
 
 def get_imaging_backend(name=None):
     if name:

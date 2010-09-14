@@ -96,7 +96,6 @@ class ListConfigField(ConfigField):
     data type. `:` is used as a separator character between the items.
     """
 
-
     def __init__(self, name, default, field=None):
         ConfigField.__init__(self, name, default)
         if field is not None:
@@ -104,7 +103,7 @@ class ListConfigField(ConfigField):
         else:
             self.conversion_field = TextConfigField(u'', u'')
 
-    def converter(self, value=[]):
+    def converter(self, value=None):
         if not isinstance(value, basestring):
             return value
         erg = []

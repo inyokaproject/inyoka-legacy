@@ -8,7 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka import Interface, InterfaceMeta, _is_interface, _import_modules
+from inyoka import Interface, InterfaceMeta, _is_interface, _import_module
 from inyoka.core.api import ctx
 from inyoka.core.test import with_setup, eq_, assert_false, assert_true, \
     raises
@@ -59,7 +59,7 @@ def test_component_is_activated():
 
     eq_(ctx.load_packages(['tests.core.test_components'],
                           ['tests.core.test_components.Implementation1']),
-                          set([Implementation2,Implementation3]))
+                          set([Implementation2, Implementation3]))
 
 
 @with_setup(teardown=_teardown_components)
@@ -120,16 +120,16 @@ def test_unable_to_load_non_interface():
     ctx.load_component(SomeDummy)
 
 
-def test_import_modules():
+def test_import_module():
     from inyoka.core.auth import models
     # import definite modules
-    assert_true(models is list(_import_modules(('inyoka.core.auth.models',)))[0])
+    assert_true(models is list(_import_module('inyoka.core.auth.models'))[0])
     # star import packages
-    assert_true(models in list(_import_modules(('inyoka.core.*',))))
+    assert_true(models in list(_import_module('inyoka.core.*')))
     # star import to definite modules not packages
     # we assert here to import the module rather than to raise a ValueError
     # as werkzeug's find_modules would do.
-    list(_import_modules(('werkzeug._internal.*',)))
+    list(_import_module('werkzeug._internal.*'))
 
 
 def test_automatical_config_creation():

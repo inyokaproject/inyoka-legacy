@@ -164,6 +164,12 @@ def quote_value(value):
     return (u'"%s"' % value.translate(_quote_table)).encode('utf-8')
 
 
+#TODO: Right now this funtion does not work since our `convert` methods
+#      do not raise `ValidationError`.  The validation behaviour needs
+#      to be rewritten somehow to store information about misconfigured
+#      values.  The easiest way would be to provide a funtion that does
+#      not fallback, so that that one can be used in the UI to set config
+#      values.
 def from_string(value, field):
     """Try to convert a value from string or fall back to the default."""
     try:

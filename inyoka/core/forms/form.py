@@ -41,7 +41,7 @@ def get_csrf_token(request=None, force_reset=False):
 class Form(BaseForm):
     """This form implements basic CSRF protection."""
 
-    csrf = fields.HiddenField()
+    csrf = fields.HiddenField(u' ')
 
     #: Set this to `True` to disable all csrf checks on this form.
     #: Note: This overrides global csrf settings!

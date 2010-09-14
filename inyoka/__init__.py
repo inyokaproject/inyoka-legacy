@@ -312,8 +312,6 @@ def _bootstrap():
                 realpath(join(dirname(__file__))))
     # the path to the Inyoka instance folder
     os.environ['INYOKA_INSTANCE'] = realpath(join(conts, pardir))
-    # the python path to our celery loader
-    os.environ['CELERY_LOADER'] = 'inyoka.core.celery_support.CeleryLoader'
 
     #: bind the context
     ctx = ApplicationContext()

@@ -31,6 +31,7 @@ def send_activation_mail(user_id, activation_url):
         'website_title':    website_title,
     }), ctx.cfg['mail_address'], user.email)
 
+
 @task
 def send_notifications(object, action_name, subscriptions):
     action = SubscriptionAction.by_name(action_name)

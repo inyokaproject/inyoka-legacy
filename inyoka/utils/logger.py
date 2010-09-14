@@ -58,12 +58,3 @@ logger = logging.getLogger('inyoka')
 logging_handler = logging.StreamHandler(sys.stderr)
 logging_handler.setFormatter(SimpleFormatter())
 logger.addHandler(logging_handler)
-
-if ctx.cfg['debug']:
-    logger.setLevel(logging.DEBUG)
-
-#database logger
-#dblogger = logging.getLogger('sqlalchemy.engine')
-#dblogger.setLevel(logging.INFO)
-#_log_path = path.join(os.environ['INYOKA_INSTANCE'], 'db.log')
-#dblogger.addHandler(logging.FileHandler(_log_path))

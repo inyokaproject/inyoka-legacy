@@ -458,5 +458,3 @@ class ConfigTransaction(object):
         finally:
             self.cfg._lock.release()
         self._committed = True
-
-import inyoka.core.config.defaults

@@ -21,13 +21,7 @@ from sqlalchemy.exceptions import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 from inyoka.core.cache import cache
 from inyoka.core.database import db
-
-
-class Storage(db.Model):
-    __tablename__ = 'core_storage'
-
-    key = db.Column(db.Unicode(200), primary_key=True, index=True)
-    value = db.Column(db.PickleType)
+from inyoka.core.models import Storage
 
 
 class CachedStorage(object):

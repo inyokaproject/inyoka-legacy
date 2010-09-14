@@ -221,3 +221,18 @@ class Confirm(db.Model):
     @property
     def is_expired(self):
         return self.expires < date.today()
+
+
+class Cache(db.Model):
+    __tablename__ = 'core_cache'
+
+    key = db.Column(db.Unicode(60), primary_key=True, nullable=False)
+    value = db.Column(db.PickleType, nullable=False)
+    expires = db.Column(db.DateTime, nullable=False)
+
+
+class Storage(db.Model):
+    __tablename__ = 'core_storage'
+
+    key = db.Column(db.Unicode(200), primary_key=True, index=True)
+    value = db.Column(db.PickleType)

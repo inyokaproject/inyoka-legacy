@@ -20,18 +20,11 @@ from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
      MemcachedCache, BaseCache, GAEMemcachedCache
 from inyoka.context import ctx
 from inyoka.core.database import db
+from inyoka.core.models import Cache
 
 __all__ = ('cache',)
 
 cache = (type('UnconfiguredCache', (NullCache,), {}))()
-
-
-class Cache(db.Model):
-    __tablename__ = 'core_cache'
-
-    key = db.Column(db.Unicode(60), primary_key=True, nullable=False)
-    value = db.Column(db.PickleType, nullable=False)
-    expires = db.Column(db.DateTime, nullable=False)
 
 
 class DatabaseCache(BaseCache):

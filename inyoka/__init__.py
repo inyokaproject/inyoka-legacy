@@ -227,7 +227,7 @@ class ApplicationContext(object):
                 # fail silently if component is not loaded
                 continue
 
-    def load_packages(self, packages, deactivated_packages=None):
+    def load_packages(self, packages, deactivated_components=None):
         """Load all components from a known python package.
 
         Example::
@@ -241,18 +241,18 @@ class ApplicationContext(object):
                                     import.
         :returns: A list of loaded component classes.
         """
-        deactivated_components = []
-        deactivated_components = (deactivated_components or
-                                  self.cfg['deactivated_components'])
-        components = set()
+        deactivated_components = set((deactivated_components or
+                                      self.cfg['deactivated_components']))
+        modules = set()
         for package in packages:
-            modules = _import_module(package, deactivated_components)
-            components.update(set(m[1] for m in
-                sum((getmembers(mod, _is_interface) for mod in modules), [])
-                if self.component_is_activated(m[1], deactivated_components)))
+            modules.update(set(_import_module(package, deactivated_components)))
             # get aware of on-component loading config changes so that
             # we can act if there are new deactivaated components.
-            deactivated_components.extend(self.cfg['deactivated_components'])
+            deactivated_components.update(self.cfg['deactivated_components'])
+
+        components = set(m[1] for m in
+            sum((getmembers(mod, _is_interface) for mod in modules), [])
+            if self.component_is_activated(m[1], deactivated_components))
 
         return self.load_components(components)
 

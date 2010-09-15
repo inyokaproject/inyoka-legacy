@@ -237,10 +237,6 @@
   background-image: url('../img/icons/small/pastebin.png') !important;
 }
 
-.tagcloud a.tag {
-  text-decoration: none;
-}
-
 .wiki_revisions {
   background-image: url('../img/icons/small/wiki.png') !important;
 }

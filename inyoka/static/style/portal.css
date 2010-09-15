@@ -21,8 +21,18 @@
   text-decoration: none;
 }
 
+.tagcloud {
+  text-align: justify;
+  white-space: normal;
+}
+
+.tagcloud a.tag {
+  color: #777;
+  text-decoration: none;
+}
+
 #portal .itemlist a:hover,
-.tagcloud a:hover {
+.tagcloud a.tag:hover {
   color: #000;
 }
 
@@ -43,14 +53,4 @@
 
 #portal ul li {
   list-style: none;
-}
-
-.tagcloud {
-  text-align: justify;
-  white-space: normal;
-}
-
-.tagcloud a.tag {
-  color: #777;
-  text-decoration: none;
 }

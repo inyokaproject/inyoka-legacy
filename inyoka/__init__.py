@@ -12,12 +12,14 @@
 """
 import os
 import re
+import sys
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from operator import methodcaller
 from werkzeug import find_modules, import_string, cached_property
 from inyoka.context import LocalProperty
 from inyoka.core.config import ListConfigField
+from inyoka.utils.hgutil import iui, hgcmd
 
 
 #: Inyoka revision present in the current mercurial working copy
@@ -288,31 +290,21 @@ class ApplicationContext(object):
 def _bootstrap():
     """Get the Inyoka version and store it."""
     global INYOKA_REVISION
-    from subprocess import Popen, PIPE
-
-    # get Inyoka revision
-    try:
-        hg = Popen(['hg', 'id', '-i', '-n'], stdout=PIPE, stderr=PIPE,
-                   stdin=PIPE, cwd=os.path.dirname(__file__))
-    except OSError:
-        pass
-    else:
-        hg.stdin.close()
-        hg.stderr.close()
-        rev = hg.stdout.readline()
-        hg.stdout.close()
-        if hg.wait() == 0:
-            m = re.match('^(?P<id>[0-9a-z]+)(?P<mod>\+?) (?P<num>[0-9]+)\+?$',
-                         rev)
-            if m:
-                INYOKA_REVISION = '%(num)s:%(id)s%(mod)s' % m.groupdict()
 
     # the path to the contents of the Inyoka module
     conts = os.environ.setdefault('INYOKA_MODULE',
                 realpath(join(dirname(__file__))))
     # the path to the Inyoka instance folder
-    os.environ['INYOKA_INSTANCE'] = realpath(join(conts, pardir))
+    os.environ['INYOKA_INSTANCE'] = instance = realpath(join(conts, pardir))
     os.environ['CELERY_LOADER'] = 'inyoka.core.celery_support.CeleryLoader'
+
+    ui = iui()
+    hgcmd.identify(ui, None, join(conts, '..'), num=True, id=True)
+    rev = ui.get_output()
+    id, num = rev.split()
+    INYOKA_REVISION = '%(num)s:%(id)s' % {
+        'num': num[:-1], 'id': id[:-1]
+    }
 
     #: bind the context
     ctx = ApplicationContext()

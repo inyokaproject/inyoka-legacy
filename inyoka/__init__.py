@@ -303,7 +303,7 @@ def _bootstrap():
     rev = ui.get_output()
     id, num = rev.split()
     INYOKA_REVISION = '%(num)s:%(id)s' % {
-        'num': num[:-1], 'id': id[:-1]
+        'num': num.rstrip('+'), 'id': id.rstrip('+')
     }
 
     #: bind the context

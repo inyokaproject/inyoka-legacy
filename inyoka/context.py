@@ -3,9 +3,10 @@
     inyoka.context
     ~~~~~~~~~~~~~~
 
-    Thread Locals
+    Some internal definitions that should not be accessable by remote
+    interfaces.  Those are exported by :mod:`inyoka.core.api`.
 
-    Use these thread locals with caution and only where
+    Use the context locals with caution and only where
     you don't have access to the current request/application
     object at all.  If there are easy ways of *not* using
     thread locals, you should not use them.
@@ -13,31 +14,36 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from functools import partial
+from werkzeug import LocalStack, LocalProxy, Local, LocalManager
 
-from werkzeug import Local, LocalManager
 
-# Thread Locals
+def _lookup_object(name):
+    top = _request_ctx_stack.top
+    if top is None:
+        raise RuntimeError('working outside of request context')
+    return getattr(top, name)
+
+
+# Context Locals
 # -------------
 #
-# Use these thread locals with caution and only where
+# Use these context locals with caution and only where
 # you don't have access to the current request/application
 # object at all.  If there are easy ways of *not* using
-# thread locals, you should not use them.
-#
-# Please also note that you should *ever* set the `local` proxy
-# values to `None` before initializing the proxy.  This adds some
-# proper “not defined” manner by returning `None` instead of raising
-# an RuntimeException
-#
+# context locals, you should not use them.
+
+_request_ctx_stack = LocalStack()
 local = Local()
 local_manager = LocalManager(local)
 
+# Proxy definitions of commonly used objects.
 ctx = local('ctx')
-request = local('request')
+request = LocalProxy(partial(_lookup_object, 'request'))
 
 
 class LocalProperty(object):
-    """Class/Instance property that returns something from the local.
+    """Class/Instance property that returns something from the local stack.
 
     Note that if some value is not present in the current thread local
     it does *not* raise an AttributeError but returns `None`.
@@ -46,5 +52,11 @@ class LocalProperty(object):
     def __init__(self, name):
         self.__name__ = name
 
+    #TODO: evaluate if we need that at all, or at least if we want to
+    #      be able to not raise a RuntimeError.
     def __get__(self, obj, type=None):
-        return getattr(local, self.__name__, None)
+        try:
+            object = _lookup_object(self.__name__)
+        except RuntimeError:
+            object = None
+        return object

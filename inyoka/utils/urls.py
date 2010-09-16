@@ -30,7 +30,7 @@ def make_full_domain(subdomain=None, path=None):
 
     """
     subdomain, path = (subdomain or u''), (path or u'')
-    adapter = ctx.dispatcher.url_adapter
+    adapter = ctx.dispatcher.get_url_adapter()
     path = path.strip('/')
 
     return u'%s://%s%s%s/%s' % (

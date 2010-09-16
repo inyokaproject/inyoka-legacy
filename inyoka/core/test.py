@@ -26,10 +26,10 @@ from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
 from inyoka.l10n import parse_timestamp, parse_timeonly
-from inyoka.context import ctx
+from inyoka.context import ctx, _request_ctx_stack
 from inyoka.core import database
 from inyoka.core.database import db
-from inyoka.core.http import Response, Request, get_bound_request
+from inyoka.core.http import Response, Request
 from inyoka.core.resource import IResourceManager
 from inyoka.core.exceptions import ImproperlyConfigured
 from inyoka.utils.logger import logger
@@ -103,6 +103,36 @@ class TestResourceManager(IResourceManager):
             models = [models]
         cls.models.extend(models)
 
+
+class InyokaTestClient(Client):
+    """Works like a regular Werkzeug test client but has some
+    knowledge about how Inyoka works to defer the cleanup of the
+    request context stack to the end of a with body when used
+    in a with statement.
+    """
+
+    preserve_context = context_preserved = False
+
+    def open(self, *args, **kwargs):
+        if self.context_preserved:
+            _request_ctx_stack.pop()
+            self.context_preserved = False
+        kwargs.setdefault('environ_overrides', {}) \
+            ['inyoka._preserve_context'] = self.preserve_context
+        old = _request_ctx_stack.top
+        try:
+            return Client.open(self, *args, **kwargs)
+        finally:
+            self.context_preserved = _request_ctx_stack.top is not old
+
+    def __enter__(self):
+        self.preserve_context = True
+        return self
+
+    def __exit__(self, exc_type, exc_value, tb):
+        self.preserve_context = False
+        if self.context_preserved:
+            _request_ctx_stack.pop()
 
 # Fixture Framework
 #
@@ -413,8 +443,7 @@ class ViewTestCase(DatabaseTestCase):
         """Setup the test client and url and base domain values"""
         super(ViewTestCase, self)._pre_setup()
 
-        self.client = Client(ctx.dispatcher, response_wrapper=TestResponse,
-                             use_cookies=True)
+        self.client = InyokaTestClient(ctx.dispatcher, TestResponse, use_cookies=True)
         self.base_domain = ctx.cfg['base_domain_name']
         self.base_url = get_base_url_for_controller(self.controller or 'test')
 
@@ -489,9 +518,7 @@ class ViewTestCase(DatabaseTestCase):
         function accepts the same arguments).
         """
         kwargs['base_url'] = self.base_url
-        req = get_bound_request(ctx.dispatcher.request_class,
-                                create_environ(*args, **kwargs))
-        return req
+        return ctx.dispatcher.test_request_context(*args, **kwargs)
 
     # Advanced Unittest methods for easy unittests
 

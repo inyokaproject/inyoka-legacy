@@ -92,45 +92,47 @@ class CsrfTester(ViewTestCase):
     controller = PortalController
 
     def test_csrf_protection_success(self):
-        request = self.get_new_request()
-        form = DummyForm2(request.form)
-        assert_true(form.validate())
+        with self.get_new_request() as c:
+            form = DummyForm2(c.request.form)
+            assert_true(form.validate())
 
     @raises(BadRequest)
     def test_csrf_protection_failure(self):
         _old = ctx.cfg['enable_csrf_checks']
         ctx.cfg['enable_csrf_checks'] = True
-        request = self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalid'})
-        form = DummyForm2(request.form)
-        form.validate()
-        ctx.cfg['enable_csrf_checks'] = _old_value
+        args = {'path': '/login', 'method': 'POST',
+                'data': {'csrf_token': 'invalid'}}
+        with self.get_new_request(**args) as c:
+            form = DummyForm2(c.request.form)
+            form.validate()
+            ctx.cfg['enable_csrf_checks'] = _old
 
     def test_token_set_on_session(self):
-        req = self.get_new_request()
-        token = get_csrf_token(req)
-        eq_(token, req.session['csrf_token'])
+        with self.get_new_request() as c:
+            token = get_csrf_token(c.request)
+            eq_(token, c.request.session['csrf_token'])
 
     def test_csrf_disabled(self):
         # test for globally disabled csrf check
         _old_value = ctx.cfg['enable_csrf_checks']
         ctx.cfg['enable_csrf_checks'] = False
-        request = self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalid'})
-        form = DummyForm2(request.form)
-        form.validate()
+        with self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalid'}) as c:
+            form = DummyForm2(c.request.form)
+            form.validate()
 
         # test that disabling on a form instance works
         ctx.cfg['enable_csrf_checks'] = True
-        request = self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalud'})
-        form = DummyForm2(request.form)
-        assert_raises(BadRequest, form.validate)
-        form.csrf_disabled = True
-        assert_true(form.validate())
+        with self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalud'}) as c:
+            form = DummyForm2(c.request.form)
+            assert_raises(BadRequest, form.validate)
+            form.csrf_disabled = True
+            assert_true(form.validate())
 
         # test for no csrf check on xhr requests
-        request = self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalid'},
-                                       environ_overrides={'HTTP_X_REQUESTED_WITH': 'XmlHttpRequest'})
-        form = DummyForm2(request.form)
-        assert_true(form.validate())
+        with self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalid'},
+                                  environ_overrides={'HTTP_X_REQUESTED_WITH': 'XmlHttpRequest'}) as c:
+            form = DummyForm2(c.request.form)
+            assert_true(form.validate())
 
         ctx.cfg['enable_csrf_checks'] = _old_value
 

@@ -16,7 +16,7 @@ from werkzeug import Request as BaseRequest, Response as BaseResponse, \
     redirect, cached_property
 from werkzeug.contrib.securecookie import SecureCookie
 from markupsafe import escape
-from inyoka.context import ctx, local
+from inyoka.context import ctx
 from inyoka.core.routing import href
 
 
@@ -27,18 +27,6 @@ class FlashMessage(namedtuple('FlashMessage', 'text success id html')):
         if not self.html:
             return escape(self.text)
         return self.text
-
-
-def get_bound_request(cls, environ):
-    """Initialize the request right after it was bound to the thread local.
-
-    This makes it possible that the requests __init__ method can access
-    thread local objects.
-    """
-    request = object.__new__(cls)
-    local.request = request
-    request.__init__(environ)
-    return request
 
 
 class Session(SecureCookie):
@@ -61,6 +49,22 @@ class Request(BaseRequest):
 
     """
 
+    #: the internal URL rule that matched the request.  This can be
+    #: useful to inspect which methods are allowed for the URL from
+    #: a before/after handler (``request.url_rule.methods``) etc.
+    #:
+    url_rule = None
+
+    #: a dict of view arguments that matched the request.  If an exception
+    #: happened when matching, this will be `None`.
+    view_args = None
+
+    #: if matching the URL failed, this is the exception that will be
+    #: raised / was raised as part of the request handling.  This is
+    #: usually a :exc:`~werkzeug.exceptions.NotFound` exception or
+    #: something similar.
+    routing_exception = None
+
     def __init__(self, *args, **kwargs):
         BaseRequest.__init__(self, *args, **kwargs)
         #: Logged database queries
@@ -73,6 +77,16 @@ class Request(BaseRequest):
         secret = ctx.cfg['secret_key'].encode('utf-8')
         name = ctx.cfg['cookie_name']
         return Session.load_cookie(self, name, secret_key=secret)
+
+    @property
+    def endpoint(self):
+        """The endpoint that matched the request.  This in combination with
+        :attr:`view_args` can be used to reconstruct the same or a
+        modified URL.  If an exception happened when matching, this will
+        be `None`.
+        """
+        if self.url_rule is not None:
+            return self.url_rule.endpoint
 
     @property
     def flash_messages(self):

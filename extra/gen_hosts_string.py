@@ -12,4 +12,4 @@
 from urllib2 import splitport
 from inyoka.core.api import ctx
 
-print u' '.join((sub +'.' if sub else sub) + splitport(ctx.dispatcher.url_adapter.server_name)[0] for sub in sorted(set(rule.subdomain for rule in ctx.dispatcher.url_map.iter_rules())))
+print u' '.join((sub +'.' if sub else sub) + splitport(ctx.dispatcher.get_url_adapter().server_name)[0] for sub in sorted(set(rule.subdomain for rule in ctx.dispatcher.url_map.iter_rules())))

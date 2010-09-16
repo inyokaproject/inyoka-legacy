@@ -89,7 +89,7 @@ class ICoreResourceManager(IResourceManager):
 
 from inyoka.core.database import db
 from inyoka.core.auth.decorators import login_required
-from inyoka.core.http import Request, Response, redirect_to, redirect, get_bound_request
+from inyoka.core.http import Request, Response, redirect_to, redirect
 from inyoka.core.routing import IController, IServiceProvider
 from inyoka.core.routing import view, service, Rule, href
 from inyoka.core.templating import templated, render_template

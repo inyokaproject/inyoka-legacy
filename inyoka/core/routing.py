@@ -275,8 +275,8 @@ def href(endpoint, **values):
         _anchor = values.pop('_anchor', None)
 
 
-    url = ctx.dispatcher.url_adapter.build(endpoint, values,
-                                           force_external=_external)
+    url = ctx.dispatcher.get_url_adapter() \
+        .build(endpoint, values, force_external=_external)
     if _anchor is not None:
         url += '#' + url_quote(_anchor)
     return unicode(url)

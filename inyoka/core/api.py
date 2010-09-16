@@ -6,26 +6,17 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-#TODO: Sort everything here a bit and define the API properly.
-#      Maybe this module should not do anything more than all other
-#      apps `api` modules but define the interfaces and the resource-components
-#      and should not import other core packages.
-#      This way we don't get cluttered
-
-# Imports for easy API access and our import system
+import os
+from os.path import join
 from inyoka import Interface, deactivated_components
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
-
-
-from inyoka.core.models import Cache, Confirm, Tag, Storage
-
-import os
-from os.path import join
 from inyoka.core.config import BooleanConfigField, TextConfigField, \
     IntegerConfigField, DottedConfigField, ListConfigField
+from inyoka.core.models import Cache, Confirm, Tag, Storage
 
 
+#: The default path to media files.
 _default_media_data_path = join(os.environ['INYOKA_MODULE'], 'media')
 
 
@@ -83,10 +74,11 @@ class ICoreResourceManager(IResourceManager):
     #: Exclude inyoka.core.tasks per default to fix the celery loader
     deactivated_components.default.append('inyoka.core.tasks')
 
+    #: register core models
     models = [Cache, Confirm, Tag, Storage]
 
 
-
+# Import shortcuts
 from inyoka.core.database import db
 from inyoka.core.auth.decorators import login_required
 from inyoka.core.http import Request, Response, redirect_to, redirect

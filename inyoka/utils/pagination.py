@@ -50,7 +50,7 @@ class Pagination(object):
     """
 
     # translatable strings for the pagination buttons
-    _comma = '<span class="comma">%s</span>' % escape(_(u', '))
+    _comma = u'<span class="comma">%s</span>' % escape(_(u', '))
     _next = escape(_(u'next »'))
     _prev = escape(_(u'« previous'))
     _ellipsis = escape(_(u'…'))

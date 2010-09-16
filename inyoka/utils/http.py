@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from markupsafe import escape
-from jinja2.utils import escape
 
 from inyoka.core.api import render_template, Response
 from inyoka.portal.controllers import context_modifier

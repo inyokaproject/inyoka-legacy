@@ -12,7 +12,7 @@
 """
 import re
 from htmlentitydefs import name2codepoint
-from jinja2.utils import escape
+from markupsafe import escape
 
 
 _entities = {'\n': '&#10;', '\r': '&#13;', '\t': '&#9;'}

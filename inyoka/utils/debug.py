@@ -10,7 +10,8 @@
 """
 import re
 import sys
-from werkzeug import escape, html
+from markupsafe import escape
+from werkzeug import html
 
 
 _body_end_re = re.compile(r'</\s*(body|html)(?i)')

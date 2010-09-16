@@ -82,7 +82,7 @@ class Comment(db.Model):
     rendered_text = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    author = db.relationship(User,backref=db.backref('comments', lazy='dynamic'))
+    author = db.relationship(User, backref=db.backref('comments', lazy='dynamic'))
     article_id = db.Column(db.Integer, db.ForeignKey('news_article.id'))
 
     def get_url_values(self, action='view'):

@@ -11,8 +11,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
-import re
-import sys
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from operator import methodcaller
@@ -295,9 +293,10 @@ def _bootstrap():
     conts = os.environ.setdefault('INYOKA_MODULE',
                 realpath(join(dirname(__file__))))
     # the path to the Inyoka instance folder
-    os.environ['INYOKA_INSTANCE'] = instance = realpath(join(conts, pardir))
+    os.environ['INYOKA_INSTANCE'] = realpath(join(conts, pardir))
     os.environ['CELERY_LOADER'] = 'inyoka.core.celery_support.CeleryLoader'
 
+    # get the `INYOKA_REVISION` using the mercurial python api
     ui = iui()
     hgcmd.identify(ui, None, join(conts, '..'), num=True, id=True)
     rev = ui.get_output()

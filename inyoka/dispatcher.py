@@ -137,7 +137,9 @@ class RequestDispatcher(object):
         request and does the request/response middleware wrapping.
         """
         try:
-            urls = self.get_url_adapter(request.environ)
+            # Test if we are on the correct base domain and do redirect
+            # if we're using something like `localhost` instead.
+            url_adapter = self.get_url_adapter(request.environ)
         except ValueError:
             # we cannot use make_full_domain() here because the url adapter
             # is used there too.  So we raise a new `ValueError` here too.
@@ -163,6 +165,11 @@ class RequestDispatcher(object):
                     raise ValueError('View function did not return a response')
             except db.NoResultFound:
                 raise NotFound()
+
+        except NotFound as err:
+            if ctx.cfg['debug']:
+                return notfound(request, url_adapter)
+            response = err.get_response(request.environ)
 
         except HTTPException as err:
             response = err.get_response(request.environ)

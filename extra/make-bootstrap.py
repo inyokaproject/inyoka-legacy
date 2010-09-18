@@ -25,7 +25,7 @@ from os import path
 
 pil_version = '1.1.7'
 cldr_version = '1.7.2'
-jinja_version = '2.5'
+jinja_version = '2.5.2'
 
 
 def install_requirements(home_dir, requirements):

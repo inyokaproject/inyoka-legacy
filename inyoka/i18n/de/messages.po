@@ -2,19 +2,19 @@
 # Copyright (C) 2009 The Inyoka Team
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-09-18 03:42+0200\n"
+"POT-Creation-Date: 2010-09-18 03:58+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
 
 #: wtforms/fields.py:403
@@ -27,7 +27,9 @@ msgstr "Keine gültige Auswahl"
 
 #: wtforms/fields.py:436
 msgid "Invalid choice(s): one or more data inputs could not be coerced"
-msgstr "Ungültige Wahl(en): eine oder mehrere Eingaben konnten nicht verarbeitet werden"
+msgstr ""
+"Ungültige Wahl(en): eine oder mehrere Eingaben konnten nicht verarbeitet "
+"werden"
 
 #: wtforms/fields.py:443
 #, python-format
@@ -141,8 +143,12 @@ msgid "E-Mail"
 msgstr "E-Mail"
 
 #: inyoka/core/serializer.py:139
-msgid "Could not detect format.  You have to specify the format as query argument or in the accept HTTP header."
-msgstr "Konnte das Format nicht erkennen.  Du musst das Format als Query-Argument oder im ACCEPT HTTP-Header angeben."
+msgid ""
+"Could not detect format.  You have to specify the format as query argument "
+"or in the accept HTTP header."
+msgstr ""
+"Konnte das Format nicht erkennen.  Du musst das Format als Query-Argument "
+"oder im ACCEPT HTTP-Header angeben."
 
 #: inyoka/core/serializer.py:157
 #, python-format
@@ -215,8 +221,12 @@ msgid "Internal parser error: "
 msgstr "Interner Parser-Fehler:"
 
 #: inyoka/core/markup/parser.py:47
-msgid "The parser could not process the text because it exceeded the maximum allowed depth for nested elements"
-msgstr "Der Parser konnte den Text nicht verarbeiten, da die maximale Tiefe für verschachtelte Elemente überschritten wurde"
+msgid ""
+"The parser could not process the text because it exceeded the maximum "
+"allowed depth for nested elements"
+msgstr ""
+"Der Parser konnte den Text nicht verarbeiten, da die maximale Tiefe für "
+"verschachtelte Elemente überschritten wurde"
 
 #: inyoka/forum/admin.py:20 inyoka/forum/templates/base.html:2
 #: inyoka/forum/templates/index.html:4 inyoka/templates/base.html:45
@@ -267,8 +277,7 @@ msgstr "Neue Frage"
 #: inyoka/forum/templates/admin/forum.html:11
 #: inyoka/news/templates/edit_comment.html:9
 #: inyoka/news/templates/admin/article_edit.html:16
-#: inyoka/paste/templates/index.html:9
-#: inyoka/paste/templates/admin/edit.html:21
+#: inyoka/paste/templates/index.html:9 inyoka/paste/templates/admin/edit.html:21
 #: inyoka/portal/templates/admin/tag_edit.html:14
 #: inyoka/portal/templates/usercp/profile.html:9
 #: inyoka/wiki/templates/edit.html:10
@@ -279,8 +288,7 @@ msgstr "Abschicken"
 msgid "Welcome to our bulletin board!"
 msgstr "Wilkommen in unserem Forum!"
 
-#: inyoka/forum/templates/index.html:14
-#: inyoka/forum/templates/questions.html:39
+#: inyoka/forum/templates/index.html:14 inyoka/forum/templates/questions.html:39
 msgid "All Questions"
 msgstr "Alle Fragen"
 
@@ -288,8 +296,7 @@ msgstr "Alle Fragen"
 msgid "asked"
 msgstr "gefragt"
 
-#: inyoka/forum/templates/question.html:6
-#: inyoka/forum/templates/questions.html:84
+#: inyoka/forum/templates/question.html:6 inyoka/forum/templates/questions.html:84
 msgid "by"
 msgstr "von"
 
@@ -300,20 +307,16 @@ msgid_plural "%(num)d visits"
 msgstr[0] "%(num)d mal besucht"
 msgstr[1] "%(num)d mal besucht"
 
-#: inyoka/forum/templates/question.html:18
-#: inyoka/forum/templates/question.html:28
-#: inyoka/forum/templates/question.html:82
-#: inyoka/forum/templates/question.html:92
+#: inyoka/forum/templates/question.html:18 inyoka/forum/templates/question.html:28
+#: inyoka/forum/templates/question.html:82 inyoka/forum/templates/question.html:92
 msgid "vote revoke"
 msgstr "Stimme zurückziehen"
 
-#: inyoka/forum/templates/question.html:22
-#: inyoka/forum/templates/question.html:86
+#: inyoka/forum/templates/question.html:22 inyoka/forum/templates/question.html:86
 msgid "vote up"
 msgstr "Positiv bewerten"
 
-#: inyoka/forum/templates/question.html:32
-#: inyoka/forum/templates/question.html:96
+#: inyoka/forum/templates/question.html:32 inyoka/forum/templates/question.html:96
 msgid "vote down"
 msgstr "Negativ bewerten"
 
@@ -538,11 +541,15 @@ msgstr "Du wurdest erfolgreich für Benachrichtigungen neuer Artikel gelöscht."
 
 #: inyoka/news/controllers.py:228
 msgid "You have successfully been subscribed to new comments on this article."
-msgstr "Du wurdest erfolgreich für Benachrichtigungen neuer Kommentare dieses Artikels registriert."
+msgstr ""
+"Du wurdest erfolgreich für Benachrichtigungen neuer Kommentare dieses "
+"Artikels registriert."
 
 #: inyoka/news/controllers.py:231
 msgid "You have successfully been unsubscribed from new comments on this article."
-msgstr "Du wurdest erfolgreich für Benachrichtigungen neuer Kommentare dieses Artikels gelöscht."
+msgstr ""
+"Du wurdest erfolgreich für Benachrichtigungen neuer Kommentare dieses "
+"Artikels gelöscht."
 
 #: inyoka/news/controllers.py:249
 #, python-format
@@ -567,8 +574,12 @@ msgid "Author"
 msgstr "Author"
 
 #: inyoka/news/forms.py:32
-msgid "To quote another comment use <em>@comment_number</em>. This is automatically used if you click “answer”."
-msgstr "Um einen anderen Kommentar zu zitieren benutze <em>@kommentar_nummer</em>. Dies geschieht automatisch wenn du „Antworten” klickst."
+msgid ""
+"To quote another comment use <em>@comment_number</em>. This is automatically"
+" used if you click “answer”."
+msgstr ""
+"Um einen anderen Kommentar zu zitieren benutze <em>@kommentar_nummer</em>. "
+"Dies geschieht automatisch wenn du „Antworten” klickst."
 
 #: inyoka/news/models.py:29 inyoka/news/templates/admin/index.html:5
 msgid "Articles"
@@ -627,8 +638,12 @@ msgstr "Aktuelle Artikel"
 
 #: inyoka/news/templates/detail.html:10
 #, python-format
-msgid "written by <a href=\"%(author_url)s\">%(author_name)s</a> on %(article_pubdate)s %(article_pubtime)s"
-msgstr "geschrieben von <a href=\"%(author_url)s\">%(author_name)s</a> %(article_pubdate)s %(article_pubtime)s"
+msgid ""
+"written by <a href=\"%(author_url)s\">%(author_name)s</a> on "
+"%(article_pubdate)s %(article_pubtime)s"
+msgstr ""
+"geschrieben von <a href=\"%(author_url)s\">%(author_name)s</a> "
+"%(article_pubdate)s %(article_pubtime)s"
 
 #: inyoka/news/templates/detail.html:27 inyoka/news/templates/detail.html:50
 #: inyoka/paste/templates/browse.html:24
@@ -764,24 +779,31 @@ msgstr "Einträge vergleichen"
 #: inyoka/paste/templates/compare_paste.html:6
 #, python-format
 msgid ""
-"Differences between the pastes <a href=\"%(old_link)s\">%(old_title)s</a> (%(old_date)s)\n"
-"    and <a href=\"%(new_link)s\">%(new_title)s</a> (%(new_date)s). Download as <a href=\"%(udiff_link)s\">unified diff</a>."
+"Differences between the pastes <a href=\"%(old_link)s\">%(old_title)s</a> "
+"(%(old_date)s)\n"
+"    and <a href=\"%(new_link)s\">%(new_title)s</a> (%(new_date)s). Download "
+"as <a href=\"%(udiff_link)s\">unified diff</a>."
 msgstr ""
-"Unterschiede zwischen den Einträgen <a href=\"%(old_link)s\">%(old_title)s</a> (%(old_date)s)\n"
-"    und <a href=\"%(new_link)s\">%(new_title)s</a> (%(new_date)s).  Lade diese als <a href=\"%(udiff_link)s\">Unified Diff</a> herunter."
+"Unterschiede zwischen den Einträgen <a "
+"href=\"%(old_link)s\">%(old_title)s</a> (%(old_date)s)\n"
+"    und <a href=\"%(new_link)s\">%(new_title)s</a> (%(new_date)s).  Lade "
+"diese als <a href=\"%(udiff_link)s\">Unified Diff</a> herunter."
 
 #: inyoka/paste/templates/compare_paste.html:17
 msgid "The two pastes are identical."
 msgstr "Die beiden Einträge sind identisch."
 
-#: inyoka/paste/templates/paste_tree.html:2
-#: inyoka/paste/templates/view.html:15
+#: inyoka/paste/templates/paste_tree.html:2 inyoka/paste/templates/view.html:15
 msgid "Paste Tree"
 msgstr "Paste-Baum"
 
 #: inyoka/paste/templates/paste_tree.html:4
-msgid "Here you can see the tree of paste replies. The paste you're coming from is highlighted."
-msgstr "Hier siehst du den Antworten-Baum.  Der Eintrag von dem du kommst ist hervorgehoben."
+msgid ""
+"Here you can see the tree of paste replies. The paste you're coming from is "
+"highlighted."
+msgstr ""
+"Hier siehst du den Antworten-Baum.  Der Eintrag von dem du kommst ist "
+"hervorgehoben."
 
 #: inyoka/paste/templates/view.html:6
 #, python-format
@@ -817,8 +839,8 @@ msgstr "Paste Editieren"
 msgid "Pastebin Admin"
 msgstr "Pastebin Admin"
 
-#: inyoka/paste/templates/admin/edit.html:13
-#: inyoka/wiki/templates/base.html:18 inyoka/wiki/templates/edit.html:3
+#: inyoka/paste/templates/admin/edit.html:13 inyoka/wiki/templates/base.html:18
+#: inyoka/wiki/templates/edit.html:3
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -855,8 +877,7 @@ msgstr "Aktivierung erfolgreich, du kannst dich nun mit deinen Benutzerdaten anm
 msgid "User is unknown or the password is not correct."
 msgstr "Der Benutzer existiert nicht oder das Passwort ist falsch."
 
-#: inyoka/portal/auth.py:112 inyoka/portal/auth.py:144
-#: inyoka/portal/auth.py:188
+#: inyoka/portal/auth.py:112 inyoka/portal/auth.py:144 inyoka/portal/auth.py:188
 msgid "You are now logged in."
 msgstr "Du bist nun angemeldet."
 
@@ -1039,8 +1060,7 @@ msgstr "Auf dieser Seite siehst du alle registrierten Benutzer."
 msgid "Grouplist"
 msgstr "Gruppenliste"
 
-#: inyoka/portal/templates/groups.html:14
-#: inyoka/portal/templates/users.html:12
+#: inyoka/portal/templates/groups.html:14 inyoka/portal/templates/users.html:12
 msgid "#"
 msgstr "#"
 
@@ -1054,8 +1074,16 @@ msgstr "Wilkommen bei Inyoka"
 
 #: inyoka/portal/templates/index.html:5
 #, python-format
-msgid "Inyoka is a portal software that integrates a complete News, Wiki and Bulletin Board system next to a pastebin application.  It's written in <a href=\"%(python_link)s\">Python</a> and uses various opensource technologies."
-msgstr "Inyoka ist eine Portal-Software, die eine vollständige News, Wiki und Bulletin Board System integriert. Es ist in <a href=\"%(python_link)s\">Python</a> geschrieben und benutzt verschiedene OpenSource Technologien."
+msgid ""
+"Inyoka is a portal software that integrates a complete News, Wiki and "
+"Bulletin Board system next to a pastebin application.  It's written in <a "
+"href=\"%(python_link)s\">Python</a> and uses various opensource "
+"technologies."
+msgstr ""
+"Inyoka ist eine Portal-Software, die eine vollständige News, Wiki und "
+"Bulletin Board System integriert. Es ist in <a "
+"href=\"%(python_link)s\">Python</a> geschrieben und benutzt verschiedene "
+"OpenSource Technologien."
 
 #: inyoka/portal/templates/index.html:11
 msgid "Latest Content"
@@ -1270,8 +1298,12 @@ msgstr "« Zurück"
 
 #: inyoka/utils/sortable.py:98
 #, python-format
-msgid "The selected criterium “%s” is not available, falling back to default ordering"
-msgstr "Das ausgewählte Kriterium „%s” ist nicht verfügbar, benutze Standardsortierung"
+msgid ""
+"The selected criterium “%s” is not available, falling back to default "
+"ordering"
+msgstr ""
+"Das ausgewählte Kriterium „%s” ist nicht verfügbar, benutze "
+"Standardsortierung"
 
 #: inyoka/wiki/controllers.py:58 inyoka/wiki/controllers.py:60
 msgid "Invalid revision specified."
@@ -1360,13 +1392,28 @@ msgstr "Revisionen vergleichen"
 
 #: inyoka/wiki/templates/diff.html:9
 #, python-format
-msgid "The following table shows the article's differences between <a href=\"%(revlink1)s\">the revision of %(date1)s</a> (created by <a href=\"%(userlink1)s\">%(user1)s</a>) and <a href=\"%(revlink2)s\">the revision of %(date2)s</a> (created by <a href=\"%(userlink2)s\">%(user2)s</a>)."
-msgstr "Die folgende Tabelle zeigt die Unterschiede zwischen <a href=\"%(revlink1)s\">der Revision vom %(date1)s</a> (erstellt von <a href=\"%(userlink1)s\">%(user1)s</a>) und <a href=\"\"%(revlink2)s\"> die Revision vom %(date2)s</a> (erstellt von <a href=\"%(userlink2)s\">%(user2)s</a>."
+msgid ""
+"The following table shows the article's differences between <a "
+"href=\"%(revlink1)s\">the revision of %(date1)s</a> (created by <a "
+"href=\"%(userlink1)s\">%(user1)s</a>) and <a href=\"%(revlink2)s\">the "
+"revision of %(date2)s</a> (created by <a "
+"href=\"%(userlink2)s\">%(user2)s</a>)."
+msgstr ""
+"Die folgende Tabelle zeigt die Unterschiede zwischen <a "
+"href=\"%(revlink1)s\">der Revision vom %(date1)s</a> (erstellt von <a "
+"href=\"%(userlink1)s\">%(user1)s</a>) und <a href=\"\"%(revlink2)s\"> die "
+"Revision vom %(date2)s</a> (erstellt von <a "
+"href=\"%(userlink2)s\">%(user2)s</a>."
 
 #: inyoka/wiki/templates/diff.html:21
 #, python-format
-msgid "You may also download a <a href=\"%(udiff)s\">Unified Diff</a> of these changes or see the <a href=\"%(history)s\">list of recent changes</a>."
-msgstr "Du kannst auch einen <a href=\"%(udiff)s\">Unified Diff</a> dieser Änderungen herunterladen oder dir die <a href=\"%(history)s\">Liste der letzten Änderungen</a>anschauen."
+msgid ""
+"You may also download a <a href=\"%(udiff)s\">Unified Diff</a> of these "
+"changes or see the <a href=\"%(history)s\">list of recent changes</a>."
+msgstr ""
+"Du kannst auch einen <a href=\"%(udiff)s\">Unified Diff</a> dieser "
+"Änderungen herunterladen oder dir die <a href=\"%(history)s\">Liste der "
+"letzten Änderungen</a>anschauen."
 
 #: inyoka/wiki/templates/history.html:10
 msgid "Created at"
@@ -1387,3 +1434,4 @@ msgstr "Die gesuchte Seite wurde nicht gefunden."
 #: inyoka/wiki/templates/not_found.html:11
 msgid "Create it."
 msgstr "Erstellen."
+

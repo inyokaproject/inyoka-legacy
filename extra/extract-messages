@@ -11,9 +11,11 @@
 """
 from os import path, makedirs
 from optparse import OptionParser
+from werkzeug import import_string
 from babel.messages import Catalog
 from babel.messages.extract import extract_from_dir
 from babel.messages.pofile import write_po
+import inyoka
 
 
 KEYWORDS = {
@@ -41,34 +43,29 @@ def strip_path(filename, base):
 
 def main():
     global parser
-    parser = OptionParser(usage='%prog [path]')
+    parser = OptionParser(usage='%prog [module]')
     options, args = parser.parse_args()
-    if not args:
-        print 'Extracting core strings'
-        root = path.abspath(path.join(path.dirname(__file__),
-                                      path.pardir, 'inyoka'))
-    elif len(args) == 1:
-        root = path.join(path.abspath(args[0]))
-        if not path.isdir(root):
-            parser.error('source folder missing')
-        print 'Extracting from', root
-    else:
-        parser.error('incorrent number of arguments')
 
+    print 'Extracting core strings'
+
+    modules = ('wtforms', 'inyoka')
+    root = path.abspath(path.join(*inyoka.__path__))
     catalog = Catalog(msgid_bugs_address=BUGS_ADDRESS,
                       copyright_holder=COPYRIGHT, charset='utf-8')
+    for module in modules:
+        modpath = path.abspath(path.join(*import_string(module).__path__))
 
-    def callback(filename, method, options):
-        if method != 'ignore':
-            print strip_path(filename, root)
+        def callback(filename, method, options):
+            if method != 'ignore':
+                print strip_path(filename, modpath)
 
-    extracted = extract_from_dir(root, METHODS, {}, KEYWORDS,
-                                 COMMENT_TAGS, callback=callback,
-                                 strip_comment_tags=True)
+        extracted = extract_from_dir(modpath, METHODS, {}, KEYWORDS,
+                                     COMMENT_TAGS, callback=callback,
+                                     strip_comment_tags=True)
 
-    for filename, lineno, message, comments in extracted:
-        catalog.add(message, None, [(strip_path(filename, root), lineno)],
-                    auto_comments=comments)
+        for filename, lineno, message, comments in extracted:
+            catalog.add(message, None, [(strip_path(filename, modpath), lineno)],
+                        auto_comments=comments)
 
     output_path = path.join(root, 'i18n')
     if not path.isdir(output_path):

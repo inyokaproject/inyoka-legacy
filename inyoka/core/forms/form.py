@@ -10,6 +10,7 @@
 """
 from uuid import uuid4
 from wtforms import Form as BaseForm
+from inyoka.i18n import get_translations
 from inyoka.core.forms import fields
 from inyoka.core.exceptions import BadRequest
 from inyoka.context import ctx
@@ -50,6 +51,10 @@ class Form(BaseForm):
     def __init__(self, formdata=None, *args, **kwargs):
         csrf_token = get_csrf_token()
         super(Form, self).__init__(formdata, csrf=csrf_token, *args, **kwargs)
+
+    def _get_translations(self):
+        """Hook our translations into wtforms"""
+        return get_translations()
 
     def validate_csrf(self, field):
         enabled = (ctx.cfg['enable_csrf_checks'] and

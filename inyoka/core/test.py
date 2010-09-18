@@ -11,7 +11,7 @@
 """
 import os
 import sys
-import unittest2
+import unittest
 import warnings
 import traceback
 from contextlib import contextmanager
@@ -345,7 +345,7 @@ class FixtureLoader(object):
         logger.error(msg)
 
 
-class TestCase(unittest2.TestCase):
+class TestCase(unittest.TestCase):
     """TestCase for the Inyoka test framework.
 
     A TestCase holds various test methods for unittesting and
@@ -639,14 +639,17 @@ class InyokaPlugin(cover.Coverage):
         Output code coverage report.
         """
         import coverage
+        from coverage.config import CoverageConfig
         coverage.stop()
         modules = [module for name, module in sys.modules.items()
                    if self.wantModuleCoverage(name, module)]
         html_reporter = coverage.html.HtmlReporter(coverage._the_coverage)
+        config = CoverageConfig()
+        config.html_dir = self.coverHtmlDir
         if self.coverHtmlDir:
             if not os.path.exists(self.coverHtmlDir):
                 os.makedirs(self.coverHtmlDir)
-            html_reporter.report(modules, self.coverHtmlDir)
+            html_reporter.report(modules, config)
 
 
 def refresh_database(func):

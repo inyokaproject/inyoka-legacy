@@ -8,16 +8,15 @@ Werkzeug==0.6.2
 amqplib==0.6.1
 anyjson==0.2.4
 carrot==0.10.5
-coverage==3.3.1
+coverage==3.4b2
 cssutils==0.9.7b3
 dnspython==1.7.1
 docutils==0.7
 feedparser==4.1
 html5lib==0.90
-importlib==1.0.2
 lxml==2.2.6
 mailer==0.5
-nose==0.11.3
+nose==0.11.4
 pycrypto==2.1.0
 pyparsing==1.5.3
 python-dateutil==1.5
@@ -27,7 +26,6 @@ translitcodec==0.1
 virtualenv==1.4.9
 wsgiref==0.1.2
 celery==2.0.0
-unittest2==0.5
 markupsafe==0.9.3
 blinker==1.1
 # We use the flickzeug trunk as there's no official release yet

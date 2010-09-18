@@ -19,7 +19,7 @@ except ImportError:
 
 
 EXTRA_TEXT = """
-import os
+import os, sys
 import tempfile, shutil
 from os import path
 
@@ -99,20 +99,6 @@ def babel_svn_repo_install(home_dir):
 
 
 def after_install(options, home_dir):
-    global FETCH_CMD
-    try:
-        call_subprocess(['which', 'wget'], show_stdout=False)
-        FETCH_CMD = ['wget']
-    except OSError:
-        # wget does not exist, try curl instead
-        try:
-            call_subprocess(['which', 'curl'], show_stdout=False)
-            FETCH_CMD = ['curl', '-L', '-O']
-        except OSError:
-            import sys
-            sys.stderr.write('\\nERROR: need either wget or curl\\n')
-            sys.exit(1)
-
     easy_install('setuptools', home_dir)
     easy_install('pip', home_dir)
     install_jinja2(home_dir)
@@ -137,15 +123,45 @@ def extend_parser(parser):
                       default='',
                       help='Path to a requirements file usable with pip')
 
+
+def adjust_options(options, args):
+    global FETCH_CMD, logger
+
+    verbosity = options.verbose - options.quiet
+    logger = Logger([(Logger.level_for_integer(2-verbosity), sys.stdout)])
+
+    dest_dir = path.abspath(args[0])
+
+    try:
+        call_subprocess(['which', 'wget'], show_stdout=False)
+        FETCH_CMD = ['wget']
+    except OSError:
+        # wget does not exist, try curl instead
+        try:
+            call_subprocess(['which', 'curl'], show_stdout=False)
+            FETCH_CMD = ['curl', '-L', '-O']
+        except OSError:
+            sys.stderr.write('\\nERROR: need either wget or curl\\n')
+            sys.exit(1)
+
+    folder = '/tmp/inyoka_virtualenv'
+    if not path.exists(folder):
+        os.mkdir(folder)
+        # checkout python distribution
+        call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/2.7/Python-2.7.tar.bz2'], cwd=folder)
+        call_subprocess(['tar', '-xjf', 'Python-2.7.tar.bz2'], cwd=folder)
+
+    python_folder = path.join(folder, 'Python-2.7')
+
+    # configure python
+    call_subprocess(['./configure', '--prefix=%s' % dest_dir], cwd=python_folder)
+    call_subprocess(['make'], cwd=python_folder)
+    call_subprocess(['make', 'install'], cwd=python_folder)
+
+    options.python = path.join(python_folder, 'python')
+
 """
-
-
-cmdlineparser = OptionParser()
-cmdlineparser.add_option('-p', '--python', dest='python',
-                         default='',
-                         help='python version to use (like 2.5)')
-
+import os
 
 if __name__ == '__main__':
-    (options, args) = cmdlineparser.parse_args()
-    print create_bootstrap_script(EXTRA_TEXT, python_version=options.python)
+    print create_bootstrap_script(EXTRA_TEXT)

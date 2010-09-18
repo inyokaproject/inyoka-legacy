@@ -209,12 +209,8 @@ def create_virtualenv(directory='../inyoka-testsuite', pyver=None, interpreter='
     :param directory: Where to create this virtual environment (folder must not exist).
     :param pyver: Which Python Version to use.
     """
-    if pyver is None:
-        pyver = ''
-    else:
-        pyver = '-p ' + pyver
-    local('%s %s %s > %s' % (interpreter,
-        _j('extra/make-bootstrap.py'), pyver, _j('bootstrap.py')), capture=False)
+    local('%s %s > %s' % (interpreter,
+        _j('extra/make-bootstrap.py'), _j('bootstrap.py')), capture=False)
     local('%s ./bootstrap.py --no-site-packages -r %s %s' % (interpreter,
         _j('requirements.txt'), directory), capture=False)
 

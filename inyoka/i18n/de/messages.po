@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-09-08 00:38+0200\n"
+"POT-Creation-Date: 2010-09-18 03:42+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -17,6 +17,120 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
 
+#: wtforms/fields.py:403
+msgid "Invalid Choice: could not coerce"
+msgstr ""
+
+#: wtforms/fields.py:410 wtforms/ext/appengine/fields.py:62
+msgid "Not a valid choice"
+msgstr ""
+
+#: wtforms/fields.py:436
+msgid "Invalid choice(s): one or more data inputs could not be coerced"
+msgstr ""
+
+#: wtforms/fields.py:443
+#, python-format
+msgid "'%(value)s' is not a valid choice for this field"
+msgstr ""
+
+#: wtforms/fields.py:525
+msgid "Not a valid integer value"
+msgstr ""
+
+#: wtforms/fields.py:570
+msgid "Not a valid decimal value"
+msgstr ""
+
+#: wtforms/fields.py:592
+msgid "Not a valid float value"
+msgstr ""
+
+#: wtforms/validators.py:51
+#, python-format
+msgid "Invalid field name '%s'."
+msgstr ""
+
+#: wtforms/validators.py:58
+#, python-format
+msgid "Field must be equal to %(other_name)s."
+msgstr ""
+
+#: wtforms/validators.py:90
+#, python-format
+msgid "Field must be at least %(min)d character long."
+msgid_plural "Field must be at least %(min)d characters long."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wtforms/validators.py:93
+#, python-format
+msgid "Field cannot be longer than %(max)d character."
+msgid_plural "Field cannot be longer than %(max)d characters."
+msgstr[0] ""
+msgstr[1] ""
+
+#: wtforms/validators.py:96
+#, python-format
+msgid "Field must be between %(min)d and %(max)d characters long."
+msgstr ""
+
+#: wtforms/validators.py:131
+#, python-format
+msgid "Number must be greater than %(min)s."
+msgstr ""
+
+#: wtforms/validators.py:133
+#, python-format
+msgid "Number must be less than %(max)s."
+msgstr ""
+
+#: wtforms/validators.py:135
+#, python-format
+msgid "Number must be between %(min)s and %(max)s."
+msgstr ""
+
+#: wtforms/validators.py:171
+msgid "This field is required."
+msgstr ""
+
+#: wtforms/validators.py:199
+#, fuzzy
+msgid "Invalid input."
+msgstr "Fehlerhafter Login."
+
+#: wtforms/validators.py:218
+#, fuzzy
+msgid "Invalid email address."
+msgstr "Du musst eine valide E-Mail Adresse eingeben."
+
+#: wtforms/validators.py:235
+msgid "Invalid IP address."
+msgstr ""
+
+#: wtforms/validators.py:260
+#, fuzzy
+msgid "Invalid URL."
+msgstr "Fehlerhafter Login."
+
+#: wtforms/validators.py:287
+#, python-format
+msgid "Invalid value, must be one of: %(values)s."
+msgstr ""
+
+#: wtforms/validators.py:314
+#, python-format
+msgid "Invalid value, can't be any of: %(values)s."
+msgstr ""
+
+#: wtforms/ext/dateutil/fields.py:48
+msgid "Please input a date/time value"
+msgstr ""
+
+#: wtforms/ext/dateutil/fields.py:60
+msgid "Invalid date/time input"
+msgstr ""
+
 #: inyoka/admin/templates/base.html:3 inyoka/templates/base.html:47
 msgid "Admin"
 msgstr "Administration"
@@ -24,6 +138,11 @@ msgstr "Administration"
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
 msgstr "Willkommen in der Inyoka-Administration!"
+
+#: inyoka/core/notifications.py:169
+#, fuzzy
+msgid "E-Mail"
+msgstr "Email"
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -38,7 +157,7 @@ msgstr ""
 msgid "Unknown format \"%s\""
 msgstr "Unbekanntes Format „%s\\”"
 
-#: inyoka/core/tasks.py:28
+#: inyoka/core/tasks.py:27
 #, python-format
 msgid "Registration at %s"
 msgstr "Registrierung bei %s"
@@ -354,11 +473,11 @@ msgstr "elf"
 msgid "twelve"
 msgstr "zwölf"
 
-#: inyoka/l10n/__init__.py:242
+#: inyoka/l10n/__init__.py:241
 msgid "just now"
 msgstr "gerade eben"
 
-#: inyoka/l10n/__init__.py:246
+#: inyoka/l10n/__init__.py:245
 #, python-format
 msgid "%(timedelta)s ago"
 msgstr "vor %(timedelta)s"
@@ -1136,39 +1255,39 @@ msgstr "Abmelden"
 msgid "Powered by Inyoka %(revision)s on Python %(python)s"
 msgstr "Basiert auf Inyoka %(revision)s mit Python %(python)s"
 
-#: inyoka/utils/captcha.py:47
+#: inyoka/utils/captcha.py:59
 msgid "Get a visual challenge"
 msgstr "neue visuelle Herausforderung"
 
-#: inyoka/utils/captcha.py:48
+#: inyoka/utils/captcha.py:60
 msgid "Get an audio challenge"
 msgstr "neue Audio-Herausforderung"
 
-#: inyoka/utils/captcha.py:49
+#: inyoka/utils/captcha.py:61
 msgid "Get a new challenge"
 msgstr "neue Herausforderung"
 
-#: inyoka/utils/captcha.py:50
+#: inyoka/utils/captcha.py:62
 msgid "Type the two words:"
 msgstr "Tippe die zwei Wörter ein:"
 
-#: inyoka/utils/captcha.py:51
+#: inyoka/utils/captcha.py:63
 msgid "Type what you hear:"
 msgstr "Geben Sie ein, was Sie hören:"
 
-#: inyoka/utils/captcha.py:52
+#: inyoka/utils/captcha.py:64
 msgid "Help"
 msgstr "Hilfe"
 
-#: inyoka/utils/captcha.py:53
+#: inyoka/utils/captcha.py:65
 msgid "Play sound again"
 msgstr "Ton erneut wiedergeben"
 
-#: inyoka/utils/captcha.py:54
+#: inyoka/utils/captcha.py:66
 msgid "Download sound as MP3"
 msgstr "Download als MP3-Sound"
 
-#: inyoka/utils/captcha.py:55
+#: inyoka/utils/captcha.py:67
 msgid "Incorrect. Try again."
 msgstr "Falsch! Bitte versuche es nocheinmal."
 

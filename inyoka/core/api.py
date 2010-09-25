@@ -14,6 +14,7 @@ from inyoka.core.resource import IResourceManager
 from inyoka.core.config import BooleanConfigField, TextConfigField, \
     IntegerConfigField, DottedConfigField, ListConfigField
 from inyoka.core.models import Cache, Confirm, Tag, Storage
+from inyoka.core.auth.models import User, Group, UserProfile
 
 
 #: The default path to media files.
@@ -75,7 +76,7 @@ class ICoreResourceManager(IResourceManager):
     deactivated_components.default.append('inyoka.core.tasks')
 
     #: register core models
-    models = [Cache, Confirm, Tag, Storage]
+    models = [Cache, Confirm, Tag, Storage, User, UserProfile, Group]
 
 
 # Import shortcuts

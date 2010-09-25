@@ -11,7 +11,7 @@
 """
 import os
 import sys
-from os import path as _path, access, F_OK
+from os import path as _path, access as _access, F_OK as _F_OK
 from functools import partial as _partial
 from fabric.api import *
 
@@ -226,7 +226,7 @@ def clean_files():
     local("find . -name '*.orig.*' -delete")
     local("find . -name '*.py.fej' -delete")
     local("find . -name '*.egg' -delete")
-    if access('bootstrap.py', F_OK):
+    if _access('bootstrap.py', _F_OK):
         local("rm bootstrap.py")
 
 

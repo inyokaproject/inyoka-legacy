@@ -133,7 +133,7 @@ def adjust_options(options, args):
 
     try:
         call_subprocess(['which', 'wget'], show_stdout=False)
-        FETCH_CMD = ['wget']
+        FETCH_CMD = ['wget', '-c']
     except OSError:
         # wget does not exist, try curl instead
         try:

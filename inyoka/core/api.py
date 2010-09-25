@@ -42,9 +42,6 @@ class ICoreResourceManager(IResourceManager):
     #: Cookie name
     cookie_name = TextConfigField('cookie_name', default=u'inyoka-session')
 
-    #: The current language locale
-    language = TextConfigField('language', default=u'en')
-
     #: The default timezone for all users
     default_timezone = TextConfigField('default_timezone', default=u'Europe/Berlin')
 

@@ -33,7 +33,8 @@ _js_translations = WeakKeyDictionary()
 translations_reloaded = signal('translations-reloaded')
 
 
-language = TextConfigField(u'language', 'de')
+language = TextConfigField('language', u'en')
+
 
 def load_core_translations(locale):
     """Return the matching locale catalog for `locale`"""

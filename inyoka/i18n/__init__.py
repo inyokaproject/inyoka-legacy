@@ -22,6 +22,7 @@ from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
 from blinker import signal
 from inyoka.context import ctx
+from inyoka.core.config import TextConfigField
 
 
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']
@@ -31,6 +32,8 @@ _translations = None
 _js_translations = WeakKeyDictionary()
 translations_reloaded = signal('translations-reloaded')
 
+
+language = TextConfigField(u'language', 'de')
 
 def load_core_translations(locale):
     """Return the matching locale catalog for `locale`"""

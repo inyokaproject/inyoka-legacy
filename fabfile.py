@@ -11,7 +11,8 @@
 """
 import os
 import sys
-from os import path as _path, access as _access, F_OK as _F_OK
+from os import path as _path, access as _access, mkdir as _mkdir, F_OK as _F_OK
+from os.path import isdir as _isdir
 from functools import partial as _partial
 from fabric.api import *
 
@@ -209,6 +210,8 @@ def create_virtualenv(directory='../inyoka-testsuite', pyver=None, interpreter='
     :param directory: Where to create this virtual environment (folder must not exist).
     :param pyver: Which Python Version to use.
     """
+    if not _isdir(directory):
+        _mkdir(directory)
     local('%s %s > %s' % (interpreter,
         _j('extra/make-bootstrap.py'), _j('bootstrap.py')), capture=False)
     local('%s ./bootstrap.py --no-site-packages -r %s %s' % (interpreter,

@@ -99,7 +99,6 @@ def babel_svn_repo_install(home_dir):
 
 
 def after_install(options, home_dir):
-    easy_install('setuptools', home_dir)
     easy_install('pip', home_dir)
     install_jinja2(home_dir)
     babel_svn_repo_install(home_dir)
@@ -144,14 +143,11 @@ def adjust_options(options, args):
             sys.stderr.write('\\nERROR: need either wget or curl\\n')
             sys.exit(1)
 
-    folder = '/tmp/inyoka_virtualenv'
-    if not path.exists(folder):
-        os.mkdir(folder)
-        # checkout python distribution
-        call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/2.7/Python-2.7.tar.bz2'], cwd=folder)
-        call_subprocess(['tar', '-xjf', 'Python-2.7.tar.bz2'], cwd=folder)
+    # checkout python distribution
+    call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/2.7/Python-2.7.tar.bz2'], cwd=dest_dir)
+    call_subprocess(['tar', '-xjf', 'Python-2.7.tar.bz2'], cwd=dest_dir)
 
-    python_folder = path.join(folder, 'Python-2.7')
+    python_folder = path.join(dest_dir, 'Python-2.7')
 
     # configure python
     call_subprocess(['./configure', '--prefix=%s' % dest_dir], cwd=python_folder)
@@ -159,9 +155,11 @@ def adjust_options(options, args):
     call_subprocess(['make', 'install'], cwd=python_folder)
 
     options.python = path.join(python_folder, 'python')
+    options.no_site_packages = True
+    options.unzip_setuptools = True
+    options.use_distribute = True
 
 """
-import os
 
 if __name__ == '__main__':
     print create_bootstrap_script(EXTRA_TEXT)

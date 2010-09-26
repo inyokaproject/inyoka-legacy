@@ -162,7 +162,7 @@ class AlterProfileExtension(UserCPExtension):
 
     @login_required
     @view
-    @templated('usercp/profile.html', modifier=context_modifier)
+    @templated('portal/usercp/profile.html', modifier=context_modifier)
     def profile(self, request):
         profile = UserProfile.query.filter_by(user_id=request.user.id).first()
         form = ProfileForm(request.form, profile=profile)
@@ -186,7 +186,7 @@ class PasswordExtension(UserCPExtension):
 
     @view
     @login_required
-    @templated('usercp/password.html')
+    @templated('portal/usercp/password.html')
     def password(self, request):
         form = get_change_password_form(request)(request.form)
 
@@ -220,7 +220,7 @@ class UserCPController(IController):
 
     @view
     @login_required
-    @templated('usercp/index.html')
+    @templated('portal/usercp/index.html')
     def index(self, request):
         return {
             'extensions':   self.extensions,

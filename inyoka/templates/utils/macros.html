@@ -92,7 +92,7 @@
         {%- if field.type == 'HiddenField' %}
             {{ field() }}
         {%- else %}
-            <li{% if class %} class="{{ class }}{% endif %}">{{ form_field(field) }}</li>
+			<li{% if class %} class="{{ class }}"{% endif %}>{{ form_field(field) }}</li>
         {%- endif %}
     {%- endfor %}
     </ol>

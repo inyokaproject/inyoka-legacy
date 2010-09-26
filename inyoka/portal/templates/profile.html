@@ -17,6 +17,6 @@
   <li>{{ name }}: {{ user.profile[key] or '–' }}</li>
   {%- endfor %}
 </ul>
-{% if user == request.user %}<a href="{{ href('portal/profile_edit') }}">{{ _('Edit Profile') }}</a>{% endif %}
+{% if user == request.user %}<a href="{{ href('usercp/profile') }}">{{ _('Edit Profile') }}</a>{% endif %}
 
 {%- endblock %}

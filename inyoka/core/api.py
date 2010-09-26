@@ -58,7 +58,7 @@ class ICoreResourceManager(IResourceManager):
     mail_address = TextConfigField('mail_address', default=u'system@inyoka.local')
 
     #: The duration a permanent session is valid.  Defined in days, defaults to 30
-    permanent_session_lifetime = IntegerConfigField('permanent_session_life', default=30)
+    permanent_session_lifetime = IntegerConfigField('permanent_session_lifetime', default=30)
 
     #: Path to the directory that includes static files.  Relative to the inyoka
     #: package path.

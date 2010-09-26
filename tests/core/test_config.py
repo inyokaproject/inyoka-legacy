@@ -114,3 +114,23 @@ def test_on_load_config_field_loading():
     runtime_value = TextConfigField('_test_runtime_value', default=u'yea')
     assert_true('_test_runtime_value' in _config.defined_vars)
     assert_equal(_config['_test_runtime_value'], u'yea')
+
+
+@with_setup(_setup_config_test, _teardown_config_test)
+def test_automatical_config_creation():
+    import os
+    from inyoka import ApplicationContext
+    from inyoka.core.api import ctx
+    from inyoka.core.config import Configuration
+    # ensure that our config file really exists
+    assert_true(ctx.cfg.exists)
+    # remove the config file and ensure that it's really removed
+    # and marked as such by our configuration system.
+    fn = ctx.cfg.filename
+    content = open(fn).read()
+    os.remove(fn)
+    assert_false(Configuration(fn).exists)
+    # check that it's created automatically by our :cls:`ApplicationContext`
+    new_ctx = ApplicationContext()
+    assert_true(os.path.exists(fn))
+    open(fn, 'w').write(content)

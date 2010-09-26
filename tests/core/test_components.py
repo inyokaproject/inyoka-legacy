@@ -130,22 +130,3 @@ def test_import_module():
     # we assert here to import the module rather than to raise a ValueError
     # as werkzeug's find_modules would do.
     list(_import_module('werkzeug._internal.*'))
-
-
-def test_automatical_config_creation():
-    import os
-    from inyoka import ApplicationContext
-    from inyoka.core.api import ctx
-    from inyoka.core.config import Configuration
-    # ensure that our config file really exists
-    assert_true(ctx.cfg.exists)
-    # remove the config file and ensure that it's really removed
-    # and marked as such by our configuration system.
-    fn = ctx.cfg.filename
-    content = open(fn).read()
-    os.remove(fn)
-    assert_false(Configuration(fn).exists)
-    # check that it's created automatically by our :cls:`ApplicationContext`
-    new_ctx = ApplicationContext()
-    assert_true(os.path.exists(fn))
-    open(fn, 'w').write(content)

@@ -274,7 +274,7 @@ msgid "Ask a Question"
 msgstr "Neue Frage"
 
 #: inyoka/forum/templates/ask.html:12 inyoka/forum/templates/question.html:120
-#: inyoka/forum/templates/admin/forum.html:11
+#: inyoka/forum/templates/admin/forum.html:17
 #: inyoka/news/templates/edit_comment.html:9
 #: inyoka/news/templates/admin/article_edit.html:16
 #: inyoka/paste/templates/index.html:9 inyoka/paste/templates/admin/edit.html:21
@@ -414,10 +414,14 @@ msgstr "gefragt <strong>%(date)s</strong>"
 msgid "No questions found."
 msgstr "Keine Fragen gefunden."
 
-#: inyoka/forum/templates/admin/forum.html:7
 #: inyoka/forum/templates/admin/index.html:9
+#: inyoka/forum/templates/admin/forum.html:11
 msgid "Create new Forum"
 msgstr "Erstelle ein neues Forum"
+
+#: inxoka/forum/templates/admin/form.html:9
+msgid "Edit Forum"
+msgstr "Forum bearbeiten"
 
 #: inyoka/l10n/__init__.py:164
 msgid "zero"

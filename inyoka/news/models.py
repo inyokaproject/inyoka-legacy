@@ -90,6 +90,8 @@ class Comment(db.Model):
             return 'news/edit_comment', {
                 'id': self.id, 'action': action
             }
+        #TODO: self.id needs to be replaced with the number of the comment
+        # in the appropriate article
         return 'news/detail', {
             'slug': self.article.slug,
             '_anchor': 'comment_%s' % self.id

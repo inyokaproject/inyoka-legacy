@@ -48,9 +48,9 @@ class TestRevisionedModelMixin(DatabaseTestCase):
 
     def test_compare_to(self):
         root, second, last = self.data['FancyModel']
-        eq_(root.compare_to(second, 'code'),
+        self.assertEqual(root.compare_to(second, 'code'),
             u'--- #1 \n+++ #2 \n@@ -1,1 +1,1 @@\n-some code\n+Some Code')
-        eq_(root.compare_to(last, 'code'),
+        self.assertEqual(root.compare_to(last, 'code'),
             u'--- #1 \n+++ #3 \n@@ -1,1 +1,1 @@\n-some code\n+some Code')
-        eq_(second.compare_to(last, 'code'),
+        self.assertEqual(second.compare_to(last, 'code'),
             u'--- #2 \n+++ #3 \n@@ -1,1 +1,1 @@\n-Some Code\n+some Code')

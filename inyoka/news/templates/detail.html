@@ -7,9 +7,9 @@
     <h1 class="title">{{ article.title }}</h1>
     <p class="meta">
       <span class="published">
-        {%- trans author_url=href(article.author.profile), author_name=article.author.username,
+        {%- trans author_link=user_link(article.author),
                   article_pubdate=article.updated|dateformat, article_pubtime=article.updated|timeformat('short') -%}
-        written by <a href="{{ author_url }}">{{ author_name }}</a> on {{ article_pubdate }} {{ article_pubtime }}
+        written by {{ author_link }} on {{ article_pubdate }} {{ article_pubtime }}
         {%- endtrans -%}
       </span>
       <span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>

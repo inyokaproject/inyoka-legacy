@@ -19,7 +19,7 @@ from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.forms import ProfileForm, get_change_password_form
+from inyoka.portal.forms import ProfileForm, get_change_password_form, get_deactivate_profile_form
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
@@ -204,6 +204,37 @@ class PasswordExtension(UserCPExtension):
         return {
             'random_pw': form.new_password.data,
             'form': form,
+        }
+
+
+class DeactivateExtension(UserCPExtension):
+    ext_name = _(u'Deactivate Profile')
+    ext_key = 'deactivate'
+
+    url_rules = [
+        Rule('/deactivate', endpoint='deactivate'),
+    ]
+
+    @login_required
+    @view
+    @templated('portal/usercp/deactivate.html', modifier=context_modifier)
+    def deactivate(self, request):
+        form = get_deactivate_profile_form(request)(request.form)
+
+        if form.validate_on_submit():
+            if not request.user.check_password(form.password.data):
+                form.password.errors = [_(u'The password was not correct.')]
+            else:
+                user = request.user
+                get_auth_system().logout(request)
+                user.deactivate()
+                db.session.commit()
+                request.flash(_(u'Your profile was deactivated successfully'),
+                     success=True)
+                return redirect(href('portal/index'))
+
+        return {
+            'form': form
         }
 
 

@@ -1,0 +1,24 @@
+{% extends 'portal/usercp/base.html' %}
+{% from 'utils/macros.html' import form_field %}
+
+{% block content %}
+<h1>{{ _('Deactivate Profile')  }}</h1>
+<p>
+  {{_('Here you can deactivate your profile. All your private information will be deleted, but your texts in the forum and the wiki will still exist!') }}
+</p>
+<p> 
+  <strong>{{ _('This action is irreversible and you can not loggin anymore!!') }}</strong>
+</p>
+<p>
+  {{ _('If you still want to continue, please enter your password again.') }}
+</p>
+<form action="" method="post" id="usercp_deactivate_profile">
+{{ form_field(form.csrf) }}
+  <ol>
+    <li class="horiz-left">{{ form_field(form.password) }}</li>
+  </ol>
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Deactivate Profile ') }}" name="delete">
+  </fieldset>
+</form>
+{%- endblock %}

@@ -175,6 +175,15 @@ class User(db.Model, SerializableObject):
     def get_url_values(self, action='profile'):
         if action == 'profile':
             return 'portal/profile', {'username': self.username}
+	
+    def deactivate(self):
+        """
+        Deactivates the user for ever. Use with care!!
+        """
+        self._status = 3
+        if self.profile is not None:
+            user_profile = UserProfile.query.filter_by(user_id=self.id).one()
+            db.session.delete(user_profile)
 
     def __repr__(self):
         i = '#%d' % self.id if self.id else '[no id]'

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-09-18 03:58+0200\n"
+"POT-Creation-Date: 2010-09-27 15:08+0200\n"
 "PO-Revision-Date: 2010-05-14 16:16+0100\n"
 "Last-Translator: Christopher Grebs <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -137,10 +137,6 @@ msgstr "Administration"
 #: inyoka/admin/templates/base.html:6
 msgid "Welcome on the Inyoka Admin Center!"
 msgstr "Willkommen in der Inyoka-Administration!"
-
-#: inyoka/core/notifications.py:169
-msgid "E-Mail"
-msgstr "E-Mail"
 
 #: inyoka/core/serializer.py:139
 msgid ""
@@ -414,14 +410,14 @@ msgstr "gefragt <strong>%(date)s</strong>"
 msgid "No questions found."
 msgstr "Keine Fragen gefunden."
 
-#: inyoka/forum/templates/admin/index.html:9
-#: inyoka/forum/templates/admin/forum.html:11
-msgid "Create new Forum"
-msgstr "Erstelle ein neues Forum"
-
-#: inxoka/forum/templates/admin/form.html:9
+#: inyoka/forum/templates/admin/forum.html:9
 msgid "Edit Forum"
 msgstr "Forum bearbeiten"
+
+#: inyoka/forum/templates/admin/forum.html:11
+#: inyoka/forum/templates/admin/index.html:9
+msgid "Create new Forum"
+msgstr "Erstelle ein neues Forum"
 
 #: inyoka/l10n/__init__.py:164
 msgid "zero"
@@ -589,7 +585,7 @@ msgstr ""
 msgid "Articles"
 msgstr "Artikel"
 
-#: inyoka/news/models.py:99
+#: inyoka/news/models.py:101
 #, python-format
 msgid "Comment by %s on %s"
 msgstr "Kommentar von% s auf %s"
@@ -806,6 +802,7 @@ msgid ""
 "Here you can see the tree of paste replies. The paste you're coming from is "
 "highlighted."
 msgstr ""
+
 "Hier siehst du den Antworten-Baum.  Der Eintrag von dem du kommst ist "
 "hervorgehoben."
 
@@ -929,6 +926,18 @@ msgstr "Das eingegebene Passwort stimmt nicht mit deinem alten Passwort überein
 msgid "Your password was changed successfully"
 msgstr "Dein Passwort wurde erfolgreich geändert"
 
+#: inyoka/portal/controllers.py:211
+msgid "Deactivate Profile"
+msgstr "Benutzer deaktivieren"
+
+#: inyoka/portal/controllers.py:226
+msgid "The password was not correct."
+msgstr "Das Passwort stimmte nicht"
+
+#: inyoka/portal/controllers.py:232
+msgid "Your profile was deactivated successfully"
+msgstr "Der Benutzer wurde erfolgreich deaktiviert"
+
 #: inyoka/portal/forms.py:23
 msgid "Realname"
 msgstr "Name"
@@ -966,7 +975,7 @@ msgstr "Skype"
 msgid "Username"
 msgstr "Benutzername"
 
-#: inyoka/portal/forms.py:53 inyoka/portal/forms.py:72
+#: inyoka/portal/forms.py:53 inyoka/portal/forms.py:72 inyoka/portal/forms.py:108
 msgid "Password"
 msgstr "Passwort"
 
@@ -978,7 +987,7 @@ msgstr "Angemeldet bleiben"
 msgid "Email"
 msgstr "Email"
 
-#: inyoka/portal/forms.py:73 inyoka/portal/forms.py:99
+#: inyoka/portal/forms.py:73 inyoka/portal/forms.py:100
 msgid "Passwords must match"
 msgstr "Die zwei Passwörter müssen gleich sein"
 
@@ -990,15 +999,15 @@ msgstr "Passwortwiederholung"
 msgid "ReCaptcha"
 msgstr "ReCaptcha"
 
-#: inyoka/portal/forms.py:92
+#: inyoka/portal/forms.py:93
 msgid "Old Password"
 msgstr "Altes Passwort"
 
-#: inyoka/portal/forms.py:94
+#: inyoka/portal/forms.py:95
 msgid "New Password"
 msgstr "Neues Passwort"
 
-#: inyoka/portal/forms.py:98
+#: inyoka/portal/forms.py:99
 msgid "New Password (confirmation)"
 msgstr "Neues Passwort (bestätigen)"
 
@@ -1188,6 +1197,33 @@ msgstr "…oder <a href=\"%(link)s\">erstelle einen neue Kategorie</a>"
 #: inyoka/portal/templates/usercp/index.html:4 inyoka/templates/base.html:58
 msgid "User Control Panel"
 msgstr "Mein Konto"
+
+#: inyoka/portal/templates/usercp/deactivate.html:5
+msgid "Deactivate Profile"
+msgstr "Benutzer deaktivieren"
+
+#: inyoka/portal/templates/usercp/deactivate.html:7
+msgid ""
+"Here you can deactivate your profile. All your private information will be "
+"deleted, but your texts in the forum and the wiki will still exist!"
+msgstr "Hier kanns du dein Profil deaktivieren. "
+"Alle privaten Informationen werden gelöscht, aber alles Beiträge "
+"im Forum und im Wiki beleiben bestehen"
+
+#: inyoka/portal/templates/usercp/deactivate.html:10
+msgid "This action is irreversible and you can not loggin anymore!!"
+msgstr "Diese Aktion ist nicht umkehrbar und "
+"du kannst dich nicht mehr einloggen!!"
+
+#: inyoka/portal/templates/usercp/deactivate.html:13
+msgid "If you still want to continue, please enter your password again."
+msgstr "Wenn du immernoch weiter machen möchtest, "
+"gib bitte noch mal dein Passwort ein."
+
+#: inyoka/portal/templates/usercp/deactivate.html:21
+#, fuzzy
+msgid "Deactivate Profile "
+msgstr "Benutzer deaktivieren"
 
 #: inyoka/portal/templates/usercp/password.html:5
 #: inyoka/portal/templates/usercp/password.html:26

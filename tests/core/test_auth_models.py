@@ -40,6 +40,11 @@ def test_user(fixtures):
     anon = User.query.get_anonymous()
     eq_(anon.username, ctx.cfg['anonymous_name'])
 
+    me.deactivate()
+    db.session.commit()
+    assert_false(me.is_active)
+    assert_true(me.profile is None)
+    eq_(USER_STATUS_MAP[me._status], me.status)
 
 group_fixtures = [{Group: [
     {'&g1': {'name': 'g1'}},

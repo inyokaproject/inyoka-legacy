@@ -179,7 +179,7 @@ def create_test_users():
 
     # admin user
     admin = User(username=u'admin', email=u'root@localhost', password=u'default')
-    admin.status = 'normal'
+    admin.status = u'normal'
     admin_profile = UserProfile(user=admin)
 
     # some crazy users
@@ -207,16 +207,16 @@ def create_test_users():
             {'real_name': u'©æſðæ®€“”@', 'location': u'/dev/cdrom'}),
         u'guj':             (u'j@u.g', u'default',
             {'real_name': u'Yea Man', 'location': u'Germany'}),
-        u'RoterRitter':     (u'roterr@it.er', 'default',
+        u'RoterRitter':     (u'roterr@it.er', u'default',
             {'real_name': u'Der Rote Ritter mit der langen Lanze', 'location': u'Burg Rotenstein'}),
-        u'Kebap':           (u'dö@n.er', 'default',
-            {'real_name': u'DönerDönerDönerDöner', 'location': 'Berlin'}),
+        u'Kebap':           (u'dö@n.er', u'default',
+            {'real_name': u'DönerDönerDönerDöner', 'location': u'Berlin'}),
 
     }
     for user in users:
         email, pw = users[user][:-1]
         u = User(username=user, email=email, password=pw)
-        u.status = 'normal'
+        u.status = u'normal'
         p = UserProfile(user=u, **users[user][-1])
         user_instances.append(u)
 
@@ -241,8 +241,8 @@ def create_test_users():
             if username not in used:
                 used.add(username)
                 break
-        u = User(username=username, email='%s@example.com' % username,
-                 password='default')
+        u = User(username=username, email=u'%s@example.com' % username,
+                 password=u'default')
         UserProfile(user=u)
         if random() > 0.6:
             u.groups = [choice(groups)]

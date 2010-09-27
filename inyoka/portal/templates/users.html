@@ -1,4 +1,5 @@
 {%- extends 'portal/base.html' %}
+{% from 'utils/macros.html' import user_link %}
 
 {% block introduction %}
 {{- _('On this page you can see all registered users.') -}}
@@ -16,7 +17,7 @@
   {%- for user in users %}
   <tr>
     <td>{{ user.id }}</td>
-    <td><a href="{{ href(user.profile) }}">{{ user.username }}</a></td>
+    <td>{{ user_link(user) }}</td>
     <td>{{ user.date_joined|datetimeformat('short') }}</td>
   </tr>
   {%- endfor %}

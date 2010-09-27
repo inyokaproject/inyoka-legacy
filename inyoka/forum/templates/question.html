@@ -1,9 +1,9 @@
 {%- extends 'forum/base.html' %}
-{% from 'utils/macros.html' import form_fields %}
+{% from 'utils/macros.html' import form_fields, user_link %}
 {%- block content %}
 
 <div class="author">{{ _('asked') }} <strong>{{ question.date_created|timedelta }}</strong><br>
-    {{ _('by') }} <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
+    {{ _('by') }} {{ user_link(question.author) }}
     ({{ ngettext('%(num)d visit', '%(num)d visits', question.view_count) }})
 </div>
 
@@ -101,7 +101,7 @@
   <div class="summary">
     <div class="author">
       {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
-      <a href="{{ href(answer.author.profile) }}">{{ answer.author }}</a>
+	  {{ user_link(answer.author) }}
     </div>
     <p>{{ answer.rendered_text|safe }}</p>
   </div>

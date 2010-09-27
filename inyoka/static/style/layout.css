@@ -371,3 +371,7 @@ ul.pagetabs li.selected a {
   border-bottom: 0.5em solid #fff;
   color: #000;
 }
+
+.user_deleted {
+text-decoration: line-through;
+}

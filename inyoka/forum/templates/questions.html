@@ -1,4 +1,5 @@
 {%- extends 'forum/base.html' %}
+{% from 'utils/macros.html' import user_link %}
 
 {%- block content %}
 
@@ -81,7 +82,7 @@
 
   <div class="author">
     {{ _('asked <strong>%(date)s</strong>', date=question.date_created|timedelta) }}
-    {{ _('by') }} <a href="{{ href(question.author.profile) }}">{{ question.author }}</a>
+    {{ _('by') }} {{ user_link(question.author) }}
   </div>
 
   <div class="summary">

@@ -43,8 +43,8 @@ def test_user(fixtures):
     me.deactivate()
     db.session.commit()
     assert_false(me.is_active)
-    assert_true(me.profile is None)
-    eq_(USER_STATUS_MAP[me._status], me.status)
+    assert_true(me.profile is not None)
+    eq_(USER_STATUS_MAP[3], me.status)
 
 group_fixtures = [{Group: [
     {'&g1': {'name': 'g1'}},

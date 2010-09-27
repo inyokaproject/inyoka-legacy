@@ -103,3 +103,9 @@
     </fieldset>
     {%- endif %}
 {%- endmacro -%}
+
+{%- macro user_link(user) -%}
+    <a href="{{ href(user.profile) }}"
+        {% if user._status == 3  %} class="user_deleted"{% endif %}
+    >{{ user }}</a>
+{%- endmacro -%}

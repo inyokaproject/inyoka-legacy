@@ -12,11 +12,14 @@
 
 {%- block content %}
 <h1>{{ user }}</h1>
-<ul>
-  {%- for key, name in fields %}
-  <li>{{ name }}: {{ user.profile[key] or '–' }}</li>
-  {%- endfor %}
-</ul>
-{% if user == request.user %}<a href="{{ href('usercp/profile') }}">{{ _('Edit Profile') }}</a>{% endif %}
-
+{% if user.is_active %}
+  <ul>
+    {%- for key, name in fields %}
+      <li>{{ name }}: {{ user.profile[key] or '–' }}</li>
+    {%- endfor %}
+  </ul>
+  {% if user == request.user %}<a href="{{ href('usercp/profile') }}">{{ _('Edit Profile') }}</a>{% endif %}
+{% else %}
+  {{ _('This user is deactivatet.') }}
+{% endif %}
 {%- endblock %}

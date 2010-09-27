@@ -181,9 +181,7 @@ class User(db.Model, SerializableObject):
         Deactivates the user for ever. Use with care!!
         """
         self._status = 3
-        if self.profile is not None:
-            user_profile = UserProfile.query.filter_by(user_id=self.id).one()
-            db.session.delete(user_profile)
+        self.profile.clear()
 
     def __repr__(self):
         i = '#%d' % self.id if self.id else '[no id]'
@@ -232,3 +230,11 @@ class UserProfile(db.Model):
         }
 
         return values[action][0], values[action][1]
+
+    def clear(self):
+        self.real_name = u''
+        self.website = u''
+        self.location = u''
+        self.intersts = u''
+        self.occupation = u''
+        self.signature = u''

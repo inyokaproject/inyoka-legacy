@@ -1,5 +1,5 @@
 {%- extends 'news/base.html' %}
-{% from 'utils/macros.html' import form_fields %}
+{% from 'utils/macros.html' import form_fields, user_link %}
 {% set title_trace = [article.title] %}
 
 {% block content %}
@@ -42,7 +42,7 @@
         class="{{ loop.cycle('odd', 'even') -}}
                {%- if comment.author_id == request.user.id %} owned{% endif -%}
                {%- if comment.deleted %} hidden{% endif -%}">
-      <a href="{{ href(comment.author.profile) }}" class="comment_author">{{ comment.author.display_name }}</a>
+      {{ user_link(comment.author, class_=['comment_author']) }}
       <img src="{{ href('static', file='img/no_avatar.png') }}" class="avatar">
       <span class="meta">
         <strong><a href="#comment_{{ loop.index }}">{{ loop.index }}.</a></strong>

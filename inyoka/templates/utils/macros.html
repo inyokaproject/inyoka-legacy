@@ -104,8 +104,14 @@
     {%- endif %}
 {%- endmacro -%}
 
-{%- macro user_link(user) -%}
+{%- macro user_link(user, class_=None) -%}
+    {% if class_ == None %}
+        {% set class_ = [] %}
+    {% endif %}
+    {% if user._status == 3 %}
+        {% do class_.append('user_deleted') %}
+    {% endif %}
     <a href="{{ href(user.profile) }}"
-        {% if user._status == 3  %} class="user_deleted"{% endif %}
+        {% if class_  %} class="{{ class_|join(' ') }}"{% endif %}
     >{{ user }}</a>
 {%- endmacro -%}

@@ -373,5 +373,5 @@ ul.pagetabs li.selected a {
 }
 
 .user_deleted {
-text-decoration: line-through;
+text-decoration: line-through!important;
 }

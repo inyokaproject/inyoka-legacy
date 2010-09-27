@@ -46,7 +46,7 @@ class PortalAdminController(IAdminProvider):
             tag = Tag.query.filter_by(name=name).first()
             if tag is not None:
                 return redirect_to('admin/portal/tag_edit', slug=tag.slug)
-            request.flash(_(u'The tag “%s” does not exist'), False)
+            request.flash(_(u'The tag “%s” does not exist' % tag.name), False)
 
         return {
             'tag_cloud': cloud,

@@ -1,6 +1,7 @@
 {%- extends 'wiki/base.html' %}
 {%- set title_trace = [_('History'), page.name] %}
 {%- set current_tab = 'history' %}
+{% from 'utils/macros.html' import  user_link %}
 
 {%- block wiki_content %}
 <form action="{{ href(page, action='diff') }}" method="get">
@@ -17,7 +18,7 @@
   {%- for rev in revisions %}
       <tr>
         <td><a href="{{ href(rev) }}">{{ rev.change_date|datetimeformat }}</td>
-        <td><a href="{{ href(rev.change_user) }}">{{ rev.change_user.username }}</a></td>
+        <td>{{ user_link(rev.change_user) }}</td>
         <td>{{ rev.change_comment }}</td>
         <td><input type="radio" name="old_rev" value="{{ rev.id }}" />
             <input type="radio" name="new_rev" value="{{ rev.id }}" /></td>

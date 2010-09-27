@@ -15,6 +15,7 @@ from wtforms.validators import ValidationError
 from inyoka.i18n import lazy_gettext
 from inyoka.context import ctx
 from inyoka.core.auth.models import User
+from inyoka.core.models import tag_re as _tag_re
 
 
 _mail_re = re.compile(r'''(?xi)
@@ -174,4 +175,12 @@ def is_valid_attachment_name():
         if u'/' in field.data:
             raise ValidationError(lazy_gettext(u'The name must not contain '
                                                u'slashes.'))
+    return validator
+
+
+def is_valid_tag_name():
+    def validator(form, field):
+        if not _tag_re.match(field.data):
+            raise ValidationError(lazy_gettext(u'Tag Names should only contain '
+                                               u'ascii characters and numbers.'))
     return validator

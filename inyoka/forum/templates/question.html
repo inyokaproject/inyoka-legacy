@@ -48,6 +48,9 @@
   <div class="summary">
 
     <p>{{ question.rendered_text|safe }}</p>
+    {% if question.author.profile.signature_html %}
+      <div class="signature">{{ question.author.profile.signature_html|safe }}</div>
+    {% endif %}
     <p>{{ _('Tags: ') }}
         {% for tag in question.tags %}
         <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
@@ -104,6 +107,9 @@
 	  {{ user_link(answer.author) }}
     </div>
     <p>{{ answer.rendered_text|safe }}</p>
+    {% if answer.author.profile.signature_html %}
+      <div class="signature">{{ answer.author.profile.signature_html|safe }}</div>
+    {% endif %}
   </div>
 </div>
 <hr class="answer_seperator">

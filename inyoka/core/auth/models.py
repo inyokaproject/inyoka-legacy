@@ -16,6 +16,7 @@ from inyoka.i18n import _
 from inyoka.core.cache import cache
 from inyoka.context import ctx
 from inyoka.core.database import db
+from inyoka.core.markup.parser import parse, render
 from inyoka.core.serializer import SerializableObject
 from inyoka.core.subscriptions import subscribed
 from inyoka.utils.datastructures import BidiMap
@@ -217,11 +218,24 @@ class UserProfile(db.Model):
     location = db.Column(db.Unicode(200))
     interests = db.Column(db.Unicode(200))
     occupation = db.Column(db.Unicode(200))
-    signature = db.Column(db.Text)
+    _signature = db.Column('signature',db.Text)
+    signature_html = db.Column(db.Text)
 
     # communication channels
     jabber = db.Column(db.Unicode(200))
     skype = db.Column(db.Unicode(200))
+
+    def _get_signature(self):
+        return self._signature
+    def _set_signature(self, value):
+        if self._signature == value:
+            return
+        else:
+            self._signature = value
+            self.signature_html = render(parse(value), format='html')
+
+    signature = db.synonym('_signature',
+            descriptor=property(_get_signature,_set_signature))
 
     def get_url_values(self, action='view'):
         values = {

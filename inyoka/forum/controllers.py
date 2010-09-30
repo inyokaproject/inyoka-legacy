@@ -58,6 +58,7 @@ class ForumController(IController):
         Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
         Rule('/question/<string:slug>/<string:sort>/<int:page>/',
              endpoint='question'),
+        Rule('/post/<int:posting_id>/', endpoint='posting'),
 
         Rule('/vote/<int:entry_id>/<string:action>/', endpoint='vote'),
 
@@ -132,6 +133,11 @@ class ForumController(IController):
             'pagination': pagination,
             'user_votes': user_votes
         }
+
+    @view('posting')
+    def posting(self, request, posting_id=None):
+        entry = Entry.query.get(posting_id)
+        return redirect_to(entry)
 
     @login_required
     @view('ask')

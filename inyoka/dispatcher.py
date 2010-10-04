@@ -17,6 +17,8 @@ from datetime import timedelta, datetime
 
 from werkzeug import redirect, cached_property
 
+from logbook import Processor
+
 from inyoka.context import ctx, local_manager, _request_ctx_stack, _lookup_object
 from inyoka.core.api import db, IController, Request, Response, \
     IMiddleware, IServiceProvider
@@ -205,23 +207,31 @@ class RequestDispatcher(object):
         self.ctx.bind()
         with self.request_context(environ) as reqctx:
             request = reqctx.request
-            response = self.dispatch_request(request, environ)
 
-            # apply common response processors like cookies and etags
-            if request.session.should_save:
-                # check for permanent session saving
-                expires = None
-                if request.session.permanent:
-                    lifetime = timedelta(days=ctx.cfg['permanent_session_lifetime'])
-                    expires = datetime.utcnow() + lifetime
+            def inject_info(record):
+                record.extra.update(
+                    ip=request.remote_addr,
+                    method=request.method,
+                    url=request.url)
 
-                request.session.save_cookie(response, ctx.cfg['cookie_name'],
-                    expires=expires, httponly=True,
-                    domain=ctx.cfg['cookie_domain_name'])
+            with Processor(inject_info):
+                response = self.dispatch_request(request, environ)
 
-            if response.status == 200:
-                response.add_etag()
-                response = response.make_conditional(request)
+                # apply common response processors like cookies and etags
+                if request.session.should_save:
+                    # check for permanent session saving
+                    expires = None
+                    if request.session.permanent:
+                        lifetime = timedelta(days=ctx.cfg['permanent_session_lifetime'])
+                        expires = datetime.utcnow() + lifetime
+
+                    request.session.save_cookie(response, ctx.cfg['cookie_name'],
+                        expires=expires, httponly=True,
+                        domain=ctx.cfg['cookie_domain_name'])
+
+                if response.status == 200:
+                    response.add_etag()
+                    response = response.make_conditional(request)
 
             return response(environ, start_response)
 

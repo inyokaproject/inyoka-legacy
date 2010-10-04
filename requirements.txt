@@ -31,3 +31,6 @@ blinker==1.1
 mercurial==1.6.3
 # We use the flickzeug trunk as there's no official release yet
 http://bitbucket.org/s0undt3ch/flickzeug/get/tip.gz
+# relying on logbook 0.3 features, once it's released we don't have to use
+# trunk anymore
+-e git+git://github.com/mitsuhiko/logbook.git#egg=logbook

@@ -9,52 +9,24 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import sys
-import logging
-from logging import Formatter
 from inyoka import INYOKA_REVISION
-from inyoka.utils.colors import blue, green, red, yellow, white
 
-#TODO: Rewrite with the help of logbook
-
-
-def _level_aware_colorizer(level):
-    levels = {
-        'CRITICAL': red,
-        'ERROR':    red,
-        'WARN':     yellow,
-        'WARNING':  yellow,
-        'INFO':     green,
-        'DEBUG':    blue,
-        'NOTSET':   white
-    }
-    colorized = u'[%(levelname)s %(asctime)s]'
-    message = u' %(message)s'
-
-    return levels[level](colorized) + message
+from logbook import Logger
+from logbook.more import ColorizedStderrHandler as ColorizedStderrHandlerBase
 
 
-class SimpleFormatter(Formatter):
-
-    _date_fmt = '%Y-%m-%d %H:%M:%S'
-
-    def __init__(self, fmt=None, datefmt=None, use_color=True):
-        Formatter.__init__(self, fmt, self._date_fmt)
-        self.use_color = use_color
-
-    def format(self, record):
-        levelname = record.levelname
-        log_format = _level_aware_colorizer(levelname)
-        record.message = record.getMessage()
-        record.asctime = self.formatTime(record, self.datefmt)
-        if record.exc_info:
-            if not record.exc_text:
-                record.exc_text = self.formatException(record.exc_info)
-        dct = dict(record.__dict__)
-        dct['revision'] = INYOKA_REVISION
-        return log_format % dct
+class ColorizedStderrHandler(ColorizedStderrHandlerBase):
+    def get_color(self, record):
+        if record.level >= ERROR:
+            return 'red'
+        elif record.level >= WARNING:
+            return 'yellow'
+        elif record.level == INFO:
+            return 'green'
+        elif record.level == DEBUG:
+            return 'blue'
+        return 'white'
 
 
-logger = logging.getLogger('inyoka')
-logging_handler = logging.StreamHandler(sys.stderr)
-logging_handler.setFormatter(SimpleFormatter())
-logger.addHandler(logging_handler)
+logger = Logger('inyoka')
+logbook_handler = ColorizedStderrHandler()

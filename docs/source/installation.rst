@@ -26,10 +26,11 @@ To get Inyoka work properly we need those dependencies (with headers):
  * libxslt
  * libxml2
  * libbz2
+ * libsqlite3-dev
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev libsqlite3-dev
     apt-get build-dep python-imaging
 
 Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::

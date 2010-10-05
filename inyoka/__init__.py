@@ -317,6 +317,7 @@ def _bootstrap():
     # setup components
     ctx.load_packages(ctx.cfg['activated_components'])
 
+    # makes INYOKA_REVISION visible in the extra dict of every log record
     Processor(lambda x: x.extra.update(INYOKA_REVISION=INYOKA_REVISION)).push_application()
 
 

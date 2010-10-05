@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from logbook import Logger
+from logbook.base import ERROR, WARNING, INFO, DEBUG
 from logbook.more import ColorizedStderrHandler as ColorizedStderrHandlerBase
 
 

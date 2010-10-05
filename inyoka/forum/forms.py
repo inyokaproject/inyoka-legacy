@@ -37,7 +37,7 @@ class EditForumForm(Form):
     slug = TextField(lazy_gettext(u'Slug'),
                      [validators.Required(), validators.Length(max=160)])
     parent = QuerySelectField(lazy_gettext(u'Parent'), query_factory=lambda: Forum.query,
-                              get_label='name')
+                              get_label='name', allow_blank=True)
     description = TextField(lazy_gettext(u'Description'), [validators.Required()],
                             widget=widgets.TextArea())
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',

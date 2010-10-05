@@ -17,14 +17,13 @@ from datetime import timedelta, datetime
 
 from werkzeug import redirect, cached_property
 
-from logbook import Processor
-
 from inyoka.context import ctx, local_manager, _request_ctx_stack, _lookup_object
 from inyoka.core.api import db, IController, Request, Response, \
     IMiddleware, IServiceProvider
 from inyoka.core.exceptions import HTTPException, NotFound
 from inyoka.core.routing import Map
 from inyoka.utils.http import notfound
+from inyoka.utils.logger import RequestProcessor
 
 
 class _RequestContext(object):
@@ -208,13 +207,7 @@ class RequestDispatcher(object):
         with self.request_context(environ) as reqctx:
             request = reqctx.request
 
-            def inject_info(record):
-                record.extra.update(
-                    ip=request.remote_addr,
-                    method=request.method,
-                    url=request.url)
-
-            with Processor(inject_info):
+            with RequestProcessor(request):
                 response = self.dispatch_request(request, environ)
 
                 # apply common response processors like cookies and etags

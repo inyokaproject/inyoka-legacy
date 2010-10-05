@@ -10,6 +10,7 @@
 """
 from inyoka.core.forms import Form, TextField, validators, widgets
 from inyoka.core.forms.fields import QuerySelectField, AutocompleteField
+from inyoka.core.forms.validators import ValidationError
 from inyoka.i18n import lazy_gettext
 from inyoka.forum.models import Forum, Tag
 
@@ -43,3 +44,16 @@ class EditForumForm(Form):
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
                              query_factory=lambda: Tag.query,
                              validators=[validators.Length(min=1)])
+
+    def _parent_in_subforums(self, forum, parent):
+        if forum == parent:
+            return True
+        for subforum in forum.subforums:
+            if self._parent_in_subforums(subforum, parent):
+                return True
+
+    def validate_parent(self, field):
+        message = lazy_gettext(u"You can't choose the forum itself or one of its subforums as parent")
+        forum = Forum.query.filter_by(slug=self.slug.data).first()
+        if forum and field.data and self._parent_in_subforums(forum, field.data):
+            raise ValidationError(message)

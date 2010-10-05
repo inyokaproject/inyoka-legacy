@@ -19,6 +19,7 @@ from werkzeug import find_modules, import_string, cached_property
 
 from logbook import Processor
 
+import inyoka.utils.logger # import for side effects, ugly i know...
 from inyoka.context import LocalProperty
 from inyoka.core.config import ListConfigField
 from inyoka.utils.hgutil import iui, hgcmd

@@ -27,3 +27,4 @@ class ColorizedStderrHandler(ColorizedStderrHandlerBase):
 
 logger = Logger('inyoka')
 logbook_handler = ColorizedStderrHandler()
+logbook_handler.push_application()

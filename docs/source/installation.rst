@@ -26,11 +26,21 @@ To get Inyoka work properly we need those dependencies (with headers):
  * libxslt
  * libxml2
  * libbz2
- * libsqlite3-dev
+ * libsqlite3-dev (if we want to use SQLite)
+ * libmysqlclient-dev (if we want to use MySQL)
 
 For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
 
+For SQLite::
+
     aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev libsqlite3-dev
+
+For MySQL::
+
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev libmysqlclient-dev
+
+Now we build the dependencies for python-imaging::
+
     apt-get build-dep python-imaging
 
 Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::
@@ -73,7 +83,9 @@ Do not forget the "." at the beginning!::
 
     . ../inyoka-testsuite/bin/activate
 
-Before starting we have to initialize the database::
+Before starting we have to initialize the database. Inyoka is using
+`SQLite <http://www.sqlite.org/>`_ by default. To use
+`MySQL <http://www.mysql.com/>` see below::
 
     fab initdb
 
@@ -129,3 +141,16 @@ on the inyoka virtual host domain::
     sudo rabbitmqctl set_permissions -p inyoka inyoka ".*" ".*" ".*"
 
 Now you can use ``fab celeryd`` to start your celery server.
+
+Installing MySQL instead of SQLite
+==================================
+
+Make sure you have libmysqlclient-dev installed::
+
+    apt-get install libmysqlclient-dev
+
+To add the Python bindings for MySQL run::
+
+    pip install MySQL-python
+
+Continue with :doc:`Database and other things`

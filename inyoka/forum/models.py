@@ -50,21 +50,18 @@ class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider)
 
 class ForumQuery(db.Query):
 
-    def _get_subforums(self, forum):
-        forums = []
-        for subforum in forum.subforums:
-            forums.append(subforum)
-            if subforum.subforums:
-                forums.extend(self._get_subforums(subforum))
-        return forums
-
-    def subforums(self):
+    def subforums(self, forum=None):
         """Return a list of all subforums."""
-        forums = self.all()
+        # Execute the query if there is no forum given
+        if not forum:
+            forums = self.all()
+        else:
+            forums = [forum]
         all_forums = []
         for forum in forums:
-            if forum.subforums:
-                all_forums.extend(self._get_subforums(forum))
+            for subforum in forum.subforums:
+                all_forums.append(subforum)
+                all_forums.extend(self.subforums(subforum))
         return all_forums
 
 

@@ -48,9 +48,30 @@ class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider)
         )).options(db.noload('votes'), db.noload('author'))
 
 
+class ForumQuery(db.Query):
+
+    def _get_subforums(self, forum):
+        forums = []
+        for subforum in forum.subforums:
+            forums.append(subforum)
+            if subforum.subforums:
+                forums.extend(self._get_subforums(subforum))
+        return forums
+
+    def subforums(self):
+        """Return a list of all subforums."""
+        forums = self.all()
+        all_forums = []
+        for forum in forums:
+            if forum.subforums:
+                all_forums.extend(self._get_subforums(forum))
+        return all_forums
+
+
 class Forum(db.Model, SerializableObject):
     __tablename__ = 'forum_forum'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
+    query = db.session.query_property(ForumQuery)
 
     #: serializer attributes
     object_type = 'forum.forum'

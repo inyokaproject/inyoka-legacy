@@ -45,15 +45,9 @@ class EditForumForm(Form):
                              query_factory=lambda: Tag.query,
                              validators=[validators.Length(min=1)])
 
-    def _parent_in_subforums(self, forum, parent):
-        if forum == parent:
-            return True
-        for subforum in forum.subforums:
-            if self._parent_in_subforums(subforum, parent):
-                return True
-
     def validate_parent(self, field):
         message = lazy_gettext(u"You can't choose the forum itself or one of its subforums as parent")
         forum = Forum.query.filter_by(slug=self.slug.data).first()
-        if forum and field.data and self._parent_in_subforums(forum, field.data):
+        forums = Forum.query.filter_by(slug=self.slug.data).subforums()
+        if field.data in forums or field.data == forum:
             raise ValidationError(message)

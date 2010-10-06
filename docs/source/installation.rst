@@ -29,7 +29,7 @@ To get Inyoka work properly we need those dependencies (with headers):
  * libsqlite3-dev (if we want to use SQLite)
  * libmysqlclient-dev (if we want to use MySQL)
 
-For Ubuntu (or any Debian based distribution) use ``aptitude`` to install::
+For Ubuntu (or any Debian based distribution) use ``aptitude`` to install:
 
 For SQLite::
 
@@ -74,6 +74,8 @@ default `inyoka.ini` will be created.  You can, of course, create and modify
 for you own purposes.
 
 
+.. _database-configuration:
+
 Database and other things
 =========================
 
@@ -85,7 +87,7 @@ Do not forget the "." at the beginning!::
 
 Before starting we have to initialize the database. Inyoka is using
 `SQLite <http://www.sqlite.org/>`_ by default. To use
-`MySQL <http://www.mysql.com/>` see below::
+`MySQL <http://www.mysql.com/>`_ see below::
 
     fab initdb
 
@@ -153,4 +155,8 @@ To add the Python bindings for MySQL run::
 
     pip install MySQL-python
 
-Continue with :doc:`Database and other things`
+Now we can initialize the database::
+
+    fab initdb
+
+Now continue with :ref:`database-configuration`

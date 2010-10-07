@@ -148,7 +148,7 @@ def create_search_document(id, obj):
         # if the returned object is a list item we iterate over it and
         # set `key` multiply to all its children, otherwise once for
         # the value.
-        for v in (isinstance(value, list) and value or [value]):
+        for v in (value if isinstance(value, list) else [value]):
             doc.fields.append(Field(key, unicode(v)))
     return doc
 
@@ -158,6 +158,8 @@ def register_search_fields(indexer):
     Takes an `IndexerConnection` and registers the search fields.
     """
     lang = ctx.cfg['language']
+    # when adding a new INDEX_EXACT field that should be searchable, don't
+    # forget to add it to the `allow` list of the search query call
     indexer.add_field_action('title', FieldActions.INDEX_FREETEXT, weight=5, language=lang)
     indexer.add_field_action('text', FieldActions.INDEX_FREETEXT, language=lang, spell=True)
     indexer.add_field_action('author', FieldActions.INDEX_EXACT)

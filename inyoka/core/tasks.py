@@ -112,7 +112,7 @@ def search_query(q, page):
     """
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
-    query = searcher.query_parse(q)
+    query = searcher.query_parse(q, allow=['tag', 'author'])
     results = searcher.search(query, offset, offset + count)
     total = results.matches_estimated
     return [result.id.split('-', 1) for result in results], total

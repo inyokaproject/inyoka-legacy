@@ -335,7 +335,7 @@ def search(query, count=50):
     from inyoka.core.api import ctx
     searcher = SearchConnection(ctx.cfg['search.database'])
 
-    query = searcher.query_parse(query)
+    query = searcher.query_parse(query, allow=['tag', 'author'])
     results = searcher.search(query, 0, int(count))
 
     for result in results:

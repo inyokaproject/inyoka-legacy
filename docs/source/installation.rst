@@ -74,10 +74,8 @@ default `inyoka.ini` will be created.  You can, of course, create and modify
 for you own purposes.
 
 
-.. _database-configuration:
-
-Database and other things
-=========================
+Database initialization
+=======================
 
 We are now ready to activate the virtual environment
 (``../inyoka-testsuite`` is the default installation folder, may be replaced).
@@ -94,6 +92,11 @@ Before starting we have to initialize the database. Inyoka is using
 And create some Test Data::
 
     fab reset
+
+.. _starting-the-server:
+
+Starting the server
+===================
 
 Last but not least make some DNS Setup in the ``/etc/hosts``::
 
@@ -159,4 +162,8 @@ Now we can initialize the database::
 
     fab initdb
 
-Now continue with :ref:`database-configuration`
+And create some Test Data::
+
+    fab reset
+
+Now continue with :ref:`starting-the-server`

@@ -31,3 +31,4 @@ blinker==1.1
 mercurial==1.6.3
 # We use the flickzeug trunk as there's no official release yet
 http://bitbucket.org/s0undt3ch/flickzeug/get/tip.gz
+xappy==0.5

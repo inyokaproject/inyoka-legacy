@@ -36,8 +36,6 @@ from inyoka.utils.logger import logger
 from inyoka.utils.urls import get_base_url_for_controller
 
 
-logger.disabled = True
-
 warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 

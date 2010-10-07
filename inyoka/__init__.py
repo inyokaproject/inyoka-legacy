@@ -14,7 +14,12 @@ import os
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from operator import methodcaller
+
 from werkzeug import find_modules, import_string, cached_property
+
+from logbook import Processor
+
+import inyoka.utils.logger # import for side effects, ugly i know...
 from inyoka.context import LocalProperty
 from inyoka.core.config import ListConfigField
 from inyoka.utils.hgutil import iui, hgcmd
@@ -311,6 +316,9 @@ def _bootstrap():
 
     # setup components
     ctx.load_packages(ctx.cfg['activated_components'])
+
+    # makes INYOKA_REVISION visible in the extra dict of every log record
+    Processor(lambda x: x.extra.update(INYOKA_REVISION=INYOKA_REVISION)).push_application()
 
 
 _bootstrap()

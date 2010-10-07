@@ -23,6 +23,7 @@ from inyoka.core.api import db, IController, Request, Response, \
 from inyoka.core.exceptions import HTTPException, NotFound
 from inyoka.core.routing import Map
 from inyoka.utils.http import notfound
+from inyoka.utils.logger import RequestProcessor
 
 
 class _RequestContext(object):
@@ -205,23 +206,25 @@ class RequestDispatcher(object):
         self.ctx.bind()
         with self.request_context(environ) as reqctx:
             request = reqctx.request
-            response = self.dispatch_request(request, environ)
 
-            # apply common response processors like cookies and etags
-            if request.session.should_save:
-                # check for permanent session saving
-                expires = None
-                if request.session.permanent:
-                    lifetime = timedelta(days=ctx.cfg['permanent_session_lifetime'])
-                    expires = datetime.utcnow() + lifetime
+            with RequestProcessor(request):
+                response = self.dispatch_request(request, environ)
 
-                request.session.save_cookie(response, ctx.cfg['cookie_name'],
-                    expires=expires, httponly=True,
-                    domain=ctx.cfg['cookie_domain_name'])
+                # apply common response processors like cookies and etags
+                if request.session.should_save:
+                    # check for permanent session saving
+                    expires = None
+                    if request.session.permanent:
+                        lifetime = timedelta(days=ctx.cfg['permanent_session_lifetime'])
+                        expires = datetime.utcnow() + lifetime
 
-            if response.status == 200:
-                response.add_etag()
-                response = response.make_conditional(request)
+                    request.session.save_cookie(response, ctx.cfg['cookie_name'],
+                        expires=expires, httponly=True,
+                        domain=ctx.cfg['cookie_domain_name'])
+
+                if response.status == 200:
+                    response.add_etag()
+                    response = response.make_conditional(request)
 
             return response(environ, start_response)
 

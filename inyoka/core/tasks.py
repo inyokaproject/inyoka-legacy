@@ -17,7 +17,7 @@ from xappy import SearchConnection, IndexerConnection, UnprocessedDocument, \
 from inyoka.context import ctx
 from inyoka.core.auth.models import User
 from inyoka.core.resource import IResourceManager
-from inyoka.core.search import create_search_document
+from inyoka.core.search import create_search_document, allowed_fields
 from inyoka.core.subscriptions import SubscriptionAction
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.core.templating import render_template
@@ -112,7 +112,7 @@ def search_query(q, page):
     """
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
-    query = searcher.query_parse(q, allow=['tag', 'author'])
+    query = searcher.query_parse(q, allow=allowed_fields)
     results = searcher.search(query, offset, offset + count)
     total = results.matches_estimated
     return [result.id.split('-', 1) for result in results], total

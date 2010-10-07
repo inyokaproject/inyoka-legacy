@@ -333,9 +333,10 @@ def search(query, count=50):
     """
     from xappy import SearchConnection
     from inyoka.core.api import ctx
+    from inyoka.core.search import allowed_fields
     searcher = SearchConnection(ctx.cfg['search.database'])
 
-    query = searcher.query_parse(query, allow=['tag', 'author'])
+    query = searcher.query_parse(query, allow=allowed_fields)
     results = searcher.search(query, 0, int(count))
 
     for result in results:

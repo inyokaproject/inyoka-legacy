@@ -26,6 +26,9 @@ search_database = TextConfigField('search.database', default=u'search.db')
 #: How many objects should be displayed per page when searching?
 search_count = IntegerConfigField('search.count', default=20)
 
+#: fields allowed for direct search
+allowed_fields = ['tag', 'author', 'text', 'title', 'date']
+
 
 class SearchProvider(Interface):
     """

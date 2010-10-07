@@ -21,6 +21,7 @@ from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination, SearchPagination
 from inyoka.utils.sortable import Sortable
+from inyoka.utils.text import get_search_words
 from inyoka.portal.forms import ProfileForm, SearchForm, DeactivateProfileForm,\
     get_change_password_form
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
@@ -178,7 +179,7 @@ class PortalController(IController):
                 'pagination': pagination,
                 # XXX: Does it make sense to move this to a jinja template
                 #      filter? I'm unsure as it's only used once.
-                'highlight': lambda t, l: hl.makeSample(t, q.split(' '),
+                'highlight': lambda t, l: hl.makeSample(t, get_search_words(q),
                                 maxlen=l, hl=('<strong>', '</strong>')),
             }
         return {

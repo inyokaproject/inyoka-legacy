@@ -20,6 +20,9 @@ _string_inc_re = re.compile(r'(\d+)$')
 _placeholder_re = re.compile(r'%(\w+)%')
 _default_slug_format = u'%year%/%month%/%day%/%slug%'
 
+# get only parts that are relevant for highlighting search terms
+_search_re = re.compile(r'[\w:]+')
+
 
 def get_random_password():
     """This function returns a pronounceable word."""
@@ -173,6 +176,22 @@ def _make_date_slug_part(key, places):
             return (u'%%0%dd' % places) % value
         return unicode(value)
     return key, handler
+
+
+def get_search_words(q):
+    """
+    Filter the words of a search query string that aren't xapian statements.
+    This is useful for highlighting these words.
+    """
+    for word in _search_re.findall(q):
+        word = word.lower()
+        # filter out search key words
+        if word in ['and', 'or', 'xor', 'not', 'near', 'adj']:
+            continue
+        # filter out field names
+        if ':' in word:
+            yield word.split(':', 1)[1]
+        yield word
 
 
 #: a dict of slug part handlers for gen_timestamped_slug

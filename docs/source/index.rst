@@ -27,6 +27,7 @@ Core Tools
 .. toctree::
     :maxdepth: 2
 
+    core/search
     core/subscriptions
 
 References

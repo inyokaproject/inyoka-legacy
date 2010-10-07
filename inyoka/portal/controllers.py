@@ -8,19 +8,25 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from xappy.highlight import Highlighter
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect, _, login_required
 from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User, UserProfile, Group
 from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
+from inyoka.core.search import query
 from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
-from inyoka.utils.pagination import URLPagination
+from inyoka.utils.pagination import URLPagination, SearchPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.forms import ProfileForm, get_change_password_form, get_deactivate_profile_form
+from inyoka.portal.forms import ProfileForm, SearchForm, \
+    get_change_password_form, get_deactivate_profile_form
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
+
+
+hl = Highlighter(ctx.cfg['language'])
 
 
 def context_modifier(request, context):
@@ -44,6 +50,7 @@ class PortalController(IController):
         Rule('/groups/', endpoint='groups'),
         Rule('/group/<name>/', endpoint='group'),
         Rule('/tag/<slug>/', endpoint='tag'),
+        Rule('/search/', endpoint='search'),
     ]
 
     @view
@@ -145,6 +152,38 @@ class PortalController(IController):
         return {
             'tag': tag,
             'content': content,
+        }
+
+    @view
+    @templated('portal/search.html', modifier=context_modifier)
+    def search(self, request):
+        form = SearchForm(request.args)
+
+        if 'q' in request.args and form.validate():
+            page = form['page'].data
+            q = form['q'].data
+
+            # TODO: This is done by a celery task. As we have to wait for the
+            #       result, the server process may be idle for some time. Maybe
+            #       it would be better to send a temporary page and check
+            #       dynamically via ajax whether the result has arrived.
+            results, total, corrected = query(q, page=page)
+
+            pagination = SearchPagination(page, total, request.args)
+
+            return {
+                'results': results,
+                'corrected': corrected,
+                'form': form,
+                'pagination': pagination,
+                # XXX: Does it make sense to move this to a jinja template
+                #      filter? I'm unsure as it's only used once.
+                'highlight': lambda t, l: hl.makeSample(t, q.split(' '),
+                                maxlen=l, hl=('<strong>', '</strong>')),
+            }
+        return {
+            'form': form,
+            'results': None,
         }
 
 

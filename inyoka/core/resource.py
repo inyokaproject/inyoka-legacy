@@ -25,6 +25,9 @@ class IResourceManager(Interface):
     #: subsystem.  Models not listed won't be recognized by structure
     #: changing operations such as initial table creation.
     models = []
+    #: List all search providers here to register them, otherwise their data
+    #: won't be indexed.
+    search_providers = []
 
     @classmethod
     def get_models(cls, tables=False):
@@ -41,3 +44,11 @@ class IResourceManager(Interface):
                     yield model
                 else:
                     yield model.__table__ if tables else model
+
+    @classmethod
+    def get_search_providers(cls):
+        dct = {}
+        for component in ctx.get_implementations(cls, instances=True):
+            for provider in component.search_providers:
+                dct[provider.name] = provider
+        return dct

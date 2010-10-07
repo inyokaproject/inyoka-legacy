@@ -14,6 +14,7 @@ from inyoka.core.api import _, ctx, db, cache
 from inyoka.core.auth.models import User
 from inyoka.core.markup.parser import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
+from inyoka.core.search import SearchIndexMapperExtension
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
@@ -153,7 +154,8 @@ class ArticleQuery(db.Query):
 class Article(db.Model):
     __tablename__ = 'news_article'
     __mapper_args__ = {
-        'extension': db.SlugGenerator('slug', 'title')
+        'extension': (db.SlugGenerator('slug', 'title'),
+                      SearchIndexMapperExtension('news'))
     }
     query = db.session.query_property(ArticleQuery)
 

@@ -169,8 +169,9 @@ def celeryd():
     """
     Start a celery worker, using our config.
     """
+    # we start celery with -B option to make periodic tasks possible
     cmd = ('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" '
-           'celeryd --loglevel=INFO')
+           'celeryd --loglevel=INFO -B')
     local(cmd, capture=False)
 
 
@@ -293,3 +294,49 @@ def lsdns(basedomain=None):
     )
 
     ctx.cfg['base_domain_name'] = _old
+
+
+def reindex():
+    """
+    Iterate over all documents we're able to find (even those that are already
+    in the search index) and index them. Note that this may take a lot of time.
+    """
+    from xappy import IndexerConnection, errors
+    from inyoka.core.api import ctx
+    from inyoka.core.resource import IResourceManager
+    from inyoka.core.search import create_search_document,register_search_fields
+
+    indexer = IndexerConnection(ctx.cfg['search.database'])
+
+    # define the search fields
+    register_search_fields(indexer)
+
+    # iterate over all search providers...
+    for name, provider in IResourceManager.get_search_providers().iteritems():
+        # ... to get all their data
+        for id, obj in provider.prepare_all():
+            # create a new document for the search index
+            doc = create_search_document('%s-%s' % (name, id), obj)
+            try:
+                # try to create a new search entry
+                indexer.add(doc)
+            except errors.IndexerError:
+                # there's already an exising one, replace it
+                indexer.replace(doc)
+        indexer.flush()
+    indexer.close()
+
+
+def search(query, count=50):
+    """
+    Make a search query and print `count` results.
+    """
+    from xappy import SearchConnection
+    from inyoka.core.api import ctx
+    searcher = SearchConnection(ctx.cfg['search.database'])
+
+    query = searcher.query_parse(query)
+    results = searcher.search(query, 0, int(count))
+
+    for result in results:
+        print u'%d. %s' % (result.rank, result.id)

@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField, \
-    RecaptchaField, PasswordField
+    RecaptchaField, PasswordField, IntegerField
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.core.database import db
 from inyoka.i18n import lazy_gettext
@@ -83,6 +83,13 @@ def get_registration_form(request):
 class EditTagForm(Form):
     name = TextField(lazy_gettext(u'Name'), [validators.Required(),
 		validators.Length(max=20),validators.is_valid_tag_name()])
+
+
+class SearchForm(Form):
+    csrf_disabled = True
+
+    q = TextField(lazy_gettext(u'Search'), [validators.Required()])
+    page = IntegerField(lazy_gettext(u'Page'), default=1)
 
 
 def get_change_password_form(request):

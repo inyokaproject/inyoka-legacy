@@ -84,7 +84,7 @@ from werkzeug import FileStorage
 from mimetypes import guess_type
 import sqlalchemy
 from sqlalchemy import MetaData, create_engine
-from sqlalchemy import orm, sql, exc
+from sqlalchemy import orm, sql, exc, func
 from sqlalchemy.interfaces import ConnectionProxy
 from sqlalchemy.orm.session import Session as SASession
 from sqlalchemy.engine.url import make_url, URL
@@ -234,28 +234,23 @@ def find_next_increment(column, string, max_length=None):
     return get_next_increment(flatten_iterator(existing), string, max_length)
 
 
-def select_blocks(query, column, block_size=1000, start_with=0, max_fails=10):
+def select_blocks(query, column, block_size=1000, start_with=0):
     """
-    Execute a query blockwise to prevent lack of memory.
+    Execute a query blockwise to prevent lack of memory. Yields all rows
+    seperately.
+    You've to specify an id column, `block_size` and `start_with` are optional.
 
-    :param query: The SQLAlchemy query object.
-    :param column: The SQLAlchemy column object to use for selecting.
-    :param block_size: The range of objects to fetch.
-    :param start_with: The object number to start with.
-    :param max_fails: Sets the number of failours (empty query sets).
-                      If reached fail silently.
+    Example::
+
+        query = MyModel.query.options(db.eagerload(MyModel.relation)) \
+                             .filter(MyModel.id > 100)
+        for obj in db.select_blocks(query, MyModel.id):
+            ...
     """
     range = (start_with, start_with + block_size)
-    failed = 0
-    while failed < max_fails:
-        result = query.where(column.between(*range)).execute()
-        i = 0
-        for i, row in enumerate(result):
-            yield row
-        if i == 0:
-            failed += 1
-        else:
-            failed = 0
+    while range[0] < session.execute(db.select([func.max(column)])).fetchone()[0]:
+        for obj in query.filter(column.between(*range)):
+            yield obj
         range = range[1] + 1, range[1] + block_size
 
 
@@ -621,6 +616,7 @@ def _make_module():
     db.atomic_add = atomic_add
     db.no_autoflush = no_autoflush
     db.find_next_increment = find_next_increment
+    db.select_blocks = select_blocks
     db.Model = Model
     db.Query = Query
     db.File = File

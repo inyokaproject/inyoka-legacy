@@ -107,7 +107,7 @@ here for demonstration reasons.
 
 Install and start RabbitMQ::
 
-    sudo apt-get rabbitmq-server
+    sudo apt-get install rabbitmq-server
     sudo /etc/init.d/rabbitmq-server start
 
 The server now runs fine and only needs to be configured to create a new

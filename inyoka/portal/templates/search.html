@@ -1,0 +1,28 @@
+{% extends "portal/base.html" %}
+{% from 'utils/macros.html' import form_field %}
+{% block content %}
+<h1>{{ _('Search') }}</h1>
+<form action="" method="get">
+  {{ form.q }}
+  {%- if corrected|default() %}
+  <p>{{ _('Did you mean:') }} <a href="{{ href('portal/search', q=corrected) }}">{{ corrected }}</a></p>
+  {%- endif %}
+  <input type="submit" />
+</form>
+
+{%- if results %}
+{%- for result in results %}
+<strong><a href="{{ result['link'] }}">{{ highlight(result['title'], 50)|safe }}</a></strong>
+<p>
+  {{ highlight(result['text'], 400)|safe }}
+</p>
+<p>
+  {%- for tag in result.get('tag', []) %}
+  <a class="tag" href="{{ href(tag) }}">{{ tag }}</a>
+  {%- endfor %}
+</p>
+{%- endfor %}
+{%- endif %}
+
+{% if results %}{{ pagination() }}{% endif %}
+{% endblock content %}

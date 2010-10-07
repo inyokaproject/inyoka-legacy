@@ -29,6 +29,7 @@
 """
 from werkzeug import Href, url_encode
 from markupsafe import Markup, escape
+from inyoka.core.api import ctx
 from inyoka.core.exceptions import NotFound
 from inyoka.utils.decorators import abstract
 from inyoka.i18n import _
@@ -319,3 +320,19 @@ class GETPagination(Pagination):
             if self.link: # avoid query string of only `?`
                 return self.link
         return '%s?%s' % (self.link or u'', url_encode(args))
+
+
+class SearchPagination(GETPagination):
+    def __init__(self, page, total, args):
+        self.page = page
+        self.link = None
+        self.args = args
+        self.per_page = ctx.cfg['search.count']
+        self.total = total
+
+        self.pages = (max(0, self.total - 1) // self.per_page) + 1
+
+        if self.page > self.pages or self.page < 1:
+            raise NotFound()
+
+        offset = (self.page - 1) * self.per_page

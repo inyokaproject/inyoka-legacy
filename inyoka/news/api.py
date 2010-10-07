@@ -10,7 +10,9 @@
 """
 from inyoka.core.api import IResourceManager
 from inyoka.news.models import Article, Comment, article_tag
+from inyoka.news.search import NewsSearchProvider
 
 
 class NewsResourceManager(IResourceManager):
     models = [Article, Comment, article_tag]
+    search_providers = [NewsSearchProvider()]

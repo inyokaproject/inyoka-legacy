@@ -12,9 +12,10 @@ from datetime import datetime
 from collections import defaultdict
 from werkzeug import cached_property
 from inyoka.core.api import _, db, SerializableObject
+from inyoka.core.auth.models import User
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
-from inyoka.core.auth.models import User
+from inyoka.core.search import SearchIndexMapperExtension
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 from inyoka.utils import confidence
 
@@ -212,7 +213,8 @@ class Question(Entry):
     several tags."""
     __tablename__ = 'forum_question'
     __mapper_args__ = {
-        'extension': db.SlugGenerator('slug', 'title'),
+        'extension': (db.SlugGenerator('slug', 'title'),
+                      SearchIndexMapperExtension('question')),
         'polymorphic_identity': u'question'
     }
     query = db.session.query_property(QuestionQuery)
@@ -258,6 +260,7 @@ class Question(Entry):
 class Answer(Entry):
     __tablename__ = 'forum_answer'
     __mapper_args__ = {
+        'extension': SearchIndexMapperExtension('answer'),
         'polymorphic_identity': u'answer'
     }
 

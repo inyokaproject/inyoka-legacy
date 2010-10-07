@@ -255,6 +255,9 @@ $.TokenList = function (input, settings) {
     function init_list () {
         var li_data = settings.prePopulate;
         if(li_data && li_data.length) {
+            // Clear the hidden field to prevent multiple entries because of
+            // browsers autocomplete feature
+            hidden_input.val("");
             for(var i in li_data) {
                 if (!$.inArray(li_data[i].name, saved_tokens) > -1) {
                   saved_tokens.push(li_data[i].name)
@@ -262,7 +265,7 @@ $.TokenList = function (input, settings) {
                       .addClass(settings.classes.token)
                       .insertBefore(input_token);
 
-                  $("<span>x</span>")
+                  $("<span>X</span>")
                       .addClass(settings.classes.tokenDelete)
                       .appendTo(this_token)
                       .click(function () {
@@ -321,7 +324,7 @@ $.TokenList = function (input, settings) {
       .insertBefore(input_token);
 
       // The 'delete token' button
-      $("<span>x</span>")
+      $("<span>X</span>")
           .addClass(settings.classes.tokenDelete)
           .appendTo(this_token)
           .click(function () {

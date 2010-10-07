@@ -109,11 +109,8 @@ def get_change_password_form(request):
 
     return ChangePasswordForm
 
-def get_deactivate_profile_form(request):
 
-	class DeactivateProfileForm(Form):
-		password = PasswordField(lazy_gettext(u'Password'),
-			[validators.Required()],
-			widget=widgets.PasswordInput(False))
-
-	return DeactivateProfileForm
+class DeactivateProfileForm(Form):
+        password = PasswordField(lazy_gettext(u'Password'),
+                [validators.Required()],
+                widget=widgets.PasswordInput(False))

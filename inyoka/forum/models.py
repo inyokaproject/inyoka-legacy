@@ -49,9 +49,27 @@ class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider)
         )).options(db.noload('votes'), db.noload('author'))
 
 
+class ForumQuery(db.Query):
+
+    def subforums(self, forum=None):
+        """Return a list of all subforums."""
+        # Execute the query if there is no forum given
+        if not forum:
+            forums = self.all()
+        else:
+            forums = [forum]
+        all_forums = []
+        for forum in forums:
+            for subforum in forum.subforums:
+                all_forums.append(subforum)
+                all_forums.extend(self.subforums(subforum))
+        return all_forums
+
+
 class Forum(db.Model, SerializableObject):
     __tablename__ = 'forum_forum'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'name')}
+    query = db.session.query_property(ForumQuery)
 
     #: serializer attributes
     object_type = 'forum.forum'

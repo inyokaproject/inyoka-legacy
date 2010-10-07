@@ -21,8 +21,8 @@ from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination, SearchPagination
 from inyoka.utils.sortable import Sortable
-from inyoka.portal.forms import ProfileForm, SearchForm, \
-    get_change_password_form, get_deactivate_profile_form
+from inyoka.portal.forms import ProfileForm, SearchForm, DeactivateProfileForm,\
+    get_change_password_form
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
 
 
@@ -258,7 +258,7 @@ class DeactivateExtension(UserCPExtension):
     @view
     @templated('portal/usercp/deactivate.html', modifier=context_modifier)
     def deactivate(self, request):
-        form = get_deactivate_profile_form(request)(request.form)
+        form = DeactivateProfileForm(request.form)
 
         if form.validate_on_submit():
             if not request.user.check_password(form.password.data):

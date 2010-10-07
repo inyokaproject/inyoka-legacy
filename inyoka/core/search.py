@@ -35,7 +35,7 @@ class SearchProvider(Interface):
     Create a class inheriting from `SearchProvider` to make your app accessible
     to the search. Register this new-created class in your ResourceManager like
     this:
-    
+
         class MySearchProvider(SearchProvider):
             name = 'me'
             ...
@@ -46,7 +46,7 @@ class SearchProvider(Interface):
     You've to implement `prepare` and `prepare_all` and to set `name`.
     """
     name = None
-    
+
     def prepare(self, doc_ids):
         """
         This method takes a list of document ids whose data is yielded one by
@@ -92,9 +92,9 @@ class SearchIndexMapperExtension(db.MapperExtension):
         self.provider = provider
 
     def _update_index(self, mapper, connection, instance):
-       from celery.execute import send_task
-       send_task('inyoka.core.tasks.update_search_index',
-                 [self.provider, instance.id])
+        from celery.execute import send_task
+        send_task('inyoka.core.tasks.update_search_index',
+                  [self.provider, instance.id])
 
     after_insert = after_update = after_delete = _update_index
 

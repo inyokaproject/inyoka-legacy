@@ -82,7 +82,7 @@ def get_registration_form(request):
 
 class EditTagForm(Form):
     name = TextField(lazy_gettext(u'Name'), [validators.Required(),
-		validators.Length(max=20),validators.is_valid_tag_name()])
+                validators.Length(max=20),validators.is_valid_tag_name()])
 
 
 class SearchForm(Form):
@@ -111,6 +111,6 @@ def get_change_password_form(request):
 
 
 class DeactivateProfileForm(Form):
-        password = PasswordField(lazy_gettext(u'Password'),
-                [validators.Required()],
-                widget=widgets.PasswordInput(False))
+    password = PasswordField(lazy_gettext(u'Password'),
+            [validators.Required()],
+            widget=widgets.PasswordInput(False))

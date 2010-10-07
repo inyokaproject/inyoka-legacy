@@ -176,7 +176,7 @@ class User(db.Model, SerializableObject):
     def get_url_values(self, action='profile'):
         if action == 'profile':
             return 'portal/profile', {'username': self.username}
-	
+
     def deactivate(self):
         """
         Deactivates the user for ever. Use with care!!

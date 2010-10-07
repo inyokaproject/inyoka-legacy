@@ -211,7 +211,6 @@ def create_test_users():
             {'real_name': u'Der Rote Ritter mit der langen Lanze', 'location': u'Burg Rotenstein'}),
         u'Kebap':           (u'dö@n.er', u'default',
             {'real_name': u'DönerDönerDönerDöner', 'location': u'Berlin'}),
-
     }
     for user in users:
         email, pw = users[user][:-1]

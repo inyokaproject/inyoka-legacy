@@ -130,3 +130,8 @@ def spell_correct(q):
 def flush_indexer():
     indexer.flush()
     searcher.reopen()
+
+
+# don't store the result of tasks without return value
+for f in [send_activation_mail, send_notifications, update_search_index]:
+    f.ignore_result = True

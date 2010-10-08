@@ -162,7 +162,7 @@ def register_search_fields(indexer):
     """
     lang = ctx.cfg['language']
     # when adding a new INDEX_EXACT field that should be searchable, don't
-    # forget to add it to the `allow` list of the search query call
+    # forget to add it to the `allowed_fields` list
     indexer.add_field_action('title', FieldActions.INDEX_FREETEXT, weight=5, language=lang)
     indexer.add_field_action('text', FieldActions.INDEX_FREETEXT, language=lang, spell=True)
     indexer.add_field_action('author', FieldActions.INDEX_EXACT)

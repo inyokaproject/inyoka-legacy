@@ -1,14 +1,24 @@
 {% extends "portal/base.html" %}
 {% from 'utils/macros.html' import form_field %}
+{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
+{%- set styles = styles|default([]) + ['widgets.css'] %}
 {% block content %}
 <h1>{{ _('Search') }}</h1>
 <form action="" method="get">
-  {{ form.q }}
+  <ol>
+    <li class="horiz">{{ form_field(form.q) }}</li>
+    <li class="horiz">{{ form_field(form.tags) }}</li>
+    <li class="horiz">{{ form_field(form.author) }}</li>
+    {#<li class="horiz">{{ form_field(form.date) }}</li>#}
+  </ol>
+  <fieldset class="actions">
+    <input type="submit" value="{{ _('Search') }}">
+  </fieldset>
+</form>
+
   {%- if corrected|default() %}
   <p>{{ _('Did you mean:') }} <a href="{{ href('portal/search', q=corrected) }}">{{ corrected }}</a></p>
   {%- endif %}
-  <input type="submit" />
-</form>
 
 {%- if results %}
 {%- for result in results %}

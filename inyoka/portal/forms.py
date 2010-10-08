@@ -10,8 +10,10 @@
 """
 from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField, \
     RecaptchaField, PasswordField, IntegerField
+from inyoka.core.forms.fields import AutocompleteField
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.core.database import db
+from inyoka.core.models import Tag
 from inyoka.i18n import lazy_gettext
 from inyoka.core.auth.models import UserProfile
 from inyoka.utils.text import get_random_password
@@ -89,6 +91,10 @@ class SearchForm(Form):
     csrf_disabled = True
 
     q = TextField(lazy_gettext(u'Search'), [validators.Required()])
+    # TODO: Use autocompleted input field
+    author = TextField(lazy_gettext(u'Author'), [validators.is_user(allow_empty=True)])
+    tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
+                        query_factory=lambda: Tag.query)
     page = IntegerField(lazy_gettext(u'Page'), default=1)
 
 

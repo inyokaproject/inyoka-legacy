@@ -26,8 +26,10 @@ search_database = TextConfigField('search.database', default=u'search.db')
 #: How many objects should be displayed per page when searching?
 search_count = IntegerConfigField('search.count', default=20)
 
-#: fields allowed for direct search
-allowed_fields = ['tag', 'author', 'text', 'title', 'date']
+#: fields allowed for direct search. For some reason adding "text" / "title"
+#: here breaks direct field searching, so don't do it. TODO: Research whether
+#: this is wanted behaviour or a bug.
+allowed_fields = ['tag', 'author', 'date']
 
 
 class SearchProvider(Interface):
@@ -99,7 +101,7 @@ class SearchIndexMapperExtension(db.MapperExtension):
     after_insert = after_update = after_delete = _update_index
 
 
-def query(q, page=1):
+def query(q, page=1, **kwargs):
     """
     This function does two things:
         - It searches the search index for `q` which may be user-entered text.
@@ -116,7 +118,7 @@ def query(q, page=1):
           otherwise `None`
     """
     from celery.execute import send_task
-    t1 = send_task('inyoka.core.tasks.search_query', [q, page])
+    t1 = send_task('inyoka.core.tasks.search_query', [q, page], kwargs)
     t2 = send_task('inyoka.core.tasks.spell_correct', [q])
 
     results = {}

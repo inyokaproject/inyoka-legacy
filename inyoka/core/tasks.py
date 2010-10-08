@@ -101,7 +101,7 @@ def update_search_index(provider, doc_id):
 
 
 @task
-def search_query(q, page):
+def search_query(q, page, author=None, tags=[]):
     """
     Searches for the query `q` in the search index.
 
@@ -113,6 +113,14 @@ def search_query(q, page):
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
     query = searcher.query_parse(q, allow=allowed_fields)
+
+    if author:
+        query = searcher.query_filter(query, searcher.query_field('author',
+                                                                  author))
+
+    for tag in tags:
+        query = searcher.query_filter(query, searcher.query_field('tag', tag))
+
     results = searcher.search(query, offset, offset + count)
     total = results.matches_estimated
     return [result.id.split('-', 1) for result in results], total

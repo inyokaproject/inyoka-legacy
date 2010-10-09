@@ -46,7 +46,7 @@ No imports from :mod:`inyoka.core.api` in core and utils (to avoid recursive imp
 JavaScript
 ----------
 
-JavaScript code is intended with 2 spaces and *only two spaces*.
+JavaScript code is indented with 2 spaces and *only two spaces*.
 
 HTML
 ----

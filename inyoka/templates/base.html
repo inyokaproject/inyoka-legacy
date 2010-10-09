@@ -9,23 +9,22 @@
     <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
     {#- Commonly used javascript files that need to included first #}
     {%- for script in ['jquery.js', 'jquery.ui.js', 'babel.js', 'Inyoka.js'] %}
-    <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
+      <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}
-     <script type=text/javascript>
-       Inyoka.SCRIPT_ROOT = {{ request.url_root|jsonencode|safe }};
-       Inyoka.SERVICE_ROOT = {{ SERVICE_URL|jsonencode|safe }};
-     </script>
+    <script type="text/javascript">
+      Inyoka.SCRIPT_ROOT = {{ request.url_root|jsonencode|safe }};
+      Inyoka.SERVICE_ROOT = {{ SERVICE_URL|jsonencode|safe }};
+    </script>
     <script type="text/javascript" src="{{ href('api/core/get_translations') }}"></script>
     {%- for script in scripts %}
-    <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
+      <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}
     {%- for style in styles %}
-    <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" media="screen">
+      <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/' + style) }}" media="screen">
     {%- endfor %}
     <link rel="stylesheet" type="text/css" href="{{ href('static', file='style/print.css') }}" media="print">
     <link rel="shortcut icon" type="image/icon" href="{{ href('static', file='img/favicon.ico') }}">
-    {% block html_head %}
-    {% endblock %}
+    {% block html_head %}{% endblock %}
   </head>
   <body>
 
@@ -38,13 +37,13 @@
     <div id="head">
       <h1><a href="{{ request.host_url }}">Inyoka</a></h1>
       <div id="navi">
-      <a href="{{ href('portal/index') }}" class="icon-portal{% if active=='portal' %} active{% endif %}">{{ _('Portal') }}</a>
-      <a href="{{ href('paste/index') }}" class="icon-pastebin{% if active=='paste' %} active{% endif %}">{{ _('Pastebin') }}</a>
-      <a href="{{ href('news/index') }}" class="icon-news{% if active=='news' %} active{% endif %}">{{ _('News') }}</a>
-      <a href="{{ href('wiki/index') }}" class="icon-wiki{% if active=='wiki' %} active{% endif %}">{{ _('Wiki') }}</a>
-      <a href="{{ href('forum/index') }}" class="icon-forum{% if active=='forum' %} active{% endif %}">{{ _('Forum') }}</a>
-      {# TODO: ACL #}
-      <a href="{{ href('admin/index') }}" class="icon-admin{% if active=='admin' %} active{% endif %}">{{ _('Admin') }}</a>
+        <a href="{{ href('portal/index') }}" class="icon-portal{% if active=='portal' %} active{% endif %}">{{ _('Portal') }}</a>
+        <a href="{{ href('paste/index') }}" class="icon-pastebin{% if active=='paste' %} active{% endif %}">{{ _('Pastebin') }}</a>
+        <a href="{{ href('news/index') }}" class="icon-news{% if active=='news' %} active{% endif %}">{{ _('News') }}</a>
+        <a href="{{ href('wiki/index') }}" class="icon-wiki{% if active=='wiki' %} active{% endif %}">{{ _('Wiki') }}</a>
+        <a href="{{ href('forum/index') }}" class="icon-forum{% if active=='forum' %} active{% endif %}">{{ _('Forum') }}</a>
+        {# TODO: ACL #}
+        <a href="{{ href('admin/index') }}" class="icon-admin{% if active=='admin' %} active{% endif %}">{{ _('Admin') }}</a>
       </div>
     </div>
     <div id="page">
@@ -52,24 +51,24 @@
         <div id="page-navbar">
           <span class="pathbar">Yet / A Dummy / Pathbar</span>
           <span class="user-status">
-            {% if request.user.is_anonymous %}
+            {%- if request.user.is_anonymous -%}
               <a href="{{ href('portal/login') }}">{{ _('Login') }}</a> <a href="{{ href('portal/register') }}">{{ _('Register') }}</a>
-            {% else %}
-            {{ _('Hello %(name)s (%(status)s)', name=request.user.display_name, status=request.user.status) }} <a href="{{ href('usercp/index') }}">{{ _('User Control Panel') }}</a> <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
-            {% endif %}
+            {%- else -%}
+              {{ _('Hello %(name)s (%(status)s)', name=request.user.display_name, status=request.user.status) }} <a href="{{ href('usercp/index') }}">{{ _('User Control Panel') }}</a> <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
+            {%- endif -%}
           </span>
         </div>
-        {% if introduction %}
+        {%- if introduction %}
         <div id="page-introduction">
           {% block introduction %}{% endblock introduction %}
         </div>
-        {% endif %}
-        {% if sidebar %}
+        {%- endif %}
+        {%- if sidebar %}
           <div id="page-sidebar">
-          {% block download %}{% endblock download %}
-          {% block sidebar %}{% endblock sidebar %}
+            {% block download %}{% endblock download %}
+            {% block sidebar %}{% endblock sidebar %}
           </div>
-        {% endif %}
+        {%- endif %}
         <div id="content" {% if sidebar %}class="with-sidebar"{% endif %}>
           {% block content %}{% endblock content %}
         </div>

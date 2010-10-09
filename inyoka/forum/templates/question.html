@@ -2,129 +2,132 @@
 {% from 'utils/macros.html' import form_fields, user_link %}
 {%- block content %}
 
-<div class="author">{{ _('asked') }} <strong>{{ question.date_created|timedelta }}</strong><br>
-    {{ _('by') }} {{ user_link(question.author) }}
-    ({{ ngettext('%(num)d visit', '%(num)d visits', question.view_count) }})
-</div>
-
-<div class="question-detail">
-  <h1>{{ question.title }}</h1>
-
-
-  <div class="vote">
-    {% set vote = question.get_vote(request.user) %}
-    {% if vote and vote.score > 0 %}
-      <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
-        <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
-      </a>
-    {% else %}
-      <a href="{{ href('forum/vote', entry_id=question.id, action='up') }}">
-        <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
-      </a>
-    {% endif %}
-    <strong>{{ question.score }}</strong>
-    {% if vote and vote.score < 0 %}
-      <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
-        <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
-      </a>
-    {% else %}
-      <a href="{{ href('forum/vote', entry_id=question.id, action='down') }}">
-        <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
-      </a>
-    {% endif %}
-    <p>
-    {% if vote and vote.favorite %}
-    <a href="{{ href('forum/vote', entry_id=question.id, action='nofavorite') }}">
-        <img src="{{ href('static', file='img/favorite.png') }}" alt="{{ _('favorite') }}">
-      </a>
-    {% else %}
-      <a href="{{ href('forum/vote', entry_id=question.id, action='favorite') }}">
-        <img src="{{ href('static', file='img/nofavorite.png') }}" alt="{{ _('no favorite') }}">
-      </a>
-    {% endif %}
-    </p>
+  <div class="author">{{ _('asked') }} <strong>{{ question.date_created|timedelta }}</strong><br>
+      {{ _('by') }} {{ user_link(question.author) }}
+      ({{ ngettext('%(num)d visit', '%(num)d visits', question.view_count) }})
   </div>
 
-  <div class="summary">
+  <div class="question-detail">
+    <h1>{{ question.title }}</h1>
 
-    <p>{{ question.rendered_text|safe }}</p>
-    {% if question.author.profile.signature_html %}
-      <div class="signature">{{ question.author.profile.signature_html|safe }}</div>
-    {% endif %}
-    <p>{{ _('Tags: ') }}
-        {% for tag in question.tags %}
-        <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
-        {% endfor %}
-    </p>
-  </div>
-</div>
 
-<br style="clear: both">
-
-<h2>
-{%- trans count=question.answer_count, human_count=question.answer_count|humanize|capitalize -%}
-{{ human_count }} Answer{% pluralize %}{{ human_count }} Answers
-{%- endtrans -%}
-</h2>
-{% set tab = sort or 'votes' %}
-<ul class="pagetabs">
-    <li{% if tab == 'votes' %} class="selected"{% endif %}>
-        <a href="{{ href(question) }}">{{ _('Votes') }}</a></li>
-    <li{% if tab == 'latest' %} class="selected"{% endif %}>
-        <a href="{{ href(question, sort='latest') }}">{{ _('Latest') }}</a></li>
-    <li{% if tab == 'oldest' %} class="selected"{% endif %}>
-        <a href="{{ href(question, sort='oldest') }}">{{ _('Oldest') }}</a></li>
-</ul>
-
-{% for answer in answers %}
-<div class="answer" id="answer-{{ answer.id }}">
-  <div class="vote">
-    {% set vote = user_votes[answer.id] %}
-    {% if vote and vote > 0 %}
-      <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
-        <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
-      </a>
-    {% else %}
-      <a href="{{ href('forum/vote', entry_id=answer.id, action='up') }}">
-        <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
-      </a>
-    {% endif %}
-    <strong>{{ answer.score }}</strong>
-    {% if vote and vote < 0 %}
-      <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
-        <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
-      </a>
-    {% else %}
-      <a href="{{ href('forum/vote', entry_id=answer.id, action='down') }}">
-        <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
-      </a>
-    {% endif %}
-  </div>
-
-  <div class="summary">
-    <div class="author">
-      {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
-	  {{ user_link(answer.author) }}
+    <div class="vote">
+      {%- set vote = question.get_vote(request.user) %}
+      {% if vote and vote.score > 0 %}
+        <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
+          <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
+        </a>
+      {% else %}
+        <a href="{{ href('forum/vote', entry_id=question.id, action='up') }}">
+          <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
+        </a>
+      {% endif %}
+      <strong>{{ question.score }}</strong>
+      {% if vote and vote.score < 0 %}
+        <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
+          <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
+        </a>
+      {% else %}
+        <a href="{{ href('forum/vote', entry_id=question.id, action='down') }}">
+          <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
+        </a>
+      {% endif %}
+      <p>
+      {% if vote and vote.favorite %}
+      <a href="{{ href('forum/vote', entry_id=question.id, action='nofavorite') }}">
+          <img src="{{ href('static', file='img/favorite.png') }}" alt="{{ _('favorite') }}">
+        </a>
+      {% else %}
+        <a href="{{ href('forum/vote', entry_id=question.id, action='favorite') }}">
+          <img src="{{ href('static', file='img/nofavorite.png') }}" alt="{{ _('no favorite') }}">
+        </a>
+      {% endif %}
+      </p>
     </div>
-    <p>{{ answer.rendered_text|safe }}</p>
-    {% if answer.author.profile.signature_html %}
-      <div class="signature">{{ answer.author.profile.signature_html|safe }}</div>
-    {% endif %}
+
+    <div class="summary">
+
+      {{ question.rendered_text|safe }}
+      {% if question.author.profile.signature_html %}
+        <div class="signature">{{ question.author.profile.signature_html|safe }}</div>
+      {% endif %}
+      <p>{{ _('Tags: ') }}
+        {%- for tag in question.tags %}
+          <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
+        {%- endfor %}
+      </p>
+    </div>
   </div>
-</div>
-<hr class="answer_seperator">
-{% else %}
-<p>{{ _('There aren\'t any answers yet.') }}</p>
-{% endfor %}
 
-{{ pagination() }}
+  <br style="clear: both">
 
-<h2>{{ _('Your Answer') }}</h2>
-<form action="" method="post" id="forum_news_answer">
-  {{ form_fields(form) }}
-  <fieldset class="actions">
-    <input type="submit" value="{{ _('Submit') }}">
-  </fieldset>
-</form>
+  <h2>
+    {%- trans count=question.answer_count, human_count=question.answer_count|humanize|capitalize -%}
+      {{ human_count }} Answer{% pluralize %}{{ human_count }} Answers
+    {%- endtrans -%}
+  </h2>
+  {%- set tab = sort or 'votes' %}
+  <ul class="pagetabs">
+    <li{% if tab == 'votes' %} class="selected"{% endif %}>
+      <a href="{{ href(question) }}">{{ _('Votes') }}</a>
+    </li>
+    <li{% if tab == 'latest' %} class="selected"{% endif %}>
+      <a href="{{ href(question, sort='latest') }}">{{ _('Latest') }}</a>
+    </li>
+    <li{% if tab == 'oldest' %} class="selected"{% endif %}>
+      <a href="{{ href(question, sort='oldest') }}">{{ _('Oldest') }}</a>
+    </li>
+  </ul>
+
+  {% for answer in answers %}
+    <div class="answer" id="answer-{{ answer.id }}">
+      <div class="vote">
+        {%- set vote = user_votes[answer.id] %}
+        {% if vote and vote > 0 %}
+          <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
+            <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
+          </a>
+        {% else %}
+          <a href="{{ href('forum/vote', entry_id=answer.id, action='up') }}">
+            <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
+          </a>
+        {% endif %}
+        <strong>{{ answer.score }}</strong>
+        {% if vote and vote < 0 %}
+          <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
+            <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
+          </a>
+        {% else %}
+          <a href="{{ href('forum/vote', entry_id=answer.id, action='down') }}">
+            <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="summary">
+        <div class="author">
+          {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
+	        {{ user_link(answer.author) }}
+        </div>
+        {{ answer.rendered_text|safe }}
+        {% if answer.author.profile.signature_html %}
+          <div class="signature">{{ answer.author.profile.signature_html|safe }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <hr class="answer_seperator">
+  {% else %}
+    <p>{{ _('There aren\'t any answers yet.') }}</p>
+  {% endfor %}
+
+  {{ pagination() }}
+
+  <h2>{{ _('Your Answer') }}</h2>
+  <form action="" method="post" id="forum_news_answer">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
 
 {%- endblock %}

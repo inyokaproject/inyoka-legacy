@@ -1,11 +1,11 @@
 {% extends 'admin/base.html' %}
 
 {% block admin_content %}
-<ul>
-    {% for forum in forums %}
-    <li><a href="{{ href('admin/forum/forum', id=forum.id) }}">{{ forum.name }}</a></li>
-    {% endfor %}
-</ul>
-<a href="{{ href('admin/forum/forum') }}">{{ _('Create new Forum') }}</a>
+  <ul>
+      {%- for forum in forums %}
+        <li><a href="{{ href('admin/forum/forum', id=forum.id) }}">{{ forum.name }}</a></li>
+      {%- endfor %}
+  </ul>
+  <a href="{{ href('admin/forum/forum') }}">{{ _('Create new Forum') }}</a>
 
 {% endblock %}

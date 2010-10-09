@@ -9,17 +9,24 @@
       <span class="published">
         {%- trans author_link=user_link(article.author),
                   article_pubdate=article.updated|dateformat, article_pubtime=article.updated|timeformat('short') -%}
-        written by {{ author_link }} on {{ article_pubdate }} {{ article_pubtime }}
+          written by {{ author_link }} on {{ article_pubdate }} {{ article_pubtime }}
         {%- endtrans -%}
       </span>
-      {% if article.tags %}<span class="tags">{% for tag in article.tags %}<a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</span>{% endif %}
+      {% if article.tags %}
+        <span class="tags">
+          {%- for tag in article.tags -%}
+            <a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a>
+            {%- if not loop.last %}, {% endif %}
+          {%- endfor -%}
+        </span>
+      {% endif %}
       <span class="comments"><a href="{{ href(article, _anchor='comments') }}">
         {% if article.comment_count %}
-        {%- trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize -%}
-        {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
-        {%- endtrans -%}
+          {%- trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize -%}
+            {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
+          {%- endtrans -%}
         {% else %}
-        {{ _('No Comments') }}
+          {{ _('No Comments') }}
         {% endif %}
       </a></span>
       {# TODO: ACL check #}
@@ -29,50 +36,52 @@
     <div class="intro">{{ article.rendered_intro|safe }}</div>
     <div class="text">{{ article.rendered_text|safe }}</div>
     {%- if article.comments_enabled %}
-    <span class="description">{% if article.comment_count %}
-                              {%- trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize -%}
-                              {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
-                              {%- endtrans -%}
-                              {% else %}
-                              {{ _('No Comments') }}
-                              {% endif %}</span>
-    <ol class="comments">
-    {%- for comment in comments %}
-    <li id="comment_{{ loop.index }}"
-        class="{{ loop.cycle('odd', 'even') -}}
-               {%- if comment.author_id == request.user.id %} owned{% endif -%}
-               {%- if comment.deleted %} hidden{% endif -%}">
-      {{ user_link(comment.author, class_=['comment_author']) }}
-      <img src="{{ href('static', file='img/no_avatar.png') }}" class="avatar">
-      <span class="meta">
-        <strong><a href="#comment_{{ loop.index }}">{{ loop.index }}.</a></strong>
-        <span class="written">{{ comment.pub_date|dateformat }} @ {{ comment.pub_date|timeformat('short') }}</span>
-        <a href="{{ href(comment, action='edit') }}" class="adminlink action action_edit">{{ _('edit') }}</a> |
-        {%- if comment.deleted %}
-        <a href="{{ href(comment, action='restore') }}" class="adminlink action action_restore">{{ _('restore') }}</a>
-        {%- else %}
-        <a href="{{ href(comment, action='hide') }}" class="adminlink action action_hide">{{ _('hide') }}</a>
+      <span class="description">
+        {%- if article.comment_count %}
+          {%- trans count=article.comment_count, human_count=article.comment_count|humanize|capitalize -%}
+            {{ human_count }} Comment{% pluralize %}{{ human_count }} Comments
+          {%- endtrans -%}
+        {% else %}
+          {{ _('No Comments') }}
         {%- endif -%}
       </span>
+      <ol class="comments">
+        {%- for comment in comments %}
+          <li id="comment_{{ loop.index }}"{#
+           #} class="{{ loop.cycle('odd', 'even') -}}
+                     {%- if comment.author_id == request.user.id %} owned{% endif -%}
+                     {%- if comment.deleted %} hidden{% endif -%}">
+            {{ user_link(comment.author, class_=['comment_author']) }}
+            <img src="{{ href('static', file='img/no_avatar.png') }}" class="avatar">
+            <span class="meta">
+              <strong><a href="#comment_{{ loop.index }}">{{ loop.index }}.</a></strong>
+              <span class="written">{{ comment.pub_date|dateformat }} @ {{ comment.pub_date|timeformat('short') }}</span>
+              <a href="{{ href(comment, action='edit') }}" class="adminlink action action_edit">{{ _('edit') }}</a> |
+              {%- if comment.deleted %}
+                <a href="{{ href(comment, action='restore') }}" class="adminlink action action_restore">{{ _('restore') }}</a>
+              {%- else %}
+                <a href="{{ href(comment, action='hide') }}" class="adminlink action action_hide">{{ _('hide') }}</a>
+              {%- endif -%}
+            </span>
 
-      <div class="text">
-        {{ comment.rendered_text|safe }}
+            <div class="text">
+              {{ comment.rendered_text|safe }}
+            </div>
+          </li>
+        {%- endfor %}
+      </ol>
+      <div class="new_comment">
+        <form action="" method="post" id="news_new_comment">
+        {{ form_fields(form, true) }}
+        </form>
       </div>
-    </li>
-    {%- endfor %}
-    </ol>
-    <div class="new_comment">
-      <form action="" method="post" id="news_new_comment">
-      {{ form_fields(form, true) }}
-      </form>
-    </div>
     {% endif %}
     <p>
-      {% if not request.user.subscribed('news.comments.by_entry', article.id) %}
-      <a href="{{ href(article, action='subscribe') }}">{{ _('subscribe') }}</a>
-      {% else %}
-      <a href="{{ href(article, action='unsubscribe') }}">{{ _('unsubscribe') }}</a>
-      {% endif %}
+      {%- if not request.user.subscribed('news.comments.by_entry', article.id) %}
+        <a href="{{ href(article, action='subscribe') }}">{{ _('subscribe') }}</a>
+      {%- else %}
+        <a href="{{ href(article, action='unsubscribe') }}">{{ _('unsubscribe') }}</a>
+      {%- endif %}
     </p>
   </div>
 {% endblock %}

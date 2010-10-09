@@ -3,104 +3,109 @@
 
 {%- block content %}
 
-{% if forum %}
-  <h1>{{ _('Forum “%(forum)s”', forum=forum.name) }}</h1>
+  {% if forum %}
+    <h1>{{ _('Forum “%(forum)s”', forum=forum.name) }}</h1>
 
-  <p>{{ forum.description }}</p>
+    <p>{{ forum.description }}</p>
 
-  {% if forum.subforums %}
-    <p><strong>{{ _('Subforums:') }}</strong>
-    {% for subforum in forum.subforums %}
-      <a href="{{ href(subforum) }}">{{ subforum.name }}</a>
-      {%- if not loop.last %}, {% endif %}
-    {% endfor %}
+    {% if forum.subforums %}
+      <p><strong>{{ _('Subforums:') }}</strong>
+        {%- for subforum in forum.subforums %}
+          <a href="{{ href(subforum) }}">{{ subforum.name }}</a>
+          {%- if not loop.last %}, {% endif %}
+        {%- endfor %}
+      </p>
+    {% endif %}
+
+    <p class="tags">
+      {%- for tag in forum.all_tags %}
+        <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
+      {%- endfor %}
     </p>
+
+    {%- set url_values = {'forum': forum.slug} %}
+
+  {% elif tags %}
+    <h1>{{ _('Tagged Questions') }}</h1>
+
+    <p class="tags">
+      {%- for tag in tags %}
+        <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
+      {%- endfor %}
+    </p>
+
+    {%- set url_values = {'tags': tags|join(' ')} %}
+
+  {% else %}
+    <h1>{{ _('All Questions') }}</h1>
+
+    {%- set url_values = {} %}
   {% endif %}
 
-  <p class="tags">
-  {% for tag in forum.all_tags %}
-    <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
-  {% endfor %}
-  </p>
-
-  {% set url_values = {'forum': forum.slug} %}
-
-{% elif tags %}
-  <h1>{{ _('Tagged Questions') }}</h1>
-
-  <p class="tags">
-  {% for tag in tags %}
-    <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
-  {% endfor %}
-  </p>
-
-  {% set url_values = {'tags': tags|join(' ')} %}
-
-{% else %}
-  <h1>{{ _('All Questions') }}</h1>
-
-  {% set url_values = {} %}
-{% endif %}
-
-<ul class="pagetabs">
-    {% if tab is undefined %}
+  <ul class="pagetabs">
+      {% if tab is undefined %}
         {% set tab = sort or 'latest' %}
-    {% endif %}
-    <li{% if tab == 'latest' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', **url_values) }}">{{ _('Latest') }}</a></li>
-    <li{% if tab == 'active' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='active', **url_values) }}">{{ _('Active') }}</a></li>
-    <li{% if tab == 'unanswered' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='unanswered', **url_values) }}">{{ _('Unanswered') }}</a></li>
-    <li{% if tab == 'votes' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/questions', sort='votes', **url_values) }}">{{ _('Votes') }}</a></li>
-    <li{% if tab == 'ask' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/ask', **url_values) }}">{{ _('Ask Question') }}</a></li>
-</ul>
+      {% endif %}
+      <li{% if tab == 'latest' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', **url_values) }}">{{ _('Latest') }}</a>
+      </li>
+      <li{% if tab == 'active' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', sort='active', **url_values) }}">{{ _('Active') }}</a>
+      </li>
+      <li{% if tab == 'unanswered' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', sort='unanswered', **url_values) }}">{{ _('Unanswered') }}</a>
+      </li>
+      <li{% if tab == 'votes' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/questions', sort='votes', **url_values) }}">{{ _('Votes') }}</a>
+      </li>
+      <li{% if tab == 'ask' %} class="selected"{% endif %}>
+        <a href="{{ href('forum/ask', **url_values) }}">{{ _('Ask Question') }}</a>
+      </li>
+  </ul>
 
-{% block questions_body %}
+  {% block questions_body %}
 
-{% for question in questions %}
-<div class="question">
-  <div class="stats">
-    <div class="votes">
-      {% trans votes=question.score -%}
-      <strong>{{ votes }}</strong> vote
-      {%- pluralize -%}
-      <strong>{{ votes }}</strong> votes
-      {%- endtrans %}
-    </div>
+    {% for question in questions %}
+      <div class="question">
+        <div class="stats">
+          <div class="votes">
+            {% trans votes=question.score -%}
+              <strong>{{ votes }}</strong> vote
+              {%- pluralize -%}
+              <strong>{{ votes }}</strong> votes
+            {%- endtrans %}
+          </div>
 
-    <div class="status{% if not question.answer_count %} unanswered{% endif %}">
-      {% trans answers=question.answer_count -%}
-      <strong>{{ answers }}</strong> answer
-      {%- pluralize -%}
-      <strong>{{ answers }}</strong> answers
-      {%- endtrans %}
-    </div>
-  </div>
+          <div class="status{% if not question.answer_count %} unanswered{% endif %}">
+            {% trans answers=question.answer_count -%}
+              <strong>{{ answers }}</strong> answer
+              {%- pluralize -%}
+              <strong>{{ answers }}</strong> answers
+            {%- endtrans %}
+          </div>
+        </div>
 
-  <div class="author">
-    {{ _('asked <strong>%(date)s</strong>', date=question.date_created|timedelta) }}
-    {{ _('by') }} {{ user_link(question.author) }}
-  </div>
+        <div class="author">
+          {{ _('asked <strong>%(date)s</strong>', date=question.date_created|timedelta) }}
+          {{ _('by') }} {{ user_link(question.author) }}
+        </div>
 
-  <div class="summary">
-    <h2><a href="{{ href(question) }}">{{ question.title }}</a></h2>
+        <div class="summary">
+          <h2><a href="{{ href(question) }}">{{ question.title }}</a></h2>
 
-    <ul class="tags">
-      {% for tag in question.tags %}
-      <li><a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a></li>
-      {% endfor %}
-    </ul>
+          <ul class="tags">
+            {%- for tag in question.tags %}
+              <li><a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a></li>
+            {%- endfor %}
+          </ul>
 
-  </div>
-</div>
-{% else %}
-<p>{{ _('No questions found.') }}</p>
-{% endfor %}
-{{ pagination() }}
+        </div>
+      </div>
+    {% else %}
+      <p>{{ _('No questions found.') }}</p>
+    {% endfor %}
+    {{ pagination() }}
 
-{% endblock %}
+  {% endblock %}
 
 {%- endblock %}

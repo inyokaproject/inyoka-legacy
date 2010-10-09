@@ -8,20 +8,20 @@
     <ul>
       <li><a href="{{ href('news/index') }}">{{ _('Latest Articles') }}</a></li>
       {%- for year, month in archive -%}
-      <li><a href="{{ href('news/archive', year=year, month=month) }}">
-        {{ months[month] }} {{ year }}
-      </a></li>
+        <li><a href="{{ href('news/archive', year=year, month=month) }}">
+          {{ months[month] }} {{ year }}
+        </a></li>
       {%- endfor %}
       {%- if short_archive %}
-      <li><a href="{{ href('news/archive') }}">{{ _('Archive') }}</a></li>
+        <li><a href="{{ href('news/archive') }}">{{ _('Archive') }}</a></li>
       {% endif -%}
     </ul>
     {% if tags %}
       <h3 class="navi_tags">{{ _('Tags') }}</h3>
       <ul>
-      {%- for tag in tags -%}
-        <li><a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a></li>
-      {%- endfor %}
+        {%- for tag in tags -%}
+          <li><a href="{{ href('news/index', slug=tag.slug) }}">{{ tag.name }}</a></li>
+        {%- endfor %}
       </ul>
     {% endif %}
   </div>

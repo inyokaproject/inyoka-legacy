@@ -1,9 +1,9 @@
 {% extends "admin/base.html" %}
 
 {% block admin_content %}
-  <ul>
-  {% for provider in providers %}
+<ul>
+  {%- for provider in providers %}
     <li><a href="{{ provider.get_index_uri() }}">{{ provider.title }}</a></li>
-  {% endfor %}
-  </ul>
+  {%- endfor %}
+</ul>
 {% endblock %}

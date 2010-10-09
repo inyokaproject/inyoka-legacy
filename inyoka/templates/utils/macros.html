@@ -21,7 +21,7 @@
 
 {%- macro form_field_label(field) -%}
   <label for="{{ field.id }}">{{ field.label.text }}
-    {%- if field.flags.required -%}
+    {% if field.flags.required -%}
       <abbr title="{{ _('This field is required.') }}">*</abbr>
     {%- endif %}
   </label>
@@ -87,7 +87,7 @@
   <ol>
     {%- for field in fields %}
       {%- if field.type == 'HiddenField' %}
-          {{ field() }}
+          <li style="display:none">{{ field() }}</li>
       {%- else %}
 	      <li{% if class %} class="{{ class }}"{% endif %}>
 	        {{ form_field(field) }}

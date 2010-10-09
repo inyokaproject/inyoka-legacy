@@ -87,7 +87,7 @@
   <ol>
     {%- for field in fields %}
       {%- if field.type == 'HiddenField' %}
-          <li style="display:none">{{ field() }}</li>
+          <li style="display: none">{{ field() }}</li>
       {%- else %}
 	      <li{% if class %} class="{{ class }}"{% endif %}>
 	        {{ form_field(field) }}

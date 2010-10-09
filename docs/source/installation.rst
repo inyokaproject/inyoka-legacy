@@ -26,6 +26,7 @@ To get Inyoka work properly we need those dependencies (with headers):
  * libxslt
  * libxml2
  * libbz2
+ * uuid-dev
  * libsqlite3-dev (if we want to use SQLite)
  * libmysqlclient-dev (if we want to use MySQL)
 
@@ -33,11 +34,11 @@ For Ubuntu (or any Debian based distribution) use ``aptitude`` to install:
 
 For SQLite::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev libsqlite3-dev
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libsqlite3-dev
 
 For MySQL::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev libmysqlclient-dev
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libmysqlclient-dev
 
 Now we build the dependencies for python-imaging::
 
@@ -72,7 +73,6 @@ Or create it under a user definied path::
 We are ready to run now.  If you start inyoka the first time (see below) a
 default `inyoka.ini` will be created.  You can, of course, create and modify
 for you own purposes.
-
 
 Database initialization
 =======================

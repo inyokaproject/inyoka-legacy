@@ -2,9 +2,11 @@ import os, sys
 import tempfile, shutil
 from os import path
 
+python_version = '2.7'
 pil_version = '1.1.7'
 cldr_version = '1.7.2'
 jinja_version = '2.5.2'
+xapian_version = '1.2.3'
 
 
 def install_requirements(home_dir, requirements):
@@ -19,15 +21,18 @@ def install_requirements(home_dir, requirements):
 def pil_install(home_dir):
     folder = tempfile.mkdtemp(prefix='virtualenv')
 
-    call_subprocess(FETCH_CMD + ['http://effbot.org/downloads/Imaging-%s.tar.gz' % pil_version], cwd=folder)
-    call_subprocess(['tar', '-xzf', 'Imaging-%s.tar.gz' % pil_version], cwd=folder)
+    call_subprocess(FETCH_CMD + ['http://effbot.org/downloads/Imaging-%s.tar.gz' % pil_version],
+                    cwd=folder)
+    call_subprocess(['tar', '-xzf', 'Imaging-%s.tar.gz' % pil_version],
+                    cwd=folder)
 
     img_folder = path.join(folder, 'Imaging-%s' % pil_version)
 
     f1 = path.join(img_folder, 'setup_new.py')
     f2 = path.join(img_folder, 'setup.py')
 
-    file(f1, 'w').write(file(f2).read().replace('import _tkinter', 'raise ImportError()'))
+    file(f1, 'w').write(file(f2).read().replace('import _tkinter',
+                                                'raise ImportError()'))
 
     cmd = [path.join(home_dir, 'bin', 'python')]
     cmd.extend([path.join(os.getcwd(), f1), 'install'])
@@ -36,20 +41,63 @@ def pil_install(home_dir):
     shutil.rmtree(folder)
 
 
+def install_xapian(home_dir):
+    folder = tempfile.mkdtemp(prefix='virtualenv')
+    print 'FOLDER', folder
+    prefix = os.path.realpath(os.path.join(home_dir))
+    print 'PREFIX', prefix
+    pypath = path.join(prefix, 'bin', 'python')
+    print 'PYPATH', pypath
+    xapian_config = os.path.join(folder, 'xapian-core-' +
+                    xapian_version, 'xapian-config')
+    print 'XAPIAN_CONFIG', xapian_config
+    libpath = os.path.join(prefix, 'lib', 'python%s' % python_version)
+    print 'LIBPATH', libpath
+    incpath = os.path.join(prefix, 'include', 'python%s' % python_version)
+    print 'INCPATH', incpath
+
+    call_subprocess(['wget', 'http://oligarchy.co.uk/xapian/%s/xapian-core-%s.tar.gz' %
+                    (xapian_version, xapian_version)], cwd=folder)
+    call_subprocess(['tar', '-xzf', 'xapian-core-%s.tar.gz' % xapian_version],
+                    cwd=folder)
+    call_subprocess(['wget', 'http://oligarchy.co.uk/xapian/%s/xapian-bindings-%s.tar.gz' %
+                    (xapian_version, xapian_version)], cwd=folder)
+
+    call_subprocess(['tar', '-xzf', 'xapian-bindings-%s.tar.gz' % xapian_version],
+                    cwd=folder)
+
+    core_folder = os.path.join(folder, 'xapian-core-' + xapian_version)
+    call_subprocess(['./configure', '--prefix=%s' % prefix], cwd=core_folder)
+    call_subprocess(['make'], cwd=core_folder)
+    call_subprocess(['make', 'install'], cwd=core_folder)
+
+    binding_folder = os.path.join(folder, 'xapian-bindings-' + xapian_version)
+    call_subprocess(['./configure', '--with-python', '--prefix=%s' % prefix,
+                    'PYTHON=%s' % pypath,
+                    'XAPIAN_CONFIG=%s' % xapian_config,
+                    'PYTHON_INC=%s' % incpath,
+                    'PYTHON_LIB=%s' % libpath],
+                    cwd=binding_folder)
+    call_subprocess(['make'], cwd=binding_folder)
+    call_subprocess(['make', 'install'], cwd=binding_folder)
+
+    shutil.rmtree(folder)
+
 def install_jinja2(home_dir):
     folder = tempfile.mkdtemp(prefix='virtualenv')
     pypath = path.join(home_dir, 'bin', 'python')
 
     # checkout jinja
-    #
     call_subprocess(FETCH_CMD +
-        ['http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%s.tar.gz' % jinja_version]
-    , cwd=folder)
-    call_subprocess(['tar', '-xzf', 'Jinja2-%s.tar.gz' % jinja_version], cwd=folder)
+        ['http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%s.tar.gz' % jinja_version],
+        cwd=folder)
+    call_subprocess(['tar', '-xzf', 'Jinja2-%s.tar.gz' % jinja_version],
+                    cwd=folder)
     jinja_folder = path.join(folder, 'Jinja2-%s' % jinja_version)
 
     cmd = [path.abspath(path.join(home_dir, 'bin', 'python'))]
-    cmd.extend([path.join(os.getcwd(), path.join(jinja_folder, 'setup.py')), '--with-speedups', 'install'])
+    cmd.extend([path.join(os.getcwd(), path.join(jinja_folder, 'setup.py')),
+               '--with-speedups', 'install'])
     call_subprocess(cmd, cwd=jinja_folder)
     shutil.rmtree(folder)
 
@@ -59,12 +107,14 @@ def babel_svn_repo_install(home_dir):
     pypath = path.join(home_dir, 'bin', 'python')
 
     # checkout cldr
-    call_subprocess(FETCH_CMD + ['http://unicode.org/Public/cldr/%s/core.zip' % cldr_version], cwd=folder)
+    call_subprocess(FETCH_CMD + ['http://unicode.org/Public/cldr/%s/core.zip' % cldr_version],
+                    cwd=folder)
     call_subprocess(['unzip', '-d', 'cldr', 'core.zip'], cwd=folder)
     cldr_folder = path.join(folder, 'cldr', 'common')
 
     # checkout babel and import/compile respective cldr
-    call_subprocess(['svn', 'co', 'http://svn.edgewall.org/repos/babel/trunk/', 'babel'], cwd=folder)
+    call_subprocess(['svn', 'co', 'http://svn.edgewall.org/repos/babel/trunk/', 'babel'],
+                    cwd=folder)
     babel_folder = path.join(folder, 'babel')
     cmd = [pypath]
     cmd.extend([path.join(os.getcwd(), babel_folder, 'scripts/import_cldr.py'),
@@ -72,7 +122,8 @@ def babel_svn_repo_install(home_dir):
     call_subprocess(cmd)
 
     cmd = [path.abspath(path.join(home_dir, 'bin', 'python'))]
-    cmd.extend([path.join(os.getcwd(), path.join(babel_folder, 'setup.py')), 'install'])
+    cmd.extend([path.join(os.getcwd(), path.join(babel_folder, 'setup.py')),
+                            'install'])
     call_subprocess(cmd, cwd=babel_folder)
     shutil.rmtree(folder)
 
@@ -83,6 +134,7 @@ def after_install(options, home_dir):
     babel_svn_repo_install(home_dir)
     install_requirements(home_dir, options.requirements)
     pil_install(home_dir)
+    install_xapian(home_dir)
 
 
 def easy_install(package, home_dir, optional_args=None):
@@ -123,13 +175,16 @@ def adjust_options(options, args):
             sys.exit(1)
 
     # checkout python distribution
-    call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/2.7/Python-2.7.tar.bz2'], cwd=dest_dir)
-    call_subprocess(['tar', '-xjf', 'Python-2.7.tar.bz2'], cwd=dest_dir)
+    call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/%s/Python-%s.tar.bz2' % (python_version, python_version)],
+                    cwd=dest_dir)
+    call_subprocess(['tar', '-xjf', 'Python-%s.tar.bz2' % python_version],
+                    cwd=dest_dir)
 
-    python_folder = path.join(dest_dir, 'Python-2.7')
+    python_folder = path.join(dest_dir, 'Python-%s' % python_version)
 
     # configure python
-    call_subprocess(['./configure', '--prefix=%s' % dest_dir], cwd=python_folder)
+    call_subprocess(['./configure', '--prefix=%s' % dest_dir],
+                    cwd=python_folder)
     call_subprocess(['make'], cwd=python_folder)
     call_subprocess(['make', 'install'], cwd=python_folder)
 

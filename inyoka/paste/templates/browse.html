@@ -2,36 +2,36 @@
 {%- set title_trace = [_('Browse')] %}
 {%- set tab = 'browse' %}
 {% from 'utils/macros.html' import user_link %}
- 
+
 {% block paste_header %}{{ _('Browse Pastebin') }}{% endblock %}
 {%- block paste_content %}
-<p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
+  <p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
 
-{{ pagination() }}
+  {{ pagination() }}
 
-<table>
-  <thead>
-    <tr>
-      <th>{{ _('Title') }}</th>
-      <th>{{ _('Author') }}</th>
-      <th>{{ _('Date') }}</th>
-      <th>{{ _('Language') }}</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for p in pastes %}
-  {# TODO: ACL for hidden pastes and edit link! #}
-  <tr{% if p.hidden %} class="hidden"{% endif %}>
-    <td><a href="{{ href(p) }}">{{ p }}</a> <small><a href="{{ href(p, action='edit') }}">{{ _('edit') }}</a></small></td>
-    <td>{{ user_link(p.author) }}</td>
-    <td>{{ p.pub_date|datetimeformat('short') }}</td>
-    <td>{{ p.language|default('plain text') }}</td>
-  </tr>
-  {% else %}
-  <strong>{{ _('There are no pastes yet!') }}</strong>
-  {% endfor %}
-  </tbody>
-</table>
+  <table>
+    <thead>
+      <tr>
+        <th>{{ _('Title') }}</th>
+        <th>{{ _('Author') }}</th>
+        <th>{{ _('Date') }}</th>
+        <th>{{ _('Language') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for p in pastes %}
+      {# TODO: ACL for hidden pastes and edit link! #}
+      <tr{% if p.hidden %} class="hidden"{% endif %}>
+        <td><a href="{{ href(p) }}">{{ p }}</a> <small><a href="{{ href(p, action='edit') }}">{{ _('edit') }}</a></small></td>
+        <td>{{ user_link(p.author) }}</td>
+        <td>{{ p.pub_date|datetimeformat('short') }}</td>
+        <td>{{ p.language|default('plain text') }}</td>
+      </tr>
+    {% else %}
+      <strong>{{ _('There are no pastes yet!') }}</strong>
+    {% endfor %}
+    </tbody>
+  </table>
 
-{{ pagination() }}
+  {{ pagination() }}
 {%- endblock %}

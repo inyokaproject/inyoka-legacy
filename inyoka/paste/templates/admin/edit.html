@@ -4,8 +4,8 @@
 {% set title_trace = [_('Edit Paste')] %}
 
 {%- block admin_content %}
-<h1>{{ _('Pastebin Admin') }}</h1>
-<ul class="pagetabs">
+  <h1>{{ _('Pastebin Admin') }}</h1>
+  <ul class="pagetabs">
     {% if tab is undefined %}
         {% set tab = 'new' %}
     {% endif %}
@@ -13,12 +13,12 @@
         <a href="{{ href('paste/index') }}">{{ _('Edit') }}</a></li>
     <li{% if tab == 'browse' %} class="selected"{% endif %}>
         <a href="{{ href('paste/browse', sort='active') }}">{{ _('Browse') }}</a></li>
-</ul>
+  </ul>
 
-<form action="" method="post" id="admin_paste_edit">
-  {{ form_fields(form) }}
-  <fieldset class="actions">
-    <input type="submit" value="{{ _('Submit') }}">
-  </fieldset>
-</form>
+  <form action="" method="post" id="admin_paste_edit">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
 {%- endblock %}

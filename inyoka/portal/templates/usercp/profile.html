@@ -2,11 +2,11 @@
 {%- from 'utils/macros.html' import form_fields %}
 
 {%- block content %}
-<h1>{{ _('Edit Profile')  }}</h1>
-<form action="" method="post" id="usercp_profile_edit">
-  {{ form_fields(form, class="horiz-left") }}
-  <fieldset class="actions">
-    <input type="submit" value="{{ _('Submit') }}">
-  </fieldset>
-</form>
+  <h1>{{ _('Edit Profile')  }}</h1>
+  <form action="" method="post" id="usercp_profile_edit">
+    {{ form_fields(form, class="horiz-left") }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
 {%- endblock %}

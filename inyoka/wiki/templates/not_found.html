@@ -3,12 +3,12 @@
 {%- set current_tab = 'show' %}
 
 {%- block wiki_content %}
-<p>
-  {{ _('The requested page was not found.') }}
-</p>
-<p>
-  <a href="{{ href('wiki/edit', page=url_name) }}">
-    {{ _('Create it.') }}
-  </a>
-</p>
+  <p>
+    {{ _('The requested page was not found.') }}
+  </p>
+  <p>
+    <a href="{{ href('wiki/edit', page=url_name) }}">
+      {{ _('Create it.') }}
+    </a>
+  </p>
 {%- endblock %}

@@ -4,27 +4,27 @@
 {% from 'utils/macros.html' import  user_link %}
 
 {%- block wiki_content %}
-<form action="{{ href(page, action='diff') }}" method="get">
-  <table>
-    <thead>
-      <tr>
-        <th>{{ _('Created at') }}</th>
-        <th>{{ _('Creator') }}</th>
-        <th>{{ _('Edit comment') }}</th>
-        <th><input type="submit" value="{{ _('Compare') }}" /></th>
-      </tr>
-    </thead>
-    <tbody>
-  {%- for rev in revisions %}
-      <tr>
-        <td><a href="{{ href(rev) }}">{{ rev.change_date|datetimeformat }}</td>
-        <td>{{ user_link(rev.change_user) }}</td>
-        <td>{{ rev.change_comment }}</td>
-        <td><input type="radio" name="old_rev" value="{{ rev.id }}" />
-            <input type="radio" name="new_rev" value="{{ rev.id }}" /></td>
-      </tr>
-  {%- endfor %}
-    </tbody>
-  </table>
-</form>
+  <form action="{{ href(page, action='diff') }}" method="get">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ _('Created at') }}</th>
+          <th>{{ _('Creator') }}</th>
+          <th>{{ _('Edit comment') }}</th>
+          <th><input type="submit" value="{{ _('Compare') }}" /></th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for rev in revisions %}
+          <tr>
+            <td><a href="{{ href(rev) }}">{{ rev.change_date|datetimeformat }}</td>
+            <td>{{ user_link(rev.change_user) }}</td>
+            <td>{{ rev.change_comment }}</td>
+            <td><input type="radio" name="old_rev" value="{{ rev.id }}" />
+                <input type="radio" name="new_rev" value="{{ rev.id }}" /></td>
+          </tr>
+        {%- endfor %}
+      </tbody>
+    </table>
+  </form>
 {%- endblock %}

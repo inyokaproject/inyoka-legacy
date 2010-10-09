@@ -4,10 +4,10 @@
 {%- set current_tab = 'edit' %}
 
 {%- block wiki_content %}
-<form action="" method="post" id="wiki_page_edit">
-  {{ form_fields(form) }}
-  <fieldset class="actions">
-    <input type="submit" value="{{ _('Submit') }}">
-  </fieldset>
-</form>
+  <form action="" method="post" id="wiki_page_edit">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
 {%- endblock %}

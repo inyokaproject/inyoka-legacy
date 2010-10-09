@@ -2,20 +2,19 @@
 {% from 'utils/macros.html' import form_fields %}
 
 {%- block admin_content %}
-{% if tag.name %}
-  <h3>{{ _('Edit “%(tag)s”', tag=tag.name) }}</h3>
-{% else %}
-  <h3>{{ _('New Tag') }}</h3>
-{% endif %}
-
-<form action="" method="post" id="admin_tag_edit">
-{{ form_fields(form, class="horiz-left") }}
-<fieldset class="actions">
-  <input type="submit" value="{{ _('Submit') }}">
   {% if tag.name %}
-  <input type="submit" name="delete" value="{{ _('Delete') }}">
+    <h3>{{ _('Edit “%(tag)s”', tag=tag.name) }}</h3>
+  {% else %}
+    <h3>{{ _('New Tag') }}</h3>
   {% endif %}
-</fieldset>
-</form>
 
+  <form action="" method="post" id="admin_tag_edit">
+    {{ form_fields(form, class="horiz-left") }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+      {% if tag.name %}
+        <input type="submit" name="delete" value="{{ _('Delete') }}">
+      {% endif %}
+    </fieldset>
+  </form>
 {%- endblock %}

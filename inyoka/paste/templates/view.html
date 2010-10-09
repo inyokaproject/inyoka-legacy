@@ -3,27 +3,27 @@
 {%- set tab = 'browse' %}
 
 {%- block paste_header %}
-{%- trans title=paste.display_title, author=paste.author -%}
-{{ title }} by {{ author }}
-{%- endtrans %}
+  {%- trans title=paste.display_title, author=paste.author -%}
+    {{ title }} by {{ author }}
+  {%- endtrans %}
 {% endblock %}
 
 {% block pagetabs %}
-<li><a href="{{ href(paste, action='raw') }}">{{ _('Raw') }}</a></li>
-<li><a href="{{ href(paste, action='reply') }}">{{ _('Reply') }}</a></li>
-{% if paste.has_tree %}
-<li><a href="{{ href(paste, action='show_tree') }}">{{ _('Paste Tree') }}</a></li>
-{% endif %}
+  <li><a href="{{ href(paste, action='raw') }}">{{ _('Raw') }}</a></li>
+  <li><a href="{{ href(paste, action='reply') }}">{{ _('Reply') }}</a></li>
+  {% if paste.has_tree %}
+    <li><a href="{{ href(paste, action='show_tree') }}">{{ _('Paste Tree') }}</a></li>
+  {% endif %}
 {% endblock %}
 
 {%- block paste_content %}
-<div class="highlighted">
-  {{ paste.rendered_text|safe }}
-</div>
-<p><small>{{ _('Created on %(date)s.', date=paste.pub_date|datetimeformat) }}
-{%- if paste.parent %}
-  {{ _('Reply to') }} <a href="{{ href(paste.parent) }}">{{ paste.parent.display_title }}</a>
-  (<a href="{{ href('paste/compare_paste', new_id=paste.id, old_id=paste.parent.id) }}">{{ _('compare them') }}</a>)
-{% endif -%}
-</small></p>
+  <div class="highlighted">
+    {{ paste.rendered_text|safe }}
+  </div>
+  <p><small>{{ _('Created on %(date)s.', date=paste.pub_date|datetimeformat) }}
+  {%- if paste.parent %}
+    {{ _('Reply to') }} <a href="{{ href(paste.parent) }}">{{ paste.parent.display_title }}</a>
+    (<a href="{{ href('paste/compare_paste', new_id=paste.id, old_id=paste.parent.id) }}">{{ _('compare them') }}</a>)
+  {% endif -%}
+  </small></p>
 {%- endblock %}

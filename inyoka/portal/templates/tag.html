@@ -1,17 +1,17 @@
 {% extends "portal/base.html" %}
 
 {% block content %}
-<h1>{{ tag.name }}</h1>
+  <h1>{{ tag.name }}</h1>
   {% for taggable in content %}
-  <div class="column">
-    <h2>{{ taggable.name }}</h2>
-    <div class="content">
-      <ul class="itemlist">
-        {% for item in taggable.item_list %}
-        <li class="{{ taggable.list_class }}"><a href="{{ href(item) }}">{{ item }}</a></li>
-        {% endfor %}
-      </ul>
+    <div class="column">
+      <h2>{{ taggable.name }}</h2>
+      <div class="content">
+        <ul class="itemlist">
+          {% for item in taggable.item_list %}
+            <li class="{{ taggable.list_class }}"><a href="{{ href(item) }}">{{ item }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
   {% endfor %}
 {% endblock %}

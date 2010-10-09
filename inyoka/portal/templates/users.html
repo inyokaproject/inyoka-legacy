@@ -2,25 +2,25 @@
 {% from 'utils/macros.html' import user_link %}
 
 {% block introduction %}
-{{- _('On this page you can see all registered users.') -}}
+  {{- _('On this page you can see all registered users.') -}}
 {% endblock %}
 
 {%- block content %}
-<h1>{{ _('Userlist') }}</h1>
+  <h1>{{ _('Userlist') }}</h1>
 
-<table>
-  <tr>
-    <th>{{ table.get_html('id', _('#')) }}</th>
-    <th>{{ table.get_html('username', _('Username')) }}</th>
-    <th>{{ table.get_html('date_joined', _('Date joined')) }}</th>
-  </tr>
-  {%- for user in users %}
-  <tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user_link(user) }}</td>
-    <td>{{ user.date_joined|datetimeformat('short') }}</td>
-  </tr>
-  {%- endfor %}
-</table>
-{{ pagination() }}
+  <table>
+    <tr>
+      <th>{{ table.get_html('id', _('#')) }}</th>
+      <th>{{ table.get_html('username', _('Username')) }}</th>
+      <th>{{ table.get_html('date_joined', _('Date joined')) }}</th>
+    </tr>
+    {%- for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user_link(user) }}</td>
+        <td>{{ user.date_joined|datetimeformat('short') }}</td>
+      </tr>
+    {%- endfor %}
+  </table>
+  {{ pagination() }}
 {%- endblock %}

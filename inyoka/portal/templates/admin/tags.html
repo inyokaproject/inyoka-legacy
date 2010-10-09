@@ -3,20 +3,20 @@
 {% block admin_content %}
   <h2>{{ _('Choose Tag') }}</h2>
   <form action="" method="post" id="admin_tag_select">
-  <input type="text" name="tag">
+    <input type="text" name="tag">
   </form>
   <h2>{{ _('All tags') }}</h2>
   <div class="tagcloud">
-  {% for tag  in tag_cloud %}
-    <a href="{{ href('admin/portal/tag_edit', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
-                title="{% trans num=tag.count, tag=tag.name %}{{ num }} item tagged {{ tag }}{% pluralize %}{{ num }} posts tagged {{ tag }}{% endtrans %}">
-      {{ tag.name }}
-    </a>
-  {%- endfor %}
+    {% for tag  in tag_cloud %}
+      <a href="{{ href('admin/portal/tag_edit', slug=tag['slug']) }}" class="tag" style="font-size: {{ tag.size }}%"
+                  title="{% trans num=tag.count, tag=tag.name %}{{ num }} item tagged {{ tag }}{% pluralize %}{{ num }} posts tagged {{ tag }}{% endtrans %}">
+        {{ tag.name }}
+      </a>
+    {%- endfor %}
   </div>
   <p>
-  {%- trans link=href('admin/portal/tag_edit') -%}
-  …or <a href="{{ link }}">create a new tag</a>
-  {%- endtrans -%}
+    {%- trans link=href('admin/portal/tag_edit') -%}
+      …or <a href="{{ link }}">create a new tag</a>
+    {%- endtrans -%}
   </p>
 {% endblock %}

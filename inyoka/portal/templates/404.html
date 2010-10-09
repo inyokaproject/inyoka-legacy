@@ -2,17 +2,17 @@
 {% set title_trace=[_('Page does not exist')] %}
 
 {% block content %}
-<div class="not_found">
-  <p>{{ _('The requested page could not be found.') }}</p>
-  <img src={{ href('static', file="/img/not_found.png") }} alt="{{ _('Not Found') }}">
-  <br style="clear:both;" />
-  {% if DEBUG %}
-  <div class="url_rules">
-  <p>{{ _('We tried these urls:') }}</p>
-  {% for rule in url_list %}
-    {{ rule|safe }}{% if not loop.last %}<br />{% endif %}
-  {% endfor %}
+  <div class="not_found">
+    <p>{{ _('The requested page could not be found.') }}</p>
+    <img src={{ href('static', file="/img/not_found.png") }} alt="{{ _('Not Found') }}">
+    <br style="clear:both;" />
+    {% if DEBUG %}
+      <div class="url_rules">
+        <p>{{ _('We tried these urls:') }}</p>
+        {% for rule in url_list %}
+          {{ rule|safe }}{% if not loop.last %}<br />{% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
-  {% endif %}
-</div>
 {% endblock %}

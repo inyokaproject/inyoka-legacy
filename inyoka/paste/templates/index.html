@@ -3,11 +3,11 @@
 {% set tab = 'new' %}
 {%- block paste_content %}
 
-<form action="" method="post" id="paste_new_entry">
-  {{ form_fields(form) }}
-  <fieldset class="actions">
-    <input type="submit" value="{{ _('Submit') }}">
-  </fieldset>
-</form>
+  <form action="" method="post" id="paste_new_entry">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
 
 {%- endblock %}

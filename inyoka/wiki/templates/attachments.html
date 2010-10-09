@@ -4,20 +4,20 @@
 {%- set current_tab = 'attachments' %}
 
 {%- block wiki_content %}
-<h2>{{ _('Add attachment') }}</h2>
-<form action="" method="post" enctype="multipart/form-data">
-  {{ form_fields(form) }}
-  <input type="submit" />
-</form>
-<h2>{{ _('Existing attachments') }}</h2>
-{%- if attachment_pages %}
-{% trans number=attachment_pages|count %}There are currently {{ number }} files attached to this page.{% endtrans %}
-<ul>
-  {%- for p in attachment_pages %}
-  <li><a href="{{ href(p) }}">{{ p.name }}</a> {{ p.current_revision.attachment.file.size|filesizeformat }}</li>
-  {%- endfor %}
-</ul>
-{%- else %}
-{{ _('There are currently no files attached to this page.') }}
-{%- endif %}
+  <h2>{{ _('Add attachment') }}</h2>
+  <form action="" method="post" enctype="multipart/form-data">
+    {{ form_fields(form) }}
+    <input type="submit" />
+  </form>
+  <h2>{{ _('Existing attachments') }}</h2>
+  {%- if attachment_pages %}
+    {% trans number=attachment_pages|count %}There are currently {{ number }} files attached to this page.{% endtrans %}
+    <ul>
+      {%- for p in attachment_pages %}
+        <li><a href="{{ href(p) }}">{{ p.name }}</a> {{ p.current_revision.attachment.file.size|filesizeformat }}</li>
+      {%- endfor %}
+    </ul>
+  {%- else %}
+    {{ _('There are currently no files attached to this page.') }}
+  {%- endif %}
 {%- endblock %}

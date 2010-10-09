@@ -6,19 +6,19 @@
 {% set scripts = ['portal.js'] + scripts|default([]) %}
 
 {% block sidebar %}
-<div>
-  {{ super() }}
-  <ul>
-    <li><a href="{{ href('portal/users') }}">{{ _('Users') }}</a></li>
-    <li><a href="{{ href('portal/groups') }}">{{ _('Groups') }}</a></li>
-  </ul>
-</div>
+  <div>
+    {{ super() }}
+    <ul>
+      <li><a href="{{ href('portal/users') }}">{{ _('Users') }}</a></li>
+      <li><a href="{{ href('portal/groups') }}">{{ _('Groups') }}</a></li>
+    </ul>
+  </div>
 {% endblock sidebar %}
 
 {% block download %}
-<div id="download">
-  {{ super() }}
-  <h4>{{ _('Get Inyoka!') }}</h4>
-  <p><a href="http://bitbucket.org/EnTeQuAk/inyoka-sandbox">{{ _('Download preview "when it\'s done"') }}</a></p>
-</div>
+  <div id="download">
+    {{ super() }}
+    <h4>{{ _('Get Inyoka!') }}</h4>
+    <p><a href="http://bitbucket.org/EnTeQuAk/inyoka-sandbox">{{ _('Download preview "when it\'s done"') }}</a></p>
+  </div>
 {% endblock download %}

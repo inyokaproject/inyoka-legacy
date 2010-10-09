@@ -1,25 +1,29 @@
 {% extends "portal/base.html" %}
 {% from 'utils/macros.html' import form_field %}
 {% block content %}
-<form method="post" action="" id="portal_register">
-{{ form_field(form.csrf) }}
-  <ol>
-    <li class="horiz">{{ form_field(form.username) }}</li>
-    <li class="horiz">{{ form_field(form.email) }}</li>
-    <li class="horiz">
-      {{ form_field(form.password) }}
-      {%- if random_pw %}
-      {{ _('Generated password: <code id="random_password">%(password)s</code> |', password=random_pw) }}
-      {%- endif %}
-      <a href="{{ href('portal/register', random=true) }}" id="random_password_link">
-      {%- if random_pw %}{{ _('generate another') }}{% else %}{{ _('Generate random password') }}{%- endif %}
-      </a>
-    </li>
-    <li class="horiz">{{ form_field(form.confirm) }}</li>
-    <li class="horiz">{{ form_field(form.captcha) }}</li>
-  </ol>
-  <fieldset class="actions">
-    <input type="submit" value="{{ _('Register') }}">
-  </fieldset>
-</form>
+  <form method="post" action="" id="portal_register">
+    {{ form_field(form.csrf) }}
+    <ol>
+      <li class="horiz">{{ form_field(form.username) }}</li>
+      <li class="horiz">{{ form_field(form.email) }}</li>
+      <li class="horiz">
+        {{ form_field(form.password) }}
+        {%- if random_pw %}
+          {{ _('Generated password: <code id="random_password">%(password)s</code> |', password=random_pw) }}
+        {%- endif %}
+        <a href="{{ href('portal/register', random=true) }}" id="random_password_link">
+        {%- if random_pw %}
+          {{ _('generate another') }}
+        {% else %}
+          {{ _('Generate random password') }}
+        {%- endif %}
+        </a>
+      </li>
+      <li class="horiz">{{ form_field(form.confirm) }}</li>
+      <li class="horiz">{{ form_field(form.captcha) }}</li>
+    </ol>
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Register') }}">
+    </fieldset>
+  </form>
 {% endblock content %}

@@ -9,7 +9,7 @@
       <li class="horiz">{{ form_field(form.q) }}</li>
       <li class="horiz">{{ form_field(form.tags) }}</li>
       <li class="horiz">{{ form_field(form.author) }}</li>
-      {#<li class="horiz">{{ form_field(form.date) }}</li>#}
+      <li class="horiz">{{ form_field(form.date_between) }}</li>
     </ol>
     <fieldset class="actions">
       <input type="submit" value="{{ _('Search') }}">
@@ -34,7 +34,7 @@
     {%- endfor %}
   {%- endif %}
 
-  {% if results %}
+  {%- if results %}
     {{ pagination() }}
-  {% endif %}
+  {%- endif %}
 {% endblock content %}

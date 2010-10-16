@@ -171,6 +171,7 @@ class PortalController(IController):
             results, total, corrected = query(q, **{
                 'author': form.data['author'],
                 'tags': [tag.name for tag in form.data['tags']],
+                'date_between': form.data['date_between'],
             })
 
             pagination = SearchPagination(page, total, request.args)

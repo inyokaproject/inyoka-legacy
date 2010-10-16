@@ -53,3 +53,9 @@ class TokenInput(TextInput):
 class FileInput(Input):
     """A file input field."""
     type = 'file'
+
+
+class DatePeriodWidget(object):
+    def __call__(self, field, **kwargs):
+        html = u'between %s and %s' % (field[0](), field[1]())
+        return HTMLString(html)

@@ -20,7 +20,7 @@ nose==0.11.4
 pycrypto==2.1.0
 pyparsing==1.5.3
 python-dateutil==1.5
-python-memcached==1.45
+pylibmc==1.1.1
 pytz==2010h
 translitcodec==0.1
 virtualenv==1.4.9

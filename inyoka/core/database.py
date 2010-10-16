@@ -561,7 +561,7 @@ class File(MutableType, TypeDecorator):
             filename = self.obfuscate and obfuscate_filename(value.filename) \
                                       or value.filename
             if path.exists(path.join(folder, filename)):
-                filename = find_unused_filename(folder, value.filename)
+                filename = find_unused_filename(folder, filename)
             value.save(path.join(folder, filename))
             return filename
         return process

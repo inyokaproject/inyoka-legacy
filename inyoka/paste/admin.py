@@ -44,5 +44,6 @@ class PasteAdminProvider(IAdminProvider):
             return redirect_to(entry)
 
         return {
+            'paste': entry,
             'form': form,
         }

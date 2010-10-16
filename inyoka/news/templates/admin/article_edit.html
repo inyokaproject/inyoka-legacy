@@ -2,14 +2,14 @@
 {% from 'utils/macros.html' import form_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
+{%- if article.slug %}
+  {%- set trace = [[_('Edit “%(article)s”', article=article.title), href(article, action='edit')]] %}
+{%- else %}
+  {%- set trace = [[_('New Article'), href('admin/news/article_edit')]] %}
+{%- endif %}
+{%- set trace = [[_('News'), href('admin/news/index')]] + trace %}
 
 {%- block admin_content %}
-{% if article.slug %}
-  <h3>{{ _('Edit “%(article)s”', article=article.title) }}</h3>
-{% else %}
-  <h3>{{ _('New Article') }}</h3>
-{% endif %}
-
 <form method="post" action="" id="admin_edit_article">
   {{ form_fields(form) }}
   <fieldset class="actions">

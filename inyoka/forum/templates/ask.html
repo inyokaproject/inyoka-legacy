@@ -2,10 +2,10 @@
 {% from 'utils/macros.html' import form_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
-{% set tab='ask' %}
+{%- set tab='ask' %}
+{%- set trace = [[_('Ask a Question'), href('forum/ask')]] %}
 
 {%- block questions_body %}
-<h2>{{ _('Ask a Question') }}</h2>
 <form action="" method="post" id="forum_new_answer">
   {{ form_fields(form) }}
   <fieldset class="actions">

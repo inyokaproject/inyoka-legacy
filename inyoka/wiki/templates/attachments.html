@@ -1,6 +1,6 @@
 {%- extends 'wiki/base.html' %}
 {% from 'utils/macros.html' import form_fields %}
-{%- set title_trace = [_('Attachments'), page] %}
+{%- set trace = [[_('Attachments'), href(page, action='attachments')]] %}
 {%- set current_tab = 'attachments' %}
 
 {%- block wiki_content %}

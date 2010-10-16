@@ -1,12 +1,11 @@
 {%- extends 'portal/base.html' %}
+{%- set trace = [[_('Group “%(group)s”', group=group.name), href(group)]] %}
 
 {% block introduction %}
   {{ _('On this page you can see all members of “%(group)s”.', group=group.name) }}
 {% endblock %}
 
 {%- block content %}
-  <h1>{{ _('Group “%(group)s”', group=group.name) }}</h1>
-
   {% for user in users %}
     <div class="zealots {{ loop.cycle('zealot-left', 'zealot-right') }}">
       {# TODO: yet a dummy! #}<img src="{{ href('static', file='img/no_avatar.png') }}">

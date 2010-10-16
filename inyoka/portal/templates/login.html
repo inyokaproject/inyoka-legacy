@@ -1,5 +1,7 @@
 {% extends "portal/base.html" %}
 {% from 'utils/macros.html' import form_fields %}
+{%- set trace = [[_('Login'), href('portal/login')]] %}
+
 {% block content %}
   <form action="" method="post" id="portal_login">
     {{ form_fields(login_form, class="horiz-left") }}

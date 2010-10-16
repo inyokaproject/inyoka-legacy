@@ -1,13 +1,13 @@
 {% extends 'portal/usercp/base.html' %}
 {% from 'utils/macros.html' import form_field %}
+{%- set trace = [[_('Deactivate Profile'), href('usercp/deactivate')]] %}
 
 {% block content %}
-  <h1>{{ _('Deactivate Profile')  }}</h1>
   <p>
     {{_('Here you can deactivate your profile. All your private information will be deleted, but your texts in the forum and the wiki will still exist!') }}
   </p>
   <p>
-    <strong>{{ _('This action is irreversible and you can not loggin anymore!!') }}</strong>
+    <strong>{{ _('This action is irreversible and you can not login anymore!!') }}</strong>
   </p>
   <p>
     {{ _('If you still want to continue, please enter your password again.') }}

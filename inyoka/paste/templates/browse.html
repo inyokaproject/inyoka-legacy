@@ -1,9 +1,8 @@
 {%- extends 'paste/base.html' %}
-{%- set title_trace = [_('Browse')] %}
 {%- set tab = 'browse' %}
 {% from 'utils/macros.html' import user_link %}
+{%- set trace = [[_('Browse'), href('paste/browse')]] %}
 
-{% block paste_header %}{{ _('Browse Pastebin') }}{% endblock %}
 {%- block paste_content %}
   <p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
 

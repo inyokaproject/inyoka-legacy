@@ -63,5 +63,6 @@ class ForumAdminProvider(IAdminProvider):
             return redirect_to('admin/forum/index')
 
         return {
+            'forum': forum,
             'form': form,
         }

@@ -1,5 +1,11 @@
 {% extends 'news/base.html' %}
 {% from "news/_article.html" import render_article %}
+{%- if tag %}
+  {%- set trace = [[_('Articles for “%(tag)s”', tag=tag), href('news/index', slug=tag.slug)]] %}
+{%- else %}
+  {%- set trace = [[_('Latest News'), href('news/index')]] %}
+{%- endif %}
+
 {% block html_head %}
   {{- super() -}}
   {%- if tag %}
@@ -10,11 +16,6 @@
 {% endblock %}
 
 {% block content %}
-  {%- if tag %}
-    <h1>{{ _('Articles for “%(tag)s”', tag=tag) }}</h1>
-  {%- else %}
-    <h1>{{ _('Latest News') }}</h1>
-  {%- endif %}
   {%- if articles %}
     {%- for article in articles %}
       {{ render_article(article) }}

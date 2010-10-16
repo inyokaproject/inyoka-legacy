@@ -1,13 +1,12 @@
 {%- extends 'portal/base.html' %}
 {% from 'utils/macros.html' import user_link %}
+{%- set trace = [[_('Userlist'), href('portal/users')]] %}
 
 {% block introduction %}
   {{- _('On this page you can see all registered users.') -}}
 {% endblock %}
 
 {%- block content %}
-  <h1>{{ _('Userlist') }}</h1>
-
   <table>
     <tr>
       <th>{{ table.get_html('id', _('#')) }}</th>

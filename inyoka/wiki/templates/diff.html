@@ -1,6 +1,6 @@
 {%- extends 'wiki/base.html' %}
 {%- from 'utils/macros.html' import render_diff_part %}
-{%- set title_trace = [_('Compare revisions'), page.name] %}
+{%- set trace = [[_('History'), href(page, action='history')]] %}
 {%- set styles = ['diff.css'] + styles|default([]) %}
 {%- set current_tab = 'history' %}
 

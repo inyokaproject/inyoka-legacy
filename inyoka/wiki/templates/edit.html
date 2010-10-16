@@ -1,6 +1,6 @@
 {%- extends 'wiki/base.html' %}
 {% from 'utils/macros.html' import form_fields %}
-{%- set title_trace = [_('Edit'), page] %}
+{%- set trace = [[_('Edit'), href(page, action='edit')]] %}
 {%- set current_tab = 'edit' %}
 
 {%- block wiki_content %}

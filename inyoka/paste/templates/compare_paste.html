@@ -1,6 +1,6 @@
 {% extends "paste/base.html" %}
 {% from 'utils/macros.html' import render_diff_part %}
-{% set title_trace = [_('Compare Pastes')] %}
+{% set trace = [[_('Compare %s and %s' % (old.display_title, new.display_title)), href('paste/compare_paste', old_id=old.id, new_id=new.id)]] %}
 {% block paste_content %}
   <p>
     {%- trans old_title=old.display_title, old_date=old.pub_date|datetimeformat,

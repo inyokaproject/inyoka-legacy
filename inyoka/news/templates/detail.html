@@ -1,10 +1,9 @@
 {%- extends 'news/base.html' %}
 {% from 'utils/macros.html' import form_fields, user_link %}
-{% set title_trace = [article.title] %}
+{%- set trace = [[article.title, href(article)]] %}
 
 {% block content %}
   <div class="article">
-    <h1 class="title">{{ article.title }}</h1>
     <p class="meta">
       <span class="published">
         {%- trans author_link=user_link(article.author),

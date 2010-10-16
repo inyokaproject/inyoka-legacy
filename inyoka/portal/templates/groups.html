@@ -1,12 +1,11 @@
 {%- extends 'portal/base.html' %}
+{%- set trace = [[_('Grouplist'), href('portal/groups')]] %}
 
 {% block introduction %}
   {{ _('On this page you can see all existing groups.') }}
 {% endblock %}
 
 {%- block content %}
-  <h1>{{ _('Grouplist') }}</h1>
-
   {%- for parent in groups|groupby('grant_parent') %}
     <table>
       <caption>{{ parent.grouper.name }}</caption>

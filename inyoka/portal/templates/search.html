@@ -2,8 +2,9 @@
 {% from 'utils/macros.html' import form_field %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
+{%- set trace = [[_('Search'), href('portal/search')]] %}
+
 {% block content %}
-  <h1>{{ _('Search') }}</h1>
   <form action="" method="get">
     <ol>
       <li class="horiz">{{ form_field(form.q) }}</li>

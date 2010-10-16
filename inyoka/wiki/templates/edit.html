@@ -1,6 +1,10 @@
 {%- extends 'wiki/base.html' %}
 {% from 'utils/macros.html' import form_fields %}
-{%- set trace = [[_('Edit'), href(page, action='edit')]] %}
+{%- if page is string %}
+  {%- set trace = [[_('Create %s' % page), '']] %}
+{%- else %}
+  {%- set trace = [[_('Edit'), href(page, action='edit')]] %}
+{%- endif %}
 {%- set current_tab = 'edit' %}
 
 {%- block wiki_content %}

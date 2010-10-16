@@ -21,7 +21,8 @@ To get Inyoka work properly we need those dependencies (with headers):
  * fabric
  * unzip
  * virtualenv
- * libmemcache
+ * memcached
+ * libmemcached-dev
  * zlib
  * libxslt
  * libxml2
@@ -34,11 +35,11 @@ For Ubuntu (or any Debian based distribution) use ``aptitude`` to install:
 
 For SQLite::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libsqlite3-dev
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion memcached libmemcached-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libsqlite3-dev
 
 For MySQL::
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion libmemcache-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libmysqlclient-dev
+    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion memcached libmemcached-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libmysqlclient-dev
 
 Now we build the dependencies for python-imaging::
 

@@ -494,7 +494,7 @@ class FileObject(FileStorage):
 
     @property
     def path(self):
-        return path.join(ctx.cfg['media_path'], self.filename)
+        return path.join(ctx.cfg['media_root'], self.filename)
 
     @property
     def mimetype(self):
@@ -557,7 +557,7 @@ class File(MutableType, TypeDecorator):
 
     def bind_processor(self, dialect):
         def process(value):
-            folder = path.join(ctx.cfg['media_path'], self.save_to)
+            folder = path.join(ctx.cfg['media_root'], self.save_to)
             filename = self.obfuscate and obfuscate_filename(value.filename) \
                                       or value.filename
             if path.exists(path.join(folder, filename)):

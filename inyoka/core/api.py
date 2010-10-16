@@ -64,10 +64,6 @@ class ICoreResourceManager(IResourceManager):
     #: package path.
     static_path = TextConfigField('static_path', default=u'static')
 
-    #: Path to the directory for shared static files, aka media.  Relative to
-    #: the inyoka package path.
-    media_path = TextConfigField('media_path', default=u'media')
-
     #: Exclude inyoka.core.tasks per default to fix the celery loader
     deactivated_components.default.append('inyoka.core.tasks')
 

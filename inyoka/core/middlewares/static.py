@@ -19,7 +19,7 @@ from inyoka.core.middlewares import IMiddleware
 
 
 STATIC_PATH = join(os.environ['INYOKA_MODULE'], ctx.cfg['static_path'])
-MEDIA_PATH = join(os.environ['INYOKA_MODULE'], ctx.cfg['media_path'])
+MEDIA_PATH = ctx.cfg['media_root']
 
 
 class StaticMiddlewareBase(object):

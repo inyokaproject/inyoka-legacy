@@ -1,5 +1,7 @@
 {% extends "portal/base.html" %}
 {% from 'utils/macros.html' import form_field %}
+{%- set trace = [[_('Register'), href('portal/register')]] %}
+
 {% block content %}
   <form method="post" action="" id="portal_register">
     {{ form_field(form.csrf) }}

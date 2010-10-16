@@ -101,7 +101,7 @@ def update_search_index(provider, doc_id):
 
 
 @task
-def search_query(q, page, author=None, tags=[]):
+def search_query(q, page=1, author=None, tags=[], date_between=None):
     """
     Searches for the query `q` in the search index.
 
@@ -120,6 +120,10 @@ def search_query(q, page, author=None, tags=[]):
 
     for tag in tags:
         query = searcher.query_filter(query, searcher.query_field('tag', tag))
+
+    if date_between is not None:
+        query = searcher.query_filter(query,
+            searcher.query_range('date', *date_between))
 
     results = searcher.search(query, offset, offset + count)
     total = results.matches_estimated

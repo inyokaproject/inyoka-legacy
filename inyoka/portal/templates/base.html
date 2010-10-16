@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set introduction=true %}
 {% set sidebar=true %}
-{% set title_trace = title_trace|default([]) + [_('Portal')] %}
+{% set trace = [[_('Portal'), href('portal/index')]] + trace|default([]) %}
 {% set styles = ['portal.css'] + styles|default([]) %}
 {% set scripts = ['portal.js'] + scripts|default([]) %}
 

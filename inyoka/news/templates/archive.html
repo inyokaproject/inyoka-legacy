@@ -1,10 +1,20 @@
 {% extends "news/base.html" %}
-{% set title_trace = [_('Archive')] %}
 {% block title %}{{ _("Archive") }}{% endblock %}
 {% from "news/_article.html" import render_article %}
+{%- if month_list %}
+  {% set trace = [[_('Archive'), href('news/archive')]] %}
+{%- else %}
+  {%- if not month %}
+    {%- set trace = [[_('Archive for %(year)s', year=year), href('news/archive', year=year)]] %}
+  {%- elif not day %}
+    {%- set trace = [[_('Archive for %(month)s', month=date|monthformat), href('news/archive', year=year, month=month)]] %}
+  {%- else %}
+    {%- set trace = [[_('Archive for %(day)s', day=date|dateformat('full')), href('news/archive', year=year, month=month, day=day)]] %}
+  {%- endif %}
+{%- endif %}
+
 {% block content %}
   {%- if month_list %}
-    <h2>{{ _('Archive') }}</h2>
     <ul>
     {%- for item in articles %}
       <li><a href="{{ href('news/archive', year=item.year, month=item.month) }}">
@@ -15,13 +25,6 @@
     {%- endfor %}
     </ul>
   {%- else -%}
-    {%- if not month %}
-      <h2>{{ _('Archive for %(year)s', year=year) }}</h2>
-    {%- elif not day %}
-      <h2>{{ _('Archive for %(month)s', month=date|monthformat) }}</h2>
-    {%- else %}
-      <h2>{{ _('Archive for %(day)s', day=date|dateformat('full')) }}</h2>
-    {%- endif %}
     {%- for article in articles %}
       {{ render_article(article) }}
     {%- endfor %}

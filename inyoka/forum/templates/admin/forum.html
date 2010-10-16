@@ -2,15 +2,14 @@
 {% from 'utils/macros.html' import form_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
+{%- if form.name.data %}
+  {%- set trace = [[_('Edit Forum'), href(forum, action='edit')]] %}
+{%- else %}
+  {%- set trace = [[_('Create new Forum'), href('admin/forum/forum')]] %}
+{%- endif %}
+{%- set trace = [[_('Forum'), href('admin/forum/index')]] + trace %}
 
 {% block admin_content %}
-<h1>
-	{%- if form.name.data %}
-		{{ _('Edit Forum') }}
-	{%- else %}
-		{{ _('Create new Forum') }}
-	{%- endif %}
-</h1>
 <form action="" method="post" id="admin_new_forum">
   {{ form_fields(form, class="horiz-left") }}
   <fieldset class="actions">

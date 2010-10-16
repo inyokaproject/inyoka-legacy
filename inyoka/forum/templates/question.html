@@ -1,5 +1,6 @@
 {%- extends 'forum/base.html' %}
 {% from 'utils/macros.html' import form_fields, user_link %}
+{%- set trace = [[question.title, href(question)]] %}
 {%- block content %}
 
   <div class="author">{{ _('asked') }} <strong>{{ question.date_created|timedelta }}</strong><br>
@@ -8,9 +9,6 @@
   </div>
 
   <div class="question-detail">
-    <h1>{{ question.title }}</h1>
-
-
     <div class="vote">
       {%- set vote = question.get_vote(request.user) %}
       {% if vote and vote.score > 0 %}

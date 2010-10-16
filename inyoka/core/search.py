@@ -101,12 +101,19 @@ class SearchIndexMapperExtension(db.MapperExtension):
     after_insert = after_update = after_delete = _update_index
 
 
-def query(q, page=1, **kwargs):
+def query(q, **kwargs):
     """
     This function does two things:
         - It searches the search index for `q` which may be user-entered text.
           Xapian search syntax is allowed (e.g. author:root or title:"foo bar")
         - It tries to correct spelling mistakes in `q`
+    
+    It takes the following keyword arguments:
+        - page: An integer determing which page to show. Note that xapian is
+          optimised for low page numbers.
+        - tags: A list of tag names used for filtering the results.
+        - date_between: A tuple of two date strings. Only items created in the
+          period between these dates are matched.
 
     As these tasks are executed remotely make sure you've started celery because
     otherwise you've to wait for a result until hell freezes over.
@@ -118,7 +125,7 @@ def query(q, page=1, **kwargs):
           otherwise `None`
     """
     from celery.execute import send_task
-    t1 = send_task('inyoka.core.tasks.search_query', [q, page], kwargs)
+    t1 = send_task('inyoka.core.tasks.search_query', [q], kwargs)
     t2 = send_task('inyoka.core.tasks.spell_correct', [q])
 
     results = {}

@@ -147,13 +147,12 @@ def is_valid_recaptcha(message=None):
     return validator
 
 
-def is_user(message=None, key='username', negative=False, allow_empty=False):
+def is_user(message=None, key='username', negative=False):
     """
     Try to get an user either by name or by email (use the `key` parameter to
     specify this).
     Raises a validation error if no user was found. You can change this
     behaviour by setting `negative`.
-    If `allow_empty` is `True`, an empty input field is also accepted.
     """
     if message is None:
         if key == 'username':
@@ -164,8 +163,6 @@ def is_user(message=None, key='username', negative=False, allow_empty=False):
                   u' used') or lazy_gettext(u'There\'s no user with this email')
 
     def validator(form, field):
-        if allow_empty and not field.data:
-            return
         user = User.query.filter_by(**{key: field.data}).first()
         if (negative and user) or (not negative and not user):
             raise ValidationError(message)

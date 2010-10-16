@@ -1,6 +1,6 @@
 {%- extends 'base.html' %}
-{% set title_trace = title_trace|default([]) + [_('News')] %}
 {% set styles = ['news.css'] + styles|default([]) %}
+{% set trace = [[_('News'), href('news/index')]] + trace|default([]) %}
 
 {% block sidebar %}
   <div class="container">

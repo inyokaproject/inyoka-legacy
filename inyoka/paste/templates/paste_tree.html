@@ -1,5 +1,5 @@
 {% extends "paste/base.html" %}
-{% set title_trace = [_('Paste Tree')] %}
+{% set trace = [[paste.display_title, href(paste)], [_('Paste Tree'), href(paste, action='show_tree')]] %}
 {% block paste_content %}
   <p>{{ _('Here you can see the tree of paste replies. The paste you\'re coming from is highlighted.') }}</p>
   <ul class="revision_tree">

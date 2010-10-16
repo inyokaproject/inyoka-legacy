@@ -6,7 +6,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <title>{{ (title_trace|default([]) + ['Inyoka'])|join(' › ') }}</title>
+    <title>Inyoka{% for title, url in trace %} › {{ title }}{% endfor %}</title>
     {#- Commonly used javascript files that need to included first #}
     {%- for script in ['jquery.js', 'jquery.ui.js', 'babel.js', 'Inyoka.js'] %}
       <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
@@ -49,7 +49,14 @@
     <div id="page">
       <div id="page-inner">
         <div id="page-navbar">
-          <span class="pathbar">Yet / A Dummy / Pathbar</span>
+          <span class="pathbar">
+            {%- for name, url in trace %}
+              {% if url %}<a href="{{ url }}">{% endif %}
+              {{ name }}
+              {% if url %}</a>{% endif %}
+              {% if not loop.last %}›{% endif %}
+            {%- endfor %}
+          </span>
           <span class="user-status">
             {%- if request.user.is_anonymous -%}
               <a href="{{ href('portal/login') }}">{{ _('Login') }}</a> <a href="{{ href('portal/register') }}">{{ _('Register') }}</a>
@@ -70,6 +77,7 @@
           </div>
         {%- endif %}
         <div id="content" {% if sidebar %}class="with-sidebar"{% endif %}>
+          <h1>{{ trace[-1][0] }}</h1>
           {% block content %}{% endblock content %}
         </div>
       </div>

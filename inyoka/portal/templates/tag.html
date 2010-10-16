@@ -1,7 +1,7 @@
 {% extends "portal/base.html" %}
+{%- set trace = [[tag.name, href(tag)]] %}
 
 {% block content %}
-  <h1>{{ tag.name }}</h1>
   {% for taggable in content %}
     <div class="column">
       <h2>{{ taggable.name }}</h2>

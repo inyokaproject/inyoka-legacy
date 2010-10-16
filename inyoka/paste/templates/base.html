@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% set title_trace = title_trace|default([]) + [_('Paste')] %}
+{% set trace = [[_('Pastebin'), href('paste/index')]] + trace|default([]) %}
 {% set styles = ['paste.css', 'diff.css', 'highlighting.css'] + styles|default([]) %}
 {% set sidebar = false %}
 
 {% block content %}
-  <h1>{% block paste_header %}{{ _('Pastebin') }}{% endblock %}</h1>
   <ul class="pagetabs">
     {% if tab is undefined %}
       {% set tab = 'new' %}

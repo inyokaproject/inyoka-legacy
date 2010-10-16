@@ -1,11 +1,17 @@
 {%- extends 'forum/base.html' %}
 {% from 'utils/macros.html' import user_link %}
 
+{%- if forum %}
+  {%- set trace = [[_('Forum “%(forum)s”', forum=forum.name), href(forum)]] + trace|default([]) %}
+{%- elif tags %}
+  {%- set trace = [[_('Tagged Questions'), '']] + trace|default([]) %}
+{%- else %}
+  {%- set trace = [[_('All Questions'), href('forum/questions')]] + trace|default([]) %}
+{%- endif %}
+
 {%- block content %}
 
   {% if forum %}
-    <h1>{{ _('Forum “%(forum)s”', forum=forum.name) }}</h1>
-
     <p>{{ forum.description }}</p>
 
     {% if forum.subforums %}
@@ -26,8 +32,6 @@
     {%- set url_values = {'forum': forum.slug} %}
 
   {% elif tags %}
-    <h1>{{ _('Tagged Questions') }}</h1>
-
     <p class="tags">
       {%- for tag in tags %}
         <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
@@ -37,8 +41,6 @@
     {%- set url_values = {'tags': tags|join(' ')} %}
 
   {% else %}
-    <h1>{{ _('All Questions') }}</h1>
-
     {%- set url_values = {} %}
   {% endif %}
 

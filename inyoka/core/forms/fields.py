@@ -8,15 +8,19 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import re
 from wtforms.fields import BooleanField as OrigBooleanField, DecimalField, DateField, \
     DateTimeField, FieldList, FloatField, FormField, HiddenField, \
     IntegerField, PasswordField, RadioField, SelectField, SelectMultipleField, \
     SubmitField, TextField, TextAreaField, FileField
 from wtforms.fields import Field
 from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectField
-
+from inyoka.core.api import _
 from inyoka.core.forms import widgets
 from inyoka.core.forms import validators
+
+date_re = re.compile(r'(?P<year>[0-9]{4})([-/.])(?P<month>[0-9]{2})\2'
+                     r'(?P<day>[0-9]{2})$')
 
 
 class BooleanField(OrigBooleanField):
@@ -109,3 +113,17 @@ class AutocompleteField(QuerySelectMultipleField):
         self._formdata = None
 
     data = property(_get_data, _set_data)
+
+
+class DatePeriodField(FieldList):
+    widget = widgets.DatePeriodWidget()
+
+    def __init__(self, *args, **kwargs):
+        unbound_field = TextField('', [validators.Regexp(date_re,
+            message=_(u'Must be a valid date')), validators.Optional()])
+        FieldList.__init__(self, unbound_field, *args, min_entries=2, **kwargs)
+
+    @property
+    def data(self):
+        if self.entries[0].data and self.entries[1].data:
+            return (self.entries[0].data, self.entries[1].data)

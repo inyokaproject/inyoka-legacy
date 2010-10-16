@@ -1,12 +1,6 @@
 {%- extends 'paste/base.html' %}
-{%- set title_trace = [paste.display_title] %}
+{%- set trace = [[_('%s by %s' % (paste.display_title, paste.author)), href(paste)]] %}
 {%- set tab = 'browse' %}
-
-{%- block paste_header %}
-  {%- trans title=paste.display_title, author=paste.author -%}
-    {{ title }} by {{ author }}
-  {%- endtrans %}
-{% endblock %}
 
 {% block pagetabs %}
   <li><a href="{{ href(paste, action='raw') }}">{{ _('Raw') }}</a></li>

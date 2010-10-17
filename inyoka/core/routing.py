@@ -47,6 +47,7 @@ routing_urls_forum = DottedConfigField('routing.urls.forum', default=u'forum:/')
 routing_urls_wiki = DottedConfigField('routing.urls.wiki', default=u'wiki:/')
 routing_urls_paste = DottedConfigField('routing.urls.paste', default=u'paste:/')
 routing_urls_planet = DottedConfigField('routing.urls.planet', default=u'planet:/')
+routing_urls_event = DottedConfigField('routing.urls.event', default=u'event:/')
 routing_urls_admin = DottedConfigField('routing.urls.admin', default=u'admin:/')
 routing_urls_api = DottedConfigField('routing.urls.api', default=u'api:/')
 # NEVER CHANGE THAT VALUE!!! TODO: Find a better solution to implement testing

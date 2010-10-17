@@ -90,6 +90,10 @@
   background: url(../img/icons/admin.png) no-repeat top center;
 }
 
+#navi a.icon-event {
+  background: url(../img/icons/event.png) no-repeat top center;
+}
+
 #navi a.icon-forum {
   background: url(../img/icons/forum.png) no-repeat top center;
 }

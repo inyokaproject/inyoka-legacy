@@ -50,6 +50,7 @@ templates_packages_forum = TextConfigField('templates.packages.forum', default=u
 templates_packages_wiki = TextConfigField('templates.packages.wiki', default=u'inyoka.wiki')
 templates_packages_paste = TextConfigField('templates.packages.paste', default=u'inyoka.paste')
 templates_packages_planet = TextConfigField('templates.packages.planet', default=u'inyoka.planet')
+templates_packages_event = TextConfigField('templates.packages.event', default=u'inyoka.event')
 templates_packages_admin = TextConfigField('templates.packages.admin', default=u'inyoka.admin')
 
 

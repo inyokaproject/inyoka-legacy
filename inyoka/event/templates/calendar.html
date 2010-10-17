@@ -1,0 +1,13 @@
+{%- extends 'event/base.html' %}
+{% set tab = 'calendar' %}
+
+{%- block event %}
+  <ul>
+    {%- for event in events %}
+      <li>
+        <a href="{{ href(event) }}">{{ event.titel }}</a><br>
+        {{ _('Starting on %(date)s.', date=event.start_date|datetimeformat) }} - {{ _('Ending on %(date)s.', date=event.end_date|datetimeformat) }}
+      </li>
+    {%- endfor %}
+  </ul>
+{%- endblock %}

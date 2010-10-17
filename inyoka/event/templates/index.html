@@ -1,0 +1,13 @@
+{%- extends 'event/base.html' %}
+{% from 'utils/macros.html' import form_fields %}
+{% set tab = 'new' %}
+{%- block event_content %}
+
+  <form action="" method="post" id="event_new_entry">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
+
+{%- endblock %}

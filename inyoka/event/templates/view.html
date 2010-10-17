@@ -1,0 +1,10 @@
+{%- extends 'event/base.html' %}
+{%- set trace = [[_('%s by %s' % (event.title, event.author)), href(event)]] %}
+
+{%- block event_content %}
+  <p><small>{{ _('Starting on %(date)s.', date=event.start_date|datetimeformat) }}</small></p>
+  <p><small>{{ _('Ending on %(date)s.', date=event.end_date|datetimeformat) }}</small></p>
+  <p>
+    {{ event.text|safe }}
+  </p>
+{%- endblock %}

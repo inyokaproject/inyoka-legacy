@@ -224,6 +224,10 @@ msgstr ""
 "Der Parser konnte den Text nicht verarbeiten, da die maximale Tiefe für "
 "verschachtelte Elemente überschritten wurde"
 
+#: inyoka/event/templates/base.html:15 inyoka/event/templates/calendar.html:2
+msgid "Calendar"
+msgstr "Kalender"
+
 #: inyoka/forum/admin.py:20 inyoka/forum/templates/base.html:2
 #: inyoka/forum/templates/index.html:4 inyoka/templates/base.html:45
 msgid "Forum"

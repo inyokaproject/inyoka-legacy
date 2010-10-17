@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% set trace = [[_('Event'), href('event/index')]] + trace|default([]) %}
+{% set styles = ['event.css'] + styles|default([]) %}
+{% set sidebar = false %}
+
+{% block content %}
+  <h1>{% block event_header %}{{ _('Event') }}{% endblock %}</h1>
+  <ul class="pagetabs">
+    {% if tab is undefined %}
+      {% set tab = 'new' %}
+    {% endif %}
+    <li{% if tab == 'new' %} class="selected"{% endif %}>
+      <a href="{{ href('event/index') }}">{{ _('New') }}</a></li>
+    <li{% if tab == 'calendar' %} class="selected"{% endif %}>
+      <a href="{{ href('event/calendar') }}">{{ _('Calendar') }}</a></li>
+  {% block pagetabs %}
+  {% endblock %}
+  </ul>
+  {% block event_content %}{% endblock %}
+{% endblock %}

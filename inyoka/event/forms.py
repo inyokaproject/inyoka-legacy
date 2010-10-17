@@ -9,25 +9,13 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from operator import itemgetter
-from pygments.lexers import get_all_lexers
 from inyoka.core.forms import Form, TextField, DateTimeField, BooleanField, \
     validators, widgets, HiddenIntegerField
 from inyoka.i18n import _
 
 
-# Hell, we need a shorter list ;)
-def _get_pygments_lexers(add_empty=True):
-    r = []
-    if add_empty:
-        r.append((u'', u''),)
-    for lexer in get_all_lexers():
-        r.append((lexer[1][0], _(lexer[0])),)
-    r.sort(key=itemgetter(1))
-    return r
-
-
 class AddEventForm(Form):
-    title = TextField(_(u'Title'), [validators.Length(max=50),
+    title = TextField(_(u'Title'), [validators.Length(max=100),
                      validators.Required()])
     text = TextField(_(u'Text'), [validators.Required()],
                      widget=widgets.TextArea())

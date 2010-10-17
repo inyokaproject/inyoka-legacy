@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 from inyoka.core.api import _, db
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
@@ -31,24 +31,53 @@ class EventQuery(db.Query):
 
     def start_in(self, year, month):
         """Return a query for all events that start in the given year and month
+        :param year: The year that the event starts have to match
+        :param month: The month that the event starts have to match
         """
         days_in_month = calendar.monthrange(year, month)[1]
-        print "days_in_month", days_in_month
-        calender_begin = datetime(year, month, 1, 0, 0, 0)
-        print "calender_begin", calender_begin
-        calender_end = datetime(year, month, days_in_month, 23, 59, 59)
-        print "calender_end", calender_end
+        interval_begin = datetime(year, month, 1, 0, 0, 0)
+        interval_end = datetime(year, month, days_in_month, 23, 59, 59)
         q = self.filter(db.and_(
-            Event.start_date>=datetime(year, month, 1, 0, 0, 0),
-            Event.start_date<=datetime(year, month, days_in_month, 23, 59, 59)
-        ))
-        print "q", q
+            Event.start_date >= interval_begin,
+            Event.start_date <= interval_end
+        )).order_by(Event.start_date)
+        return q
+
+    def end_in(self, year, month):
+        """Return a query for all events that start in the given year and month
+        :param year: The year that the event ends have to match
+        :param month: The month that the event ends have to match
+        """
+        days_in_month = calendar.monthrange(year, month)[1]
+        interval_begin = datetime(year, month, 1, 0, 0, 0)
+        interval_end = datetime(year, month, days_in_month, 23, 59, 59)
+        q = self.filter(db.and_(
+            Event.end_date >= interval_begin,
+            Event.end_date <= interval_end
+        )).order_by(Event.end_date)
+        return q
+
+    def oncoming(self, year, month, duration=10):
+        """Return a query for all events that start in the given year and month
+        :param year: The year that the event starts have to match
+        :param month: The month that the event starts have to match
+        :param duration: The number of days from event start
+        """
+        interval_begin = datetime(year, month, 1, 0, 0, 0)
+        interval_end = interval_begin + timedelta(duration)
+        q = self.filter(db.and_(
+            Event.start_date >= interval_begin,
+            Event.start_date <= interval_end
+        )).order_by(Event.start_date)
         return q
 
 
 class Event(db.Model, SerializableObject, TextRendererMixin):
     __tablename__ = 'event_event'
     __mapper_args__ = {'extension': db.SlugGenerator('slug', 'title')}
+    # To order all queries by default, something like
+    # __mapper_args__ = {'order_by':Event.start_date.asc()
+    # has to be added to this class. No idea how to do that, now
 
     query = db.session.query_property(EventQuery)
 
@@ -60,7 +89,7 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     #: Model columns
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Unicode(100), nullable=False)
-    slug = db.Column(db.Unicode(50), unique=True, index=True)
+    slug = db.Column(db.Unicode(100), unique=True, index=True)
     _text = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
@@ -81,6 +110,7 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     #        primaryjoin=(info_question_id == Question.id))
 
     # revision model implementation
+
     def get_url_values(self, action='view'):
         values = {
             'view': 'event/view',
@@ -89,4 +119,4 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
         return values[action], {'id': self.id}
 
     def __unicode__(self):
-        return self.display_title
+        return self.title

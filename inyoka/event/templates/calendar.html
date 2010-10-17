@@ -1,13 +1,28 @@
 {%- extends 'event/base.html' %}
 {% set tab = 'calendar' %}
 
-{%- block event %}
-  <ul>
-    {%- for event in events %}
-      <li>
-        <a href="{{ href(event) }}">{{ event.titel }}</a><br>
-        {{ _('Starting on %(date)s.', date=event.start_date|datetimeformat) }} - {{ _('Ending on %(date)s.', date=event.end_date|datetimeformat) }}
-      </li>
-    {%- endfor %}
-  </ul>
+{%- block content %}
+  <table>
+    <tr>
+      {%- for premonth in range(monthstart) -%}
+        <td>{{ days_in_premonth - monthstart + 1 + premonth }}</td>
+      {%- endfor -%}
+      {%- for day in range(days_in_month) -%}
+        <td{% if tab == 'new' %} style="backgroud-color: #DDFFDD"{% endif %}>
+          <b>{{ day + 1 }}</b> ({{ (day + monthstart) % 7 }})
+          {%- for event in events %}
+            {%- if event.start_date.day == day + 1 -%}
+              <a href="{{ href(event) }}" titel="{{ _('Start: %(date)s - End: %(date2)s', date=event.start_date|dateformat, date2=event.end_date|dateformat) }}">{{ event.title }}</a><br>
+            {%- endif -%}
+          {%- endfor %}
+        </td>
+        {%- if ((day + monthstart + 1) % 7) == 0 -%}
+        </tr><tr>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- for postmonth in range(7 - (monthstart + days_in_month) % 7) -%}
+        <td>{{ postmonth + 1 }}</td>
+      {%- endfor -%}
+    </tr>
+  </table>
 {%- endblock %}

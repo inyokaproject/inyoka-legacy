@@ -8,6 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import calendar
 from datetime import datetime, date
 from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
@@ -32,6 +33,9 @@ class EventController(IController):
         Rule('/calendar/', endpoint='calendar'),
         Rule('/calendar/<int:year>/', endpoint='calendar'),
         Rule('/calendar/<int:year>/<int:month>/', endpoint='calendar'),
+        Rule('/oncoming/', endpoint='oncoming'),
+        Rule('/oncoming/<int:year>/', endpoint='oncoming'),
+        Rule('/oncoming/<int:year>/<int:month>/', endpoint='oncoming'),
     ]
 
     @view
@@ -62,6 +66,18 @@ class EventController(IController):
             'event': e,
         }
 
+    @view('oncoming')
+    @templated('event/oncoming.html', modifier=context_modifier)
+    def oncoming_events(self, request, year=None, month=None):
+        if not year or year < 1970:
+            year = year or date.today().year
+        if not month or month < 1 or month > 12:
+            month = date.today().month
+        events = Event.query.oncoming(year, month, 10000)
+        return {
+            'events': events,
+        }
+
     @view('calendar')
     @templated('event/calendar.html', modifier=context_modifier)
     def calendar_events(self, request, year=None, month=None):
@@ -69,8 +85,30 @@ class EventController(IController):
             year = year or date.today().year
         if not month or month < 1 or month > 12:
             month = date.today().month
+        day = date.today().day
         events = Event.query.start_in(year, month)
+        first_weekday_this_month = datetime(year, month, 1, 0, 0, 0).weekday()
+
+        if month == 1:
+            days_in_premonth = calendar.monthrange(year - 1, 12)[1]
+        else:
+            days_in_premonth = calendar.monthrange(year, month - 1)[1]
+
+        days_in_month = calendar.monthrange(year, month)[1]
+
+        #if month == 12:
+        #    days_in_postmonth = calendar.monthrange(year - 1, 1)[1]
+        #else:
+        #    days_in_postmonth = calendar.monthrange(year, month + 1)[1]
+
         return {
             'events': events,
+            'monthstart': first_weekday_this_month,
+            'days_in_premonth': days_in_premonth,
+            'days_in_month': days_in_month,
+            'thisyear': year,
+            'thismonth': month,
+            'thisday': day,
+            #'days_in_postmonth': days_in_postmonth,
         }
 

@@ -218,8 +218,12 @@ msgid ""
 "allowed depth for nested elements"
 msgstr ""
 
-#: inyoka/event/templates/base.html:15 inyoka/event/templates/calendar.html:2
+#: inyoka/event/templates/base.html:17 inyoka/event/templates/calendar.html:2
 msgid "Calendar"
+msgstr ""
+
+#: inyoka/event/templates/base.html:15 inyoka/event/templates/list.html:2
+msgid "Oncoming Events"
 msgstr ""
 
 #: inyoka/forum/admin.py:20 inyoka/forum/templates/base.html:2

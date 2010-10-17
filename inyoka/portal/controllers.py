@@ -168,7 +168,7 @@ class PortalController(IController):
             #       result, the server process may be idle for some time. Maybe
             #       it would be better to send a temporary page and check
             #       dynamically via ajax whether the result has arrived.
-            results, total, corrected = query(q, **{
+            results, total, corrected = query('portal', q, **{
                 'author': form.data['author'],
                 'tags': [tag.name for tag in form.data['tags']],
                 'date_between': form.data['date_between'],

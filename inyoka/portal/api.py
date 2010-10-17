@@ -10,7 +10,14 @@
 """
 from inyoka import Interface
 from inyoka.core.api import ctx, cache, db
+from inyoka.core.resource import IResourceManager
+from inyoka.portal.search import PortalSearchIndex
 from inyoka.utils.decorators import abstract
+
+
+class IPortalResourceManager(IResourceManager):
+    #: register portal search index
+    search_indexes = [PortalSearchIndex()]
 
 
 class ILatestContentProvider(Interface):

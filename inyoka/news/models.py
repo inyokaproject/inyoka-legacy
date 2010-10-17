@@ -155,7 +155,7 @@ class Article(db.Model):
     __tablename__ = 'news_article'
     __mapper_args__ = {
         'extension': (db.SlugGenerator('slug', 'title'),
-                      SearchIndexMapperExtension('news'))
+                      SearchIndexMapperExtension('portal', 'news'))
     }
     query = db.session.query_property(ArticleQuery)
 

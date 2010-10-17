@@ -12,12 +12,11 @@ from celery.decorators import task, periodic_task
 from collections import defaultdict
 from datetime import timedelta
 from sqlalchemy.orm.exc import NoResultFound
-from xappy import SearchConnection, IndexerConnection, UnprocessedDocument, \
-    Field, errors
+from xappy import errors
 from inyoka.context import ctx
 from inyoka.core.auth.models import User
 from inyoka.core.resource import IResourceManager
-from inyoka.core.search import create_search_document, allowed_fields
+from inyoka.core.search import create_search_document
 from inyoka.core.subscriptions import SubscriptionAction
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.core.templating import render_template
@@ -26,10 +25,7 @@ from inyoka.core.api import _
 
 
 # set up the connections to the search index
-search_database = ctx.cfg['search.database']
-indexer = IndexerConnection(search_database)
-searcher = SearchConnection(search_database)
-search_providers = IResourceManager.get_search_providers()
+INDEXES = IResourceManager.get_search_indexes()
 
 
 @task
@@ -62,11 +58,12 @@ def send_notifications(object, action_name, subscriptions):
 
 
 @task
-def update_search_index(provider, doc_id):
+def update_search_index(index, provider, doc_id):
     """
-    Add, update or delete a single item of the search index.
+    Add, update or delete a single item of the search index `index`.
 
-    It's two parameters are:
+    It's three parameters are:
+        - The name of the search index the provider belongs to
         - The name of the provider the document belongs to
         - The document id
 
@@ -80,30 +77,32 @@ def update_search_index(provider, doc_id):
     time for your document to appear when searching.
     """
     id = '%s-%s' % (provider, doc_id)
+    index = INDEXES[index]
     # get the document data from the database
-    obj = search_providers[provider].prepare([doc_id]).next()
+    obj = index.providers[provider].prepare([doc_id]).next()
 
     if obj is None:
         # the document was deleted in the database, delete the search index
         # entry too
-        indexer.delete(id)
+        index.indexer.delete(id)
     else:
         doc = create_search_document(id, obj)
         try:
             # try to create a new search entry
-            indexer.add(doc)
+            index.indexer.add(doc)
         except errors.IndexerError:
             # there's already an exising one, replace it
-            indexer.replace(doc)
+            index.indexer.replace(doc)
 
     # XXX: THIS IS ONLY FOR TESTING!!! REMOVE IT!!!
-    indexer.flush()
+    index.indexer.flush()
+    index.searcher.reopen()
 
 
 @task
-def search_query(q, page=1, author=None, tags=[], date_between=None):
+def search_query(index, q, page=1, author=None, tags=[], date_between=None):
     """
-    Searches for the query `q` in the search index.
+    Searches for the query `q` in the search index `index`.
 
     It returns:
         - An amount of search result ids specified of the config value
@@ -112,7 +111,8 @@ def search_query(q, page=1, author=None, tags=[], date_between=None):
     """
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
-    query = searcher.query_parse(q, allow=allowed_fields)
+    searcher = INDEXES[index].searcher
+    query = searcher.query_parse(q, allow=INDEXES[index].direct_search_allowed)
 
     if author:
         query = searcher.query_filter(query, searcher.query_field('author',
@@ -131,17 +131,21 @@ def search_query(q, page=1, author=None, tags=[], date_between=None):
 
 
 @task
-def spell_correct(q):
+def spell_correct(index, q):
     """
-    Uses the search index to return a spelling-corrected version of `q`.
+    Uses the search index `index` to return a spelling-corrected version of `q`.
     """
-    return searcher.spell_correct(q)
+    return INDEXES[index].searcher.spell_correct(q)
 
 
 @periodic_task(run_every=timedelta(minutes=5))
 def flush_indexer():
-    indexer.flush()
-    searcher.reopen()
+    """
+    Flush all indexer connections and reopen all search connections.
+    """
+    for index in INDEXES.itervalues():
+        index.indexer.flush()
+        index.searcher.reopen()
 
 
 # don't store the result of tasks without return value

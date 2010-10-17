@@ -16,6 +16,7 @@ from inyoka.utils.xml import strip_tags
 
 class NewsSearchProvider(SearchProvider):
     name = 'news'
+    index = 'portal'
 
     def _prepare(self, article):
         return {

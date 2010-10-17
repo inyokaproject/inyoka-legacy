@@ -296,47 +296,43 @@ def lsdns(basedomain=None):
     ctx.cfg['base_domain_name'] = _old
 
 
-def reindex():
+def reindex(index):
     """
     Iterate over all documents we're able to find (even those that are already
     in the search index) and index them. Note that this may take a lot of time.
     """
-    from xappy import IndexerConnection, errors
-    from inyoka.core.api import ctx
+    from xappy import errors
     from inyoka.core.resource import IResourceManager
-    from inyoka.core.search import create_search_document,register_search_fields
+    from inyoka.core.search import create_search_document
 
-    indexer = IndexerConnection(ctx.cfg['search.database'])
-
-    # define the search fields
-    register_search_fields(indexer)
+    index = IResourceManager.get_search_indexes()[index]
 
     # iterate over all search providers...
-    for name, provider in IResourceManager.get_search_providers().iteritems():
+    for provider in index.providers.itervalues():
         # ... to get all their data
         for id, obj in provider.prepare_all():
             # create a new document for the search index
-            doc = create_search_document('%s-%s' % (name, id), obj)
+            doc = create_search_document('%s-%s' % (provider.name, id), obj)
             try:
                 # try to create a new search entry
-                indexer.add(doc)
+                index.indexer.add(doc)
             except errors.IndexerError:
                 # there's already an exising one, replace it
-                indexer.replace(doc)
-        indexer.flush()
-    indexer.close()
+                index.indexer.replace(doc)
+        index.indexer.flush()
+    index.indexer.close()
 
 
-def search(query, count=50):
+def search(index, query, count=50):
     """
-    Make a search query and print `count` results.
+    Search for `query` in the search index `index` and print `count` results.
     """
-    from xappy import SearchConnection
-    from inyoka.core.api import ctx
-    from inyoka.core.search import allowed_fields
-    searcher = SearchConnection(ctx.cfg['search.database'])
+    from inyoka.core.resource import IResourceManager
 
-    query = searcher.query_parse(query, allow=allowed_fields)
+    index = IResourceManager.get_search_indexes()[index]
+    searcher = index.searcher
+
+    query = searcher.query_parse(query, allow=index.direct_search_allowed)
     results = searcher.search(query, 0, int(count))
 
     for result in results:

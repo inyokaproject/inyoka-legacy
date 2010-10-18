@@ -10,7 +10,7 @@
       <div class="url_rules">
         <p>{{ _('We tried these urls:') }}</p>
         {% for rule in url_list %}
-          {{ rule|safe }}{% if not loop.last %}<br />{% endif %}
+          {{ rule|safe }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
       </div>
     {% endif %}

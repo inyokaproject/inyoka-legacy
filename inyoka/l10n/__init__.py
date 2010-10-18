@@ -142,6 +142,11 @@ for func in dates.__all__ + _additional_all:
     dict_[func] = get_dummy(getattr(dates, func))
 
 
+def format_day_short(date=None):
+    """Format month and year of a date."""
+    return dates.format_date(date, 'EEE')
+
+
 def format_month(date=None):
     """Format month and year of a date."""
     return dates.format_date(date, 'MMMM YYYY')

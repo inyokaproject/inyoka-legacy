@@ -49,6 +49,7 @@ templates_packages_news = TextConfigField('templates.packages.news', default=u'i
 templates_packages_forum = TextConfigField('templates.packages.forum', default=u'inyoka.forum')
 templates_packages_wiki = TextConfigField('templates.packages.wiki', default=u'inyoka.wiki')
 templates_packages_paste = TextConfigField('templates.packages.paste', default=u'inyoka.paste')
+templates_packages_event = TextConfigField('templates.packages.event', default=u'inyoka.event')
 templates_packages_planet = TextConfigField('templates.packages.planet', default=u'inyoka.planet')
 templates_packages_event = TextConfigField('templates.packages.event', default=u'inyoka.event')
 templates_packages_admin = TextConfigField('templates.packages.admin', default=u'inyoka.admin')
@@ -245,6 +246,7 @@ class InyokaEnvironment(Environment):
             timeformat=l10n.format_time,
             timedelta=l10n.timedeltaformat,
             monthformat=l10n.format_month,
+            dayformatshort=l10n.format_day_short,
             humanize=l10n.humanize_number,
         )
         self.install_gettext_translations(

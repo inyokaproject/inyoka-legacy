@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import calendar
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, db, redirect_to
@@ -23,6 +23,19 @@ def context_modifier(request, context):
         active='event'
     )
 
+def daterange(start, end):
+    for n in range((end - start).days):
+        yield start + timedelta(n)
+
+def validate_year(year):
+    if not year or year < 1970:
+        year = year or date.today().year
+    return year
+
+def validate_month(month):
+    if not month or month < 1 or month > 12:
+        month = date.today().month
+    return month
 
 class EventController(IController):
     name = 'event'
@@ -69,11 +82,8 @@ class EventController(IController):
     @view('oncoming')
     @templated('event/oncoming.html', modifier=context_modifier)
     def oncoming_events(self, request, year=None, month=None):
-        if not year or year < 1970:
-            year = year or date.today().year
-        if not month or month < 1 or month > 12:
-            month = date.today().month
-        events = Event.query.oncoming(year, month, 10000)
+        events = Event.query.oncoming(validate_year(year),
+                                      validate_month(month), 10000)
         return {
             'events': events,
         }
@@ -81,18 +91,24 @@ class EventController(IController):
     @view('calendar')
     @templated('event/calendar.html', modifier=context_modifier)
     def calendar_events(self, request, year=None, month=None):
-        if not year or year < 1970:
-            year = year or date.today().year
-        if not month or month < 1 or month > 12:
-            month = date.today().month
+        year = validate_year(year)
+        month = validate_month(month)
+
         day = date.today().day
-        events = Event.query.start_in(year, month)
-        first_weekday_this_month = datetime(year, month, 1, 0, 0, 0).weekday()
+
+        first_weekday_this_month = date(year, month, 1).weekday()
 
         if month == 1:
-            days_in_premonth = calendar.monthrange(year - 1, 12)[1]
+            pre = date(year - 1, 12, 1)
+            post = date(year, 2, 1)
+        elif month == 12:
+            pre = date(year, 11, 1)
+            post = date(year + 1, 1, 1)
         else:
-            days_in_premonth = calendar.monthrange(year, month - 1)[1]
+            pre = date(year, month - 1, 1)
+            post = date(year, month + 1, 1)
+
+        days_in_premonth = calendar.monthrange(pre.year, pre.month)[1]
 
         days_in_month = calendar.monthrange(year, month)[1]
 
@@ -100,15 +116,20 @@ class EventController(IController):
         #    days_in_postmonth = calendar.monthrange(year - 1, 1)[1]
         #else:
         #    days_in_postmonth = calendar.monthrange(year, month + 1)[1]
+        month_begin = date(year, month, 1)
+        month_end = month_begin + timedelta(days_in_month)
+
+        events = Event.query.during(month_begin, month_end)
 
         return {
             'events': events,
             'monthstart': first_weekday_this_month,
             'days_in_premonth': days_in_premonth,
             'days_in_month': days_in_month,
-            'thisyear': year,
-            'thismonth': month,
-            'thisday': day,
-            #'days_in_postmonth': days_in_postmonth,
+            'thisday': date.today(),
+            'month_range': daterange(month_begin, month_end),
+            'today': date.today(),
+            'pre': pre,
+            'post': post,
         }
 

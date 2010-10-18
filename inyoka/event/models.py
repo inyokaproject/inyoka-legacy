@@ -71,6 +71,19 @@ class EventQuery(db.Query):
         )).order_by(Event.start_date)
         return q
 
+    def during(self, begin, end):
+        q = self.filter(db.or_(
+            db.and_(
+                Event.start_date >= begin,
+                Event.start_date <= end
+            ),
+            db.and_(
+                Event.end_date >= begin,
+                Event.end_date <= end
+            )
+        )).order_by(Event.start_date)
+        return q
+
 
 class Event(db.Model, SerializableObject, TextRendererMixin):
     __tablename__ = 'event_event'

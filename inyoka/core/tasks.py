@@ -100,9 +100,22 @@ def update_search_index(index, provider, doc_id):
 
 
 @task
-def search_query(index, q, page=1, author=None, tags=[], date_between=None):
+def search_query(index, q, page=1, filters={}):
+    # using **kwargs for `filters` is not possible because celery sends some
+    # confusing keyword arguments
     """
     Searches for the query `q` in the search index `index`.
+
+    It takes two optional arguments:
+        - page: An integer determining the page
+        - filters: A dictionary used for filtering the search results.
+            Normally, results are filtert by equality with the value.
+            You can change this behaviour by appending an ending to the key:
+                - _list: Items match if all of the objects items match
+                - _range: Items match if the value is between the first and the
+                    second item of the object (usually a tuple)
+
+            Values that are None, an empty list, tuple or string are ignored.
 
     It returns:
         - An amount of search result ids specified of the config value
@@ -112,20 +125,25 @@ def search_query(index, q, page=1, author=None, tags=[], date_between=None):
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
     searcher = INDEXES[index].searcher
-    query = searcher.query_parse(q, allow=INDEXES[index].direct_search_allowed)
+    qry = searcher.query_parse(q, allow=INDEXES[index].direct_search_allowed)
 
-    if author:
-        query = searcher.query_filter(query, searcher.query_field('author',
-                                                                  author))
+    for key, val in filters.iteritems():
+        # ignore senseless filters
+        if val in (None, [], (), ''):
+            continue
 
-    for tag in tags:
-        query = searcher.query_filter(query, searcher.query_field('tag', tag))
+        # determine the type of query to execute
+        key, type = key.split('_') if '_' in key else (key, None)
 
-    if date_between is not None:
-        query = searcher.query_filter(query,
-            searcher.query_range('date', *date_between))
+        if type == 'list':
+            for v in val:
+                qry = searcher.query_filter(qry, searcher.query_field(key, v))
+        elif type == 'range':
+            qry = searcher.query_filter(qry, searcher.query_range(key, *val))
+        else:
+            qry = searcher.query_filter(qry, searcher.query_field(key, val))
 
-    results = searcher.search(query, offset, offset + count)
+    results = searcher.search(qry, offset, offset + count)
     total = results.matches_estimated
     return [result.id.split('-', 1) for result in results], total
 

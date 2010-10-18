@@ -203,7 +203,8 @@ def query(index, q, **kwargs):
           otherwise `None`
     """
     from celery.execute import send_task
-    t1 = send_task('inyoka.core.tasks.search_query', [index, q], kwargs)
+    t1 = send_task('inyoka.core.tasks.search_query',
+                   [index, q], {'filters': kwargs})
     t2 = send_task('inyoka.core.tasks.spell_correct', [index, q])
 
     results = {}

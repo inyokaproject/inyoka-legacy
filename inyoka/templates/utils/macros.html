@@ -54,7 +54,9 @@
   {%- if field.type == 'BooleanField' %}
     {{ form_field_boolean(field, **kwargs) }}
   {%- else%}
-    {{ form_field_label(field) }}
+    {%- if field.type != 'FieldList' %}
+      {{ form_field_label(field) }}
+    {%- endif %}
     {%- if field.type == 'RadioField' %}
       {{ field(class='radio-group', **kwargs) }}
     {%- else %}

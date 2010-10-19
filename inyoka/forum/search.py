@@ -16,6 +16,7 @@ from inyoka.utils.xml import strip_tags
 
 class AnswerSearchProvider(SearchProvider):
     name = 'answer'
+    index = 'portal'
 
     def _prepare(self, answer):
         return {
@@ -42,6 +43,7 @@ class AnswerSearchProvider(SearchProvider):
 
 class QuestionSearchProvider(SearchProvider):
     name = 'question'
+    index = 'portal'
 
     def _prepare(self, question):
         return {

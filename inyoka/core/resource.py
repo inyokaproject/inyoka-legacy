@@ -25,6 +25,8 @@ class IResourceManager(Interface):
     #: subsystem.  Models not listed won't be recognized by structure
     #: changing operations such as initial table creation.
     models = []
+    #: List all search indexes here.
+    search_indexes = []
     #: List all search providers here to register them, otherwise their data
     #: won't be indexed.
     search_providers = []
@@ -46,9 +48,25 @@ class IResourceManager(Interface):
                     yield model.__table__ if tables else model
 
     @classmethod
+    def get_search_indexes(cls):
+        """
+        Generates a name -> `SearchIndex` mapping of all search indexes.
+        """
+        dct = {}
+        for component in ctx.get_implementations(cls, instances=True):
+            for index in component.search_indexes:
+                dct[index.name] = index
+        return dct
+
+    @classmethod
     def get_search_providers(cls):
+        """
+        Generates a dictionary whose keys are the search index names and whose
+        values are dictionaries of the search providers belonging to them.
+        """
         dct = {}
         for component in ctx.get_implementations(cls, instances=True):
             for provider in component.search_providers:
-                dct[provider.name] = provider
+                dct.setdefault(provider.index, {})
+                dct[provider.index][provider.name] = provider
         return dct

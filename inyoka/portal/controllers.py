@@ -161,18 +161,16 @@ class PortalController(IController):
         form = SearchForm(request.args)
 
         if 'q' in request.args and form.validate():
-            page = form.data['page']
-            q = form.data['q']
+            d = form.data
+            page, q = d['page'], d['q']
 
             # TODO: This is done by a celery task. As we have to wait for the
             #       result, the server process may be idle for some time. Maybe
             #       it would be better to send a temporary page and check
             #       dynamically via ajax whether the result has arrived.
-            results, total, corrected = query(q, **{
-                'author': form.data['author'],
-                'tags': [tag.name for tag in form.data['tags']],
-                'date_between': form.data['date_between'],
-            })
+            results, total, corrected = query('portal', q, author=d['author'],
+                tag_list=[tag.name for tag in d['tags']],
+                date_range=d['date_between'])
 
             pagination = SearchPagination(page, total, request.args)
 

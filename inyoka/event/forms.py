@@ -21,4 +21,5 @@ class AddEventForm(Form):
                      widget=widgets.TextArea())
     start = DateTimeField(_(u'Start'), [validators.Required()])
     end = DateTimeField(_(u'End'), [validators.Required()])
-
+    discussion_question = BooleanField(_(u'Create topic for discussion'))
+    info_question = BooleanField(_(u'Create topic for further information'))

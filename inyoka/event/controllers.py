@@ -16,6 +16,7 @@ from inyoka.core.api import IController, Rule, view, Response, \
 from inyoka.utils.pagination import URLPagination
 from inyoka.event.forms import AddEventForm
 from inyoka.event.models import Event
+from inyoka.forum.models import Question
 
 
 def context_modifier(request, context):
@@ -57,6 +58,18 @@ class EventController(IController):
         form = AddEventForm(request.form)
         if form.validate_on_submit():
             # TODO request the form data
+            #: Check for creating a question-object a discussion
+            if form.discussion_question.data:
+                q_discussion = Question(title=u'[Event discussion] %s' % form.title.data,
+                                        author=request.user,
+                                        text=u'This is the discussion for the event "%s"' % form.title.data)
+
+            #: Check for creating a question-object a discussion
+            if form.info_question.data:
+                q_info = Question(title=u'[Event information] %s' % form.title.data,
+                                  author=request.user,
+                                  text=u'This is the discussion for the event "%s"' % form.title.data)
+
             e = Event(title=form.title.data,
                       text=form.text.data,
                       author=request.user,

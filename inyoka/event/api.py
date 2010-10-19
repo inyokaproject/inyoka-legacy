@@ -9,8 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import IResourceManager
-from inyoka.event.models import Event
+from inyoka.event.models import Event, event_tag
 
 
 class EventResourceManager(IResourceManager):
-    models = [Event]
+    models = [Event, event_tag]

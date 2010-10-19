@@ -13,8 +13,14 @@ from datetime import datetime, timedelta
 from inyoka.core.api import _, db
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
+from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.serializer import SerializableObject
 from inyoka.forum.models import Question
+
+event_tag = db.Table('event_event_tag', db.metadata,
+    db.Column('event_id', db.Integer, db.ForeignKey('event_event.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id))
+)
 
 class EventQuestionExtension(db.AttributeExtension):
 
@@ -97,7 +103,7 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     # serializer properties
     object_type = 'event.event'
     public_fields = ('id', 'title', 'slug', 'text', 'author', 'start', 'end',
-                     'discussion_question_id', 'info_question_id')
+                     'tags', 'discussion_question_id', 'info_question_id')
 
     #: Model columns
     id = db.Column(db.Integer, primary_key=True)
@@ -107,26 +113,24 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
-    discussion_question_id = db.Column(db.Integer, db.ForeignKey(Question.id), nullable=True)
-    info_question_id = db.Column(db.Integer, db.ForeignKey(Question.id), nullable=True)
+    tags = db.relationship(Tag, secondary=event_tag, backref=db.backref(
+        'events', lazy='dynamic'), lazy='joined',
+        extension=TagCounterExtension())
+    discussion_question_id = db.Column(db.ForeignKey(Question.id), nullable=True)
+    info_question_id = db.Column(db.ForeignKey(Question.id), nullable=True)
 
     author = db.relationship(User, lazy='joined')
-    #: TODO These relationships do not work yet. Could not find a manual how to create
-    # a Question-object in a predefined Forum-object and link that Question to the
-    # discussion_question_id- or info-question-attribute.
+    #: TODO These relationships do not work yet. Don't know how to create a
+    # one-to-one relation
 
-    # discussion_question = db.relationship(Question,
-    #        backref=db.backref('event_event', uselist=False),
-    #        primaryjoin=(discussion_question_id == Question.id))
-    # info_question = db.relationship(Question,
-    #        backref=db.backref('event_event', uselist=False),
-    #        primaryjoin=(info_question_id == Question.id))
-
-    # revision model implementation
+    #discussion_question = db.relationship(Question, primaryjoin=Question.id==discussion_question_id)
+    #info_question = db.relationship(Question, primaryjoin=Question.id==info_question_id)
 
     def get_url_values(self, action='view'):
         values = {
             'view': 'event/view',
+            'browse': 'event/browse',
+            'calendar': 'event/calendar',
             'edit': 'admin/event/edit',
         }
         return values[action], {'id': self.id}

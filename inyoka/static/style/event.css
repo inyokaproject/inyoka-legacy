@@ -1,0 +1,21 @@
+/* Event styles */
+
+div.event {
+  margin-bottom: 1.5em;
+}
+
+div.event .navigation {
+  text-align: center;
+}
+
+div.event table.calendar td, div.event table.calendar th {
+  widht: 14%;
+}
+
+div.event table.calendar tr {
+  min-height: 70px;
+}
+
+div.event table.calendar td.today {
+  background-color: #CCC;
+}

@@ -7,4 +7,12 @@
   <p>
     {{ event.text|safe }}
   </p>
+  <div class="meta">
+  <!--
+    {#%- set url_values = {'id': event.discussion_question} %#}
+    <a href="{# { href('event/calendar', **url_values) } #}">{{ _('Event Discussion') }}</a>
+    {#%- set url_values = {'id': event.info_question_id} %#}
+    <a href="{# { href('event/calendar', **url_values) } #}">{{ _('Event Information') }}</a>
+  -->
+  </div>
 {%- endblock %}

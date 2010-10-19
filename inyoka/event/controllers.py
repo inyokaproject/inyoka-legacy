@@ -55,6 +55,11 @@ class EventController(IController):
     @view
     @templated('event/index.html', modifier=context_modifier)
     def index(self, request):
+        tags = []
+        if request.args.get('tags'):
+            tags = filter(bool, (Tag.query.public().filter_by(name=t).one() \
+                          for t in request.args.get('tags').split()))
+
         form = AddEventForm(request.form)
         if form.validate_on_submit():
             # TODO request the form data
@@ -62,19 +67,40 @@ class EventController(IController):
             if form.discussion_question.data:
                 q_discussion = Question(title=u'[Event discussion] %s' % form.title.data,
                                         author=request.user,
-                                        text=u'This is the discussion for the event "%s"' % form.title.data)
+                                        text=u'This is the discussion for the event "%s"' % form.title.data,
+                                        tags=form.tags.data)
+            else:
+                q_discussion = None
 
             #: Check for creating a question-object a discussion
             if form.info_question.data:
                 q_info = Question(title=u'[Event information] %s' % form.title.data,
                                   author=request.user,
-                                  text=u'This is the discussion for the event "%s"' % form.title.data)
+                                  text=u'This is the discussion for the event "%s"' % form.title.data,
+                                  tags=form.tags.data)
+            else:
+                q_info = None
+
+            db.session.commit()
+
+            if q_discussion:
+                q_discussion_id = q_discussion.id
+            else:
+                q_discussion_id = None
+
+            if q_info:
+                q_info_id = q_info.id
+            else:
+                q_info_id = None
 
             e = Event(title=form.title.data,
                       text=form.text.data,
                       author=request.user,
                       start_date=form.start.data,
-                      end_date=form.end.data)
+                      end_date=form.end.data,
+                      tags=form.tags.data,
+                      discussion_question_id = q_discussion_id,
+                      info_question_id = q_info_id)
             #if form.parent.data:
                 #e.parent_id = form.parent.data
             db.session.commit()

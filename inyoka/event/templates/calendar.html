@@ -2,35 +2,46 @@
 {% set tab = 'calendar' %}
 
 {%- block content %}
-  <div>
-    {%- set url_values = {'year': pre.year, 'month': pre.month} %}
-    <a href="{{ href('event/calendar', **url_values) }}">{{ pre|monthformat }}</a>
-    {%- set url_values = {'year': today.year, 'month': today.month} %}
-    <a href="{{ href('event/calendar', **url_values) }}">{{ today|monthformat }}</a>
-    {%- set url_values = {'year': post.year, 'month': post.month} %}
-    <a href="{{ href('event/calendar', **url_values) }}">{{ post|monthformat }}</a>
-  </div>
-  <table>
-    <tr>
-      {%- for premonth in range(monthstart) -%}
-        <td>{{ days_in_premonth - monthstart + 1 + premonth }}</td>
-      {%- endfor -%}
-      {%- for day in month_range -%}
-        <td{% if day == today %} style="background-color: #FFDDDD"{% endif %}>
-          <b>{{ day.day }}</b> ({{ day|dayformatshort }})<br>
-          {%- for event in events %}
-            {%- if (event.start_date.date() <= day) and (event.end_date.date() >= day) -%}
-              <a href="{{ href(event) }}" title="{{ _('Start: %(date)s - End: %(date2)s', date=event.start_date|dateformat, date2=event.end_date|dateformat) }}">{{ event.title }}</a><br>
+  <div class="event">
+    <div class="navigation">
+        {%- set url_values = {'year': pre.year, 'month': pre.month} %}
+        <a href="{{ href('event/calendar', **url_values) }}">{{ pre|monthformat }}</a>
+        {%- set url_values = {'year': today.year, 'month': today.month} %}
+        <a href="{{ href('event/calendar', **url_values) }}">{{ today|monthformat }}</a>
+        {%- set url_values = {'year': post.year, 'month': post.month} %}
+        <a href="{{ href('event/calendar', **url_values) }}">{{ post|monthformat }}</a>
+    </div>
+    <table class="calendar">
+        <tr>
+        <th>{{ _('Monday') }}</th>
+        <th>{{ _('Tuesday') }}</th>
+        <th>{{ _('Wednesday') }}</th>
+        <th>{{ _('Thursday') }}</th>
+        <th>{{ _('Friday') }}</th>
+        <th>{{ _('Saturday') }}</th>
+        <th>{{ _('Sunday') }}</th>
+        </tr>
+        <tr>
+        {%- for premonth in range(monthstart) -%}
+            <td>{{ days_in_premonth - monthstart + 1 + premonth }}</td>
+        {%- endfor -%}
+        {%- for day in month_range -%}
+            <td{% if day == today %} class="today"{% endif %}>
+            <strong>{{ day.day }}</strong><br>
+            {%- for event in events %}
+                {%- if (event.start_date.date() <= day) and (event.end_date.date() >= day) -%}
+                <a href="{{ href(event) }}" title="{{ _('Start: %(date)s - End: %(date2)s', date=event.start_date|dateformat, date2=event.end_date|dateformat) }}">{{ event.title }}</a><br>
+                {%- endif -%}
+            {%- endfor %}
+            </td>
+            {%- if day.weekday() == 6 -%}
+            </tr><tr>
             {%- endif -%}
-          {%- endfor %}
-        </td>
-        {%- if day.weekday() == 6 -%}
-        </tr><tr>
-        {%- endif -%}
-      {%- endfor -%}
-      {%- for postmonth in range((7 - (monthstart + days_in_month) % 7) % 7) -%}
-        <td>{{ postmonth + 1 }}</td>
-      {%- endfor -%}
-    </tr>
-  </table>
+        {%- endfor -%}
+        {%- for postmonth in range((7 - (monthstart + days_in_month) % 7) % 7) -%}
+            <td>{{ postmonth + 1 }}</td>
+        {%- endfor -%}
+        </tr>
+    </table>
+  </div>
 {%- endblock %}

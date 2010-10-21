@@ -17,6 +17,7 @@ from inyoka.utils.xml import strip_tags
 class AnswerSearchProvider(SearchProvider):
     name = 'answer'
     index = 'portal'
+    _query = Answer.query.options(db.eagerload(Answer.question, Answer.author))
 
     def _prepare(self, answer):
         return {
@@ -29,21 +30,20 @@ class AnswerSearchProvider(SearchProvider):
         }
 
     def prepare(self, ids):
-        q = Answer.query.options(db.eagerload(Answer.question, Answer.author)) \
-                        .filter(Answer.entry_id.in_(ids))
-        d = dict((a.id, self._prepare(a)) for a in q)
+        query = self._query.filter(Answer.entry_id.in_(ids))
+        d = dict((a.id, self._prepare(a)) for a in query)
         for id in ids:
             yield d[int(id)]
 
     def prepare_all(self):
-        q = Answer.query.options(db.eagerload(Answer.question, Answer.author))
-        for answer in db.select_blocks(q, Answer.id):
+        for answer in db.select_blocks(self._query, Answer.id):
             yield answer.id, self._prepare(answer)
 
 
 class QuestionSearchProvider(SearchProvider):
     name = 'question'
     index = 'portal'
+    _query = Question.query.options(db.eagerload(Question.author))
 
     def _prepare(self, question):
         return {
@@ -57,13 +57,11 @@ class QuestionSearchProvider(SearchProvider):
         }
 
     def prepare(self, ids):
-        query = Question.query.options(db.eagerload(Question.author)) \
-                              .filter(Question.id.in_(ids))
+        query = self._query.filter(Question.id.in_(ids))
         d = dict((q.id, self._prepare(q)) for q in query)
         for id in ids:
             yield d[int(id)]
 
     def prepare_all(self):
-        query = Question.query.options(db.eagerload(Question.author))
-        for question in db.select_blocks(query, Question.id):
+        for question in db.select_blocks(self._query, Question.id):
             yield question.id, self._prepare(question)

@@ -156,6 +156,15 @@ class SearchProvider(Interface):
         """
         raise NotImplementedError()
 
+    def process(self, doc_ids):
+        """
+        Processes a list of match ids.
+        By default this returns the same as `prepare` but for special cases
+        you can override this method (e.g. if you just want to get the ids or
+        want to have database objects instead of dictionaries).
+        """
+        return self.prepare(doc_ids)
+
 
 class SearchIndexMapperExtension(db.MapperExtension):
     """
@@ -216,8 +225,8 @@ def query(index, q, **kwargs):
         # if there are no ids don't call the `prepare` method to avoid execution
         # of senseless queries
         if ids:
-            for obj in provider.prepare(ids):
-                results['%s-%s' % (name, obj['id'])] = obj
+            for idx, obj in enumerate(provider.process(ids)):
+                results['%s-%s' % (name, ids[idx])] = obj
 
     results = [results['%s-%s' % (area, id)] for area, id in result_ids]
     corrected = t2.get()

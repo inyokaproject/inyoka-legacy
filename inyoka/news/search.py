@@ -17,6 +17,7 @@ from inyoka.utils.xml import strip_tags
 class NewsSearchProvider(SearchProvider):
     name = 'news'
     index = 'portal'
+    _query = Article.query.options(db.eagerload(Article.author))
 
     def _prepare(self, article):
         return {
@@ -30,13 +31,11 @@ class NewsSearchProvider(SearchProvider):
         }
 
     def prepare(self, ids):
-        query = Article.query.filter(Article.id.in_(ids)) \
-                             .options(db.eagerload(Article.author))
+        query = self._query.filter(Article.id.in_(ids))
         d = dict((a.id, self._prepare(a)) for a in query)
         for id in ids:
             yield d[int(id)]
 
     def prepare_all(self):
-        query = Article.query.options(db.eagerload(Article.author))
-        for article in db.select_blocks(query, Article.id):
+        for article in db.select_blocks(self._query, Article.id):
             yield article.id, self._prepare(article)

@@ -21,7 +21,7 @@
     <p>{{ _('Did you mean:') }} <a href="{{ href('portal/search', q=corrected) }}">{{ corrected }}</a></p>
   {%- endif %}
 
-  {%- if results %}
+  {%- if results is defined %}
     {%- for result in results %}
       <strong><a href="{{ result['link'] }}">{{ highlight(result['title'], 50)|safe }}</a></strong>
       <p>
@@ -32,10 +32,10 @@
           <a class="tag" href="{{ href(tag) }}">{{ tag }}</a>
         {%- endfor %}
       </p>
+    {%- else %}
+      <p>{{ _('No matches found.') }}</p>
     {%- endfor %}
-  {%- endif %}
 
-  {%- if results %}
     {{ pagination() }}
   {%- endif %}
 {% endblock content %}

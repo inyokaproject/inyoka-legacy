@@ -186,7 +186,6 @@ class PortalController(IController):
             }
         return {
             'form': form,
-            'results': None,
         }
 
 

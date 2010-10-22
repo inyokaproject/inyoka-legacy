@@ -85,7 +85,7 @@ class ForumController(IController):
             query = query.forum(forum)
             tags = forum.all_tags
         elif tags:
-            tags = filter(bool, (Tag.query.public().filter_by(name=t).one() \
+            tags = filter(bool, (Tag.query.public().filter_by(slug=t).one() \
                           for t in tags.split()))
             query = query.tagged(tags)
 
@@ -145,7 +145,7 @@ class ForumController(IController):
     def ask(self, request, forum=None):
         tags = []
         if request.args.get('tags'):
-            tags = filter(bool, (Tag.query.public().filter_by(name=t).one() \
+            tags = filter(bool, (Tag.query.public().filter_by(slug=t).one() \
                           for t in request.args.get('tags').split()))
         elif forum:
             forum = Forum.query.filter_by(slug=forum).one()

@@ -127,8 +127,8 @@ def test_epoch_behavior():
     r5 = Revision(page=p, change_user=u, epoch=3)
     db.session.commit()
 
-    eq_(p.all_revisions.all(), [r1, r2, r3, r4, r5])
-    eq_(p.revisions.all(), [r4, r5])
+    eq_(set(p.all_revisions.all()), set([r1, r2, r3, r4, r5]))
+    eq_(set(p.revisions.all()), set([r4, r5]))
 
 
 @refresh_database

@@ -12,7 +12,7 @@ from datetime import datetime
 from operator import attrgetter
 from functools import partial
 from inyoka.core.api import _, db
-from inyoka.core.mixins import RevisionedModelMixin, TextRendererMixin
+from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
 from inyoka.paste.utils import generate_highlighted_udiff
@@ -20,7 +20,7 @@ from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 from inyoka.utils.highlight import highlight_text
 
 
-class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixin):
+class Entry(db.Model, SerializableObject, TextRendererMixin):
     __tablename__ = 'paste_entry'
 
     # serializer properties
@@ -108,6 +108,21 @@ class Entry(db.Model, SerializableObject, RevisionedModelMixin, TextRendererMixi
             diff = prepare_udiff(udiff, True)
             return diff and diff[0] or None
         return udiff
+
+    @classmethod
+    def resolve_root(cls, identifier):
+        """Find the root for a tree.
+
+        :param identifier: The identifier a model should queried for.
+                           We use ``cls.query.get`` to query the identifier.
+        :returns: The very root object with no additional parent_id set.
+        """
+        obj = cls.query.get(identifier)
+        if obj is None:
+            return
+        while obj.parent_id is not None:
+            obj = obj.parent
+        return obj
 
     def __unicode__(self):
         return self.display_title

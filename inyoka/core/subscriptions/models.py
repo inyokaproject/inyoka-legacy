@@ -94,7 +94,7 @@ class Subscription(db.Model):
 
         from celery.execute import send_task
         send_task('inyoka.core.tasks.send_notifications',
-                  object, action.name, subscriptions)
+                  [object, action.name, subscriptions])
 
     @staticmethod
     def accessed(user, **kwargs):

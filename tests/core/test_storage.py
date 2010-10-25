@@ -14,8 +14,8 @@ from inyoka.core.cache import cache, set_cache
 from inyoka.core.storage import storage
 
 
-ITEMS1 = [u'foobar', 1, 1.5, ['asd', u'ümlauts'], {'foo': 'bar'}]
-ITEMS2 = [u'barfoo', 2, 5.1, [u'ümlauts', 'asd'], {'bar': 'foo'}]
+ITEMS1 = [u'foobar', 1, 1.5, ['asd', u'ümlauts'], {u'foo': u'bar'}]
+ITEMS2 = [u'barfoo', 2, 5.1, [u'ümlauts', 'asd'], {u'bar': u'foo'}]
 DICT_1 = dict((u'key_%d' % i, v) for i, v in enumerate(ITEMS1))
 DICT_2 = dict((u'key_%d' % i, v) for i, v in enumerate(ITEMS2))
 
@@ -37,7 +37,7 @@ def shutdown():
 def test():
     def test_get(d):
         for k, v in d.iteritems():
-            cache_key = 'storage/%s' % k
+            cache_key = u'storage/%s' % k
             # check whether it was also written to the cache
             eq_(cache.get(cache_key), v)
             # check whether retrieving storage data of the cache works
@@ -52,11 +52,11 @@ def test():
         for k, v in storage.get_many(d.keys()).iteritems():
             eq_(v, d[k])
             # check whether storage.get_many wrote the data to the cache
-            eq_(cache.get('storage/%s' % k), v)
+            eq_(cache.get(u'storage/%s' % k), v)
 
     # check whether storage.set works well for new keys
     for k, v in DICT_1.iteritems():
-        eq_(cache.get('storage/%s' % k), None)
+        eq_(cache.get(u'storage/%s' % k), None)
         storage.set(k, v)
 
     test_get(DICT_1)

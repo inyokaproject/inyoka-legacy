@@ -73,6 +73,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import re
 import sys
 import time
 from os import remove, path
@@ -104,8 +105,10 @@ from inyoka.utils.files import find_unused_filename, obfuscate_filename
 from inyoka.core.config import BooleanConfigField, TextConfigField, \
     IntegerConfigField
 
+
 _engine = None
 _engine_lock = Lock()
+_ending_numbers = re.compile(r'([^\d]+)(\d+)$')
 
 
 #: The database URL.  For more information about database settings
@@ -223,6 +226,16 @@ def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
         orm.attributes.set_committed_value(obj, column, val + delta)
 
 
+def _strip_ending_nums(string):
+    # check for ending numbers to split with.  If we do that our LIKE statement
+    # will also match all possible threads that may end with numbers but do not
+    # match the LIKE statement and as such raise IntegrityErrors
+    if string[-1].isdigit():
+        ending_nums = _ending_numbers.search(string).group(2)
+        string = string[:-len(ending_nums)]
+    return string
+
+
 def find_next_increment(column, string, max_length=None):
     """Get the next incremented string based on `column` and `string`.
 
@@ -230,6 +243,7 @@ def find_next_increment(column, string, max_length=None):
 
         find_next_increment(Category.slug, 'category name')
     """
+    string = _strip_ending_nums(string)
     existing = session.query(column).filter(column.like('%s%%' % string)).all()
     return get_next_increment(flatten_iterator(existing), string, max_length)
 
@@ -473,11 +487,13 @@ class SlugGenerator(orm.MapperExtension):
         fields = filter(None, fields)
         slug = self.separator.join(map(gen_ascii_slug, fields))
         # strip the string if max_length is applied
-        slug = slug[:max_length-10] if max_length is not None else slug
+        slug = slug[:max_length-4] if max_length is not None else slug
 
         set_attribute(instance, self.slugfield,
             find_next_increment(getattr(instance.__class__, self.slugfield),
                                 slug, max_length))
+        return orm.EXT_CONTINUE
+
 
 class FileObject(FileStorage):
 

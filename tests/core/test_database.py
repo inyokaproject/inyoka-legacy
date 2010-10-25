@@ -96,10 +96,10 @@ def test_slug_generator():
             u'But this string is more than 100 chars long and needs to be stripped properly')
     c4 = SlugGeneratorTestModel(name=name)
     db.session.commit()
-    eq_(c4.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-')
+    eq_(c4.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-long-a')
     c5 = SlugGeneratorTestModel(name=name)
     db.session.commit()
-    eq_(c5.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-2')
+    eq_(c5.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-long-a2')
 
 
 @refresh_database

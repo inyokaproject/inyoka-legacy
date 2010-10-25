@@ -14,8 +14,8 @@ from inyoka.core.cache import cache, set_cache
 from inyoka.core.storage import storage
 
 
-ITEMS1 = [u'foobar', 1, 1.5, ['asd', u'ümlauts'], {u'foo': u'bar'}]
-ITEMS2 = [u'barfoo', 2, 5.1, [u'ümlauts', 'asd'], {u'bar': u'foo'}]
+ITEMS1 = [u'foobar', 1, 1.5, [u'asd', u'ümlauts'], {u'foo': u'bar'}]
+ITEMS2 = [u'barfoo', 2, 5.1, [u'ümlauts', u'asd'], {u'bar': u'foo'}]
 DICT_1 = dict((u'key_%d' % i, v) for i, v in enumerate(ITEMS1))
 DICT_2 = dict((u'key_%d' % i, v) for i, v in enumerate(ITEMS2))
 

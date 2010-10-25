@@ -11,14 +11,16 @@
 """
 
 from optparse import OptionParser
-from os.path import isdir
+from os.path import isdir, realpath, join, dirname
 # virtualenv is stored wrong in debian squeeze
 try:
     from virtualenv import create_bootstrap_script
 except ImportError:
     from virtualenv.virtualenv import create_bootstrap_script
 
-extratext = file('extra/bootstrap-extra.py','r')
+
+base_dir = realpath(join(dirname(__file__)))
+extratext = file(join(base_dir, 'bootstrap-extra.py') ,'r')
 EXTRA_TEXT = extratext.read()
 extratext.close()
 

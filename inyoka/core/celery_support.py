@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from celery.loaders.base import BaseLoader
-from celery.loaders.default import Settings
+from celery.loaders.default import AttributeDict
 
 from inyoka.context import ctx
 from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigField
@@ -45,7 +45,7 @@ class CeleryLoader(BaseLoader):
         settings.append(('DEBUG', ctx.cfg['debug']))
         self.configured = True
 
-        return Settings(settings)
+        return AttributeDict(dict(settings))
 
     def on_worker_init(self):
         """Imports modules at worker init so tasks can be registered

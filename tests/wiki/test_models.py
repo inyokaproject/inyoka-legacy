@@ -32,13 +32,13 @@ def test_page_name_conversion_and_get_by_name():
 
 @refresh_database
 def test_text_raw_and_rendered():
-    text1 = 'This\nis my first wiki page.'
-    text1r = '<p>This\nis my first wiki page.</p>'
-    text2 = 'Now\nthere is something else.'
-    text2r = '<p>Now\nthere is something else.</p>'
+    text1 = u'This\nis my first wiki page.'
+    text1r = u'<p>This\nis my first wiki page.</p>'
+    text2 = u'Now\nthere is something else.'
+    text2r = u'<p>Now\nthere is something else.</p>'
     u = User.query.first()
 
-    r = Page.create(u'foo', change_user=u, text='a').current_revision
+    r = Page.create(u'foo', change_user=u, text=u'a').current_revision
     r.raw_text = text1
     eq_(r.raw_text, text1)
     eq_(r.rendered_text, text1r)

@@ -11,6 +11,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
+import socket
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from operator import methodcaller
@@ -19,10 +20,13 @@ from werkzeug import find_modules, import_string, cached_property
 
 from logbook import Processor
 
+from mercurial import ui as hgui
+from mercurial.localrepo import localrepository
+from mercurial.node import short as shorthex
+
 import inyoka.utils.logger # import for side effects, ugly i know...
 from inyoka.context import LocalProperty
 from inyoka.core.config import ListConfigField
-from inyoka.utils.hgutil import iui, hgcmd
 
 
 #: Inyoka revision present in the current mercurial working copy
@@ -302,13 +306,22 @@ def _bootstrap():
     os.environ['CELERY_LOADER'] = 'inyoka.core.celery_support.CeleryLoader'
 
     # get the `INYOKA_REVISION` using the mercurial python api
-    ui = iui()
-    hgcmd.identify(ui, None, join(conts, '..'), num=True, id=True)
-    rev = ui.get_output()
-    id, num = rev.split()
-    INYOKA_REVISION = '%(num)s:%(id)s' % {
-        'num': num.rstrip('+'), 'id': id.rstrip('+')
-    }
+    try:
+        ui = hgui.ui()
+        repository = localrepository(ui, join(conts, '..'))
+        ctx = repository['tip']
+        INYOKA_REVISION = '%(num)s:%(id)s' % {
+            'num': ctx.rev(), 'id': shorthex(ctx.node())
+        }
+    except TypeError:
+        # fail silently
+        pass
+
+    # This value defines the timeout for sockets in seconds.  Per default python
+    # sockets do never timeout and as such we have blocking workers.
+    # Socket timeouts are set globally within the whole application.
+    # The value *must* be a floating point value.
+    socket.setdefaulttimeout(10.0)
 
     #: bind the context
     ctx = ApplicationContext()

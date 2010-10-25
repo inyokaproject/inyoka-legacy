@@ -16,6 +16,7 @@ from inyoka.utils.decorators import abstract
 
 
 class IPortalResourceManager(IResourceManager):
+
     #: register portal search index
     search_indexes = [PortalSearchIndex()]
 

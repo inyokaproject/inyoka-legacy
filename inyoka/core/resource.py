@@ -25,8 +25,10 @@ class IResourceManager(Interface):
     #: subsystem.  Models not listed won't be recognized by structure
     #: changing operations such as initial table creation.
     models = []
+
     #: List all search indexes here.
     search_indexes = []
+
     #: List all search providers here to register them, otherwise their data
     #: won't be indexed.
     search_providers = []

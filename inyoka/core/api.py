@@ -70,6 +70,7 @@ class ICoreResourceManager(IResourceManager):
     #: register core models
     models = [Cache, Confirm, Tag, Storage]
 
+
 # Import shortcuts
 from inyoka.core.database import db
 from inyoka.core.auth.decorators import login_required

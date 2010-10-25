@@ -58,11 +58,11 @@ class SearchIndex(Interface):
     A xapian search index.
     By default it's stored in a new folder in `search.folder`, but you can
     change this behaviour by overriding `path`.
-    
+
     You've to implement `_register_fields` and to set `name` and
     `direct_search_allowed`.
     """
-    #: The name of the search index. This is also used for getting 
+    #: The name of the search index. This is also used for getting
     name = None
     #: field names allowed for direct search. For some reason adding text fields
     #: here breaks direct field searching, so don't do it. TODO: Research
@@ -194,7 +194,7 @@ def query(index, q, **kwargs):
           user-entered text.
           Xapian search syntax is allowed (e.g. author:root or title:"foo bar")
         - It tries to correct spelling mistakes in `q`
-    
+
     It takes the following keyword arguments:
         - page: An integer determing which page to show. Note that xapian is
           optimised for low page numbers.

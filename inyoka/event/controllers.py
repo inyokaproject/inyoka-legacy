@@ -171,4 +171,3 @@ class EventController(IController):
             'pre': pre,
             'post': post,
         }
-

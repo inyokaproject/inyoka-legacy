@@ -291,6 +291,15 @@ def no_autoflush(scoped_session):
         session.autoflush = True
 
 
+def driver(drivername):
+    """Return `True` or `False` if the drivername is matching the current
+    configuration.  `drivername` can be a list.
+    """
+    engine = get_engine()
+    drivers = to_list(drivername)
+    return engine.url.drivername in drivers
+
+
 class SafeURL(URL):
     """A safer url implementation, with a customized repr"""
 
@@ -633,6 +642,7 @@ def _make_module():
     db.no_autoflush = no_autoflush
     db.find_next_increment = find_next_increment
     db.select_blocks = select_blocks
+    db.driver = driver
     db.Model = Model
     db.Query = Query
     db.File = File

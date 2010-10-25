@@ -65,17 +65,17 @@ class Question(Entry):
 
 @refresh_database
 def test_find_next_increment():
-    eq_(db.find_next_increment(Category.slug, 'cat'), 'cat')
+    eq_(db.find_next_increment(Category.slug, u'cat'), u'cat')
 
-    c1 = Category(slug='cat')
+    c1 = Category(slug=u'cat')
     db.session.commit()
 
-    eq_(db.find_next_increment(Category.slug, 'cat'), 'cat2')
+    eq_(db.find_next_increment(Category.slug, u'cat'), u'cat2')
 
-    c2 = Category(slug='cat2')
+    c2 = Category(slug=u'cat2')
     db.session.commit()
 
-    eq_(db.find_next_increment(Category.slug, 'cat'), 'cat3')
+    eq_(db.find_next_increment(Category.slug, u'cat'), u'cat3')
 
 
 @refresh_database
@@ -104,7 +104,7 @@ def test_slug_generator():
 
 @refresh_database
 def test_cached_query():
-    c = Category(slug='category')
+    c = Category(slug=u'category')
     db.session.commit()
     # setup mock objects
     mock('cache.set', tracker=tracker)

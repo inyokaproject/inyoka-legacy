@@ -420,8 +420,6 @@ class DatabaseTestCase(TestCase):
             except TypeError:
                 db.session.delete(self.data[group])
 
-        db.session.commit()
-
         for factory in self.custom_cleanup_factories:
             for item in factory():
                 db.session.delete(item)

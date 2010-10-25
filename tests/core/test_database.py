@@ -109,12 +109,20 @@ def test_cached_query():
     # setup mock objects
     mock('cache.set', tracker=tracker)
     tracker.clear()
-    tester = partial(lambda: tracker.check(
-        "Called cache.set("
-        "    '_test/categories',"
-        "    [Category(id=1L, slug=u'category')],"
-        "    timeout=0.5)"
-    ))
+    if db.driver('sqlite'):
+        tester = partial(lambda: tracker.check(
+            "Called cache.set("
+            "    '_test/categories',"
+            "    [Category(id=1, slug=u'category')],"
+            "    timeout=0.5)"
+        ))
+    else:
+        tester = partial(lambda: tracker.check(
+            "Called cache.set("
+            "    '_test/categories',"
+            "    [Category(id=1L, slug=u'category')],"
+            "    timeout=0.5)"
+        ))
     x = Category.query.cached('_test/categories', timeout=0.5)
     eq_(x[0].slug, c.slug)
     assert_true(tester())

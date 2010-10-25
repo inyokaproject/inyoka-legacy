@@ -112,7 +112,7 @@ def test_cached_query():
     tester = partial(lambda: tracker.check(
         "Called cache.set("
         "    '_test/categories',"
-        "    [Category(id=1, slug=u'category')],"
+        "    [Category(id=1L, slug=u'category')],"
         "    timeout=0.5)"
     ))
     x = Category.query.cached('_test/categories', timeout=0.5)

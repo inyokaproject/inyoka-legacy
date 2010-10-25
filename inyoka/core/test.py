@@ -25,6 +25,8 @@ from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
 
+from sqlalchemy.util import to_list
+
 from inyoka.l10n import parse_timestamp, parse_timeonly
 from inyoka.context import ctx, _request_ctx_stack
 from inyoka.core import database
@@ -42,7 +44,11 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
            'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database',
-           'TestResourceManager', 'execute_tasks_inline', 'log_tasks')
+           'TestResourceManager', 'execute_tasks_inline', 'log_tasks',
+           'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless',
+           'skip_if_database')
+
+
 __all__ = __all__ + tuple(nose.tools.__all__)
 
 dct = globals()
@@ -414,6 +420,8 @@ class DatabaseTestCase(TestCase):
             except TypeError:
                 db.session.delete(self.data[group])
 
+        db.session.commit()
+
         for factory in self.custom_cleanup_factories:
             for item in factory():
                 db.session.delete(item)
@@ -727,6 +735,53 @@ def future(func):
             raise UnexpectedSuccess("Unexpected success for future test")
     return future_decorator
 
+
+def skip_if_environ(name):
+    def _wrap_test(fun):
+        @wraps(fun)
+        def _skips_if_environ(*args, **kwargs):
+            if os.environ.get(name):
+                raise nose.SkipTest("%s: %s set\n" % (
+                    fun.__name__, name))
+            return fun(*args, **kwargs)
+        return _skips_if_environ
+    return _wrap_test
+
+
+def _skip_test(reason, sign=None):
+    def _wrap_test(fun):
+        @wraps(fun)
+        def _skipped_test(*args, **kwargs):
+            raise nose.SkipTest("%s%s" % (sign + ':' if sign else '', reason))
+        return _skipped_test
+    return _wrap_test
+
+
+def todo(reason):
+    """TODO test decorator."""
+    return _skip_test(reason, "TODO")
+
+
+def skip(reason):
+    """Skip test decorator."""
+    return _skip_test(reason)
+
+
+def skip_if(predicate, reason):
+    """Skip test if predicate is ``True``."""
+    def _inner(fun):
+        return predicate and skip(reason)(fun) or fun
+    return _inner
+
+
+def skip_unless(predicate, reason):
+    """Skip test if predicate is ``False``."""
+    return skip_if(not predicate, reason)
+
+
+def skip_if_database(name, reason):
+    databases = to_list(name)
+    return skip_if(database.get_engine().url.drivername in databases, reason)
 
 
 @contextmanager

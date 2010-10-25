@@ -11,8 +11,8 @@
         >>> storage.get(u'foo')
         u'bar'
         >>> storage.set(u'bar', u'foo')
-        >>> storage.get_many(['foo', 'bar'])
-        {'foo': u'bar', 'bar': u'foo'}
+        >>> storage.get_many([u'foo', u'bar'])
+        {u'foo': u'bar', u'bar': u'foo'}
 
     :copyright: 2007-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.

@@ -33,7 +33,7 @@ class ICoreResourceManager(IResourceManager):
     #: This also enables some special logging so that for example our
     #: celery integration does not push forward to celery but executes
     #: tasks directly and adds them to a special container.
-    testing = ConfigAttribute('testing', default=False)
+    testing = BooleanConfigField('testing', default=False)
 
     #: The path to the media folder
     media_root = TextConfigField('media_root', default=_default_media_data_path)

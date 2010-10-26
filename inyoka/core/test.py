@@ -575,6 +575,8 @@ class InyokaPlugin(cover.Coverage):
     Inyoka environment.
 
     It also implements our fixture system and fixes the coverage html output.
+    Next to this it set's the internal `testing` config value to `True` so that
+    our unittest helpers get enabled.
 
     """
 
@@ -588,6 +590,7 @@ class InyokaPlugin(cover.Coverage):
         # Otherwise load_packages might try to load `test` from celery if
         # installed via setup.py develop (same goes for other packages)
         sys.path.insert(0, os.path.dirname(os.environ['INYOKA_MODULE']))
+        ctx.cfg['testing'] = True
         ctx.load_packages(['tests.*'])
 
     def options(self, parser, env):

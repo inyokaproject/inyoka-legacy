@@ -26,6 +26,15 @@ class ICoreResourceManager(IResourceManager):
     #: Enable debug mode
     debug = BooleanConfigField('debug', default=False)
 
+    #: Enable testing mode.  Set this to `True` to enable the test mode
+    #: of Inyoka.  For example this activates unittest helpers that have
+    #: an additional runtime cost which should not be enabled by default.
+    #:
+    #: This also enables some special logging so that for example our
+    #: celery integration does not push forward to celery but executes
+    #: tasks directly and adds them to a special container.
+    testing = ConfigAttribute('testing', default=False)
+
     #: The path to the media folder
     media_root = TextConfigField('media_root', default=_default_media_data_path)
 

@@ -14,7 +14,7 @@ from inyoka.core.test import *
 from inyoka.core.cache import cache
 
 
-class Category(db.Model):
+class DatabaseTestCategory(db.Model):
     __tablename__ = '_test_database_category'
 
     manager = TestResourceManager
@@ -33,12 +33,12 @@ class SlugGeneratorTestModel(db.Model):
     name = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=True)
     slug = db.Column(db.String(100), nullable=False, unique=True)
-    category = db.Column(db.Integer, db.ForeignKey(Category.id))
-    categories = db.relationship(Category, lazy='joined', backref='sluggies')
+    category = db.Column(db.Integer, db.ForeignKey(DatabaseTestCategory.id))
+    categories = db.relationship(DatabaseTestCategory, lazy='joined', backref='sluggies')
     count = db.Column(db.Integer, default=0)
 
 
-class Entry(db.Model):
+class DatabaseTestEntry(db.Model):
     __tablename__ = '_test_database_entry'
 
     manager = TestResourceManager
@@ -50,7 +50,7 @@ class Entry(db.Model):
     __mapper_args__ = {'polymorphic_on': discriminator}
 
 
-class Question(Entry):
+class DatabaseTestQuestion(DatabaseTestEntry):
     __tablename__ = '_test_database_question'
     __mapper_args__ = {
         'polymorphic_identity': u'question'
@@ -58,24 +58,24 @@ class Question(Entry):
 
     manager = TestResourceManager
 
-    id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey(DatabaseTestEntry.entry_id), primary_key=True)
     title = db.Column(db.String(160), nullable=False)
     answer_count = db.Column(db.Integer, default=0)
 
 
 @refresh_database
 def test_find_next_increment():
-    eq_(db.find_next_increment(Category.slug, u'cat'), u'cat')
+    eq_(db.find_next_increment(DatabaseTestCategory.slug, u'cat'), u'cat')
 
-    c1 = Category(slug=u'cat')
+    c1 = DatabaseTestCategory(slug=u'cat')
     db.session.commit()
 
-    eq_(db.find_next_increment(Category.slug, u'cat'), u'cat2')
+    eq_(db.find_next_increment(DatabaseTestCategory.slug, u'cat'), u'cat2')
 
-    c2 = Category(slug=u'cat2')
+    c2 = DatabaseTestCategory(slug=u'cat2')
     db.session.commit()
 
-    eq_(db.find_next_increment(Category.slug, u'cat'), u'cat3')
+    eq_(db.find_next_increment(DatabaseTestCategory.slug, u'cat'), u'cat3')
 
 
 @refresh_database
@@ -104,7 +104,7 @@ def test_slug_generator():
 
 @refresh_database
 def test_cached_query():
-    c = Category(slug=u'category')
+    c = DatabaseTestCategory(slug=u'category')
     db.session.commit()
     # setup mock objects
     mock('cache.set', tracker=tracker)
@@ -113,24 +113,24 @@ def test_cached_query():
         tester = partial(lambda: tracker.check(
             "Called cache.set("
             "    '_test/categories',"
-            "    [Category(id=1, slug=u'category')],"
+            "    [DatabaseTestCategory(id=1, slug=u'category')],"
             "    timeout=0.5)"
         ))
     else:
         tester = partial(lambda: tracker.check(
             "Called cache.set("
             "    '_test/categories',"
-            "    [Category(id=1L, slug=u'category')],"
+            "    [DatabaseTestCategory(id=1L, slug=u'category')],"
             "    timeout=0.5)"
         ))
-    x = Category.query.cached('_test/categories', timeout=0.5)
+    x = DatabaseTestCategory.query.cached('_test/categories', timeout=0.5)
     eq_(x[0].slug, c.slug)
     assert_true(tester())
-    x = Category.query.cached('_test/categories', timeout=0.5)
+    x = DatabaseTestCategory.query.cached('_test/categories', timeout=0.5)
     assert_false(tester())
     sleep(1.0)
     tracker.clear()
-    x = Category.query.cached('_test/categories', timeout=0.5)
+    x = DatabaseTestCategory.query.cached('_test/categories', timeout=0.5)
     assert_true(cache.get('_test/categories') is None)
     assert_true(tester())
 
@@ -139,9 +139,9 @@ def test_cached_query():
     # TODO: Test this only if caching is enabled!
     c1 = SlugGeneratorTestModel(name=u'cat')
     db.session.commit()
-    obj = Category.query.cached('_test/categories')[0]
+    obj = DatabaseTestCategory.query.cached('_test/categories')[0]
     obj.sluggies
-    obj = Category.query.cached('_test/categories')[0]
+    obj = DatabaseTestCategory.query.cached('_test/categories')[0]
     obj.sluggies
 
 
@@ -165,7 +165,7 @@ def test_atomic_add():
 
 @refresh_database
 def test_atomic_add_on_joined_tables():
-    obj = Question(title=u'some question')
+    obj = DatabaseTestQuestion(title=u'some question')
     db.session.commit()
     eq_(obj.view_count, 0)
     db.atomic_add(obj, 'view_count', +1)

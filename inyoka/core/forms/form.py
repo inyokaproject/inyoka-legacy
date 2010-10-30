@@ -74,3 +74,46 @@ class Form(BaseForm):
 
     def validate_on_submit(self):
         return ctx.current_request.method in ("POST", "PUT") and self.validate()
+
+
+class MagicFilterForm(Form):
+    """
+    A Form you can use as an elegant filtering UI.
+    Of the form fields specified in `dynamic_fields` only those are displayed
+    that were filled out the last time the form was submitted.
+    Fields that are not in  `dynamic_fields` remain uninfluenced.
+    If you want to show all fields, set `expand_all` on initialization (usually
+    you want this behaviour when presenting the form the first time to the user,
+    before he filled anything out).
+    Use this form in combination with `magic_filter_form` of the template
+    utilitis.
+    """
+    dynamic_fields = None
+
+    def __init__(self, formdata=None, expand_all=False, *args, **kwargs):
+        self.expand_all = expand_all
+
+        if not expand_all:
+            choices = [(x,x) for x in self.dynamic_fields]
+            self._unbound_fields += [
+                ('new_field', fields.SelectField(choices=choices)),
+                ('add_field', fields.SubmitField(u'Filter hinzufügen'))]
+
+        Form.__init__(self, formdata=formdata, *args, **kwargs)
+
+    def validate(self, *args, **kwargs):
+        rv = Form.validate(self, *args, **kwargs)
+        self.new_field.choices = []
+        data = self.data.get
+
+        # regenerate `new_field` choices to show only fields that are not added
+        # and remove fields from the form that are neither filled out nor added.
+        for field_name in self.dynamic_fields:
+            # `field_name` was added if `new_field` is set to it's name and if
+            # the `add_field` button was pressed
+            was_added = (field_name == data('new_field')) and data('add_field')
+            if not (data(field_name) or was_added):
+                self.new_field.choices += [(field_name, self._fields[field_name].label.text)]
+                self._fields.pop(field_name)
+        
+        return rv

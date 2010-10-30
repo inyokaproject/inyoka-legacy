@@ -158,19 +158,19 @@ class PortalController(IController):
     @view
     @templated('portal/search.html', modifier=context_modifier)
     def search(self, request):
-        form = SearchForm(request.args)
+        form = SearchForm(request.args, expand_all='q' not in request.args)
 
         if 'q' in request.args and form.validate():
-            d = form.data
-            page, q = d['page'], d['q']
+            d = form.data.get
+            page, q = d('page'), d('q')
 
             # TODO: This is done by a celery task. As we have to wait for the
             #       result, the server process may be idle for some time. Maybe
             #       it would be better to send a temporary page and check
             #       dynamically via ajax whether the result has arrived.
-            results, total, corrected = query('portal', q, author=d['author'],
-                tag_list=[tag.name for tag in d['tags']],
-                date_range=d['date_between'])
+            results, total, corrected = query('portal', q, author=d('author'),
+                tag_list=[tag.name for tag in d('tags', [])],
+                date_range=d('date'))
 
             pagination = SearchPagination(page, total, request.args)
 

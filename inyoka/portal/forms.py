@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField, \
-    RecaptchaField, PasswordField, IntegerField, DateField
+    RecaptchaField, PasswordField, IntegerField, DateField, MagicFilterForm
 from inyoka.core.forms.fields import AutocompleteField, DatePeriodField
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.core.database import db
@@ -87,17 +87,20 @@ class EditTagForm(Form):
                 validators.Length(max=20),validators.is_valid_tag_name()])
 
 
-class SearchForm(Form):
+class SearchForm(MagicFilterForm):
     csrf_disabled = True
+    dynamic_fields = ['author', 'tags', 'date']
 
     q = TextField(lazy_gettext(u'Search'), [validators.Required()])
+    page = IntegerField(lazy_gettext(u'Page'), default=1)
+
+    # dynamc fields
     # TODO: Use autocompleted input field
     author = TextField(lazy_gettext(u'Author'), [validators.Optional(),
         validators.is_user()])
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
                         query_factory=lambda: Tag.query)
-    page = IntegerField(lazy_gettext(u'Page'), default=1)
-    date_between = DatePeriodField(lazy_gettext(u'Date'))
+    date = DatePeriodField(lazy_gettext(u'Date'))
 
 
 def get_change_password_form(request):

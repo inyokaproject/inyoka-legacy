@@ -90,7 +90,8 @@ class AutocompleteField(QuerySelectMultipleField):
             return u''
 
     def process_formdata(self, valuelist):
-        self._formdata = set(filter(None, [x.strip() for x in valuelist[0].split(',')]))
+        if valuelist:
+            self._formdata = set(filter(None, [x.strip() for x in valuelist[0].split(',')]))
 
     def _get_data(self):
         formdata = self._formdata

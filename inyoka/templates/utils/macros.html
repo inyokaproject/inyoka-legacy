@@ -116,3 +116,21 @@
       {%- if class_  %} class="{{ class_|join(' ') }}"{% endif -%}
   >{{ user }}</a>
 {%- endmacro -%}
+
+{%- macro magic_filter_form(form) %}
+  {%- for field_name in form.dynamic_fields %}
+    {%- if field_name in form._fields %}
+      <li class="horiz-left">
+        {{ form_field(form[field_name]) }}
+      </li>
+    {%- endif %}
+  {%- endfor %}
+  {%- if not form.expand_all %}
+    <li class="horiz-left">
+      {# this is for catching enter key #}
+      <input type="submit" style="display: none" value="Suchen!" />
+      {{ form.new_field }}
+      {{ form.add_field }}
+    </li>
+  {%- endif %}
+{%- endmacro %}

@@ -10,5 +10,5 @@
 """
 from inyoka.core.forms import validators, widgets
 from inyoka.core.forms.fields import *
-from inyoka.core.forms.form import Form, get_csrf_token
+from inyoka.core.forms.form import Form, get_csrf_token, MagicFilterForm
 from inyoka.core.forms.validators import ValidationError

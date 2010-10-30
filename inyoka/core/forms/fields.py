@@ -115,15 +115,25 @@ class AutocompleteField(QuerySelectMultipleField):
     data = property(_get_data, _set_data)
 
 
-class DatePeriodField(FieldList):
-    widget = widgets.DatePeriodWidget()
+class RangeField(FieldList):
+    """
+    This field renders a field twice, it's `data` is a tuple of the two values.
+    By default, the field is a common-or-garden `TextField`; for changing this,
+    inherit this class and set `_unboud_field` (see `DatePeriodField`).
+    """
+    widget = widgets.RangeWidget(u'Between %s and %s')
+    _unbound_field = TextField('')
 
     def __init__(self, *args, **kwargs):
-        unbound_field = TextField('', [validators.Regexp(date_re,
-            message=_(u'Must be a valid date')), validators.Optional()])
-        FieldList.__init__(self, unbound_field, *args, min_entries=2, **kwargs)
+        FieldList.__init__(self, self._unbound_field, *args, min_entries=2,
+            **kwargs)
 
     @property
     def data(self):
-        if self.entries[0].data and self.entries[1].data:
+        if self.entries[0].data or self.entries[1].data:
             return (self.entries[0].data, self.entries[1].data)
+
+
+class DatePeriodField(RangeField):
+    _unbound_field = TextField('', [validators.Regexp(date_re,
+            message=_(u'Must be a valid date')), validators.Optional()])

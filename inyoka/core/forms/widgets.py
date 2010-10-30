@@ -55,7 +55,9 @@ class FileInput(Input):
     type = 'file'
 
 
-class DatePeriodWidget(object):
+class RangeWidget(object):
+    def __init__(self, html):
+        self.html = html
+
     def __call__(self, field, **kwargs):
-        html = u'between %s and %s' % (field[0](), field[1]())
-        return HTMLString(html)
+        return HTMLString(self.html % (field[0](), field[1]()))

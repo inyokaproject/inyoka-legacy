@@ -11,6 +11,7 @@
 from inyoka.core.api import IResourceManager
 from inyoka.core.config import TextConfigField
 from inyoka.wiki.models import Page, Revision, Text, Attachment
+from inyoka.wiki.search import WikiSearchProvider
 
 
 class WikiResourceManager(IResourceManager):
@@ -20,3 +21,4 @@ class WikiResourceManager(IResourceManager):
     wiki_index_name = TextConfigField('wiki.index.name', default=u'Main Page')
 
     models = [Page, Revision, Text, Attachment]
+    search_providers = [WikiSearchProvider()]

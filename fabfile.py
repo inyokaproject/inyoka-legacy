@@ -309,6 +309,9 @@ def reindex(index):
 
     # iterate over all search providers...
     for provider in index.providers.itervalues():
+        print provider
+        if provider.name != 'wiki':
+            continue
         # ... to get all their data
         for id, obj in provider.prepare_all():
             # create a new document for the search index

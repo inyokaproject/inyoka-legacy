@@ -156,6 +156,17 @@ def spell_correct(index, q):
     return INDEXES[index].searcher.spell_correct(q)
 
 
+@task
+def find_similar_docs(index, doc):
+    """
+    Find documents imilar to `doc` in the search index `index`.
+    """
+    searcher = INDEXES[index].searcher
+    results = searcher.search(searcher.query_similar(doc), 0, 10)
+    # sometimes xapian returns the document itself; ignore this
+    return [result.id.split('-', 1) for result in results if result.id != doc]
+
+
 @periodic_task(run_every=timedelta(minutes=5))
 def flush_indexer():
     """

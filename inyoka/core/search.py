@@ -187,6 +187,25 @@ class SearchIndexMapperExtension(db.MapperExtension):
     after_insert = after_update = after_delete = _update_index
 
 
+def _process_result_ids(index, result_ids):
+    """
+    Process a list of result ids to a list of the result itselves in an
+    efficient way. This function does not change the result order which is
+    important for senseful searching.
+    """
+    results = {}
+    for name, provider in IResourceManager.get_search_providers()[index].iteritems():
+        # get all ids that belong to this provider
+        ids = [r[1] for r in filter(lambda r: r[0] == name, result_ids)]
+        # if there are no ids don't call the `prepare` method to avoid execution
+        # of senseless queries
+        if ids:
+            for idx, obj in enumerate(provider.process(ids)):
+                results['%s-%s' % (name, ids[idx])] = obj
+
+    return [results['%s-%s' % (area, id)] for area, id in result_ids]
+
+
 def query(index, q, **kwargs):
     """
     This function does two things simultaneously:
@@ -216,22 +235,21 @@ def query(index, q, **kwargs):
                    [index, q], {'filters': kwargs})
     t2 = send_task('inyoka.core.tasks.spell_correct', [index, q])
 
-    results = {}
     result_ids, total = t1.get()
-
-    for name, provider in IResourceManager.get_search_providers()[index].iteritems():
-        # get all ids that belong to this provider
-        ids = [r[1] for r in filter(lambda r: r[0] == name, result_ids)]
-        # if there are no ids don't call the `prepare` method to avoid execution
-        # of senseless queries
-        if ids:
-            for idx, obj in enumerate(provider.process(ids)):
-                results['%s-%s' % (name, ids[idx])] = obj
-
-    results = [results['%s-%s' % (area, id)] for area, id in result_ids]
+    results = _process_result_ids(index, result_ids)
     corrected = t2.get()
 
     return results, total, corrected != q and corrected or None
+
+
+def find_similar(index, doc):
+    """
+    Find documents in the search index `index` similar the document `doc`, which
+    has to be an id following the scheme "provider-id".
+    """
+    from celery.execute import send_task
+    ids = send_task('inyoka.core.tasks.find_similar_docs', [index, doc]).get()
+    return _process_result_ids(index, ids)
 
 
 def create_search_document(id, obj):

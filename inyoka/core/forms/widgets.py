@@ -16,13 +16,15 @@ from inyoka.core.models import Tag
 from inyoka.core.routing import href
 
 
-TOKEN_INPUT = '''
-<script type="text/javascript">
-$(document).ready(function () {
-  $("#%s").tokenInput("%s", {'prePopulate': %s});
+SCRIPT = '''<script type="text/javascript">
+$(document).ready(function() {
+  %s
 });
 </script>
 '''
+TOKEN_INPUT = SCRIPT % '$("#%s").tokenInput("%s", {prePopulate: %s});'
+AUTOCOMPLETE = SCRIPT % '$("#%s").autocomplete({source: "%s"})';
+DATE = SCRIPT % '$("#%s").datepicker({dateFormat: "yy-mm-dd"})'
 
 
 class RecaptchaWidget(object):
@@ -48,6 +50,24 @@ class TokenInput(TextInput):
         js = TOKEN_INPUT % (field.id, href('api/core/get_tags', format='json'),
                             tags_json)
         return HTMLString(input_html + js)
+
+
+class AutocompleteWidget(TextInput):
+
+    def __init__(self, url):
+        self.url = url
+
+    def __call__(self, field, **kwargs):
+        input_html = super(TextInput, self).__call__(field, **kwargs)
+        js = AUTOCOMPLETE % (field.id, href(self.url, format='json'))
+        return HTMLString(input_html + js)
+
+
+class DateWidget(TextInput):
+
+    def __call__(self, field, **kwargs):
+        input_html = super(TextInput, self).__call__(field, **kwargs)
+        return HTMLString(input_html) + DATE % field.id
 
 
 class FileInput(Input):

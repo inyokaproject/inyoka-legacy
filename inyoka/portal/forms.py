@@ -8,6 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from inyoka.core.auth.models import User
 from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField, \
     RecaptchaField, PasswordField, IntegerField, DateField, MagicFilterForm
 from inyoka.core.forms.fields import AutocompleteField, DatePeriodField
@@ -95,9 +96,9 @@ class SearchForm(MagicFilterForm):
     page = IntegerField(lazy_gettext(u'Page'), default=1)
 
     # dynamc fields
-    # TODO: Use autocompleted input field
     author = TextField(lazy_gettext(u'Author'), [validators.Optional(),
-        validators.is_user()])
+        validators.is_user()],
+        widget=widgets.AutocompleteWidget('api/core/get_user'))
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
                         query_factory=lambda: Tag.query)
     date = DatePeriodField(lazy_gettext(u'Date'))

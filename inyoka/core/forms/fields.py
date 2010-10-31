@@ -19,9 +19,8 @@ from inyoka.core.forms import widgets
 from inyoka.core.forms import validators
 
 
-# hack in html5 attribute valuetype for DateField and DateTimeField
-DateField.__call__ = lambda self, **kwargs: self.widget(self, valuetype='date', **kwargs)
-DateTimeField.__call__ = lambda self, **kwargs: self.widget(self, valuetype='datetime', **kwargs)
+# hack in date widget
+DateField.widget = widgets.DateWidget()
 
 
 class BooleanField(OrigBooleanField):

@@ -8,7 +8,6 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-import re
 from wtforms.fields import BooleanField as OrigBooleanField, DecimalField, DateField, \
     DateTimeField, FieldList, FloatField, FormField, HiddenField, \
     IntegerField, PasswordField, RadioField, SelectField, SelectMultipleField, \
@@ -19,8 +18,10 @@ from inyoka.core.api import _
 from inyoka.core.forms import widgets
 from inyoka.core.forms import validators
 
-date_re = re.compile(r'(?P<year>[0-9]{4})([-/.])(?P<month>[0-9]{2})\2'
-                     r'(?P<day>[0-9]{2})$')
+
+# hack in html5 attribute valuetype for DateField and DateTimeField
+DateField.__call__ = lambda self, **kwargs: self.widget(self, valuetype='date', **kwargs)
+DateTimeField.__call__ = lambda self, **kwargs: self.widget(self, valuetype='datetime', **kwargs)
 
 
 class BooleanField(OrigBooleanField):
@@ -136,5 +137,4 @@ class RangeField(FieldList):
 
 
 class DatePeriodField(RangeField):
-    _unbound_field = TextField('', [validators.Regexp(date_re,
-            message=_(u'Must be a valid date')), validators.Optional()])
+    _unbound_field = DateField('')

@@ -8,7 +8,7 @@
   <head>
     <title>Inyoka{% for title, url in trace %} › {{ title }}{% endfor %}</title>
     {#- Commonly used javascript files that need to included first #}
-    {%- for script in ['jquery.js', 'jquery.ui.js', 'babel.js', 'Inyoka.js'] %}
+    {%- for script in ['jquery.js', 'jquery.ui.js', 'classy.js', 'babel.js', 'Inyoka.js'] %}
       <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
     {%- endfor %}
     <script type="text/javascript">

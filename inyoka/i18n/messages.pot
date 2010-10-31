@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2010-10-25 14:17+0200\n"
+"POT-Creation-Date: 2010-10-31 12:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,123 +17,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.0dev-r546\n"
 
-#: wtforms/fields.py:403
-msgid "Invalid Choice: could not coerce"
-msgstr ""
-
-#: wtforms/fields.py:410 wtforms/ext/appengine/fields.py:62
-msgid "Not a valid choice"
-msgstr ""
-
-#: wtforms/fields.py:436
-msgid "Invalid choice(s): one or more data inputs could not be coerced"
-msgstr ""
-
-#: wtforms/fields.py:443
-#, python-format
-msgid "'%(value)s' is not a valid choice for this field"
-msgstr ""
-
-#: wtforms/fields.py:525
-msgid "Not a valid integer value"
-msgstr ""
-
-#: wtforms/fields.py:570
-msgid "Not a valid decimal value"
-msgstr ""
-
-#: wtforms/fields.py:592
-msgid "Not a valid float value"
-msgstr ""
-
-#: wtforms/validators.py:51
-#, python-format
-msgid "Invalid field name '%s'."
-msgstr ""
-
-#: wtforms/validators.py:58
-#, python-format
-msgid "Field must be equal to %(other_name)s."
-msgstr ""
-
-#: wtforms/validators.py:90
-#, python-format
-msgid "Field must be at least %(min)d character long."
-msgid_plural "Field must be at least %(min)d characters long."
-msgstr[0] ""
-msgstr[1] ""
-
-#: wtforms/validators.py:93
-#, python-format
-msgid "Field cannot be longer than %(max)d character."
-msgid_plural "Field cannot be longer than %(max)d characters."
-msgstr[0] ""
-msgstr[1] ""
-
-#: wtforms/validators.py:96
-#, python-format
-msgid "Field must be between %(min)d and %(max)d characters long."
-msgstr ""
-
-#: wtforms/validators.py:131
-#, python-format
-msgid "Number must be greater than %(min)s."
-msgstr ""
-
-#: wtforms/validators.py:133
-#, python-format
-msgid "Number must be less than %(max)s."
-msgstr ""
-
-#: wtforms/validators.py:135
-#, python-format
-msgid "Number must be between %(min)s and %(max)s."
-msgstr ""
-
-#: wtforms/validators.py:171
-msgid "This field is required."
-msgstr ""
-
-#: wtforms/validators.py:199
-msgid "Invalid input."
-msgstr ""
-
-#: wtforms/validators.py:218
-msgid "Invalid email address."
-msgstr ""
-
-#: wtforms/validators.py:235
-msgid "Invalid IP address."
-msgstr ""
-
-#: wtforms/validators.py:260
-msgid "Invalid URL."
-msgstr ""
-
-#: wtforms/validators.py:287
-#, python-format
-msgid "Invalid value, must be one of: %(values)s."
-msgstr ""
-
-#: wtforms/validators.py:314
-#, python-format
-msgid "Invalid value, can't be any of: %(values)s."
-msgstr ""
-
-#: wtforms/ext/dateutil/fields.py:48
-msgid "Please input a date/time value"
-msgstr ""
-
-#: wtforms/ext/dateutil/fields.py:60
-msgid "Invalid date/time input"
-msgstr ""
-
 #: inyoka/admin/templates/base.html:3 inyoka/templates/base.html:47
 msgid "Admin"
-msgstr ""
-
-#: inyoka/core/notifications.py:169
-msgid "E-Mail"
 msgstr ""
 
 #: inyoka/core/serializer.py:139
@@ -172,8 +57,8 @@ msgstr ""
 msgid "deleted"
 msgstr ""
 
-#: inyoka/core/forms/fields.py:123
-msgid "Must be a valid date"
+#: inyoka/core/forms/form.py:101
+msgid "Add filter"
 msgstr ""
 
 #: inyoka/core/forms/validators.py:76
@@ -247,7 +132,7 @@ msgstr ""
 
 #: inyoka/event/forms.py:25 inyoka/forum/forms.py:24 inyoka/forum/forms.py:44
 #: inyoka/news/forms.py:23 inyoka/news/templates/base.html:20
-#: inyoka/portal/forms.py:97 inyoka/portal/templates/index.html:26
+#: inyoka/portal/forms.py:101 inyoka/portal/templates/index.html:26
 #: inyoka/portal/templates/admin/index.html:6
 msgid "Tags"
 msgstr ""
@@ -663,7 +548,7 @@ msgid "Published"
 msgstr ""
 
 #: inyoka/news/forms.py:25 inyoka/paste/templates/browse.html:15
-#: inyoka/portal/forms.py:95
+#: inyoka/portal/forms.py:99
 msgid "Author"
 msgstr ""
 
@@ -843,7 +728,7 @@ msgstr ""
 msgid "Create one yourself!"
 msgstr ""
 
-#: inyoka/paste/templates/browse.html:16 inyoka/portal/forms.py:100
+#: inyoka/paste/templates/browse.html:16 inyoka/portal/forms.py:103
 msgid "Date"
 msgstr ""
 
@@ -1037,7 +922,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: inyoka/portal/forms.py:55 inyoka/portal/forms.py:74 inyoka/portal/forms.py:122
+#: inyoka/portal/forms.py:55 inyoka/portal/forms.py:74 inyoka/portal/forms.py:125
 msgid "Password"
 msgstr ""
 
@@ -1049,7 +934,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: inyoka/portal/forms.py:75 inyoka/portal/forms.py:115
+#: inyoka/portal/forms.py:75 inyoka/portal/forms.py:118
 msgid "Passwords must match"
 msgstr ""
 
@@ -1061,24 +946,24 @@ msgstr ""
 msgid "ReCaptcha"
 msgstr ""
 
-#: inyoka/portal/forms.py:93 inyoka/portal/templates/search.html:5
-#: inyoka/portal/templates/search.html:16
+#: inyoka/portal/forms.py:94 inyoka/portal/templates/search.html:5
+#: inyoka/portal/templates/search.html:14
 msgid "Search"
 msgstr ""
 
-#: inyoka/portal/forms.py:99
+#: inyoka/portal/forms.py:95
 msgid "Page"
 msgstr ""
 
-#: inyoka/portal/forms.py:108
+#: inyoka/portal/forms.py:111
 msgid "Old Password"
 msgstr ""
 
-#: inyoka/portal/forms.py:110
+#: inyoka/portal/forms.py:113
 msgid "New Password"
 msgstr ""
 
-#: inyoka/portal/forms.py:114
+#: inyoka/portal/forms.py:117
 msgid "New Password (confirmation)"
 msgstr ""
 
@@ -1228,11 +1113,11 @@ msgstr ""
 msgid "Generate random password"
 msgstr ""
 
-#: inyoka/portal/templates/search.html:21
+#: inyoka/portal/templates/search.html:19
 msgid "Did you mean:"
 msgstr ""
 
-#: inyoka/portal/templates/search.html:36
+#: inyoka/portal/templates/search.html:34
 msgid "No matches found."
 msgstr ""
 
@@ -1307,6 +1192,82 @@ msgstr ""
 
 #: inyoka/portal/templates/usercp/password.html:8
 msgid "For security reasons you've to enter your old password once again."
+msgstr ""
+
+#: inyoka/static/js/datetime.js:20
+msgid "January"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:20
+msgid "February"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:20
+msgid "March"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:20
+msgid "April"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:20
+msgid "May"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:21
+msgid "June"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:21
+msgid "July"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:21
+msgid "August"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:21
+msgid "September"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:21
+msgid "October"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:22
+msgid "November"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:22
+msgid "December"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:23
+msgid "Su"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:23
+msgid "Mo"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:23
+msgid "Tu"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:23
+msgid "We"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:23
+msgid "Th"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:23
+msgid "Fr"
+msgstr ""
+
+#: inyoka/static/js/datetime.js:24
+msgid "Sa"
 msgstr ""
 
 #: inyoka/static/js/overall.js:35

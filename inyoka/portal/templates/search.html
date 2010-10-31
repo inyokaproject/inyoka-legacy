@@ -1,6 +1,6 @@
 {% extends "portal/base.html" %}
 {% from 'utils/macros.html' import form_field, magic_filter_form %}
-{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
+{%- set scripts = scripts|default([]) + ['jquery.tokeninput.js', 'datetime.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
 {%- set trace = [[_('Search'), href('portal/search')]] %}
 

@@ -11,6 +11,7 @@
 from uuid import uuid4
 from wtforms import Form as BaseForm
 from inyoka.i18n import get_translations
+from inyoka.core.api import _
 from inyoka.core.forms import fields
 from inyoka.core.exceptions import BadRequest
 from inyoka.context import ctx
@@ -86,7 +87,7 @@ class MagicFilterForm(Form):
     you want this behaviour when presenting the form the first time to the user,
     before he filled anything out).
     Use this form in combination with `magic_filter_form` of the template
-    utilitis.
+    utilities.
     """
     dynamic_fields = None
 
@@ -97,7 +98,7 @@ class MagicFilterForm(Form):
             choices = [(x,x) for x in self.dynamic_fields]
             self._unbound_fields += [
                 ('new_field', fields.SelectField(choices=choices)),
-                ('add_field', fields.SubmitField(u'Filter hinzufügen'))]
+                ('add_field', fields.SubmitField(_(u'Add filter')))]
 
         Form.__init__(self, formdata=formdata, *args, **kwargs)
 

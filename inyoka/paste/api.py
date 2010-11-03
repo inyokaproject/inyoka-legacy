@@ -10,7 +10,7 @@
 """
 from inyoka.core.api import IResourceManager
 from inyoka.core.config import IntegerConfigField
-from inyoka.paste.models import Entry
+from inyoka.paste.models import PasteEntry
 
 
 class PasteResourceManager(IResourceManager):
@@ -20,4 +20,4 @@ class PasteResourceManager(IResourceManager):
     paste_diffviewer_syntax_highlighting_threshold = IntegerConfigField(
         'paste.diffviewer_syntax_highlighting_threshold', default=0)
 
-    models = [Entry]
+    models = [PasteEntry]

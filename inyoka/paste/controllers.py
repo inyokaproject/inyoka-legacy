@@ -13,7 +13,7 @@ from inyoka.core.api import IController, Rule, view, Response, \
     templated, db, redirect_to
 from inyoka.utils.pagination import URLPagination
 from inyoka.paste.forms import AddPasteForm
-from inyoka.paste.models import Entry
+from inyoka.paste.models import PasteEntry
 
 
 def context_modifier(request, context):
@@ -42,7 +42,7 @@ class PasteController(IController):
     def index(self, request):
         form = AddPasteForm(request.form)
         if form.validate_on_submit():
-            e = Entry(text=form.text.data,
+            e = PasteEntry(text=form.text.data,
                       language=form.language.data or None,
                       title=form.title.data,
                       author=request.user)
@@ -53,7 +53,7 @@ class PasteController(IController):
 
         parent_id = request.args.get('reply_to', None)
         if parent_id is not None and parent_id.isdigit():
-            parent = Entry.query.get(int(parent_id))
+            parent = PasteEntry.query.get(int(parent_id))
             form = AddPasteForm(**{
                 'title': parent.title,
                 'language': parent.language,
@@ -68,20 +68,20 @@ class PasteController(IController):
     @view('view')
     @templated('paste/view.html', modifier=context_modifier)
     def view_paste(self, request, id):
-        e = Entry.query.get(id)
+        e = PasteEntry.query.get(id)
         return {
             'paste': e,
         }
 
     @view('raw')
     def raw_paste(self, request, id):
-        e = Entry.query.get(id)
+        e = PasteEntry.query.get(id)
         return Response(e.text, mimetype='text/plain')
 
     @view('browse')
     @templated('paste/browse.html', modifier=context_modifier)
     def browse_pastes(self, request, page):
-        query = Entry.query
+        query = PasteEntry.query
         pagination = URLPagination(query, page=page)
         return {
             'pastes': pagination.query,
@@ -92,7 +92,7 @@ class PasteController(IController):
     @templated('paste/paste_tree.html', modifier=context_modifier)
     def show_tree(self, request, id):
         """Display the tree of some related pastes."""
-        paste = Entry.resolve_root(id)
+        paste = PasteEntry.resolve_root(id)
         if paste is None:
             raise exc.NotFound()
         return {
@@ -104,8 +104,8 @@ class PasteController(IController):
     @templated('paste/compare_paste.html', modifier=context_modifier)
     def compare_paste(self, request, new_id=None, old_id=None):
         """Render a diff view for two pastes."""
-        old = Entry.query.get(old_id)
-        new = Entry.query.get(new_id)
+        old = PasteEntry.query.get(old_id)
+        new = PasteEntry.query.get(new_id)
         if old is None or new is None:
             raise exc.NotFound()
 
@@ -118,8 +118,8 @@ class PasteController(IController):
     @view('unidiff_paste')
     def unidiff_paste(self, request, new_id=None, old_id=None):
         """Render an udiff for the two pastes."""
-        old = Entry.query.get(old_id)
-        new = Entry.query.get(new_id)
+        old = PasteEntry.query.get(old_id)
+        new = PasteEntry.query.get(new_id)
 
         if old is None or new is None:
             raise exc.NotFound()

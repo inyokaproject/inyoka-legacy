@@ -20,7 +20,7 @@ from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 from inyoka.utils.highlight import highlight_text
 
 
-class Entry(db.Model, SerializableObject, TextRendererMixin):
+class PasteEntry(db.Model, SerializableObject, TextRendererMixin):
     __tablename__ = 'paste_entry'
 
     # serializer properties
@@ -47,7 +47,7 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
 
     # revision model implementation
     parent_id = db.Column(db.Integer, db.ForeignKey(id), nullable=True)
-    children = db.relationship('Entry', cascade='all',
+    children = db.relationship('PasteEntry', cascade='all',
         primaryjoin=parent_id == id,
         backref=db.backref('parent', remote_side=id))
 
@@ -133,4 +133,4 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
         else:
             s = '#%s' % self.id if self.id else '[no id]'
         u = self.author.username
-        return '<Entry %s by %s>' % (s, u)
+        return '<PasteEntry %s by %s>' % (s, u)

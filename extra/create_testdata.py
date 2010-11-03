@@ -420,11 +420,11 @@ def create_news_test_data():
 
 def create_pastebin_test_data():
     from inyoka.core.auth.models import User
-    from inyoka.paste.models import Entry
+    from inyoka.paste.models import PasteEntry
     u = User.query.get(u'admin')
-    e1 = Entry(text=u'print "Hello World"', author=u, language=u'python')
+    e1 = PasteEntry(text=u'print "Hello World"', author=u, language=u'python')
     db.session.commit()
-    e1.children.append(Entry(text=u'print "hello world"', author=u, language=u'python'))
+    e1.children.append(PasteEntry(text=u'print "hello world"', author=u, language=u'python'))
     db.session.commit()
 
 

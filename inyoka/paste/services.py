@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.api import service, Rule, IServiceProvider
-from inyoka.paste.models import Entry
+from inyoka.paste.models import PasteEntry
 
 
 class PasteServices(IServiceProvider):
@@ -25,5 +25,5 @@ class PasteServices(IServiceProvider):
     @service('get_pastes')
     def get_pastes(self, request, id=None, limit=10):
         if id is not None:
-            return Entry.query.get(id)
-        return Entry.query.limit(limit).all()
+            return PasteEntry.query.get(id)
+        return PasteEntry.query.limit(limit).all()

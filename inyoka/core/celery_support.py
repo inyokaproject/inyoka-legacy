@@ -17,6 +17,7 @@ from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigFi
 
 # celery broker settings
 celery_result_backend = TextConfigField('celery.result_backend', default=u'amqp')
+celery_result_dburi = TextConfigField('celery.result_dburi', default=u'sqlite://')
 celery_imports = ListConfigField('celery.imports', default=['inyoka.core.tasks'])
 celery_task_serializer = TextConfigField('celery.task_serializer', default='pickle')
 

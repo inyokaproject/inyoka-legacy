@@ -27,9 +27,9 @@ _mail_re = re.compile(r'''(?xi)
 
 
 #NOTE: according to rfc4622 a nodeid is optional. But we require one
-#     'cause nobody should enter a service-jid in the jabber field.
-#     Should we permit or deny? If we permit we need to validate the
-#     domain and resid!
+#      'cause nobody should enter a service-jid in the jabber field.
+#      Should we permit or deny? If we permit we need to validate the
+#      domain and resid!
 _jabber_re = re.compile(r'(?xi)(?:[a-z0-9!$\(\)*+,;=\[\\\]\^`{|}\-._~]+)@')
 
 

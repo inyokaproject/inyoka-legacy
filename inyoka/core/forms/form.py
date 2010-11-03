@@ -116,5 +116,5 @@ class MagicFilterForm(Form):
             if not (data(field_name) or was_added):
                 self.new_field.choices += [(field_name, self._fields[field_name].label.text)]
                 self._fields.pop(field_name)
-        
+
         return rv

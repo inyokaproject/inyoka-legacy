@@ -36,8 +36,12 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import time
 from os import path
+from weakref import WeakKeyDictionary
+from threading import currentThread as get_current_thread
 from werkzeug.utils import cached_property
+import xapian
 from xappy import UnprocessedDocument, Field, IndexerConnection,\
     SearchConnection
 from inyoka import Interface
@@ -46,11 +50,46 @@ from inyoka.core.auth.models import User
 from inyoka.core.config import TextConfigField, IntegerConfigField
 from inyoka.core.resource import IResourceManager
 
+
 #: The name of the search database
 search_index_folder = TextConfigField('search.folder', default=u'search')
 
 #: How many objects should be displayed per page when searching?
 search_count = IntegerConfigField('search.count', default=20)
+
+
+_index_connection = None
+_search_connections = WeakKeyDictionary()
+
+
+def get_connection(path, indexer=False):
+    """Get a connection to the database.
+
+    This function reuses already existing connections.
+    """
+    global _index_connection, _search_connections
+
+    _connection_attemts = 0
+    while _connection_attemts <= 3:
+        try:
+            if indexer:
+                if _index_connection is None:
+                    _index_connection = IndexerConnection(path)
+                connection = _index_connection
+            else:
+                thread = get_current_thread()
+                if thread not in _search_connections:
+                    _search_connections[thread] = connection = SearchConnection(path)
+                else:
+                    connection = _search_connections[thread]
+        except xapian.DatabaseOpeningError:
+            time.sleep(0.5)
+            connection.reopen()
+            _connection_attemts += 1
+        else:
+            break
+
+    return connection
 
 
 class SearchIndex(Interface):
@@ -81,7 +120,7 @@ class SearchIndex(Interface):
         Remember to cache the result because multiple indexers for the same
         search index can lead to problems.
         """
-        indexer = IndexerConnection(self.path)
+        indexer = get_connection(self.path, True)
         self._register_fields(indexer)
         return indexer
 
@@ -90,7 +129,7 @@ class SearchIndex(Interface):
         """
         Return a `SearchConnection` object for this search index.
         """
-        return SearchConnection(self.path)
+        return get_connection(self.path)
 
     def _register_fields(self, indexer):
         """

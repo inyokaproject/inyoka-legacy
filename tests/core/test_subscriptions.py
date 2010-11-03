@@ -19,7 +19,7 @@ from inyoka.core.test import *
 # to keep it better understandable classes etc are named like in a blog
 
 
-class Category(db.Model):
+class TestSubscriptionCategory(db.Model):
     __tablename__ = '_test_subscription_category'
 
     manager = TestResourceManager
@@ -42,8 +42,8 @@ class TestSubscriptionEntry(db.Model):
     manager = TestResourceManager
 
     id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.ForeignKey(Category.id))
-    category = db.relationship(Category)
+    category_id = db.Column(db.ForeignKey(TestSubscriptionCategory.id))
+    category = db.relationship(TestSubscriptionCategory)
     title = db.Column(db.String(30))
 
 
@@ -109,7 +109,7 @@ class NewOtherSubscriptionAction(SubscriptionAction):
 
 class CategorySubscriptionType(SubscriptionType):
     name = u'__test_category'
-    subject_type = Category
+    subject_type = TestSubscriptionCategory
     object_type = TestSubscriptionEntry
     mode = u'multiple'
     actions = [u'__test_new_entry']
@@ -156,7 +156,7 @@ class TestSubscriptions(DatabaseTestCase):
                   {'username': 'two', 'email': 'two@example.com'},
                   {'username': 'three', 'email': 'three@example.com'},
                   {'username': 'four', 'email': 'four@example.com'}]},
-        {Category: [{'id': '&c1', 'name': 'cat1'},
+        {TestSubscriptionCategory: [{'id': '&c1', 'name': 'cat1'},
                     {'id': '&c2', 'name': 'cat2'}]},
         {TestSubscriptionEntry:   [{'&e1': {'category_id': '*c1'}},
                    {'&e2': {'category_id': '*c2'}},
@@ -195,14 +195,14 @@ class TestSubscriptions(DatabaseTestCase):
     def test_subscriptiontype(self):
         eq_(SubscriptionType.by_name(u'__test_comments'), CommentsSubscriptionType)
         eq_(SubscriptionType.by_object_type(TestSubscriptionComment), [CommentsSubscriptionType])
-        eq_(SubscriptionType.by_subject_type(Category), [CategorySubscriptionType])
+        eq_(SubscriptionType.by_subject_type(TestSubscriptionCategory), [CategorySubscriptionType])
         eq_(sorted(SubscriptionType.by_action(NewEntrySubscriptionAction)),
             sorted([CategorySubscriptionType, BlogSubscriptionType, TagSubscriptionType]))
         eq_(SubscriptionType.by_action(u'__test_new_comment'), [CommentsSubscriptionType])
 
     def test_subscription(self):
         one = self.data['User'][0]
-        cat1, cat2 = self.data['Category']
+        cat1, cat2 = self.data['TestSubscriptionCategory']
         eq_(Subscription.subscribe(one, u'__test_category', cat1), True)
         eq_(Subscription.subscribe(one, u'__test_category', cat1), False)
         eq_(Subscription.subscribe(one, u'__test_blog'), True)
@@ -223,7 +223,7 @@ class TestSubscriptions(DatabaseTestCase):
         Test (with multiple mode) whether the subscription count and the unread
         information is accurate and whether notifications are sent correctly.
         """
-        cat1, cat2 = self.data['Category']
+        cat1, cat2 = self.data['TestSubscriptionCategory']
         one, two, three, four = self.data['User']
         entries = self.data['TestSubscriptionEntry']
         NotifyTrackerMixin.tracker = []
@@ -280,7 +280,7 @@ class TestSubscriptions(DatabaseTestCase):
         correctly.
         """
         entries = self.data['TestSubscriptionEntry']
-        cat1, cat2 = self.data['Category']
+        cat1, cat2 = self.data['TestSubscriptionCategory']
         one, two, three, four = self.data['User']
         t1, t2, t3 = self.data['TestSubscriptionTag']
 
@@ -342,7 +342,7 @@ class TestSubscriptions(DatabaseTestCase):
         Test (with sequent mode) whether the subscription count and the unread
         information is accurate and whether notifications are sent correctly.
         """
-        cat1, cat2 = self.data['Category']
+        cat1, cat2 = self.data['TestSubscriptionCategory']
         one, two, three, four = self.data['User']
         e1, e2 = self.data['TestSubscriptionEntry'][:2]
         comments = self.data['TestSubscriptionComment']

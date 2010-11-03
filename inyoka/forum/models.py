@@ -107,17 +107,17 @@ class Forum(db.Model, SerializableObject):
         return 'forum/questions', kwargs
 
 
-class EntryVotesExtension(db.AttributeExtension):
+class ForumEntryVotesExtension(db.AttributeExtension):
 
     def append(self, state, vote, initiator):
         entry = state.obj()
         assert vote.score is not None, "vote.score mustn't be null!"
-        entry.score = Entry.score + vote.score
+        entry.score = ForumEntry.score + vote.score
         return vote
 
     def remove(self, state, vote, initiator):
         entry = state.obj()
-        entry.score = Entry.score - vote.score
+        entry.score = ForumEntry.score - vote.score
 
 
 class VoteScoreExtension(db.AttributeExtension):
@@ -130,7 +130,7 @@ class VoteScoreExtension(db.AttributeExtension):
         return value
 
 
-class EntryQuery(db.Query):
+class ForumEntryQuery(db.Query):
     """Entries can be sorted by their creation date, their last activity or the
     number of votes they have received."""
 
@@ -138,33 +138,33 @@ class EntryQuery(db.Query):
     @property
     def latest(self):
         """Sort the entries by their creation date."""
-        return self.order_by(Entry.date_created.desc())
+        return self.order_by(ForumEntry.date_created.desc())
 
     @property
     def oldest(self):
         """Sort the entries by their creation date. The oldest entries are
         returned first."""
-        return self.order_by(Entry.date_created.asc())
+        return self.order_by(ForumEntry.date_created.asc())
 
     @property
     def active(self):
         """Sort the entries by their last activity."""
-        return self.order_by(Entry.date_active.desc())
+        return self.order_by(ForumEntry.date_active.desc())
 
     @property
     def votes(self):
         """Sort the entries by the score that they have received from votes."""
-        return self.order_by(Entry.score.desc(), Entry.date_active.desc())
+        return self.order_by(ForumEntry.score.desc(), ForumEntry.date_active.desc())
 
 
 
-class Entry(db.Model, SerializableObject, TextRendererMixin):
+class ForumEntry(db.Model, SerializableObject, TextRendererMixin):
     """The base class of a :class:`Question` or :class:`Answer`, which contains
     some general information about the author and the creation date, as well as
     the actual text and the votings."""
 
     __tablename__ = 'forum_entry'
-    query = db.session.query_property(EntryQuery)
+    query = db.session.query_property(ForumEntryQuery)
 
     #: Serializer attributes
     object_type = 'forum.entry'
@@ -183,7 +183,7 @@ class Entry(db.Model, SerializableObject, TextRendererMixin):
 
     author = db.relationship(User, lazy='joined', innerjoin=True)
     votes = db.relationship('Vote', backref='entry',
-            extension=EntryVotesExtension())
+            extension=ForumEntryVotesExtension())
 
     __mapper_args__ = {'polymorphic_on': discriminator}
 
@@ -206,8 +206,8 @@ class QuestionAnswersExtension(db.AttributeExtension):
         db.atomic_add(question, 'answer_count', -1, primary_key_field='id')
 
 
-class QuestionQuery(EntryQuery):
-    """Adds special filter methods to the :class:`EntryQuery` which are unique
+class QuestionQuery(ForumEntryQuery):
+    """Adds special filter methods to the :class:`ForumEntryQuery` which are unique
     to questions."""
 
     def tagged(self, tags):
@@ -226,8 +226,8 @@ class QuestionQuery(EntryQuery):
         return self.tagged(forum.all_tags)
 
 
-class Question(Entry):
-    """A :class:`Question` is an :class:`Entry` with a title, a slug and
+class Question(ForumEntry):
+    """A :class:`Question` is an :class:`ForumEntry` with a title, a slug and
     several tags."""
     __tablename__ = 'forum_question'
     __mapper_args__ = {
@@ -243,7 +243,7 @@ class Question(Entry):
                      'date_active', 'score', 'text', 'votes', 'tags',
                      'id', 'title', 'slug')
 
-    id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey(ForumEntry.entry_id), primary_key=True)
     title = db.Column(db.Unicode(160), nullable=False)
     slug = db.Column(db.Unicode(160), nullable=False, index=True)
     answer_count = db.Column(db.Integer, default=0)
@@ -275,7 +275,7 @@ class Question(Entry):
         return self.title
 
 
-class Answer(Entry):
+class Answer(ForumEntry):
     __tablename__ = 'forum_answer'
     __mapper_args__ = {
         'extension': SearchIndexMapperExtension('portal', 'answer'),
@@ -287,7 +287,7 @@ class Answer(Entry):
     public_fields = ('entry_id', 'discriminator', 'author', 'date_created',
                      'date_active', 'score', 'text', 'votes', 'question')
 
-    id = db.Column(db.Integer, db.ForeignKey(Entry.entry_id), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey(ForumEntry.entry_id), primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id))
 
     question = db.relationship(Question,

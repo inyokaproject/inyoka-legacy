@@ -9,7 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
-         Entry
+         ForumEntry
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
 from inyoka.core.api import IController, Rule, view, templated, db, \
          redirect, redirect_to, href, login_required
@@ -136,7 +136,7 @@ class ForumController(IController):
 
     @view('posting')
     def posting(self, request, posting_id=None):
-        entry = Entry.query.get(posting_id)
+        entry = ForumEntry.query.get(posting_id)
         return redirect_to(entry)
 
     @login_required
@@ -172,7 +172,7 @@ class ForumController(IController):
     @login_required
     @view
     def vote(self, request, entry_id, action):
-        entry = Entry.query.get(entry_id)
+        entry = ForumEntry.query.get(entry_id)
         v = Vote.query.filter_by(entry=entry, user=request.user).first()
         args = {
             'up':           {'score': +1},

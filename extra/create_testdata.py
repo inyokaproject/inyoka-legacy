@@ -273,7 +273,7 @@ def create_stub_tags():
 
 def create_forum_test_data():
     global _link_file
-    from inyoka.forum.models import Tag, Forum, Question, Answer, Vote, Entry
+    from inyoka.forum.models import Tag, Forum, Question, Answer, Vote, ForumEntry
     from inyoka.core.auth.models import User
 
     links = []
@@ -447,8 +447,8 @@ def create_wiki_test_data():
 
 def rebase_dates():
     """Rebase all dates so that they are most recent."""
-    from inyoka.forum.models import Entry
-    entries = Entry.query.all()
+    from inyoka.forum.models import ForumEntry
+    entries = ForumEntry.query.all()
     delta = datetime.utcnow() - _highest_date
     for entry in entries:
         entry.date_active += delta

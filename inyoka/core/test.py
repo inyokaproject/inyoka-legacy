@@ -593,6 +593,13 @@ class InyokaPlugin(cover.Coverage):
         ctx.cfg['testing'] = True
         ctx.load_packages(['tests.*'])
 
+        # special celery handling.  We change the result backend to `database`
+        # to be able to run the unittests without a amqp server.
+        # As celery has unittests itself we do know that the result-backend
+        # stuff works as expected.
+        ctx.cfg['celery.result_backend'] = 'database'
+        ctx.cfg['celery.result_dburi'] = ctx.cfg['database.url']
+
     def options(self, parser, env):
         # Don't setup coverage options,
         # base.Plugin takes care of with-inyoka

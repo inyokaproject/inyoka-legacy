@@ -230,8 +230,16 @@ _serializer_for_mimetypes = {
     'text/xml':             'xml',
     'text/html':            'debug',
 }
+
 _serializer_map = {
     'json':     (json.dumps, 'application/json'),
     'xml':      (dump_xml, 'application/xml'),
     'debug':    (debug_dump, 'text/html'),
 }
+
+try:
+    import msgpack
+    _serializer_map['msgpack'] = (msgpack.packb, 'application/msgpack')
+    _serializer_for_mimetypes['application/msgpack'] = 'msgpack'
+except ImportError:
+    pass

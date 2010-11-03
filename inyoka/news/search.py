@@ -32,9 +32,9 @@ class NewsSearchProvider(SearchProvider):
 
     def prepare(self, ids):
         query = self._query.filter(Article.id.in_(ids))
-        d = dict((a.id, self._prepare(a)) for a in query)
-        for id in ids:
-            yield d[int(id)]
+        documents = dict((p.id, self._prepare(p)) for p in query)
+        for id, document in documents.iteritems():
+            yield document
 
     def prepare_all(self):
         for article in db.select_blocks(self._query, Article.id):

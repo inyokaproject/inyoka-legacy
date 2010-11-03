@@ -31,9 +31,9 @@ class AnswerSearchProvider(SearchProvider):
 
     def prepare(self, ids):
         query = self._query.filter(Answer.entry_id.in_(ids))
-        d = dict((a.id, self._prepare(a)) for a in query)
-        for id in ids:
-            yield d[int(id)]
+        documents = dict((p.id, self._prepare(p)) for p in query)
+        for id, document in documents.iteritems():
+            yield document
 
     def prepare_all(self):
         for answer in db.select_blocks(self._query, Answer.id):
@@ -58,9 +58,9 @@ class QuestionSearchProvider(SearchProvider):
 
     def prepare(self, ids):
         query = self._query.filter(Question.id.in_(ids))
-        d = dict((q.id, self._prepare(q)) for q in query)
-        for id in ids:
-            yield d[int(id)]
+        documents = dict((p.id, self._prepare(p)) for p in query)
+        for id, document in documents.iteritems():
+            yield document
 
     def prepare_all(self):
         for question in db.select_blocks(self._query, Question.id):

@@ -32,9 +32,9 @@ class WikiSearchProvider(SearchProvider):
 
     def prepare(self, ids):
         query = self._query.filter(Page.id.in_(ids))
-        d = dict((p.id, self._prepare(p)) for p in query)
-        for id in ids:
-            yield d[int(id)]
+        documents = dict((p.id, self._prepare(p)) for p in query)
+        for id, document in documents.iteritems():
+            yield document
 
     def prepare_all(self):
         for page in db.select_blocks(self._query, Page.id):

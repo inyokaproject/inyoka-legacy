@@ -65,7 +65,7 @@ _entry_tag = db.Table('_test_subscription_entry_tag', db.metadata,
 TestResourceManager.register_models(_entry_tag)
 
 
-class Tag(db.Model):
+class TestSubscriptionTag(db.Model):
     __tablename__ = '_test_subscription_tag'
 
     manager = TestResourceManager
@@ -141,7 +141,7 @@ class CommentsSubscriptionType(SubscriptionType):
 
 class TagSubscriptionType(SubscriptionType):
     name = u'__test_tag'
-    subject_type = Tag
+    subject_type = TestSubscriptionTag
     object_type = Entry
     mode = u'multiple'
     actions = [u'__test_new_entry']
@@ -162,7 +162,7 @@ class TestSubscriptions(DatabaseTestCase):
                    {'&e2': {'category_id': '*c2'}},
                    {'&e3': {'category_id': '*c1'}},
                    {'&e4': {'category_id': '*c1'}}]},
-        {Tag: [{'entries': ['*e1']}, {'entries': ['*e1', '*e2', '*e4']},
+        {TestSubscriptionTag: [{'entries': ['*e1']}, {'entries': ['*e1', '*e2', '*e4']},
                {'entries': ['*e4']}]},
         {Comment: [{'entry': '*e1'}, {'entry': '*e2'}, {'entry': '*e1'},
                    {'entry': '*e1'}, {'entry': '*e1'}, {'entry': '*e2'}]}
@@ -282,7 +282,7 @@ class TestSubscriptions(DatabaseTestCase):
         entries = self.data['Entry']
         cat1, cat2 = self.data['Category']
         one, two, three, four = self.data['User']
-        t1, t2, t3 = self.data['Tag']
+        t1, t2, t3 = self.data['TestSubscriptionTag']
 
         NotifyTrackerMixin.tracker = []
 

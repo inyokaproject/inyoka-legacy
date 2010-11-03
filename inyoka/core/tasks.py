@@ -82,8 +82,13 @@ class UpdateSearchTask(Task):
     def run(self, index, provider, doc_id, **kwargs):
         id = '%s-%s' % (provider, doc_id)
         index = INDEXES[index]
-        # get the document data from the database
-        obj = index.providers[provider].prepare([doc_id]).next()
+
+        try:
+            # get the document data from the database
+            obj = index.providers[provider].prepare([doc_id]).next()
+        except StopIteration:
+            # There's no document that matches the doc_id, abort
+            return
 
         try:
             if obj is None:

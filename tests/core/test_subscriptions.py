@@ -36,7 +36,7 @@ class Wrapper(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
 
-class Entry(db.Model):
+class TestSubscriptionEntry(db.Model):
     __tablename__ = '_test_subscription_entry'
 
     manager = TestResourceManager
@@ -53,12 +53,12 @@ class Comment(db.Model):
     manager = TestResourceManager
 
     id = db.Column(db.Integer, primary_key=True)
-    entry_id = db.Column(db.ForeignKey(Entry.id), nullable=False)
-    entry = db.relationship(Entry)
+    entry_id = db.Column(db.ForeignKey(TestSubscriptionEntry.id), nullable=False)
+    entry = db.relationship(TestSubscriptionEntry)
 
 
 _entry_tag = db.Table('_test_subscription_entry_tag', db.metadata,
-    db.Column('entry_id', db.Integer, db.ForeignKey(Entry.id)),
+    db.Column('entry_id', db.Integer, db.ForeignKey(TestSubscriptionEntry.id)),
     db.Column('tag_id', db.Integer,
               db.ForeignKey('_test_subscription_tag.id')),
 )
@@ -71,8 +71,8 @@ class TestSubscriptionTag(db.Model):
     manager = TestResourceManager
 
     id = db.Column(db.Integer, primary_key=True)
-    entries = db.relationship(Entry, secondary=_entry_tag, backref='tags',
-                              lazy='joined')
+    entries = db.relationship(TestSubscriptionEntry, secondary=_entry_tag,
+                              backref='tags', lazy='joined')
 
 
 class Other(db.Model):
@@ -110,7 +110,7 @@ class NewOtherSubscriptionAction(SubscriptionAction):
 class CategorySubscriptionType(SubscriptionType):
     name = u'__test_category'
     subject_type = Category
-    object_type = Entry
+    object_type = TestSubscriptionEntry
     mode = u'multiple'
     actions = [u'__test_new_entry']
 
@@ -119,7 +119,7 @@ class CategorySubscriptionType(SubscriptionType):
 class BlogSubscriptionType(SubscriptionType):
     name = u'__test_blog'
     subject_type = None
-    object_type = Entry
+    object_type = TestSubscriptionEntry
     mode = u'multiple'
     actions = [u'__test_new_entry']
 
@@ -132,7 +132,7 @@ class BadImplementedType(SubscriptionType):
 
 class CommentsSubscriptionType(SubscriptionType):
     name = u'__test_comments'
-    subject_type = Entry
+    subject_type = TestSubscriptionEntry
     object_type = Comment
     mode = u'sequent'
     actions = [u'__test_new_comment']
@@ -142,7 +142,7 @@ class CommentsSubscriptionType(SubscriptionType):
 class TagSubscriptionType(SubscriptionType):
     name = u'__test_tag'
     subject_type = TestSubscriptionTag
-    object_type = Entry
+    object_type = TestSubscriptionEntry
     mode = u'multiple'
     actions = [u'__test_new_entry']
 
@@ -158,7 +158,7 @@ class TestSubscriptions(DatabaseTestCase):
                   {'username': 'four', 'email': 'four@example.com'}]},
         {Category: [{'id': '&c1', 'name': 'cat1'},
                     {'id': '&c2', 'name': 'cat2'}]},
-        {Entry:   [{'&e1': {'category_id': '*c1'}},
+        {TestSubscriptionEntry:   [{'&e1': {'category_id': '*c1'}},
                    {'&e2': {'category_id': '*c2'}},
                    {'&e3': {'category_id': '*c1'}},
                    {'&e4': {'category_id': '*c1'}}]},
@@ -225,7 +225,7 @@ class TestSubscriptions(DatabaseTestCase):
         """
         cat1, cat2 = self.data['Category']
         one, two, three, four = self.data['User']
-        entries = self.data['Entry']
+        entries = self.data['TestSubscriptionEntry']
         NotifyTrackerMixin.tracker = []
 
         with execute_tasks_inline():
@@ -279,7 +279,7 @@ class TestSubscriptions(DatabaseTestCase):
         unread information is accurate and whether notifications are sent
         correctly.
         """
-        entries = self.data['Entry']
+        entries = self.data['TestSubscriptionEntry']
         cat1, cat2 = self.data['Category']
         one, two, three, four = self.data['User']
         t1, t2, t3 = self.data['TestSubscriptionTag']
@@ -344,7 +344,7 @@ class TestSubscriptions(DatabaseTestCase):
         """
         cat1, cat2 = self.data['Category']
         one, two, three, four = self.data['User']
-        e1, e2 = self.data['Entry'][:2]
+        e1, e2 = self.data['TestSubscriptionEntry'][:2]
         comments = self.data['Comment']
 
         NotifyTrackerMixin.tracker = []

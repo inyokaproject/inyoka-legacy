@@ -8,7 +8,7 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from celery.decorators import task, periodic_task
+from celery.decorators import Task, task, periodic_task
 from collections import defaultdict
 from datetime import timedelta
 from sqlalchemy.orm.exc import NoResultFound
@@ -57,8 +57,7 @@ def send_notifications(object, action_name, subscriptions):
         action.notify(user, object, notifications[user])
 
 
-@task
-def update_search_index(index, provider, doc_id):
+class UpdateSearchTask(Task):
     """
     Add, update or delete a single item of the search index `index`.
 
@@ -76,28 +75,32 @@ def update_search_index(index, provider, doc_id):
     `flush_indexer` is responsible for this). As a result it may take some
     time for your document to appear when searching.
     """
-    id = '%s-%s' % (provider, doc_id)
-    index = INDEXES[index]
-    # get the document data from the database
-    obj = index.providers[provider].prepare([doc_id]).next()
 
-    if obj is None:
-        # the document was deleted in the database, delete the search index
-        # entry too
-        index.indexer.delete(id)
-    else:
-        doc = create_search_document(id, obj)
+    ignore_result = True
+    countdown = 5
+
+    def run(self, index, provider, doc_id, **kwargs):
+        id = '%s-%s' % (provider, doc_id)
+        index = INDEXES[index]
+        # get the document data from the database
+        obj = index.providers[provider].prepare([doc_id]).next()
+
         try:
-            # try to create a new search entry
-            index.indexer.add(doc)
-        except errors.IndexerError:
-            # there's already an exising one, replace it
-            index.indexer.replace(doc)
-
-    # XXX: THIS IS ONLY FOR TESTING!!! REMOVE IT!!!
-    index.indexer.flush()
-    index.searcher.reopen()
-
+            if obj is None:
+                # the document was deleted in the database, delete the search index
+                # entry too
+                index.indexer.delete(id)
+            else:
+                doc = create_search_document(id, obj)
+                try:
+                    # try to create a new search entry
+                    index.indexer.add(doc)
+                except errors.IndexerError:
+                    # there's already an exising one, replace it
+                    index.indexer.replace(doc)
+        except errors.XapianDatabaseLockError as exc:
+            self.retry([index, provider, doc_id], kwargs,
+                       countdown=10, exc=exc)
 
 @task
 def search_query(index, q, page=1, filters={}):
@@ -174,9 +177,8 @@ def flush_indexer():
     """
     for index in INDEXES.itervalues():
         index.indexer.flush()
-        index.searcher.reopen()
 
 
 # don't store the result of tasks without return value
-for f in [send_activation_mail, send_notifications, update_search_index]:
+for f in [send_activation_mail, send_notifications]:
     f.ignore_result = True

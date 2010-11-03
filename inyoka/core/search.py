@@ -220,7 +220,7 @@ class SearchIndexMapperExtension(db.MapperExtension):
 
     def _update_index(self, mapper, connection, instance):
         from celery.execute import send_task
-        send_task('inyoka.core.tasks.update_search_index',
+        send_task('inyoka.core.tasks.UpdateSearchTask',
                   [self.index, self.provider, instance.id])
 
     after_insert = after_update = after_delete = _update_index

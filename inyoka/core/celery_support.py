@@ -43,6 +43,7 @@ class CeleryLoader(BaseLoader):
 
         settings = map(conv, celeryd_vars + celery_vars + broker_vars)
         settings.append(('DEBUG', ctx.cfg['debug']))
+        settings.append(('CELERY_ALWAYS_EAGER', ctx.cfg['testing']))
         self.configured = True
 
         return AttributeDict(dict(settings))

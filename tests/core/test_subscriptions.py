@@ -47,7 +47,7 @@ class TestSubscriptionEntry(db.Model):
     title = db.Column(db.String(30))
 
 
-class Comment(db.Model):
+class TestSubscriptionComment(db.Model):
     __tablename__ = '_test_subscription_comment'
 
     manager = TestResourceManager
@@ -133,7 +133,7 @@ class BadImplementedType(SubscriptionType):
 class CommentsSubscriptionType(SubscriptionType):
     name = u'__test_comments'
     subject_type = TestSubscriptionEntry
-    object_type = Comment
+    object_type = TestSubscriptionComment
     mode = u'sequent'
     actions = [u'__test_new_comment']
 
@@ -164,7 +164,7 @@ class TestSubscriptions(DatabaseTestCase):
                    {'&e4': {'category_id': '*c1'}}]},
         {TestSubscriptionTag: [{'entries': ['*e1']}, {'entries': ['*e1', '*e2', '*e4']},
                {'entries': ['*e4']}]},
-        {Comment: [{'entry': '*e1'}, {'entry': '*e2'}, {'entry': '*e1'},
+        {TestSubscriptionComment: [{'entry': '*e1'}, {'entry': '*e2'}, {'entry': '*e1'},
                    {'entry': '*e1'}, {'entry': '*e1'}, {'entry': '*e2'}]}
     ]
 
@@ -194,7 +194,7 @@ class TestSubscriptions(DatabaseTestCase):
 
     def test_subscriptiontype(self):
         eq_(SubscriptionType.by_name(u'__test_comments'), CommentsSubscriptionType)
-        eq_(SubscriptionType.by_object_type(Comment), [CommentsSubscriptionType])
+        eq_(SubscriptionType.by_object_type(TestSubscriptionComment), [CommentsSubscriptionType])
         eq_(SubscriptionType.by_subject_type(Category), [CategorySubscriptionType])
         eq_(sorted(SubscriptionType.by_action(NewEntrySubscriptionAction)),
             sorted([CategorySubscriptionType, BlogSubscriptionType, TagSubscriptionType]))
@@ -345,7 +345,7 @@ class TestSubscriptions(DatabaseTestCase):
         cat1, cat2 = self.data['Category']
         one, two, three, four = self.data['User']
         e1, e2 = self.data['TestSubscriptionEntry'][:2]
-        comments = self.data['Comment']
+        comments = self.data['TestSubscriptionComment']
 
         NotifyTrackerMixin.tracker = []
 

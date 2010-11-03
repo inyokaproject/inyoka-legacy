@@ -12,6 +12,7 @@ from datetime import datetime
 from sqlalchemy.ext.associationproxy import association_proxy
 from inyoka.core.api import db, href, _
 from inyoka.core.mixins import TextRendererMixin
+from inyoka.core.search import SearchIndexMapperExtension
 from inyoka.core.auth.models import User
 from inyoka.wiki.utils import urlify_page_name
 from inyoka.portal.api import ILatestContentProvider
@@ -61,7 +62,12 @@ class PageExists(ValueError):
 
 class Page(db.Model):
     __tablename__ = 'wiki_page'
+    __mapper_args__ = {
+        'extension': SearchIndexMapperExtension('portal', 'wiki'),
+    }
+
     query = db.session.query_property(PageQuery)
+
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode(200), index=True, nullable=False)

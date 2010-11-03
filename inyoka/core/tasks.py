@@ -173,7 +173,7 @@ def find_similar_docs(index, doc):
 @periodic_task(run_every=timedelta(minutes=5))
 def flush_indexer():
     """
-    Flush all indexer connections and reopen all search connections.
+    Flush all indexer connections.
     """
     for index in INDEXES.itervalues():
         index.indexer.flush()

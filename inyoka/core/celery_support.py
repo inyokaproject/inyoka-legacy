@@ -18,7 +18,7 @@ from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigFi
 # celery broker settings
 celery_result_backend = TextConfigField('celery.result_backend', default=u'amqp')
 celery_imports = ListConfigField('celery.imports', default=['inyoka.core.tasks'])
-celery_task_serializer = TextConfigField('celery.task_serializer', default='json')
+celery_task_serializer = TextConfigField('celery.task_serializer', default='pickle')
 
 # ampq broker settings
 broker_host = TextConfigField('broker.host', u'localhost')

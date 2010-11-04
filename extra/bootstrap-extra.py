@@ -5,7 +5,6 @@ from os import path
 python_version = '2.7'
 pil_version = '1.1.7'
 cldr_version = '1.7.2'
-jinja_version = '2.5.2'
 xapian_version = '1.2.3'
 
 
@@ -81,24 +80,6 @@ def install_xapian(home_dir):
     call_subprocess(['make'], cwd=binding_folder)
     call_subprocess(['make', 'install'], cwd=binding_folder)
 
-    shutil.rmtree(folder)
-
-def install_jinja2(home_dir):
-    folder = tempfile.mkdtemp(prefix='virtualenv')
-    pypath = path.join(home_dir, 'bin', 'python')
-
-    # checkout jinja
-    call_subprocess(FETCH_CMD +
-        ['http://pypi.python.org/packages/source/J/Jinja2/Jinja2-%s.tar.gz' % jinja_version],
-        cwd=folder)
-    call_subprocess(['tar', '-xzf', 'Jinja2-%s.tar.gz' % jinja_version],
-                    cwd=folder)
-    jinja_folder = path.join(folder, 'Jinja2-%s' % jinja_version)
-
-    cmd = [path.abspath(path.join(home_dir, 'bin', 'python'))]
-    cmd.extend([path.join(os.getcwd(), path.join(jinja_folder, 'setup.py')),
-               '--with-speedups', 'install'])
-    call_subprocess(cmd, cwd=jinja_folder)
     shutil.rmtree(folder)
 
 

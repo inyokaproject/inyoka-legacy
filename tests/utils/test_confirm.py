@@ -49,6 +49,7 @@ def test_base():
 
     eq_(CONFIRM_LOG, [data, (2, data)])
 
+
 @refresh_database
 @with_setup(reset_log)
 def test_expiry():
@@ -58,7 +59,7 @@ def test_expiry():
     db.session.commit()
 
     # potential validation in the model would be ok, so we must bypass this
-    db.session.execute(update(Confirm.__table__, Confirm.id == 1,
+    db.session.execute(update(Confirm.__table__, Confirm.id == c.id,
                               {'expires': date(2009,1,1)}))
     c = Confirm.query.get(c.id)
     db.session.commit()

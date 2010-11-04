@@ -616,7 +616,7 @@ class InyokaPlugin(cover.Coverage):
         """
         self._engine = engine = database.get_engine()
         # first we cleanup the existing database
-        database.metadata.drop_all(bind=engine, checkfirst=True)
+        db.drop_all_tables(bind=engine)
         # then we create everything
         database.init_db(bind=engine, is_test=True)
 
@@ -626,7 +626,7 @@ class InyokaPlugin(cover.Coverage):
 
     def finalize(self, result):
         """Finally drop all database tables."""
-        database.metadata.drop_all(bind=self._engine)
+        db.drop_all_tables(bind=self._engine)
 
     def configure(self, options, conf):
         """Configure the plugin"""

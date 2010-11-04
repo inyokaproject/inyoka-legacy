@@ -640,6 +640,12 @@ def drop_all_data(bind=None):
 
 def drop_all_tables(bind=None):
     engine = bind or get_engine()
+    if engine.url.drivername == 'sqlite':
+        # SQLite is a nice database with no fancy restrictions.
+        # So we just drop everything and return.
+        db.metadata.drop_all(bind=engine)
+        return
+
     inspector = reflection.Inspector.from_engine(engine)
     metadata = MetaData()
 

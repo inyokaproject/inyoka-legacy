@@ -323,6 +323,8 @@ class FixtureLoader(object):
         skip_keys = ['nocommit']
         new_data = {}
 
+        # psycopg2 raises an InternalError instance that is not inherited from
+        # `Exception` and as such requires to be catched too.
         exceptions = [Exception]
         if 'postgresql' in db.get_engine().url.drivername:
             try:

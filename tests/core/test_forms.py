@@ -44,10 +44,10 @@ class TestFormUtils(DatabaseTestCase):
 
     def test_model_to_dict(self):
         obj = self.data['DummyModel'][0]
-        data = model_to_dict(obj)
-        eq_(data, {'id': 1, 'name': u'one', 'value': u'two'})
-        data = model_to_dict(obj, fields=('name', 'id'))
-        eq_(data, {'id': 1, 'name': u'one'})
+        data = model_to_dict(obj, ('name', 'value'))
+        eq_(data, {'name': u'one', 'value': u'two'})
+        data = model_to_dict(obj, fields=('name',))
+        eq_(data, {'name': u'one'})
         data = model_to_dict(obj, exclude=('id',))
         eq_(data, {'name': u'one', 'value': u'two'})
         data = model_to_dict(obj, fields=('id', 'name'), exclude=('id',))

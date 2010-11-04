@@ -621,7 +621,7 @@ class InyokaPlugin(cover.Coverage):
         """
         self._engine = engine = database.get_engine()
         # first we cleanup the existing database
-        database.metadata.drop_all(bind=engine)
+        database.metadata.drop_all(bind=engine, checkfirst=True)
         # then we create everything
         database.init_db(bind=engine, is_test=True)
 
@@ -684,7 +684,7 @@ def refresh_database(func):
         ret = func(*args, **kwargs)
         # drop all data afterwards and initialize the database again.
         _engine = database.get_engine()
-        database.metadata.drop_all(bind=_engine)
+        database.drop_all_data(bind=_engine)
         database.init_db(bind=_engine, is_test=True)
         return ret
     return decorator

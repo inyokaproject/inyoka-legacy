@@ -96,6 +96,7 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
 from sqlalchemy.types import MutableType, TypeDecorator
+from sqlalchemy.engine import reflection
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
 from inyoka.utils import flatten_iterator
@@ -621,6 +622,28 @@ def init_db(**kwargs):
             UserProfile(user=admin)
 
         db.session.commit()
+
+
+def drop_all_data(bind=None):
+    engine = bind or get_engine()
+    connection = engine.connect()
+    transaction = connection.begin()
+    inspector = reflection.Inspector.from_engine(engine)
+
+    # gather all data first before dropping anything.
+    # some DBs lock after things have been dropped in
+    # a transaction.
+
+    tables = set()
+    for table_name in inspector.get_table_names():
+        table = db.Table(table_name, metadata, useexisting=True, autoload=True)
+        tables.add(table)
+
+    for table in tables:
+        print table
+        connection.execute(table.delete())
+
+    transaction.commit()
 
 
 def _make_module():

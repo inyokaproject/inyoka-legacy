@@ -265,6 +265,7 @@ def test(file='', clean='yes'):
         with settings(hide('running')):
             _clean()
 
+    print u'Running unittests using %s' % os.environ.get('INYOKA_CONFIG', 'default config')
     local('python %s %s' % (_j('extra/runtests.py'), file),
           capture=False)
 

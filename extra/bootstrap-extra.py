@@ -148,19 +148,27 @@ def adjust_options(options, args):
             sys.stderr.write('\\nERROR: need either wget or curl\\n')
             sys.exit(1)
 
-    # checkout python distribution
-    call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/%s/Python-%s.tar.bz2' % (python_version, python_version)],
-                    cwd=dest_dir)
-    call_subprocess(['tar', '-xjf', 'Python-%s.tar.bz2' % python_version],
-                    cwd=dest_dir)
+    build_dir = path.join(dest_dir, 'build')
+    python_folder = path.join(build_dir, 'Python-%s' % python_version)
+    if not path.exists(build_dir):
+        os.mkdir(build_dir)
 
-    python_folder = path.join(dest_dir, 'Python-%s' % python_version)
+    if not os.path.exists('_python_was_build'):
+        # checkout python distribution
+        call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/%s/Python-%s.tar.bz2' % (python_version, python_version)],
+                        cwd=build_dir)
+        call_subprocess(['tar', '-xjf', 'Python-%s.tar.bz2' % python_version],
+                        cwd=build_dir)
 
-    # configure python
-    call_subprocess(['./configure', '--prefix=%s' % dest_dir],
-                    cwd=python_folder)
-    call_subprocess(['make'], cwd=python_folder)
-    call_subprocess(['make', 'install'], cwd=python_folder)
+        # configure python
+        call_subprocess(['./configure', '--prefix=%s' % build_dir],
+                        cwd=python_folder)
+        call_subprocess(['make'], cwd=python_folder)
+        call_subprocess(['make', 'install'], cwd=python_folder)
+
+    # touch a special file to indicate we have already build a python interpreter
+    with open('_python_was_build', 'a'):
+        os.utime('_python_was_build', None)
 
     options.python = path.join(python_folder, 'python')
     options.no_site_packages = True

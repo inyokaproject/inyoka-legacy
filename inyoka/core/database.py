@@ -97,6 +97,7 @@ from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
 from sqlalchemy.types import MutableType, TypeDecorator
 from sqlalchemy.engine import reflection
+from sqlalchemy.schema import DropTable, DropConstraint
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
 from inyoka.utils import flatten_iterator
@@ -626,13 +627,7 @@ def init_db(**kwargs):
 
 def drop_all_data(bind=None):
     engine = bind or get_engine()
-    connection = engine.connect()
-    transaction = connection.begin()
     inspector = reflection.Inspector.from_engine(engine)
-
-    # gather all data first before dropping anything.
-    # some DBs lock after things have been dropped in
-    # a transaction.
 
     tables = set()
     for table_name in inspector.get_table_names():
@@ -640,9 +635,32 @@ def drop_all_data(bind=None):
         tables.add(table)
 
     for table in tables:
-        connection.execute(table.delete())
+        engine.execute(table.delete())
 
-    transaction.commit()
+
+def drop_all_tables(bind=None):
+    engine = bind or get_engine()
+    inspector = reflection.Inspector.from_engine(engine)
+    metadata = MetaData()
+
+    tables = []
+    foreign_keys = []
+
+    for table_name in inspector.get_table_names():
+        fks = []
+        for fk in inspector.get_foreign_keys(table_name):
+            if not fk['name']:
+                continue
+            fks.append(db.ForeignKeyConstraint((), (), name=fk['name']))
+        t = db.Table(table_name, metadata, *fks)
+        tables.append(t)
+        foreign_keys.extend(fks)
+
+    for fkc in foreign_keys:
+        engine.execute(DropConstraint(fkc))
+
+    for table in tables:
+        engine.execute(DropTable(table))
 
 
 def _make_module():
@@ -657,6 +675,8 @@ def _make_module():
     db.PGArray = PGArray
 
     db.get_engine = get_engine
+    db.drop_all_data = drop_all_data
+    db.drop_all_tables = drop_all_tables
     db.session = session
     db.metadata = metadata
     db.mapper = mapper

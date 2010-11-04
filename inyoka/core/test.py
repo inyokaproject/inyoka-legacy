@@ -587,11 +587,6 @@ class InyokaPlugin(cover.Coverage):
     def __init__(self):
         super(InyokaPlugin, self).__init__()
 
-        # force the sqlite uri to in-memory if we're using sqlite.
-        # Speeds up sqlite builds extremly
-        if db.get_engine().url.drivername == 'sqlite':
-            ctx.cfg['database.url'] = 'sqlite://'
-
         # Force our `tests` module to be the first `tests` module in the path.
         # Otherwise load_packages might try to load `test` from celery if
         # installed via setup.py develop (same goes for other packages)

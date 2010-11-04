@@ -54,7 +54,8 @@ class Group(db.Model):
         primaryjoin=(id == group_group.c.group_id),
         secondaryjoin=(group_group.c.parent_id == id),
         foreign_keys=[group_group.c.group_id, group_group.c.parent_id],
-        collection_class=set)
+        collection_class=set,
+        cascade='all')
 
     def get_parents(self):
         if not self.parents:

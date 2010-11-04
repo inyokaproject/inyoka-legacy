@@ -24,7 +24,7 @@ def test_fixture_loader_string_model_references():
     eq_(User.query.filter_by(username=u'ente').count(), 0)
 
     # load the user into database
-    new_data = FixtureLoader().from_list(db.session, data)
+    new_data = FixtureLoader().from_list(data)
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
     assert_true(user is new_data['User'][0])
@@ -41,7 +41,7 @@ def test_fixture_loader_class_model_references():
     }]}]
 
     eq_(User.query.filter_by(username=u'ente').count(), 0)
-    new_data = FixtureLoader().from_list(db.session, data)
+    new_data = FixtureLoader().from_list(data)
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
     assert_true(user is new_data['User'][0])
@@ -69,7 +69,7 @@ def test_fixture_references():
     eq_(User.query.filter_by(username=u'ente').count(), 0)
 
     # load the user and profile into database
-    FixtureLoader().from_list(db.session, data)
+    FixtureLoader().from_list(data)
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
     eq_(user.profile.real_name, u'Christopher Grebs')

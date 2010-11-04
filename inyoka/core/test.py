@@ -293,12 +293,12 @@ class FixtureLoader(object):
         resolved_values = self._check_types(cls, resolved_values)
 
         obj = self.create_obj(cls, resolved_values)
-        self.session.add(obj)
+        db.session.add(obj)
 
         if ref_name:
             self.add_reference(ref_name, obj)
         if self.has_references(values):
-            self.session.flush()
+            db.session.flush()
             self.set_references(obj, values)
 
         return obj
@@ -315,14 +315,22 @@ class FixtureLoader(object):
             objects.append(obj)
         return objects
 
-    def from_list(self, session, data):
+    def from_list(self, data):
         """Initialize `data` in `session`.  See unittest docs for more details."""
-        self.session = session
         cls = None
         item = None
         group = None
         skip_keys = ['nocommit']
         new_data = {}
+
+        exceptions = [Exception]
+        if 'postgresql' in db.get_engine().url.drivername:
+            try:
+                from psycopg2 import InternalError
+                exceptions.append(InternalError)
+            except ImportError:
+                pass
+
         try:
             for group in data:
                 for cls, items in group.iteritems():
@@ -331,14 +339,12 @@ class FixtureLoader(object):
                     if isinstance(cls, basestring) and cls not in skip_keys:
                         cls = self.get_cls(cls)
                     new_data[cls.__name__] = self.add_classes(cls, items)
-                if 'nocommit' not in group:
-                    session.commit()
-        except Exception:
+                if not 'nocommit' in group:
+                    db.session.commit()
+        except exceptions:
             self.log_error(sys.exc_info()[2], data, cls, item)
             db.session.rollback()
-            raise
 
-        self.session = None
         return new_data
 
     def log_error(self, e, data, cls, item):
@@ -408,7 +414,7 @@ class DatabaseTestCase(TestCase):
 
         if self.fixtures:
             loader = FixtureLoader()
-            self.data = loader.from_list(db.session, self.fixtures)
+            self.data = loader.from_list(self.fixtures)
 
     def _post_teardown(self):
         super(DatabaseTestCase, self)._post_teardown()
@@ -710,7 +716,7 @@ def with_fixtures(fixtures):
                 # the function defines it's own fixture loader.
                 data = fixtures()
             else:
-                data = FixtureLoader().from_list(db.session, fixtures)
+                data = FixtureLoader().from_list(fixtures)
             return func(data, *args, **kwargs)
         return _proxy
     return decorator

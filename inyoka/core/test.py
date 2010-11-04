@@ -622,11 +622,10 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        self._engine = engine = database.get_engine()
-        # first we cleanup the existing database
-        db.drop_all_tables(bind=engine)
+        db.drop_all_tables()
         # then we create everything
-        database.init_db(bind=engine, is_test=True)
+        database.init_db(bind=db.get_engine(), is_test=True)
+        db.session.commit()
 
         _internal_modules_to_skip = ('inyoka.core.tasks',)
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
@@ -634,7 +633,7 @@ class InyokaPlugin(cover.Coverage):
 
     def finalize(self, result):
         """Finally drop all database tables."""
-        db.drop_all_tables(bind=self._engine)
+        db.drop_all_tables()
 
     def configure(self, options, conf):
         """Configure the plugin"""

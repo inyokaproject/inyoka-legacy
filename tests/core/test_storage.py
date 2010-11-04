@@ -33,6 +33,7 @@ def shutdown():
     ctx.cfg['caching.system'] = _configured_cache
 
 
+@refresh_database
 @with_setup(setup, shutdown)
 def test():
     def test_get(d):

@@ -164,7 +164,7 @@ def adjust_options(options, args):
                         cwd=build_dir)
 
         # configure python
-        call_subprocess(['./configure', '--prefix=%s' % build_dir],
+        call_subprocess(['./configure', '--prefix=%s' % dest_dir],
                         cwd=python_folder)
         call_subprocess(['make'], cwd=python_folder)
         call_subprocess(['make', 'install'], cwd=python_folder)

@@ -333,19 +333,19 @@ class FixtureLoader(object):
             except ImportError:
                 pass
 
-        try:
-            for group in data:
-                for cls, items in group.iteritems():
-                    if cls in skip_keys:
-                        continue
-                    if isinstance(cls, basestring) and cls not in skip_keys:
-                        cls = self.get_cls(cls)
-                    new_data[cls.__name__] = self.add_classes(cls, items)
-                if not 'nocommit' in group:
+        for group in data:
+            for cls, items in group.iteritems():
+                if cls in skip_keys:
+                    continue
+                if isinstance(cls, basestring) and cls not in skip_keys:
+                    cls = self.get_cls(cls)
+                new_data[cls.__name__] = self.add_classes(cls, items)
+            if not 'nocommit' in group:
+                try:
                     db.session.commit()
-        except exceptions:
-            self.log_error(sys.exc_info()[2], data, cls, item)
-            db.session.rollback()
+                except exceptions:
+                    self.log_error(sys.exc_info()[2], data, cls, item)
+                    db.session.rollback()
 
         return new_data
 

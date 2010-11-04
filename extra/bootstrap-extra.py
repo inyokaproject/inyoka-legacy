@@ -126,6 +126,9 @@ def extend_parser(parser):
     parser.add_option('-r', '--requirements', dest='requirements',
                       default='',
                       help='Path to a requirements file usable with pip')
+    parser.add_option('-f', '--force-rebuild', dest='force_rebuild',
+                      default=False,
+                      help=u'Force rebuilding the python interpreter')
 
 
 def adjust_options(options, args):
@@ -153,7 +156,7 @@ def adjust_options(options, args):
     if not path.exists(build_dir):
         os.mkdir(build_dir)
 
-    if not os.path.exists('_python_was_build'):
+    if not os.path.exists('_python_was_build') or options.force_rebuild:
         # checkout python distribution
         call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/%s/Python-%s.tar.bz2' % (python_version, python_version)],
                         cwd=build_dir)

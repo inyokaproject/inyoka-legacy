@@ -12,21 +12,25 @@ from celery.loaders.base import BaseLoader
 from celery.loaders.default import AttributeDict
 
 from inyoka.context import ctx
-from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigField
+from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigField, \
+    BooleanConfigField
 
 
 # celery broker settings
-celery_result_backend = TextConfigField('celery.result_backend', default=u'amqp')
+celery_result_backend = TextConfigField('celery.result_backend', default=u'database')
 celery_result_dburi = TextConfigField('celery.result_dburi', default=u'sqlite://')
 celery_imports = ListConfigField('celery.imports', default=['inyoka.core.tasks'])
 celery_task_serializer = TextConfigField('celery.task_serializer', default='pickle')
+celery_send_task_error_emails = BooleanConfigField('celery.send_task_error_emails', default=False)
 
-# ampq broker settings
+# carrot broker settings
+broker_backend = TextConfigField('broker.backend', u'memory')
 broker_host = TextConfigField('broker.host', u'localhost')
 broker_port = IntegerConfigField('broker.port', 5672)
 broker_user = TextConfigField('broker.user', u'inyoka')
 broker_password = TextConfigField('broker.password', u'default')
 broker_vhost = TextConfigField('broker.vhost', u'inyoka')
+
 
 
 class CeleryLoader(BaseLoader):
@@ -41,7 +45,7 @@ class CeleryLoader(BaseLoader):
         celery_vars = list(ctx.cfg.itersection('celery'))
         broker_vars = list(ctx.cfg.itersection('broker'))
 
-        conv = lambda x: (x[0].upper().replace('.','_'),x[1])
+        conv = lambda x: (x[0].upper().replace('.','_'), x[1])
 
         settings = map(conv, celeryd_vars + celery_vars + broker_vars)
         settings.append(('DEBUG', ctx.cfg['debug']))

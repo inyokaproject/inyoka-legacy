@@ -265,7 +265,7 @@ class Revision(db.Model):
 
     page = db.relationship(Page, primaryjoin='Revision.page_id == Page.id',
         backref=db.backref('all_revisions', lazy='dynamic',
-                           cascade='all, delete-orphan'))
+                           cascade='all, delete, delete-orphan'))
     text = db.relationship(Text)
     change_user = db.relationship(User)
     attachment = db.relationship(Attachment)

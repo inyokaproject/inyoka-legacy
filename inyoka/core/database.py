@@ -640,7 +640,6 @@ def drop_all_data(bind=None):
         tables.add(table)
 
     for table in tables:
-        print table
         connection.execute(table.delete())
 
     transaction.commit()

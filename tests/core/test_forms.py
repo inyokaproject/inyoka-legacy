@@ -18,7 +18,7 @@ from inyoka.portal.controllers import PortalController
 
 
 class DummyModel(db.Model):
-    __tablename__ = '__test_forms_dummy'
+    __tablename__ = '_test_forms_dummy'
 
     manager = TestResourceManager
 

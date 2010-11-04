@@ -80,7 +80,7 @@ class TestResourceManager(IResourceManager):
     :attr:`manager` attribute::
 
         class MyModel(db.Model):
-            __tablename__ = '__test_mymodel'
+            __tablename__ = '_test_mymodel'
 
             # resource manager model
             manager = TestResourceManager

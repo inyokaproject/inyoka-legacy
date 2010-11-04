@@ -42,18 +42,12 @@ def pil_install(home_dir):
 
 def install_xapian(home_dir):
     folder = tempfile.mkdtemp(prefix='virtualenv')
-    print 'FOLDER', folder
     prefix = os.path.realpath(os.path.join(home_dir))
-    print 'PREFIX', prefix
     pypath = path.join(prefix, 'bin', 'python')
-    print 'PYPATH', pypath
     xapian_config = os.path.join(folder, 'xapian-core-' +
                     xapian_version, 'xapian-config')
-    print 'XAPIAN_CONFIG', xapian_config
     libpath = os.path.join(prefix, 'lib', 'python%s' % python_version)
-    print 'LIBPATH', libpath
     incpath = os.path.join(prefix, 'include', 'python%s' % python_version)
-    print 'INCPATH', incpath
 
     call_subprocess(['wget', 'http://oligarchy.co.uk/xapian/%s/xapian-core-%s.tar.gz' %
                     (xapian_version, xapian_version)], cwd=folder)

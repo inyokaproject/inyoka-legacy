@@ -105,7 +105,6 @@ def babel_svn_repo_install(home_dir):
 
 def after_install(options, home_dir):
     easy_install('pip', home_dir)
-    install_jinja2(home_dir)
     babel_svn_repo_install(home_dir)
     install_requirements(home_dir, options.requirements)
     pil_install(home_dir)

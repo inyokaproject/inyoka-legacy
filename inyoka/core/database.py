@@ -667,7 +667,7 @@ def drop_all_tables(bind=None):
         engine.execute(DropConstraint(fkc))
 
     for table in tables:
-        engine.execute(AdvancedDropTable(table))
+        engine.execute(AdvancedDropTable(table, cascade=True))
 
 
 def _make_module():

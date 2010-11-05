@@ -202,7 +202,7 @@ class AdvancedDropTable(DropTable):
 @compiles(AdvancedDropTable)
 def visit_drop_table_cascade(element, compiler, **kw):
     return 'DROP TABLE %s%s' % (
-        element.element, u'CASCADE' if element.cascade else u''
+        element.element, u' CASCADE' if element.cascade else u''
     )
 
 

@@ -326,9 +326,8 @@ def _bootstrap():
         ui = hgui.ui()
         repository = localrepository(ui, join(conts, '..'))
         ctx = repository['tip']
-        INYOKA_REVISION = '%(num)s:%(id)s' % {
-            'num': ctx.rev(), 'id': shorthex(ctx.node())
-        }
+        INYOKA_REVISION = ('%(num)s:%(id)s' %
+            {'num': ctx.rev(), 'id': shorthex(ctx.node())})
     except TypeError:
         # fail silently
         pass

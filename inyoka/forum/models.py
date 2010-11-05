@@ -17,7 +17,6 @@ from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.search import SearchIndexMapperExtension
 from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
-from inyoka.utils import confidence
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -252,13 +251,6 @@ class Question(ForumEntry):
                            backref=db.backref('questions', lazy='dynamic'),
                            extension=TagCounterExtension())
 
-    @cached_property
-    def popularity(self):
-        pos = len([v for v in self.votes if v.score==1]) + self.answer_count
-        neg = len([v for v in self.votes if v.score==-1])
-        neg += len([a for a in self.answers if a.score<0])
-        return confidence(pos, neg)
-
     def get_url_values(self, **kwargs):
         """Generates an URL for this question."""
         action = kwargs.get('action')
@@ -293,12 +285,6 @@ class Answer(ForumEntry):
     question = db.relationship(Question,
             backref=db.backref('answers', extension=QuestionAnswersExtension()),
             primaryjoin=(question_id == Question.id))
-
-    @cached_property
-    def popularity(self):
-        good_votes = len([v for v in self.votes if v.score==1])
-        bad_votes = len([v for v in self.votes if v.score==-1])
-        return confidence(good_votes, bad_votes)
 
     def get_url_values(self, **kwargs):
         """Generates an URL for this answer."""

@@ -21,19 +21,6 @@ def flatten_iterator(iter):
             yield item
 
 
-# Algorithm taken from code.reddit.com by CondeNet, Inc.
-def confidence(ups, downs):
-    """Confidence sort, see
-    http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
-    """
-    n = float(ups + downs)
-    if n == 0:
-        return 0
-    z = 1.0 #1.0 = 85%, 1.6 = 95%
-    phat = float(ups) / n
-    return sqrt(phat+z*z/(2*n)-z*((phat*(1-phat)+z*z/(4*n))/n))/(1+z*z/n)
-
-
 class classproperty(object):
     """
     A mix out of the built-in `classmethod` and

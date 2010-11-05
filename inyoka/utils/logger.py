@@ -12,8 +12,6 @@ from logbook import Logger, Processor
 from logbook.base import ERROR, WARNING, INFO, DEBUG
 from logbook.more import ColorizedStderrHandler as ColorizedStderrHandlerBase
 
-from inyoka.context import ctx
-
 
 def make_request_info_injector(request):
     def inject_request_info(record):

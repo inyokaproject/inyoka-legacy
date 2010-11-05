@@ -69,6 +69,7 @@ class CachedStorage(object):
                 Storage(key=key, value=value)
                 db.session.commit()
             except IntegrityError:
+                db.session.rollback()
                 # ignore concurrent insertion
                 return
         else:

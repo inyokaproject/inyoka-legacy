@@ -172,10 +172,10 @@ class PortalController(IController):
                 tag_list=[tag.name for tag in d('tags', [])],
                 date_range=d('date'))
 
-            pagination = SearchPagination(page, total, request.args)
+            pagination = SearchPagination(results, page, total, request.args)
 
             return {
-                'results': results,
+                'results': pagination.query,
                 'corrected': corrected,
                 'form': form,
                 'pagination': pagination,

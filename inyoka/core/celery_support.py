@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from carrot.backends import get_backend_cls
+
 from celery.loaders.base import BaseLoader
 from celery.loaders.default import AttributeDict
 

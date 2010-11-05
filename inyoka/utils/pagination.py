@@ -323,7 +323,7 @@ class GETPagination(Pagination):
 
 
 class SearchPagination(GETPagination):
-    def __init__(self, page, total, args):
+    def __init__(self, query, page, total, args):
         self.page = page
         self.link = None
         self.args = args

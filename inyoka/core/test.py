@@ -21,6 +21,8 @@ from pprint import pformat
 import nose
 from nose.plugins import cover, base, errorclass, testid
 
+from logbook import TestHandler as LogbookTestHandler
+
 from werkzeug import Client, create_environ
 from werkzeug.contrib.testtools import ContentAccessors
 from minimock import mock, Mock, TraceTracker, restore as revert_mocks
@@ -627,15 +629,16 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        # drop all tables
-        database.drop_all_tables(bind=db.get_engine())
+        with LogbookTestHandler(level='ERROR') as handler:
+            # drop all tables
+            database.drop_all_tables(bind=db.get_engine())
 
-        # then we create everything
-        database.init_db(bind=db.get_engine(), is_test=True)
+            # then we create everything
+            database.init_db(bind=db.get_engine(), is_test=True)
 
-        _internal_modules_to_skip = ('inyoka.core.tasks',)
-        self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
-                            or i in _internal_modules_to_skip]
+            _internal_modules_to_skip = ('inyoka.core.tasks',)
+            self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
+                                or i in _internal_modules_to_skip]
 
     def beforeTest(self, test):
         database.init_db(bind=db.get_engine(), is_test=True)

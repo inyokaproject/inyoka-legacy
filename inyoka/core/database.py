@@ -639,19 +639,6 @@ def init_db(**kwargs):
         db.session.commit()
 
 
-def drop_all_data(bind=None):
-    engine = bind or get_engine()
-    inspector = reflection.Inspector.from_engine(engine)
-
-    tables = set()
-    for table_name in inspector.get_table_names():
-        table = db.Table(table_name, metadata, useexisting=True, autoload=True)
-        tables.add(table)
-
-    for table in tables:
-        engine.execute(table.delete())
-
-
 def drop_all_tables(bind=None):
     engine = bind or get_engine()
     if engine.url.drivername == 'sqlite':
@@ -695,7 +682,6 @@ def _make_module():
     db.PGArray = PGArray
 
     db.get_engine = get_engine
-    db.drop_all_data = drop_all_data
     db.drop_all_tables = drop_all_tables
     db.session = session
     db.metadata = metadata

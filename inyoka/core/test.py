@@ -34,6 +34,7 @@ from inyoka.core.database import db
 from inyoka.core.http import Response, Request
 from inyoka.core.resource import IResourceManager
 from inyoka.core.exceptions import ImproperlyConfigured
+from inyoka.utils import flatten_iterator
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import get_base_url_for_controller
 
@@ -61,6 +62,10 @@ tracker = TraceTracker()
 
 
 _iterables = (list, tuple, set, frozenset)
+
+
+def flatten_data(data):
+    return dict((d.keys()[0], list(flatten_iterator(d.values()))) for d in data)
 
 
 class TestResponse(Response, ContentAccessors):
@@ -321,7 +326,7 @@ class FixtureLoader(object):
         item = None
         group = None
         skip_keys = ['nocommit']
-        new_data = {}
+        new_data = []
 
         # psycopg2 raises an InternalError instance that is not inherited from
         # `Exception` and as such requires to be catched too.
@@ -339,7 +344,7 @@ class FixtureLoader(object):
                     continue
                 if isinstance(cls, basestring) and cls not in skip_keys:
                     cls = self.get_cls(cls)
-                new_data[cls.__name__] = self.add_classes(cls, items)
+                new_data.append({cls.__name__: self.add_classes(cls, items)})
             if not 'nocommit' in group:
                 try:
                     db.session.commit()
@@ -416,17 +421,16 @@ class DatabaseTestCase(TestCase):
 
         if self.fixtures:
             loader = FixtureLoader()
-            self.data = loader.from_list(self.fixtures)
+            self.data = flatten_data(loader.from_list(self.fixtures))
 
     def _post_teardown(self):
         super(DatabaseTestCase, self)._post_teardown()
 
-        for group in self.data:
-            try:
-                for cls in self.data[group]:
-                    db.session.delete(cls)
-            except TypeError:
-                db.session.delete(self.data[group])
+        for name, objects in self.data.iteritems():
+            for object in objects:
+                db.session.delete(object)
+
+        db.session.commit()
 
         for factory in self.custom_cleanup_factories:
             for item in factory():
@@ -720,7 +724,7 @@ def with_fixtures(fixtures):
                 # the function defines it's own fixture loader.
                 data = fixtures()
             else:
-                data = FixtureLoader().from_list(fixtures)
+                data = flatten_data(FixtureLoader().from_list(fixtures))
             return func(data, *args, **kwargs)
         return _proxy
     return decorator

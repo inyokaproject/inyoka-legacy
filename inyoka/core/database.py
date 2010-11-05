@@ -95,6 +95,7 @@ from sqlalchemy.orm.attributes import get_attribute, set_attribute
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.ext.declarative import declarative_base, \
     DeclarativeMeta as SADeclarativeMeta
+from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.types import MutableType, TypeDecorator
 from sqlalchemy.engine import reflection
 from sqlalchemy.schema import DropTable, DropConstraint
@@ -190,6 +191,19 @@ def refresh_engine(*args, **kwargs):
         if _engine is not None:
             _engine.dispose()
         _engine = None
+
+
+class AdvancedDropTable(DropTable):
+    def __init__(self, *args, **kwargs):
+        self.cascade = kwargs.pop('cascade', False)
+        DropTable.__init__(self, *args, **kwargs)
+
+
+@compiles(AdvancedDropTable)
+def visit_drop_table_cascade(element, compiler, **kw):
+    return 'DROP TABLE %s%s' % (
+        element.element, u'CASCADE' if element.cascade else u''
+    )
 
 
 def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
@@ -666,7 +680,7 @@ def drop_all_tables(bind=None):
         engine.execute(DropConstraint(fkc))
 
     for table in tables:
-        engine.execute(DropTable(table))
+        engine.execute(AdvancedDropTable(table))
 
 
 def _make_module():

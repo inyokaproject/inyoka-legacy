@@ -24,7 +24,7 @@ from mercurial import ui as hgui
 from mercurial.localrepo import localrepository
 from mercurial.node import short as shorthex
 
-import inyoka.utils.logger # import for side effects, ugly i know...
+from inyoka.utils.logger import logger
 from inyoka.context import LocalProperty
 from inyoka.core.config import ListConfigField
 
@@ -201,6 +201,7 @@ class ApplicationContext(object):
         :param component: A component object.  This must be an
                           an implementation not an interface to get loaded.
         """
+        logger.debug(u'Load component %r' % component)
         try:
             for interface in component._interfaces:
                 self._components.setdefault(interface, set()).add(component)
@@ -223,18 +224,33 @@ class ApplicationContext(object):
                 ret.add(loaded)
         return ret
 
+    def unload_component(self, component):
+        """Unload a component.
+
+        This method does a sanity check if the applied object is a component
+        and fails sliently if the component is not loaded.
+
+        :param component: A component class to unload.
+        :return: Either `True` or `False` specifying whether the component
+                 was unloaded or not.
+        """
+        logger.debug(u'Unload component %r' % component)
+        if getattr(component, '_isinterface', False) and component in self._components:
+            self._components.pop(component)
+            return True
+        return False
+
     def unload_components(self, components):
         """Remove various components from the context.
 
         :param components:  A list of components to unload.
+        :return: Either `True` or `False` specifying whether all components
+                 were unloaded successfully.
         """
+        retvals = set()
         for component in set(components):
-            try:
-                if getattr(component, '_isinterface', False):
-                    self._components.pop(component)
-            except KeyError:
-                # fail silently if component is not loaded
-                continue
+            retvals.add(self.unload_component(component))
+        return not any(retvals)
 
     def load_packages(self, packages, deactivated_components=None):
         """Load all components from a known python package.

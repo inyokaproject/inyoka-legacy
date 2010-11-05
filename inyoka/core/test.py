@@ -408,7 +408,7 @@ class DatabaseTestCase(TestCase):
     """This class provides fixture support."""
 
     data = {}
-    fixtures = {}
+    fixtures = []
     custom_cleanup_factories = []
 
     def _pre_setup(self):

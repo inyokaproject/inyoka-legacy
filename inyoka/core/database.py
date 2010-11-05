@@ -647,6 +647,10 @@ def drop_all_tables(bind=None):
         db.metadata.drop_all(bind=engine)
         return
 
+    # close an already existing session properly.  This closes all transactions
+    # and such stuff.  As DDL statements can produce deadlocks in some databases.
+    db.session.close()
+
     inspector = reflection.Inspector.from_engine(engine)
     metadata = MetaData()
 

@@ -343,6 +343,10 @@ def _bootstrap():
     ctx = ApplicationContext()
     ctx.bind()
 
+    from inyoka.core.api import logger, ctx
+    if ctx.cfg['testing']:
+        logger.level_name = 'ERROR'
+
     # setup components
     ctx.load_packages(ctx.cfg['activated_components'])
 

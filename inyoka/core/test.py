@@ -629,7 +629,7 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        with LogbookTestHandler(level='ERROR') as handler:
+        with LogbookTestHandler() as handler:
             # drop all tables
             database.drop_all_tables(bind=db.get_engine())
 

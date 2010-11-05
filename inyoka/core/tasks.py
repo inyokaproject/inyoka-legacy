@@ -109,8 +109,9 @@ class UpdateSearchTask(Task):
                     # there's already an exising one, replace it
                     index.indexer.replace(doc)
         except errors.XapianDatabaseLockError as exc:
+            # Retry to index that object in one minute
             self.retry([index, provider, doc_id], kwargs,
-                       countdown=10, exc=exc)
+                       countdown=60, exc=exc)
 
 @task
 def search_query(index, q, page=1, filters={}):

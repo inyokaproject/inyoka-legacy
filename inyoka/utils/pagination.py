@@ -336,3 +336,4 @@ class SearchPagination(GETPagination):
             raise NotFound()
 
         offset = (self.page - 1) * self.per_page
+        self.query = query[offset:offset+self.per_page]

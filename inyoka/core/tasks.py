@@ -16,7 +16,7 @@ from xappy import errors
 from inyoka.context import ctx
 from inyoka.core.auth.models import User
 from inyoka.core.resource import IResourceManager
-from inyoka.core.search import create_search_document
+from inyoka.core.search import create_search_document, SearchIndex
 from inyoka.core.subscriptions import SubscriptionAction
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.core.templating import render_template
@@ -26,6 +26,11 @@ from inyoka.core.api import _
 
 # set up the connections to the search index
 INDEXES = IResourceManager.get_search_indexes()
+
+def get_index_implementation(name):
+    if isinstance(name, SearchIndex):
+        return name
+    return INDEXES[name]
 
 
 @task
@@ -81,7 +86,7 @@ class UpdateSearchTask(Task):
 
     def run(self, index, provider, doc_id, **kwargs):
         id = '%s-%s' % (provider, doc_id)
-        index = INDEXES[index]
+        index = get_index_implementation(index)
 
         try:
             # get the document data from the database
@@ -132,8 +137,8 @@ def search_query(index, q, page=1, filters={}):
     """
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
-    searcher = INDEXES[index].searcher
-    qry = searcher.query_parse(q, allow=INDEXES[index].direct_search_allowed)
+    searcher = get_index_implementation(index).searcher
+    qry = searcher.query_parse(q, allow=get_index_implementation(index).direct_search_allowed)
 
     for key, val in filters.iteritems():
         # ignore senseless filters
@@ -161,7 +166,7 @@ def spell_correct(index, q):
     """
     Uses the search index `index` to return a spelling-corrected version of `q`.
     """
-    return INDEXES[index].searcher.spell_correct(q)
+    return get_index_implementation(index).searcher.spell_correct(q)
 
 
 @task
@@ -169,7 +174,7 @@ def find_similar_docs(index, doc):
     """
     Find documents imilar to `doc` in the search index `index`.
     """
-    searcher = INDEXES[index].searcher
+    searcher = get_index_implementation(index).searcher
     results = searcher.search(searcher.query_similar(doc), 0, 10)
     # sometimes xapian returns the document itself; ignore this
     return [result.id.split('-', 1) for result in results if result.id != doc]

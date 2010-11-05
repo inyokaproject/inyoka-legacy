@@ -9,6 +9,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.core.test import *
+from inyoka.core.test import flatten_data
 from inyoka.core.auth.models import User, UserProfile, Group
 
 
@@ -24,7 +25,7 @@ def test_fixture_loader_string_model_references():
     eq_(User.query.filter_by(username=u'ente').count(), 0)
 
     # load the user into database
-    new_data = FixtureLoader().from_list(data)
+    new_data = flatten_data(FixtureLoader().from_list(data))
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
     assert_true(user is new_data['User'][0])
@@ -41,7 +42,7 @@ def test_fixture_loader_class_model_references():
     }]}]
 
     eq_(User.query.filter_by(username=u'ente').count(), 0)
-    new_data = FixtureLoader().from_list(data)
+    new_data = flatten_data(FixtureLoader().from_list(data))
     user = User.query.filter_by(username=u'ente').first()
     assert_true(user)
     assert_true(user is new_data['User'][0])

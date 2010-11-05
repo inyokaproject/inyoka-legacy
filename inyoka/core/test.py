@@ -632,6 +632,9 @@ class InyokaPlugin(cover.Coverage):
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
                             or i in _internal_modules_to_skip]
 
+    def beforeTest(self, test):
+        database.init_db(bind=db.get_engine(), is_test=True)
+
     def finalize(self, result):
         """Finally drop all database tables."""
 

@@ -628,12 +628,13 @@ def init_db(**kwargs):
         # some essential database things
         from inyoka.core.auth.models import User, UserProfile
         anon_name = ctx.cfg['anonymous_name']
-        anon = User(username=anon_name, email=u'', password=u'')
-        UserProfile(user=anon)
+        if not User.query.filter_by(username=anon_name).first():
+            anon = User(username=anon_name, email=u'', password=u'')
+            UserProfile(user=anon)
 
-        if is_test:
-            admin = User(username=u'admin', email=u'admin@example.com',
-                         password=u'default')
+        admin_credentials = {'username': u'admin', 'email': u'admin@example.com'}
+        if is_test and not User.query.filter_by(**admin_credentials).first():
+            admin = User(password=u'default', **admin_credentials)
             UserProfile(user=admin)
 
         db.session.commit()

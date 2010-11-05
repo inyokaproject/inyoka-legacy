@@ -32,7 +32,7 @@ class SlugGeneratorTestModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(100), nullable=True)
-    slug = db.Column(db.String(100), nullable=False, unique=True)
+    slug = db.Column(db.String(50), nullable=False, unique=True)
     category = db.Column(db.Integer, db.ForeignKey(DatabaseTestCategory.id))
     categories = db.relationship(DatabaseTestCategory, lazy='joined', backref='sluggies')
     count = db.Column(db.Integer, default=0)
@@ -92,14 +92,13 @@ def test_slug_generator():
     eq_(c3.slug, u'cat/drei')
 
     # test that models with max_length are stripped properly
-    name = (u'This is just a test category with awesome features.  '
-            u'But this string is more than 100 chars long and needs to be stripped properly')
+    name = (u'This is just a test category with awesome features. But this string is more than 50 chars long')
     c4 = SlugGeneratorTestModel(name=name)
     db.session.commit()
-    eq_(c4.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-long-a')
+    eq_(c4.slug, u'this-is-just-a-test-category-with-awesome-feat')
     c5 = SlugGeneratorTestModel(name=name)
     db.session.commit()
-    eq_(c5.slug, u'this-is-just-a-test-category-with-awesome-features-but-this-string-is-more-than-100-chars-long-a2')
+    eq_(c5.slug, u'this-is-just-a-test-category-with-awesome-feat2')
 
 
 @refresh_database
@@ -109,7 +108,7 @@ def test_cached_query():
     # setup mock objects
     mock('cache.set', tracker=tracker)
     tracker.clear()
-    if db.driver('sqlite'):
+    if db.driver(('sqlite', 'postgresql')):
         tester = partial(lambda: tracker.check(
             "Called cache.set("
             "    '_test/categories',"
@@ -123,6 +122,7 @@ def test_cached_query():
             "    [DatabaseTestCategory(id=1L, slug=u'category')],"
             "    timeout=0.5)"
         ))
+
     x = DatabaseTestCategory.query.cached('_test/categories', timeout=0.5)
     eq_(x[0].slug, c.slug)
     assert_true(tester())

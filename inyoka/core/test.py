@@ -415,28 +415,29 @@ class DatabaseTestCase(TestCase):
     data = {}
     fixtures = []
     custom_cleanup_factories = []
+    _loaded_fixtures = []
 
     def _pre_setup(self):
         super(DatabaseTestCase, self)._pre_setup()
 
         if self.fixtures:
             loader = FixtureLoader()
-            self.data = flatten_data(loader.from_list(self.fixtures))
+            self._loaded_fixtures = data = loader.from_list(self.fixtures)
+            self.data = flatten_data(data)
 
     def _post_teardown(self):
         super(DatabaseTestCase, self)._post_teardown()
 
-        for name, objects in self.data.iteritems():
-            for object in objects:
-                db.session.delete(object)
-
-        db.session.commit()
-
         for factory in self.custom_cleanup_factories:
             for item in factory():
                 db.session.delete(item)
+                db.session.commit()
 
-        db.session.commit()
+        for group in reversed(self._loaded_fixtures):
+            for name, objects in group.iteritems():
+                for object in objects:
+                    db.session.delete(object)
+                    db.session.commit()
 
         # revert all mock objects to get clear passage on the next test
         revert_mocks()

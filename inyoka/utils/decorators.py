@@ -45,6 +45,7 @@ def abstract(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
+        """Raises `NotImplementedError` if the abstract function was not defined."""
         raise NotImplementedError('Missing required %s() method.' % func.__name__)
 
     return wrapper

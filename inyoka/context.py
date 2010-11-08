@@ -46,14 +46,12 @@ class LocalProperty(object):
     """Class/Instance property that returns something from the local stack.
 
     Note that if some value is not present in the current thread local
-    it does *not* raise an AttributeError but returns `None`.
+    it does *not* raise an `RuntimeError` but returns `None`.
     """
 
     def __init__(self, name):
         self.__name__ = name
 
-    #TODO: evaluate if we need that at all, or at least if we want to
-    #      be able to not raise a RuntimeError.
     def __get__(self, obj, type=None):
         try:
             object = _lookup_object(self.__name__)

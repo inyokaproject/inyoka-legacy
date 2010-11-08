@@ -15,6 +15,7 @@ import socket
 from os.path import realpath, dirname, join, pardir
 from inspect import getmembers, isclass
 from operator import methodcaller
+from itertools import imap
 
 from werkzeug import find_modules, import_string, cached_property
 
@@ -76,7 +77,7 @@ class InterfaceMeta(type):
             obj._isinterface = False
             # collect all classes in the interface tree of every
             # base class for that component.
-            mro = sum(map(methodcaller('mro'), bases), [])
+            mro = sum(imap(methodcaller('mro'), bases), [])
             # bind all classes that implement the interface protocol.
             obj._interfaces = set(c for c in mro if '_isinterface' in dir(c))
 
@@ -169,18 +170,23 @@ class ApplicationContext(object):
 
     @cached_property
     def dispatcher(self):
+        """A cached property forwarding to a dispatcher instance.
+
+        :return: a new :class:`~inyoka.dispatcher.RequestDispatcher` instance
+        """
         from inyoka.dispatcher import make_dispatcher
         return make_dispatcher(self)
 
     #: The current request in the thread-local
     current_request = LocalProperty('request')
 
-    def component_is_activated(self, component, deactivated_packages=[]):
+    def component_is_activated(self, component, deactivated_packages=None):
         """Checks whether a component should be added to the registry or not.
 
         :param component: The component to check.
         :param deactivated_packages: List of packages not to load.
         """
+        deactivated_packages = deactivated_packages or []
         component_path = component.__module__ + '.' + component.__name__
         for path in deactivated_packages:
             if path[-1] == '*':
@@ -235,7 +241,8 @@ class ApplicationContext(object):
                  was unloaded or not.
         """
         logger.debug(u'Unload component %r' % component)
-        if getattr(component, '_isinterface', False) and component in self._components:
+        isinterface = getattr(component, '_isinterface', False)
+        if isinterface and component in self._components:
             self._components.pop(component)
             return True
         return False
@@ -342,7 +349,7 @@ def _bootstrap():
     ctx = ApplicationContext()
     ctx.bind()
 
-    from inyoka.core.api import logger, ctx
+    import inyoka.core.api
     if ctx.cfg['testing']:
         logger.level_name = 'ERROR'
 
@@ -350,7 +357,9 @@ def _bootstrap():
     ctx.load_packages(ctx.cfg['activated_components'])
 
     # makes INYOKA_REVISION visible in the extra dict of every log record
-    Processor(lambda x: x.extra.update(INYOKA_REVISION=INYOKA_REVISION)).push_application()
+    Processor(lambda x:
+        x.extra.update(INYOKA_REVISION=INYOKA_REVISION)
+    ).push_application()
 
 
 _bootstrap()

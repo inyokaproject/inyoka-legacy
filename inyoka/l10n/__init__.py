@@ -111,14 +111,19 @@ def to_datetime(obj):
 _timezone_aware = ('format_datetime', 'format_time')
 
 
-def get_dummy(func):
+def get_wrapper(func):
+    """Return a wrapper around a Babel function to hook in
+    our timezone and locale system.
+
+    :param func: A function from babel.dates
+    """
     #: avoid failing doctest from the original docstring
     if func.func_name in _timezone_aware:
-        w = wraps(func, ('__module__', '__name__'))
+        wrapper = wraps(func, ('__module__', '__name__'))
     else:
-        w = wraps(func, ('__module__', '__name__', '__doc__'))
+        wrapper = wraps(func, ('__module__', '__name__', '__doc__'))
 
-    @w
+    @wrapper
     def _inner(*args, **kwargs):
         if 'locale' not in kwargs or kwargs['locale'] is dates.LC_TIME:
             kwargs['locale'] = get_locale()
@@ -139,7 +144,7 @@ dict_ = globals()
 _additional_all = ['get_month_names', 'get_day_names', 'get_era_names',
     'get_period_names', 'get_quarter_names']
 for func in dates.__all__ + _additional_all:
-    dict_[func] = get_dummy(getattr(dates, func))
+    dict_[func] = get_wrapper(getattr(dates, func))
 
 
 def format_day_short(date=None):
@@ -293,6 +298,7 @@ def parse_timestamp(value):
 
 
 def parse_timeonly(value):
+    """Parse a timestamp string"""
     match = timeonly_regexp.match(value)
     if match is None:
         raise ValueError('Unknown Time format, %s try HH:MM:SS.dddddd' % value)

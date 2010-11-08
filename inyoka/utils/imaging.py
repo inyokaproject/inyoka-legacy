@@ -73,6 +73,9 @@ class BaseImage(object):
     :param filename: Image filename
     """
 
+    def __init__(self, filename):
+        pass
+
     @classmethod
     def init(cls):
         """
@@ -139,6 +142,7 @@ class PilImage(BaseImage):
     """
 
     def __init__(self, filename):
+        BaseImage.__init__(self, filename)
         self.image = PilBackend.open(filename)
 
     @classmethod
@@ -161,6 +165,7 @@ class PyGameImage(BaseImage):
     """
 
     def __init__(self, filename):
+        BaseImage.__init__(self, filename)
         self.image = pygame.image.load(filename)
 
     @classmethod
@@ -183,6 +188,7 @@ class PGMagickImage(BaseImage):
     """
 
     def __init__(self, filename):
+        BaseImage.__init__(self, filename)
         self.image = pgmagick.Image(filename)
 
     @classmethod

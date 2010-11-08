@@ -209,6 +209,10 @@ BACKENDS = OrderedDict([
 
 
 def get_imaging_backend(name=None):
+    """Try to load a proper imaging backend.
+
+    :param name: Force to use a specific backend.
+    """
     if name:
         try:
             return BACKENDS[name]

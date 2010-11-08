@@ -19,6 +19,11 @@ from werkzeug import LocalStack, LocalProxy, Local, LocalManager
 
 
 def _lookup_object(name):
+    """Lookup an object on the request stack.
+
+    Returns either the object or raises an `RuntimeError` if we are
+    not in an request context.
+    """
     top = _request_ctx_stack.top
     if top is None:
         raise RuntimeError('working outside of request context')

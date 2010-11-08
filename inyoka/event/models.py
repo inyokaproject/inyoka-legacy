@@ -22,16 +22,6 @@ event_tag = db.Table('event_event_tag', db.metadata,
     db.Column('tag_id', db.Integer, db.ForeignKey(Tag.id))
 )
 
-class EventQuestionExtension(db.AttributeExtension):
-
-    def append(self, state, answer, initiator):
-        question = state.obj()
-        db.atomic_add(question, 'answer_count', 1, primary_key_field='id')
-        return answer
-
-    def remove(self, state, answer, initiator):
-        question = state.obj()
-        db.atomic_add(question, 'answer_count', -1, primary_key_field='id')
 
 class EventQuery(db.Query):
 

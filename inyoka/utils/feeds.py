@@ -38,7 +38,7 @@ def atom_feed(cache_key=None, endpoint=None, cache_timeout=600):
 
         # set the endpoint if not already done – this can save the additional
         # @view decorator.
-        endpoint = getattr(original, 'endpoint', original.__name__)
+        endpoint = endpoint or getattr(original, 'endpoint', original.__name__)
         func.endpoint = endpoint
         return func
 

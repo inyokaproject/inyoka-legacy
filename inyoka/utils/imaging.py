@@ -73,9 +73,6 @@ class BaseImage(object):
     :param filename: Image filename
     """
 
-    def __init__(self, filename):
-        raise NotImplementedError
-
     @classmethod
     def init(cls):
         """

@@ -13,6 +13,7 @@ from os import listdir
 from os.path import splitext
 from time import time
 from hashlib import sha1
+from markupsafe import escape
 from inyoka.core.api import ctx
 
 
@@ -24,8 +25,7 @@ def find_unused_filename(folder, filename):
    :param filename: The file's name.
     """
     max_id = 1
-    base, ext = splitext(filename)
-    # XXX: Escape base
+    base, ext = splitext(escape(filename))
     r = re.compile('%s(\d+)%s' % (base, ext))
     for f in listdir(folder):
         match = r.match(f)

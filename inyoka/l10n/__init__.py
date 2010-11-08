@@ -260,7 +260,8 @@ def parse_timestamp(value):
     """
     match = timestamp_regexp.match(value)
     if match is None:
-        raise ValueError('Unknown DateTime format, %s try %%Y-%%m-%%d %%h:%%m:%%s.d' % value)
+        raise ValueError(u'Unknown DateTime format, '
+                         u'%s try %%Y-%%m-%%d %%h:%%m:%%s.d' % value)
 
     values = match.groupdict()
     year = int(values['year'])

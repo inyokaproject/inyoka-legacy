@@ -17,7 +17,8 @@ from datetime import timedelta, datetime
 
 from werkzeug import redirect, cached_property
 
-from inyoka.context import ctx, local_manager, _request_ctx_stack, _lookup_object
+from inyoka.context import ctx, local_manager, _request_ctx_stack, \
+    _lookup_object
 from inyoka.core.api import db, IController, Request, Response, \
     IMiddleware, IServiceProvider
 from inyoka.core.exceptions import HTTPException, NotFound
@@ -31,6 +32,9 @@ class _RequestContext(object):
     created at the beginning of the request and pushed to the
     `_request_ctx_stack` and removed at the end of it.  It will create the
     URL adapter and request object for the WSGI environment provided.
+
+    :param ctx: The current `inyoka.ApplicationContext` object.
+    :param environ: the WSGI environment dictionary.
     """
 
     def __init__(self, ctx, environ):
@@ -72,6 +76,8 @@ class _RequestContext(object):
 class RequestDispatcher(object):
     """The main dispatcher that handles all the dispatching
     and routing stuff.
+
+    :param ctx: The current `inyoka.ApplicationContext` object.
     """
 
     #: Default class for requests.
@@ -107,7 +113,7 @@ class RequestDispatcher(object):
         """
         domain = self.ctx.cfg['base_domain_name']
         try:
-            env = environ or ctx.current_request.environ
+            env = environ or self.ctx.current_request.environ
             adapter = self.url_map.bind_to_environ(env, server_name=domain)
         except AttributeError:
             adapter = self.url_map.bind(domain)
@@ -145,7 +151,7 @@ class RequestDispatcher(object):
             # we cannot use make_full_domain() here because the url adapter
             # is used there too.  So we raise a new `ValueError` here too.
             # Thats why we do it the manual way
-            return redirect('http://%s/' % ctx.cfg['base_domain_name'])
+            return redirect('http://%s/' % self.ctx.cfg['base_domain_name'])
 
         for middleware in IMiddleware.iter_middlewares():
             response = middleware.process_request(request)
@@ -168,7 +174,7 @@ class RequestDispatcher(object):
                 raise NotFound()
 
         except NotFound as err:
-            if ctx.cfg['debug']:
+            if self.ctx.cfg['debug']:
                 return notfound(request, url_adapter)
             response = err.get_response(request.environ)
 
@@ -228,11 +234,11 @@ class RequestDispatcher(object):
 
             return response(environ, start_response)
 
-    def make_response(self, request, rv):
+    def make_response(self, request, rev):
         """Converts the return value from a handler to a real response
         object that is an instance of :attr:`response_class`.
 
-        The following types are allowd for `rv`:
+        The following types are allowd for `rev`:
 
         ======================= ===========================================
         :attr:`response_class`  the object is returned unchanged
@@ -250,24 +256,24 @@ class RequestDispatcher(object):
 
         :param request:
             A :class:`Request` instance.
-        :param rv:
+        :param rev:
             The return value from the handler.
         :return:
             A :class:`Response` instance.
         """
-        if isinstance(rv, self.response_class):
-            return rv
+        if isinstance(rev, self.response_class):
+            return rev
 
-        if isinstance(rv, basestring):
-            return self.response_class(rv)
+        if isinstance(rev, basestring):
+            return self.response_class(rev)
 
-        if isinstance(rv, tuple):
-            return self.response_class(*rv)
+        if isinstance(rev, tuple):
+            return self.response_class(*rev)
 
-        if rv is None:
+        if rev is None:
             raise ValueError('Handler did not return a response.')
 
-        return self.response_class.force_type(rv, request.environ)
+        return self.response_class.force_type(rev, request.environ)
 
     def request_context(self, environ):
         """Creates a request context from the given environment and binds

@@ -123,11 +123,11 @@ class TokenStream(object):
         return {'items': list(self), 'current': current,
                 'pushed': pushed}
 
-    def __setstate__(self, d):
-        self._next = iter(d['items']).next
-        self._pushed = d['pushed']
+    def __setstate__(self, state):
+        self._next = iter(state['items']).next
+        self._pushed = state['pushed']
         self.current = Token('initial', '')
-        while self.current != d['current']:
+        while self.current != state['current']:
             self.next()
 
     @property
@@ -160,9 +160,9 @@ class TokenStream(object):
         if current:
             self.next()
 
-    def skip(self, n):
+    def skip(self, num):
         """Got n tokens ahead."""
-        for x in xrange(n):
+        for idx in xrange(num):
             self.next()
 
     def next(self):

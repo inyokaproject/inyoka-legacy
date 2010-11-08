@@ -178,12 +178,12 @@ def _make_date_slug_part(key, places):
     return key, handler
 
 
-def get_search_words(q):
+def get_search_words(query):
     """
     Filter the words of a search query string that aren't xapian statements.
     This is useful for highlighting these words.
     """
-    for word in _search_re.findall(q):
+    for word in _search_re.findall(query):
         word = word.lower()
         # filter out search key words
         if word in ['and', 'or', 'xor', 'not', 'near', 'adj']:

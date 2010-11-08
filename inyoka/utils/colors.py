@@ -115,7 +115,7 @@ def create_color_func(color_key):
         return colorize(color_key, text)
     return derived_func
 
-ns = locals()
+ns, c = locals(), None
 for c in functions_colors:
     ns[c] = create_color_func(c)
 

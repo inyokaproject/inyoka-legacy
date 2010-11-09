@@ -179,8 +179,9 @@ class User(db.Model, SerializableObject):
             return 'portal/profile', {'username': self.username}
 
     def deactivate(self):
-        """
-        Deactivates the user for ever. Use with care!!
+        """Deactivates the user for ever. Use with care!!
+
+        This method does not commit the changes to the database.
         """
         self._status = 3
         self.profile.clear()

@@ -12,52 +12,73 @@ from inyoka.core.test import *
 from inyoka.core.auth.models import User, USER_STATUS_MAP, Group
 
 
-user_fixture = [{User: [{'username': u'me', 'email': u'me@example.com',
+class TestUserModel(DatabaseTestCase):
+
+    fixtures = [{User: [{'username': u'me', 'email': u'me@example.com',
                          'password': u's3cr3t'}]}]
 
-@with_fixtures(user_fixture)
-def test_user(fixtures):
-    me = fixtures['User'][0]
-    db.session.commit()
-    eq_(me._status, 0)
-    eq_(me.status, USER_STATUS_MAP[0])
-    assert_false(me.is_active)
-    me.status = u'normal'
-    eq_(USER_STATUS_MAP[me._status], me.status)
-    assert_true(me.is_active)
-    assert_true(me.profile is not None)
-    assert_true(me is User.query.get(u'me'))
-    assert_true(me is User.query.get(me.id))
-    assert_true(me.check_password(u's3cr3t'))
-    assert_false(me.check_password(u'secret'))
-    # and test if check_password hashing does work with unicode strings
-    assert_true(me.check_password(u's3cr3t'))
-    eq_(me.display_name, u'me')
-    eq_(unicode(me), me.display_name)
-    eq_(me.is_anonymous, False)
+    def test_user_status(self):
+        me = self.data['User'][0]
+        # test the numerical status value
+        self.assertEqual(me._status, 0)
+        # test that we are using the correct name for the status
+        self.assertEqual(me.status, USER_STATUS_MAP[0])
+        self.assertFalse(me.is_active)
+        me.status = u'normal'
+        self.assertEqual(me._status, 1)
+        self.assertEqual(USER_STATUS_MAP[1], me.status)
+        self.assertTrue(me.is_active)
 
-    # check that anonymous is created no matter what happens ;)
-    anon = User.query.get_anonymous()
-    eq_(anon.username, ctx.cfg['anonymous_name'])
+    def test_automatic_user_profile(self):
+        """Every user has an automatically created profile relation"""
+        me = self.data['User'][0]
+        self.assertTrue(me.profile is not None)
 
-    me.deactivate()
-    db.session.commit()
-    assert_false(me.is_active)
-    assert_true(me.profile is not None)
-    eq_(USER_STATUS_MAP[3], me.status)
+    def test_user_query_get(self):
+        """User.query.get can either accept a username or id"""
+        me = self.data['User'][0]
+        self.assertTrue(me is User.query.get(u'me'))
+        self.assertTrue(me is User.query.get(me.id))
 
-group_fixtures = [{Group: [
-    {'&g1': {'name': 'g1'}},
-    {'&g4': {'name': 'g4'}},
-    {'&g2': {'name': 'g2', 'parents': set(['*g1', '*g4'])}},
-    {'&g3': {'name': 'g3', 'parents': set(['*g1', '*g2'])}},
-]}]
+    def test_user_password(self):
+        me = self.data['User'][0]
+        self.assertTrue(me.check_password(u's3cr3t'))
+        self.assertFalse(me.check_password('secr3t'))
+        self.assertFalse(me.check_password(u'„s€©®€™”'))
+
+    def test_user_display_name(self):
+        me = self.data['User'][0]
+        self.assertEqual(me.display_name, u'me')
+        self.assertEqual(unicode(me), me.display_name)
+
+    def test_user_anonymous(self):
+        me = self.data['User'][0]
+        self.assertEqual(me.is_anonymous, False)
+        # check that anonymous is created no matter what happens ;)
+        anon = User.query.get_anonymous()
+        self.assertEqual(anon.username, ctx.cfg['anonymous_name'])
+
+    def test_user_deactivate(self):
+        me = self.data['User'][0]
+        me.deactivate()
+        db.session.commit()
+        self.assertFalse(me.is_active)
+        self.assertTrue(me.profile is not None)
+        self.assertEqual(USER_STATUS_MAP[3], me.status)
 
 
-@with_fixtures(group_fixtures)
-def test_groups(fixtures):
-    """Check that the self-referential many-to-many group relationship works"""
-    g1, g4, g2, g3 = fixtures['Group']
-    eq_(g1.children, set([g2, g3]))
-    eq_(g4.children, set([g2]))
-    eq_(g3.parents, set([g1, g2]))
+
+class TestGroupModel(DatabaseTestCase):
+    fixtures = [{Group: [
+        {'&g1': {'name': 'g1'}},
+        {'&g4': {'name': 'g4'}},
+        {'&g2': {'name': 'g2', 'parents': set(['*g1', '*g4'])}},
+        {'&g3': {'name': 'g3', 'parents': set(['*g1', '*g2'])}},
+    ]}]
+
+    def test_groups(self):
+        """Check that the self-referential many-to-many group relationship works"""
+        g1, g4, g2, g3 = self.data['Group']
+        self.assertEqual(g1.children, set([g2, g3]))
+        self.assertEqual(g4.children, set([g2]))
+        self.assertEqual(g3.parents, set([g1, g2]))

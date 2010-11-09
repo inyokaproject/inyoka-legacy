@@ -23,6 +23,7 @@ from babel.support import Translations as TranslationsBase, LazyProxy
 from blinker import signal
 from inyoka.context import ctx
 from inyoka.core.config import TextConfigField
+from io import open
 
 
 __all__ = ['_', 'gettext', 'ngettext', 'lazy_gettext', 'lazy_ngettext']

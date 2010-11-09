@@ -71,11 +71,8 @@ def main():
     if not path.isdir(output_path):
         makedirs(output_path)
 
-    f = file(path.join(output_path, 'messages.pot'), 'w')
-    try:
-        write_po(f, catalog, width=79)
-    finally:
-        f.close()
+    with open(path.join(output_path, 'messages.pot'), 'w') as fobj:
+        write_po(fobj, catalog, width=79)
 
     print 'All done.'
 

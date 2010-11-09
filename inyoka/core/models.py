@@ -8,6 +8,7 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from __future__ import division
 import re
 import random
 import string
@@ -212,7 +213,7 @@ class Confirm(db.Model):
     @classmethod
     def _make_key(cls):
         return u''.join(random.choice(cls._key_chars) for _
-                        in range(cls._key_length))
+                        in xrange(cls._key_length))
 
     @property
     def url(self):

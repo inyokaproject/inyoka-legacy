@@ -147,7 +147,7 @@ class Pagination(object):
                 yield 'prev', self.make_link(self.page - 1)
 
         was_ellipsis = False
-        for num in range(1, self.pages + 1):
+        for num in xrange(1, self.pages + 1):
             if include(num):
                 if num == self.page:
                     yield num, None

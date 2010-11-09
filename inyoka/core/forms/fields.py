@@ -17,6 +17,7 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectMultipleField, QuerySelectF
 from inyoka.core.api import _
 from inyoka.core.forms import widgets
 from inyoka.core.forms import validators
+from itertools import ifilter
 
 
 # hack in date widget
@@ -91,7 +92,7 @@ class AutocompleteField(QuerySelectMultipleField):
 
     def process_formdata(self, valuelist):
         if valuelist:
-            self._formdata = set(filter(None, [x.strip() for x in valuelist[0].split(',')]))
+            self._formdata = set(ifilter(None, [x.strip() for x in valuelist[0].split(',')]))
 
     def _get_data(self):
         formdata = self._formdata

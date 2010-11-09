@@ -16,6 +16,7 @@ from werkzeug.routing import Rule
 
 from inyoka.context import ctx
 from inyoka.core.middlewares import IMiddleware
+from itertools import imap
 
 
 STATIC_PATH = join(os.environ['INYOKA_MODULE'], ctx.cfg['static_path'])
@@ -41,7 +42,7 @@ class StaticMiddlewareBase(object):
 
     def __init__(self, ctx):
         # Convert paths and ids to utf-8, otherwise werkzeug will break
-        self.exports = dict(map(
+        self.exports = dict(imap(
             lambda x: (x[0].encode('utf-8'), x[1].encode('utf-8')),
             self.exports.items()))
         IMiddleware.__init__(self, ctx)

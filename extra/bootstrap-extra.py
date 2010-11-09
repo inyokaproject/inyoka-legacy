@@ -30,7 +30,7 @@ def pil_install(home_dir):
     f1 = path.join(img_folder, 'setup_new.py')
     f2 = path.join(img_folder, 'setup.py')
 
-    file(f1, 'w').write(file(f2).read().replace('import _tkinter',
+    open(f1, 'w').write(open(f2).read().replace('import _tkinter',
                                                 'raise ImportError()'))
 
     cmd = [path.join(home_dir, 'bin', 'python')]

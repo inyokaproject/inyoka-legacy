@@ -17,6 +17,7 @@ from inyoka.utils.pagination import URLPagination
 from inyoka.event.forms import AddEventForm
 from inyoka.event.models import Event
 from inyoka.forum.models import Question
+from itertools import ifilter
 
 
 def context_modifier(request, context):
@@ -25,7 +26,7 @@ def context_modifier(request, context):
     )
 
 def daterange(start, end):
-    for n in range((end - start).days):
+    for n in xrange((end - start).days):
         yield start + timedelta(n)
 
 def validate_year(year):
@@ -57,7 +58,7 @@ class EventController(IController):
     def index(self, request):
         tags = []
         if request.args.get('tags'):
-            tags = filter(bool, (Tag.query.public().filter_by(name=t).one() \
+            tags = ifilter(bool, (Tag.query.public().filter_by(name=t).one() \
                           for t in request.args.get('tags').split()))
 
         form = AddEventForm(request.form)

@@ -46,11 +46,8 @@ def main():
                 parser.error("unknown locale. %s not found." % filepath)
 
 
-    f = file(path.join(root, 'messages.pot'))
-    try:
-        template = read_po(f)
-    finally:
-        f.close()
+    with open(path.join(root, 'messages.pot')) as fobj:
+        template = read_po(fobj)
 
     po_files = []
     for lang in listdir(root):
@@ -62,14 +59,11 @@ def main():
             if path.exists(filename):
                 print 'Updating %r' % lang,
                 locale = Locale.parse(lang)
-                f = file(filename)
-                try:
+                with open(filename) as fobj:
                     catalog = read_po(f, locale=locale, domain=domain)
-                finally:
-                    f.close()
                 catalog.update(template)
 
-                f = file(filename, 'w')
+                f = open(filename, 'w')
                 try:
                     write_po(f, catalog, ignore_obsolete=True,
                              include_previous=False, width=79)

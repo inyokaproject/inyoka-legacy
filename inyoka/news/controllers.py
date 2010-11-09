@@ -21,6 +21,7 @@ from inyoka.news.subscriptions import ArticleSubscriptionType, \
     CommentSubscriptionType
 from inyoka.utils.feeds import atom_feed, AtomFeed
 from inyoka.utils.pagination import URLPagination, PageURLPagination
+from itertools import izip
 
 
 def context_modifier(request, context):
@@ -78,7 +79,7 @@ class NewsController(IController):
 
         # add the more complex url rule for archive and show post
         tmp = '/archive/'
-        for digits, part in zip((4, 2, 2), ('year', 'month', 'day')):
+        for digits, part in izip((4, 2, 2), ('year', 'month', 'day')):
             tmp += '<int(fixed_digits=%d):%s>/' % (digits, part)
             url_rules.extend([
                 Rule(tmp, defaults={'page': 1}, endpoint='archive'),

@@ -15,6 +15,7 @@ from threading import Lock
 from wtforms.validators import ValidationError
 from markupsafe import soft_unicode
 from blinker import signal
+from io import open
 
 
 DEFAULTS = {}
@@ -131,7 +132,7 @@ class BooleanConfigField(ConfigField):
 
 
 #: header for the config file
-CONFIG_HEADER = '# Generated Configuration file\n'
+CONFIG_HEADER = u'# Generated Configuration file\n'
 
 
 def unquote_value(value):
@@ -211,7 +212,7 @@ class Configuration(object):
         self._load_time = path.getmtime(self.filename)
         self.exists = True
         section = 'inyoka'
-        with file(self.filename) as fobj:
+        with open(self.filename) as fobj:
             for line in fobj:
                 line = line.strip()
                 if not line or line[0] in '#;':
@@ -444,17 +445,14 @@ class ConfigTransaction(object):
             for section in sections:
                 section[1].sort()
 
-            f = file(self.cfg.filename, 'w')
-            f.write(CONFIG_HEADER)
-            try:
+            with open(self.cfg.filename, 'w') as fobj:
+                fobj.write(CONFIG_HEADER)
                 for idx, (section, items) in enumerate(reversed(sections)):
                     if idx:
-                        f.write(u'\n')
-                    f.write(u'[%s]\n' % section)
+                        fobj.write(u'\n')
+                    fobj.write(u'[%s]\n' % section)
                     for key, value in items:
-                        f.write(u'%s = %s\n' % (key, quote_value(value)))
-            finally:
-                f.close()
+                        fobj.write(u'%s = %s\n' % (key, quote_value(value)))
             self.cfg._values.update(self._values)
             self.cfg._converted_values.update(self._converted_values)
             for key in self._remove:

@@ -57,7 +57,7 @@ def main():
             if path.isfile(translations):
                 mo_file = open(translations.replace('.po', '.mo'), 'wb')
                 print 'Compiling %r' % lang,
-                f = file(translations)
+                f = open(translations)
                 try:
                     catalog = read_po(f, locale=lang)
                 finally:

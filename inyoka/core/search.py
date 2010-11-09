@@ -49,6 +49,7 @@ from inyoka.core.api import db, ctx
 from inyoka.core.auth.models import User
 from inyoka.core.config import TextConfigField, IntegerConfigField
 from inyoka.core.resource import IResourceManager
+from itertools import ifilter
 
 
 #: The name of the search database
@@ -235,7 +236,7 @@ def _process_result_ids(index, result_ids):
     results = {}
     for name, provider in IResourceManager.get_search_providers()[index].iteritems():
         # get all ids that belong to this provider
-        ids = [r[1] for r in filter(lambda r: r[0] == name, result_ids)]
+        ids = [r[1] for r in ifilter(lambda r: r[0] == name, result_ids)]
         # if there are no ids don't call the `prepare` method to avoid execution
         # of senseless queries
         if ids:

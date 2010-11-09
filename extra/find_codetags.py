@@ -204,7 +204,7 @@ td { padding: 2px 5px 2px 5px;
           '<td class="tag %%(tag)s">%%(tag)s</td>'
           '<td class="who">%%(who)s</td><td class="what">%%(what)s</td></tr>')
 
-    f = file(output, 'w')
+    f = open(output, 'w')
     table = '\n'.join(TABLE % fname +
                       '\n'.join(TR % (no % 2,) % entry
                                 for no, entry in enumerate(store[fname]))

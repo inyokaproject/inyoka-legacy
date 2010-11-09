@@ -45,7 +45,7 @@ class CircularImportFinder(object):
                 if not filename.endswith('.py'):
                     continue
                 pkg_from = self.get_package_name(path, filename)
-                for line in file(os.path.join(path, filename)):
+                for line in open(os.path.join(path, filename)):
                     match = _import_re.match(line)
                     if not match:
                         continue

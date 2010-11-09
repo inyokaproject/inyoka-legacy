@@ -759,8 +759,8 @@ def future(func):
     def future_decorator(*args, **kw):
         try:
             func(*args, **kw)
-        except Exception as ex:
-            raise ExpectedFailure("Test failed as expected: %s ... " % str(ex))
+        except Exception as exc:
+            raise ExpectedFailure("Test failed as expected: %s ... " % str(exc))
         else:
             raise UnexpectedSuccess("Unexpected success for future test")
     return future_decorator

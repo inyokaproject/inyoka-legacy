@@ -37,7 +37,7 @@ def main():
 
 def create_from_pot(locale, path):
     try:
-        f = file(path)
+        f = open(path)
     except IOError as err:
         parser.error(str(err))
     try:
@@ -53,7 +53,7 @@ def write_catalog(catalog, folder):
     target = join(folder, str(catalog.locale))
     if not isdir(target):
         makedirs(target)
-    f = file(join(target, 'messages.po'), 'w')
+    f = open(join(target, 'messages.po'), 'w')
     try:
         write_po(f, catalog, width=79)
     finally:

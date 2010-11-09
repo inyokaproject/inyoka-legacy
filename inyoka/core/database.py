@@ -107,6 +107,9 @@ from inyoka.utils.debug import find_calling_context
 from inyoka.utils.files import find_unused_filename, obfuscate_filename
 from inyoka.core.config import BooleanConfigField, TextConfigField, \
     IntegerConfigField
+from itertools import imap
+from itertools import ifilter
+from io import open
 
 
 _engine = None
@@ -509,8 +512,8 @@ class SlugGenerator(orm.MapperExtension):
 
         # filter out fields with no value as we cannot join them they are
         # not relevant for slug generation.
-        fields = filter(None, fields)
-        slug = self.separator.join(map(gen_ascii_slug, fields))
+        fields = ifilter(None, fields)
+        slug = self.separator.join(imap(gen_ascii_slug, fields))
         # strip the string if max_length is applied
         slug = slug[:max_length-4] if max_length is not None else slug
 
@@ -560,7 +563,7 @@ class FileObject(FileStorage):
         Open the file as file descriptor.  Don't forget to close this file
         descriptor accordingly.
         """
-        return file(self.path, mode)
+        return open(self.path, mode)
 
     def delete(self):
         if path.exists(self.filename):

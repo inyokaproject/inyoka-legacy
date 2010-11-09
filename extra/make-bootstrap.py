@@ -20,9 +20,8 @@ except ImportError:
 
 
 base_dir = realpath(join(dirname(__file__)))
-extratext = file(join(base_dir, 'bootstrap-extra.py') ,'r')
-EXTRA_TEXT = extratext.read()
-extratext.close()
+with open(join(base_dir, 'bootstrap-extra.py'), 'r') as fobj:
+    EXTRA_TEXT = fobj.read()
 
 if __name__ == '__main__':
     print create_bootstrap_script(EXTRA_TEXT)

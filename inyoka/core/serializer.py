@@ -23,6 +23,7 @@ from markupsafe import escape
 from inyoka.i18n import _
 from inyoka.context import ctx
 from inyoka.core.exceptions import BadRequest
+from itertools import imap
 
 
 XML_NS = 'http://ubuntuusers.de/inyoka/'
@@ -115,7 +116,7 @@ def dump_xml(obj):
                 if not isinstance(obj, (tuple, list, dict)):
                     return u'<item>%s</item>' % _dump(obj)
                 return _dump(obj)
-            return u'<list>%s</list>' % (u''.join(map(_item_dump, obj)))
+            return u'<list>%s</list>' % (u''.join(imap(_item_dump, obj)))
         if isinstance(obj, bool):
             return obj and u'yes' or u'no'
         return escape(unicode(obj))

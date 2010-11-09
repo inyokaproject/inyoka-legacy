@@ -87,7 +87,7 @@ class TestFormUtils(DatabaseTestCase):
         eq_(new.value, u'yea!')
 
 
-class CsrfTester(ViewTestCase):
+class TestFormCsrf(ViewTestCase):
 
     controller = PortalController
 

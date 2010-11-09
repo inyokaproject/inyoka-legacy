@@ -10,15 +10,15 @@
     folder determined by the config value `search.folder` (defaults to
     "search"), but you can force another location if you want.
 
-    By default, the `portal` application creates a basic `SearchIndex` and
+    By default, the `portal` application creates a basic :class:`.SearchIndex` and
     offers a search controller. You can plug your data in there or create a new
-    `SearchIndex` (but then you've also to create a new controller function).
+    :class:`.SearchIndex` (but then you've also to create a new controller function).
 
-    Each `SearchIndex` should have one or more `SearchProvider`s associated with
-    it. Each `SearchProvider` provides access to exactly one `Model`.
+    Each :class:`.SearchIndex` should have one or more :class:`.SearchProvider` associated
+    with it. Each :class:`.SearchProvider` provides access to exactly one :class:`~inyoka.core.database.Model`.
 
-    `SearchIndex`es and `SearchProvider`s have to be registered in the
-    application's ResourceManager::
+    All :class:`.SearchIndex` and :class:`.SearchProvider` classes have to be registered in the
+    application's :class:`~inyoka.core.resource.IResourceManager`::
 
         class MySearchIndex(SearchIndex):
             name = 'foo'

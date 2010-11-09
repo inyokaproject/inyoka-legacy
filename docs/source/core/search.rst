@@ -9,19 +9,23 @@ Interfaces
 ==========
 
 
+.. autoclass:: SearchIndex
+   :members:
+
 .. autoclass:: SearchProvider
    :members:
 
-
-.. autoclass:: SearchMapperExtension
+.. autoclass:: SearchIndexMapperExtension
    :members:
 
 
 Utilities
 =========
 
+.. autofunction:: get_connection
+
 .. autofunction:: query
 
-.. autofunction:: create_search_document
+.. autofunction:: find_similar
 
-.. autofunction:: register_search_fields
+.. autofunction:: create_search_document

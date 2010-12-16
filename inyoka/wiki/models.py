@@ -237,7 +237,7 @@ def _create_text(value):
     return Text(text=value)
 
 
-class Revision(db.Model):
+class Revision(db.Model, TextRendererMixin):
     __tablename__ = 'wiki_revision'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -259,7 +259,6 @@ class Revision(db.Model):
     attachment = db.relationship(Attachment)
 
     raw_text = association_proxy('text', 'text', creator=_create_text)
-    rendered_text = association_proxy('text', 'rendered_text')
 
     def __repr__(self):
         pn = repr(self.page.name) if self.page else None

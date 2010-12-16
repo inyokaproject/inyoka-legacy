@@ -24,7 +24,7 @@ class WikiSearchProvider(SearchProvider):
         return {
             'id': page.id,
             'title': page.name,
-            'text': page.current_revision.text,
+            'text': page.current_revision.raw_text,
             'date': page.current_revision.change_date.date(),
             'author': page.current_revision.change_user.username,
             'link': href(page),

@@ -6,5 +6,5 @@
   {%- if page.is_attachment_page %}
     {{ revision.attachment.html_representation|safe }}
   {%- endif %}
-  {{ revision.get_rendered_text(revision.text)|safe }}
+  {{ revision.get_rendered_text(revision.raw_text)|safe }}
 {%- endblock %}

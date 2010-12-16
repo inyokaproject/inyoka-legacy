@@ -25,16 +25,15 @@ class PasteEntry(db.Model, SerializableObject):
     # serializer properties
     object_type = 'paste.entry'
     public_fields = ('id', 'text', 'title', 'author', 'pub_date',
-                     'hidden')
+                     'language', 'hidden')
 
-       #: Model columns
+    #: Model columns
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
 
     title = db.Column(db.Unicode(50), nullable=True)
-    rendered_text = db.Column(db.Text, nullable=False)
 
-    _language = db.Column('language', db.Unicode(30))
+    language = db.Column(db.Unicode(30))
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     pub_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     hidden = db.Column(db.Boolean, default=False)
@@ -57,14 +56,6 @@ class PasteEntry(db.Model, SerializableObject):
             'edit': 'admin/paste/edit',
         }
         return values[action], {'id': self.id}
-
-    def _set_language(self, language):
-        changed = language != self._language
-        self._language = language
-        if changed and not self._rendered:
-            self._render()
-    language = db.synonym('_language', descriptor=property(
-        attrgetter('_language'), _set_language))
 
     @property
     def display_title(self):

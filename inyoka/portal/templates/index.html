@@ -7,20 +7,6 @@
 
 {% block content %}
   <div id="portal" class="clear">
-    <div class="column">
-      <h2>{% trans %}Latest Content{% endtrans %}</h2>
-      <div class="content">
-      {% if latest_content %}
-        <ul class="itemlist">
-          {% for app, item in latest_content %}
-          <li class="{{ app }}"><a href="{{ href(item) }}">{{ item }}</a></li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <strong>{{ _('There\'s no content yet!') }}</strong>
-      {% endif %}
-      </div>
-    </div>
     {% if tag_cloud %}
       <div class="column tagcloud">
         <h2>{{ _('Tags') }}</h2>

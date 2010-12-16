@@ -15,7 +15,7 @@ from inyoka.core.auth.models import User
 from inyoka.core.markup.parser import RenderContext, parse, render
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.search import SearchIndexMapperExtension
-from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
+from inyoka.portal.api import ITaggableContentProvider
 
 
 article_tag = db.Table('news_article_tag', db.metadata,
@@ -24,29 +24,12 @@ article_tag = db.Table('news_article_tag', db.metadata,
 )
 
 
-class ArticlesContentProvider(ILatestContentProvider, ITaggableContentProvider):
+class ArticlesContentProvider(ITaggableContentProvider):
     type = 'news_articles'
-    cache_key = 'news/latest_articles'
     name = _('Articles')
-
-    def get_latest_content(self):
-        return Article.query.published() \
-            .lightweight(lazy=(Article.comments, Article.author, Article.tags)) \
-            .order_by(Article.updated.desc())
 
     def get_taggable_content(self, tag):
         return tag.articles.order_by('view_count')
-
-
-
-class LatestCommentsContentProvider(ILatestContentProvider):
-    type = 'news_comments'
-    cache_key = 'news/latest_comments'
-
-    def get_latest_content(self):
-        return Comment.query.options(db.eagerload('author')) \
-                      .order_by(Comment.pub_date).lightweight(lazy=(
-                      'author.profile', 'article.tags'))
 
 
 class CommentMapperExtension(db.MapperExtension):

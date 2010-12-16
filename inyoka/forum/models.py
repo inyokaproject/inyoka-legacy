@@ -16,7 +16,7 @@ from inyoka.core.auth.models import User
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.search import SearchIndexMapperExtension
-from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
+from inyoka.portal.api import ITaggableContentProvider
 
 
 question_tag = db.Table('forum_question_tag', db.metadata,
@@ -31,14 +31,9 @@ forum_tag = db.Table('forum_forum_tag', db.metadata,
 )
 
 
-class QuestionsContentProvider(ILatestContentProvider, ITaggableContentProvider):
+class QuestionsContentProvider(ITaggableContentProvider):
     type = 'forum_questions'
-    cache_key = 'forum/latest_questions'
     name = _('Questions')
-
-    def get_latest_content(self):
-        return Question.query.order_by(Question.date_active.desc()) \
-            .options(db.noload('votes'), db.noload('author'))
 
     def get_taggable_content(self, tag):
         return Question.query.order_by(Question.score, Question.view_count) \

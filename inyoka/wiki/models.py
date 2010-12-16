@@ -15,19 +15,8 @@ from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.search import SearchIndexMapperExtension
 from inyoka.core.auth.models import User
 from inyoka.wiki.utils import urlify_page_name
-from inyoka.portal.api import ILatestContentProvider
 from inyoka.utils.highlight import highlight_text
 
-
-
-class WikiLatestContentProvider(ILatestContentProvider):
-
-    type = 'wiki_revisions'
-    cache_key = 'wiki/latest_revisions'
-
-    def get_latest_content(self):
-        return Revision.query.options(db.eagerload('page')) \
-                       .order_by(Revision.change_date.desc())
 
 
 class PageQuery(db.Query):

@@ -24,7 +24,7 @@ from inyoka.utils.sortable import Sortable
 from inyoka.utils.text import get_search_words
 from inyoka.portal.forms import ProfileForm, SearchForm, DeactivateProfileForm,\
     get_change_password_form
-from inyoka.portal.api import ILatestContentProvider, ITaggableContentProvider
+from inyoka.portal.api import ITaggableContentProvider
 
 
 hl = Highlighter(ctx.cfg['language'])
@@ -57,12 +57,10 @@ class PortalController(IController):
     @view
     @templated('portal/index.html', modifier=context_modifier)
     def index(self, request):
-        contents = ILatestContentProvider.get_cached_content(2)
         cloud, more = Tag.query.public().get_cloud()
         return {
             'tag_cloud': cloud,
             'more_tags': more,
-            'latest_content': contents,
         }
 
     @view

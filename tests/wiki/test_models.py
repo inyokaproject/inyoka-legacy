@@ -31,35 +31,6 @@ def test_page_name_conversion_and_get_by_name():
 
 
 @refresh_database
-def test_text_raw_and_rendered():
-    text1 = u'This\nis my first wiki page.'
-    text1r = u'<p>This\nis my first wiki page.</p>'
-    text2 = u'Now\nthere is something else.'
-    text2r = u'<p>Now\nthere is something else.</p>'
-    u = User.query.first()
-
-    r = Page.create(u'foo', change_user=u, text=u'a').current_revision
-    r.raw_text = text1
-    eq_(r.raw_text, text1)
-    eq_(r.rendered_text, text1r)
-    r.raw_text = text2
-    eq_(r.raw_text, text2)
-    eq_(r.rendered_text, text2r)
-    db.session.commit()
-
-    r_ = Revision.query.get(r.id)
-    eq_(r_.raw_text, text2)
-    eq_(r_.rendered_text, text2r)
-
-    # assert that we don't call the rerender method when not required
-    mock(u'Text._render', tracker=tracker)
-    tracker.clear()
-    r_.raw_text = text2
-    assert_false(tracker.check(u'Called Text._render()'))
-
-
-
-@refresh_database
 def test_page_create_and_edit():
     u = User.query.first()
     u2 = User(username=u'user 2')

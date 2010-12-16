@@ -12,7 +12,7 @@
 
 {%- block paste_content %}
   <div class="highlighted">
-    {{ paste.rendered_text|safe }}
+    {{ paste.highlighted_text|safe }}
   </div>
   <p><small>{{ _('Created on %(date)s.', date=paste.pub_date|datetimeformat) }}
   {%- if paste.parent %}

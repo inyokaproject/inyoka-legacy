@@ -12,7 +12,6 @@ from datetime import datetime
 from operator import attrgetter
 from functools import partial
 from inyoka.core.api import _, db
-from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.auth.models import User
 from inyoka.core.serializer import SerializableObject
 from inyoka.paste.utils import generate_highlighted_udiff
@@ -20,7 +19,7 @@ from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 from inyoka.utils.highlight import highlight_text
 
 
-class PasteEntry(db.Model, SerializableObject, TextRendererMixin):
+class PasteEntry(db.Model, SerializableObject):
     __tablename__ = 'paste_entry'
 
     # serializer properties
@@ -28,12 +27,9 @@ class PasteEntry(db.Model, SerializableObject, TextRendererMixin):
     public_fields = ('id', 'text', 'title', 'author', 'pub_date',
                      'hidden')
 
-    #: The renderer that renders the text
-    text_renderer = lambda s, v: highlight_text(v, s._language)
-
-    #: Model columns
+       #: Model columns
     id = db.Column(db.Integer, primary_key=True)
-    _text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.Text, nullable=False)
 
     title = db.Column(db.Unicode(50), nullable=True)
     rendered_text = db.Column(db.Text, nullable=False)
@@ -75,6 +71,10 @@ class PasteEntry(db.Model, SerializableObject, TextRendererMixin):
         if self.title:
             return self.title
         return _(u'Paste #%d') % self.id
+
+    @property
+    def highlighted_text(self):
+        return highlight_text(self.text, self.language)
 
     @property
     def has_tree(self):

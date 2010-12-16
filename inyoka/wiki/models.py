@@ -192,8 +192,7 @@ class Text(db.Model, TextRendererMixin):
     __tablename__ = 'wiki_text'
 
     id = db.Column(db.Integer, primary_key=True)
-    _text = db.Column('text', db.Text, nullable=False)
-    rendered_text = db.Column('rendered_text', db.Text)
+    text = db.Column('text', db.Text, nullable=False)
 
     def __repr__(self):
         return '<Text #%r>' % self.id

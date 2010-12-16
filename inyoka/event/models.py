@@ -99,7 +99,7 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Unicode(100), nullable=False)
     slug = db.Column(db.Unicode(100), unique=True, index=True)
-    _text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.ForeignKey(User.id), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)

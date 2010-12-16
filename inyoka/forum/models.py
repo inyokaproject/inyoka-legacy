@@ -171,8 +171,7 @@ class ForumEntry(db.Model, SerializableObject, TextRendererMixin):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_active = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     score = db.Column(db.Integer, nullable=False, default=0)
-    _text = db.Column('text', db.Text, nullable=False)
-    rendered_text = db.Column(db.Text, nullable=False)
+    text = db.Column(db.Text, nullable=False)
     view_count = db.Column(db.Integer, default=0, nullable=False)
 
     author = db.relationship(User, lazy='joined', innerjoin=True)

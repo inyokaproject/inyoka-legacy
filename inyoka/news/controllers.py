@@ -257,9 +257,11 @@ class NewsController(IController):
             icon=href('static', file='img/favicon.ico'))
 
         for article in query.all():
+            value = u'%s\n%s' % (
+                article.get_rendered_text(article.intro, request, 'html'),
+                article.get_rendered_text(article.text, request, 'html'))
             feed.add(article.title,
-                u'%s\n%s' % (article.rendered_intro, article.rendered_text),
-                content_type='html', url=href(article, _external=True),
+                value, content_type='html', url=href(article, _external=True),
                 author={
                     'name': article.author.display_name,
                     'uri': href(article.author.profile)

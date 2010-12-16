@@ -45,7 +45,7 @@
 
     <div class="summary">
 
-      {{ question.rendered_text|safe }}
+      {{ question.get_rendered_text(question.text)|safe }}
       {% if question.author.profile.signature_html %}
         <div class="signature">{{ question.author.profile.signature_html|safe }}</div>
       {% endif %}
@@ -107,7 +107,7 @@
           {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
 	        {{ user_link(answer.author) }}
         </div>
-        {{ answer.rendered_text|safe }}
+        {{ answer.get_rendered_text(answer.text)|safe }}
         {% if answer.author.profile.signature_html %}
           <div class="signature">{{ answer.author.profile.signature_html|safe }}</div>
         {% endif %}

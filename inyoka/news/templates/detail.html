@@ -32,8 +32,8 @@
       <span class="visits">{{ ngettext('%(num)d visit', '%(num)d visits', article.view_count) }}</span>
       <span class="admin"><a href="{{ href(article, action='edit') }}" class="adminlink">{{ _('edit') }}</a></span>
     </p>
-    <div class="intro">{{ article.rendered_intro|safe }}</div>
-    <div class="text">{{ article.rendered_text|safe }}</div>
+    <div class="intro">{{ article.get_rendered_text(article.intro)|safe }}</div>
+    <div class="text">{{ article.get_rendered_text(article.text)|safe }}</div>
     {%- if article.comments_enabled %}
       <span class="description">
         {%- if article.comment_count %}
@@ -64,7 +64,7 @@
             </span>
 
             <div class="text">
-              {{ comment.rendered_text|safe }}
+              {{ comment.get_rendered_text(comment.text)|safe }}
             </div>
           </li>
         {%- endfor %}

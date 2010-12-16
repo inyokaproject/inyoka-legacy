@@ -13,6 +13,7 @@ from werkzeug import cached_property
 from inyoka.core.api import _, ctx, db, cache
 from inyoka.core.auth.models import User
 from inyoka.core.markup.parser import RenderContext, parse, render
+from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.search import SearchIndexMapperExtension
 from inyoka.portal.api import ITaggableContentProvider
@@ -32,16 +33,6 @@ class ArticlesContentProvider(ITaggableContentProvider):
         return tag.articles.order_by('view_count')
 
 
-class CommentMapperExtension(db.MapperExtension):
-    def before_insert(self, mapper, connection, instance):
-        self.before_update(mapper, connection, instance)
-
-    def before_update(self, mapper, connection, instance):
-        context = RenderContext(ctx.current_request)
-        node = parse(instance.text)
-        instance.rendered_text = node.render(context, 'html')
-
-
 class CommentCounterExtension(db.AttributeExtension):
 
     def append(self, state, value, initiator):
@@ -54,16 +45,13 @@ class CommentCounterExtension(db.AttributeExtension):
         instance.comment_count -= 1
 
 
-class Comment(db.Model):
+class Comment(db.Model, TextRendererMixin):
     __tablename__ = 'news_comment'
-    __mapper_args__ = {'extension': CommentMapperExtension()}
 
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
     pub_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     deleted = db.Column(db.Boolean, nullable=False, default=False)
-    #TODO: do we really need the rendered text in the database?
-    rendered_text = db.Column(db.Text, nullable=False)
 
     author_id = db.Column(db.Integer, db.ForeignKey(User.id))
     author = db.relationship(User, backref=db.backref('comments', lazy='dynamic'))
@@ -134,7 +122,7 @@ class ArticleQuery(db.Query):
         ))
 
 
-class Article(db.Model):
+class Article(db.Model, TextRendererMixin):
     __tablename__ = 'news_article'
     __mapper_args__ = {
         'extension': (db.SlugGenerator('slug', 'title'),
@@ -166,28 +154,6 @@ class Article(db.Model):
         lazy='dynamic',
         cascade='all, delete, delete-orphan',
         extension=CommentCounterExtension())
-
-    def _render(self, text, key):
-        """Render a text that belongs to this Article to HTML.
-
-        We do not use :cls:`~inyoka.core.mixins.TextRendererMixin` because
-        we use a more caching aware implementation and need to implement
-        two fields to render.
-        """
-        context = RenderContext(ctx.current_request)
-        instructions = cache.get(key)
-        if instructions is None:
-            instructions = parse(text).compile('html')
-            cache.set(key, instructions)
-        return render(instructions, context)
-
-    @cached_property
-    def rendered_text(self):
-        return self._render(self.text, 'news/article_text/%s' % self.id)
-
-    @cached_property
-    def rendered_intro(self):
-        return self._render(self.intro, 'news/article_intro/%s' % self.id)
 
     @property
     def hidden(self):

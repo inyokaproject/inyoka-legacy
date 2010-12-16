@@ -22,7 +22,7 @@ class AnswerSearchProvider(SearchProvider):
     def _prepare(self, answer):
         return {
             'id': answer.id,
-            'text': strip_tags(answer.rendered_text),
+            'text': answer.text,
             'date': answer.date_created.date(),
             'title': answer.question.title,
             'author': answer.author.username,
@@ -48,7 +48,7 @@ class QuestionSearchProvider(SearchProvider):
     def _prepare(self, question):
         return {
             'id': question.id,
-            'text': strip_tags(question.rendered_text),
+            'text': question.text,
             'date': question.date_created.date(),
             'author': question.author.username,
             'title': question.title,

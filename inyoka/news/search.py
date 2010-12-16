@@ -23,7 +23,7 @@ class NewsSearchProvider(SearchProvider):
         return {
             'id': article.id,
             'title': article.title,
-            'text': strip_tags(article.rendered_intro + article.rendered_text),
+            'text': article.intro + article.text,
             'date': article.pub_date.date(),
             'author': article.author.username,
             'link': href(article),

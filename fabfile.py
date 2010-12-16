@@ -31,17 +31,10 @@ _j = lambda *a: _path.join(_base_dir, *a)
 def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
     cfg = os.environ.setdefault('INYOKA_CONFIG', cfg)
     from inyoka.core.api import ctx
-    from flickzeug import debug as debugger, leakfinder, profiling
+    from werkzeug.debug import DebuggedApplication
     dispatcher = ctx.dispatcher
     if debug:
-        dispatcher = debugger.DebuggedApplication(dispatcher, evalex=True,
-            show_hidden_frames=True)
-    if profile:
-        if not os.path.exists('profiles'):
-            os.mkdir('profiles')
-        dispatcher = profiling.Profiler(dispatcher, 'profiles')
-    if leaky:
-        dispatcher = leakfinder.LeakFinder(dispatcher, async_ajax=True)
+        dispatcher = DebuggedApplication(dispatcher, evalex=True)
     return dispatcher
 
 

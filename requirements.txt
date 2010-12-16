@@ -32,5 +32,3 @@ translitcodec==0.1
 virtualenv==1.5.1
 wsgiref==0.1.2
 xappy==0.5
-# We use the flickzeug trunk as there's no official release yet
--e hg+http://dev.pocoo.org/hg/flickzeug-main#egg=flickzeug

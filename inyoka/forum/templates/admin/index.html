@@ -1,12 +1,12 @@
-{% extends 'admin/base.html' %}
-{%- set trace = [[_('Forum'), href('admin/forum/index')]] %}
+{% extends 'forum/base.html' %}
+{%- set trace = [[_('Forum'), href('forum/index')]] %}
 
-{% block admin_content %}
+{% block content %}
   <ul>
       {%- for forum in forums %}
-        <li><a href="{{ href('admin/forum/forum', id=forum.id) }}">{{ forum.name }}</a></li>
+        <li><a href="{{ href('forum/forum', forum=forum.slug) }}">{{ forum.name }}</a></li>
       {%- endfor %}
   </ul>
-  <a href="{{ href('admin/forum/forum') }}">{{ _('Create new Forum') }}</a>
+  <a href="{{ href('forum/edit_forum') }}">{{ _('Create new Forum') }}</a>
 
 {% endblock %}

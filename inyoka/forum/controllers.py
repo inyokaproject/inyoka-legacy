@@ -10,9 +10,10 @@
 """
 from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
          ForumEntry
-from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm
+from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm, EditForumForm
 from inyoka.core.api import IController, Rule, view, templated, db, \
          redirect, redirect_to, href, login_required
+from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.utils.pagination import URLPagination
 from itertools import ifilter
 
@@ -53,6 +54,8 @@ class ForumController(IController):
         Rule('/forum/<string:forum>/' \
              '<any(latest, active, unanswered, votes):sort>/<int:page>/',
              endpoint='questions'),
+        Rule('/forum/<string:forum>/add/', endpoint='edit_forum'),
+        Rule('/forum/<string:forum>/edit/', endpoint='edit_forum'),
 
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<int:page>/', endpoint='question'),
@@ -194,3 +197,36 @@ class ForumController(IController):
                 setattr(v, key, a)
         db.session.commit()
         return redirect_to(entry)
+
+    @view
+    @login_required
+    @templated('forum/admin/forum.html')
+    def edit_forum(self, request, forum=None):
+        if forum:
+            forum = Forum.query.filter_by(slug=forum).first()
+            initial = model_to_dict(forum)
+        else:
+            forum = None
+            initial = {}
+
+        form = EditForumForm(request.form, **initial)
+
+        if form.validate_on_submit():
+            if forum:
+                forum = update_model(forum, form,
+                    ('name', 'slug', 'parent', 'description', 'tags'))
+            else:
+                forum = Forum(
+                    name=form.name.data,
+                    slug=form.slug.data,
+                    parent=form.parent.data,
+                    description=form.description.data,
+                    tags=form.tags.data
+                )
+            db.session.commit()
+            return redirect_to('forum/index')
+
+        return {
+            'forum': forum,
+            'form': form,
+        }

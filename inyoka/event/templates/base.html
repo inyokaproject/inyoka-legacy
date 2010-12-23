@@ -4,19 +4,20 @@
 {% set sidebar = false %}
 
 {% block content %}
-  <h1>{% block event_header %}{{ _('Event') }}{% endblock %}</h1>
   <ul class="pagetabs">
     {% if tab is undefined %}
       {% set tab = 'new' %}
     {% endif %}
     <li{% if tab == 'new' %} class="selected"{% endif %}>
-      <a href="{{ href('event/index') }}">{{ _('New') }}</a></li>
+      <a href="{{ href('event/index') }}">{{ _('New') }}</a>
+    </li>
     <li{% if tab == 'oncoming' %} class="selected"{% endif %}>
-      <a href="{{ href('event/oncoming') }}">{{ _('Oncoming Events') }}</a></li>
+      <a href="{{ href('event/oncoming') }}">{{ _('Oncoming Events') }}</a>
+    </li>
     <li{% if tab == 'calendar' %} class="selected"{% endif %}>
-      <a href="{{ href('event/calendar') }}">{{ _('Calendar') }}</a></li>
-  {% block pagetabs %}
-  {% endblock %}
+      <a href="{{ href('event/calendar') }}">{{ _('Calendar') }}</a>
+    </li>
+    {% block pagetabs %}{% endblock %}
   </ul>
   {% block event_content %}{% endblock %}
 {% endblock %}

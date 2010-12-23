@@ -60,9 +60,12 @@
           </span>
           <span class="user-status">
             {%- if request.user.is_anonymous -%}
-              <a href="{{ href('portal/login') }}">{{ _('Login') }}</a> <a href="{{ href('portal/register') }}">{{ _('Register') }}</a>
+              <a href="{{ href('portal/login') }}">{{ _('Login') }}</a> |
+              <a href="{{ href('portal/register') }}">{{ _('Register') }}</a>
             {%- else -%}
-              {{ _('Hello %(name)s (%(status)s)', name=request.user.display_name, status=request.user.status) }} <a href="{{ href('usercp/index') }}">{{ _('User Control Panel') }}</a> <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
+              {{ _('Hello %(name)s (%(status)s)', name=request.user.display_name, status=request.user.status) }} |
+              <a href="{{ href('usercp/index') }}">{{ _('User Control Panel') }}</a> |
+              <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
             {%- endif -%}
           </span>
         </div>

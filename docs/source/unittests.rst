@@ -28,8 +28,8 @@ Test structure
 The inyoka unittests are located at the ``tests`` folder in the root of your
 working copy.  Every application (forum, portal, wiki) and larger modules get
 their own folder.  In this folder every file that should be recognized as a test
-providing file shall start with ``test`` in the name.  In these files our
-unittests are located.
+providing file shall start with ``test`` in the name.  In these files are our
+unittests located.
 
 
 Run the unittests
@@ -54,7 +54,7 @@ Function Tests
 Function tests for example are just functions acting with
 :mod:`nose.tools` and running their tests in the function body.
 
-Exmaple::
+Example::
 
     def test_bidimap():
         map = BidiMap({
@@ -101,7 +101,7 @@ most common is the :class:`TestCase`, it's more or less the same as
 Next to that there's the :class:`DatabaseTestCase`.
 
 This class allows you to use fixtures.  So, what are fixtures?  Did you ever
-have to write initalisation code for unittests with database models with their
+have to write initialization code for unittests with database models with their
 references and ids and so much other stuff.  You don't have to do that
 anymore, mostly.
 

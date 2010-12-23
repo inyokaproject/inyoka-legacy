@@ -22,9 +22,6 @@
 
 .error, .notice, .success {
   border: 2px solid #ddd;
-  display: inline-block;
-  margin-bottom: 1.6em;
-  padding: .5em;
 }
 
 .hide {

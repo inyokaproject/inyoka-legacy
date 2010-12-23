@@ -272,12 +272,7 @@ body {
 }
 
 div.flash_message {
-  left: 30%;
-  margin-bottom: 1.6em;
   padding: .5em;
-  position: absolute;
-  top: 30%;
-  width: 40%;
 }
 
 div.not_found {

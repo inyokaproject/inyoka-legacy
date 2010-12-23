@@ -27,13 +27,6 @@
     {% block html_head %}{% endblock %}
   </head>
   <body>
-
-    {%- for message in request.flash_messages %}
-    <div class="flash_message{% if message.success == true %} success{% elif message.success == false %} error{% else %} notice{% endif %}">
-      {{ message|safe }}
-    </div>
-    {%- endfor %}
-
     <div id="head">
       <h1><a href="{{ request.host_url }}">Inyoka</a></h1>
       <div id="navi">
@@ -69,10 +62,15 @@
             {%- endif -%}
           </span>
         </div>
+        {%- for message in request.flash_messages %}
+          <div class="flash_message{% if message.success == true %} success{% elif message.success == false %} error{% else %} notice{% endif %}">
+            {{ message|safe }}
+          </div>
+        {%- endfor %}
         {%- if introduction %}
-        <div id="page-introduction">
-          {% block introduction %}{% endblock introduction %}
-        </div>
+          <div id="page-introduction">
+            {% block introduction %}{% endblock introduction %}
+          </div>
         {%- endif %}
         {%- if sidebar %}
           <div id="page-sidebar">

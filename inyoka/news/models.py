@@ -62,11 +62,13 @@ class Comment(db.Model, TextRendererMixin):
             return 'news/edit_comment', {
                 'id': self.id, 'action': action
             }
-        #TODO: self.id needs to be replaced with the number of the comment
-        # in the appropriate article
+        for i, comment in enumerate(self.article.comments):
+            if self is comment:
+                id_ = i+1
+                break
         return 'news/detail', {
             'slug': self.article.slug,
-            '_anchor': 'comment_%s' % self.id
+            '_anchor': 'comment_%s' % id_
         }
 
     def __unicode__(self):

@@ -349,7 +349,7 @@ def _bootstrap():
     ctx = ApplicationContext()
     ctx.bind()
 
-    import inyoka.core.api
+    ctx.load_packages(['inyoka.core.api'])
     if ctx.cfg['testing']:
         logger.level_name = 'ERROR'
 

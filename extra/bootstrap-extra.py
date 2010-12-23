@@ -3,6 +3,7 @@ import tempfile, shutil
 from os import path
 
 python_version = '2.7.1'
+python_main_version = '2.7'
 pil_version = '1.1.7'
 cldr_version = '1.7.2'
 xapian_version = '1.2.3'
@@ -46,8 +47,8 @@ def install_xapian(home_dir):
     pypath = path.join(prefix, 'bin', 'python')
     xapian_config = os.path.join(folder, 'xapian-core-' +
                     xapian_version, 'xapian-config')
-    libpath = os.path.join(prefix, 'lib', 'python%s' % python_version)
-    incpath = os.path.join(prefix, 'include', 'python%s' % python_version)
+    libpath = os.path.join(prefix, 'lib', 'python%s' % python_main_version)
+    incpath = os.path.join(prefix, 'include', 'python%s' % python_main_version)
 
     call_subprocess(['wget', 'http://oligarchy.co.uk/xapian/%s/xapian-core-%s.tar.gz' %
                     (xapian_version, xapian_version)], cwd=folder)

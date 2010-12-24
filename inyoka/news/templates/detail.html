@@ -46,7 +46,7 @@
       </span>
       <ol class="comments">
         {%- for comment in comments %}
-          <li id="comment_{{ loop.index }}"{#
+          <li id="comment_{{ comment.id }}"{#
            #} class="{{ loop.cycle('odd', 'even') -}}
                      {%- if comment.author_id == request.user.id %} owned{% endif -%}
                      {%- if comment.deleted %} hidden{% endif -%}">

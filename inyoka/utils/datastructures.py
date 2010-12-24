@@ -10,11 +10,7 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import sys
-from copy import deepcopy
-from itertools import imap
 from collections import namedtuple
-from itertools import izip
-
 
 
 #: Represents one token.

@@ -46,7 +46,6 @@ from xappy import UnprocessedDocument, Field, IndexerConnection,\
     SearchConnection
 from inyoka import Interface
 from inyoka.core.api import db, ctx
-from inyoka.core.auth.models import User
 from inyoka.core.config import TextConfigField, IntegerConfigField
 from inyoka.core.resource import IResourceManager
 from itertools import ifilter

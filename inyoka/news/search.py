@@ -11,7 +11,6 @@
 from inyoka.core.api import db, href
 from inyoka.core.search import SearchProvider
 from inyoka.news.models import Article
-from inyoka.utils.xml import strip_tags
 
 
 class NewsSearchProvider(SearchProvider):

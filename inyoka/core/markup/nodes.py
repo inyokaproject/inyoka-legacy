@@ -18,10 +18,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from urlparse import urlparse, urlunparse
-from werkzeug import url_quote_plus
 from markupsafe import escape
 from inyoka.context import ctx
-from inyoka.core.api import href
 from inyoka.core.markup.machine import NodeCompiler, NodeRenderer, \
     NodeQueryInterface
 from inyoka.utils.html import build_html_tag

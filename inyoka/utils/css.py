@@ -9,8 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 import re
-from urlparse import urlparse
-from markupsafe import escape
 
 
 acceptable_css_properties = frozenset([

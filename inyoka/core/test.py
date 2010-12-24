@@ -19,7 +19,7 @@ from functools import partial, wraps
 from pprint import pformat
 
 import nose
-from nose.plugins import cover, base, errorclass, testid
+from nose.plugins import cover, base, errorclass
 
 from logbook import TestHandler as LogbookTestHandler
 

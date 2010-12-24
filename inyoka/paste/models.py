@@ -9,7 +9,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from datetime import datetime
-from operator import attrgetter
 from functools import partial
 from inyoka.core.api import _, db
 from inyoka.core.auth.models import User

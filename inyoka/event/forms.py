@@ -8,7 +8,6 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from operator import itemgetter
 from inyoka.core.forms import Form, AutocompleteField, TextField, \
     DateTimeField, BooleanField, validators, widgets
 from inyoka.i18n import _

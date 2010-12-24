@@ -9,10 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from datetime import datetime, timedelta
-from werkzeug import cached_property
-from inyoka.core.api import _, ctx, db, cache
+from inyoka.core.api import _, db
 from inyoka.core.auth.models import User
-from inyoka.core.markup.parser import RenderContext, parse, render
 from inyoka.core.mixins import TextRendererMixin
 from inyoka.core.models import Tag, TagCounterExtension
 from inyoka.core.search import SearchIndexMapperExtension

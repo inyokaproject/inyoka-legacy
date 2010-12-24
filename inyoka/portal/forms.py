@@ -8,9 +8,8 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from inyoka.core.auth.models import User
 from inyoka.core.forms import Form, validators, widgets, BooleanField, TextField, \
-    RecaptchaField, PasswordField, IntegerField, DateField, MagicFilterForm
+    RecaptchaField, PasswordField, IntegerField, MagicFilterForm
 from inyoka.core.forms.fields import AutocompleteField, DatePeriodField
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.core.database import db

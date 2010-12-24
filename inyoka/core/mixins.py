@@ -8,10 +8,8 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from werkzeug import cached_property
 from inyoka.core.api import ctx
 from inyoka.core.markup.parser import parse, render, RenderContext
-from inyoka.utils.diff3 import prepare_udiff, generate_udiff
 
 
 

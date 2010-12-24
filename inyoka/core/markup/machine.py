@@ -12,7 +12,6 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from cPickle import loads, dumps, HIGHEST_PROTOCOL
-from markupsafe import soft_unicode
 
 
 class NodeCompiler(object):

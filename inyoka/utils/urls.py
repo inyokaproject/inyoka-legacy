@@ -10,8 +10,6 @@
 """
 import urlparse
 from inyoka.context import ctx
-from werkzeug import url_encode, url_decode, url_quote, \
-     url_quote_plus, url_fix
 
 
 def make_full_domain(subdomain=None, path=None):

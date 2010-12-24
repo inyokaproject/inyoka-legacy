@@ -10,9 +10,8 @@
     :copyright: 2006-2007 by Georg Brandl, 2009 by Christopher Grebs.
     :license: GNU GPL, see LICENSE for more details.
 """
-import sys, os, re
+import sys, os, re, io
 import getopt
-import cStringIO
 from os.path import join, splitext, abspath
 
 BAD_DIRS = ['.hg', '.coverage_html', '_build', '_static']
@@ -181,7 +180,7 @@ def main(argv):
     verbose = '-v' in opts
 
     num = 0
-    out = cStringIO.StringIO()
+    out = io.StringIO()
 
     for root, dirs, files in os.walk(path):
         for dir in BAD_DIRS:
@@ -218,7 +217,7 @@ def main(argv):
                 if not in_inyoka_pkg and checker.only_pkg:
                     continue
                 for lno, msg in checker(fn, lines):
-                    print >>out, "%s:%d: %s" % (fn, lno, msg)
+                    out.write(u"%s:%d: %s\n" % (fn, lno, msg))
                     num += 1
     if verbose:
         print

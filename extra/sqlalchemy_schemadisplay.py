@@ -1,9 +1,8 @@
 # updated SQLA schema display to work with pydot 1.0.2
-
-from sqlalchemy.orm.properties import PropertyLoader
-from sqlalchemy.orm import sync
+import io
 import pydot
 import types
+from PIL import Image
 from inyoka.core.api import db
 
 
@@ -158,13 +157,9 @@ def create_schema_graph(tables=None, metadata=None, show_indexes=True, show_data
     return graph
 
 def show_uml_graph(*args, **kwargs):
-    from cStringIO import StringIO
-    from PIL import Image
-    iostream = StringIO(create_uml_graph(*args, **kwargs).create_png())
+    iostream = io.StringIO(create_uml_graph(*args, **kwargs).create_png())
     Image.open(iostream).show(command=kwargs.get('command','gwenview'))
 
 def show_schema_graph(*args, **kwargs):
-    from cStringIO import StringIO
-    from PIL import Image
-    iostream = StringIO(create_schema_graph(*args, **kwargs).create_png())
+    iostream = io.StringIO(create_schema_graph(*args, **kwargs).create_png())
     Image.open(iostream).show(command=kwargs.get('command','gwenview'))

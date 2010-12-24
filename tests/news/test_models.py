@@ -119,13 +119,13 @@ class TestNewsModels(DatabaseTestCase):
         self.assertEqual(comment.get_url_values(),
             ('news/detail', {
                 'slug': comment.article.slug,
-                '_anchor': 'comment_1'}))
+                '_anchor': 'comment_%s' % comment.id}))
 
         comment = self.data['Comment'][1]
         self.assertEqual(comment.get_url_values(),
             ('news/detail', {
                 'slug': comment.article.slug,
-                '_anchor': 'comment_2'}))
+                '_anchor': 'comment_%s' % comment.id}))
 
         for action in ('hide', 'restore', 'edit'):
             self.assertEqual(comment.get_url_values(action=action),

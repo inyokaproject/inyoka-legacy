@@ -67,7 +67,7 @@ _iterables = (list, tuple, set, frozenset)
 
 
 def flatten_data(data):
-    return dict((d.keys()[0], list(flatten_iterator(d.values()))) for d in data)
+    return {d.keys()[0]: list(flatten_iterator(d.values())) for d in data}
 
 
 class TestResponse(Response, ContentAccessors):

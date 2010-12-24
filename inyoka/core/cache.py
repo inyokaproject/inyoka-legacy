@@ -83,7 +83,7 @@ class DatabaseCache(BaseCache):
     def get_dict(self, *keys):
         """Return a key/value dictionary for all `keys`"""
         result = db.session.query(Cache).filter(Cache.key.in_(keys)).all()
-        return dict((x.key, x.value) for x in result)
+        return {x.key: x.value for x in result}
 
     def set(self, key, value, timeout=None, overwrite=True):
         """Set a cached value.

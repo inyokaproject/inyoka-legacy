@@ -48,7 +48,7 @@ def primitive(obj, config=None):
     if isinstance(obj, Locale):
         return unicode(str(obj))
     if isinstance(obj, dict):
-        return dict((key, primitive(value, config)) for key, value in obj.iteritems())
+        return {key: primitive(value, config) for key, value in obj.iteritems()}
     if hasattr(obj, '__iter__'):
         return map(partial(primitive, config=config), obj)
     return obj

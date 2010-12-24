@@ -52,7 +52,7 @@ class BidiMap(dict):
     def __init__(self, items=None):
         items = items or {}
         dict.__init__(self, **items)
-        self.reversed = dict((v, k) for k, v in self.iteritems())
+        self.reversed = {v: k for k, v in self.iteritems()}
         if len(self) != len(self.reversed):
             raise ValueError('Values are not unique')
 

@@ -32,7 +32,7 @@ class NewsSearchProvider(SearchProvider):
 
     def prepare(self, ids):
         query = self._query.filter(Article.id.in_(ids))
-        documents = dict((p.id, self._prepare(p)) for p in query)
+        documents = {p.id: self._prepare(p) for p in query}
         for id, document in documents.iteritems():
             yield document
 

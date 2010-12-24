@@ -65,8 +65,7 @@ def is_endpoint(value):
 def get_endpoint_map(map, providers, delmitter=''):
     for provider in providers:
         members = tuple(x[1] for x in getmembers(provider, is_endpoint))
-        map.update(dict((delmitter.join((provider.name, m.endpoint)), m)
-                                        for m in members))
+        map.update({delmitter.join((provider.name, m.endpoint)): m for m in members})
     return map
 
 
@@ -150,7 +149,7 @@ class UrlMixin(object):
         :param prefix:  A common prefix for every endpoint.
         """
         members = tuple(x[1] for x in getmembers(self, is_endpoint))
-        endpoint_map = dict((prefix + m.endpoint, m) for m in members)
+        endpoint_map = {prefix + m.endpoint: m for m in members}
         return endpoint_map
 
 

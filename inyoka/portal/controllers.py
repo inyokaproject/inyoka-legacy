@@ -11,11 +11,11 @@
 from xappy.highlight import Highlighter
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect, _, login_required
+from inyoka.core import search
 from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User, UserProfile, Group
 from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
-from inyoka.core.search import query
 from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.utils.confirm import call_confirm, Expired
@@ -166,7 +166,7 @@ class PortalController(IController):
             #       result, the server process may be idle for some time. Maybe
             #       it would be better to send a temporary page and check
             #       dynamically via ajax whether the result has arrived.
-            results, total, corrected = query('portal', q, author=d('author'),
+            results, total, corrected = search.query('portal', q, author=d('author'),
                 tag_list=[tag.name for tag in d('tags', [])],
                 date_range=d('date'))
 

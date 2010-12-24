@@ -79,7 +79,7 @@ class InterfaceMeta(type):
             # base class for that component.
             mro = sum(imap(methodcaller('mro'), bases), [])
             # bind all classes that implement the interface protocol.
-            obj._interfaces = set(c for c in mro if '_isinterface' in dir(c))
+            obj._interfaces = {c for c in mro if '_isinterface' in dir(c)}
 
         return obj
 
@@ -224,7 +224,7 @@ class ApplicationContext(object):
         :meth:`~ApplicationContext.load_component` for more details.
         """
         ret = set()
-        for component in set(components):
+        for component in components:
             loaded = self.load_component(component)
             if loaded:
                 ret.add(loaded)
@@ -255,7 +255,7 @@ class ApplicationContext(object):
                  were unloaded successfully.
         """
         retvals = set()
-        for component in set(components):
+        for component in components:
             retvals.add(self.unload_component(component))
         return not any(retvals)
 
@@ -282,9 +282,9 @@ class ApplicationContext(object):
             # we can act if there are new deactivaated components.
             deactivated_components.update(self.cfg['deactivated_components'])
 
-        components = set(m[1] for m in
-            sum((getmembers(mod, _is_interface) for mod in modules), [])
-            if self.component_is_activated(m[1], deactivated_components))
+        module_components = sum((getmembers(mod, _is_interface) for mod in modules), [])
+        is_active = lambda m: self.component_is_activated(m[1], deactivated_components)
+        components = {m[1] for m in module_components if is_active(m)}
 
         return self.load_components(components)
 
@@ -297,8 +297,7 @@ class ApplicationContext(object):
         """
         if not instances:
             return self._components.get(interface, ())
-        return set([self.get_instance(impl) for impl in
-                    self._components.get(interface, ())])
+        return {self.get_instance(impl) for impl in self._components.get(interface, ())}
 
     def get_instance(self, compcls):
         """Return the instance of a component class.

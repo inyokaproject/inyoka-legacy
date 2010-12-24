@@ -207,8 +207,8 @@ def list_api_methods():
         if args and args[1] == 'request':
             args = args[2:]
         result.setdefault(handler, {})
-        result[handler].setdefault('valid_methods', set([])).update(
-             set(view.valid_methods))
+        result[handler].setdefault('valid_methods', set()) \
+            .update(set(view.valid_methods))
         result[handler]['doc'] = inspect.getdoc(view) or u''
         result[handler]['signature'] = inspect.formatargspec(
             args, varargs, varkw, defaults,
@@ -221,7 +221,7 @@ def list_api_methods():
             else:
                 tmp.append(data)
         rule_repr = u'%s' % u''.join(tmp).lstrip('|')
-        result[handler].setdefault('urls', set([])).add(rule_repr)
+        result[handler].setdefault('urls', set()).add(rule_repr)
     return result
 
 

@@ -8,9 +8,9 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from collections import OrderedDict
 from inyoka.context import ctx
 from inyoka.utils.decorators import abstract
-from inyoka.utils.datastructures import OrderedDict
 from inyoka.core.config import TextConfigField
 
 # Try to import PyGame

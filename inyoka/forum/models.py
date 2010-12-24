@@ -205,7 +205,7 @@ class QuestionQuery(ForumEntryQuery):
 
     def tagged(self, tags):
         """Filter questions by tags."""
-        tag_ids = set(t.id for t in tags)
+        tag_ids = {t.id for t in tags}
         return self.filter(db.and_(
             Question.id == question_tag.c.question_id,
             question_tag.c.tag_id.in_(tag_ids)))

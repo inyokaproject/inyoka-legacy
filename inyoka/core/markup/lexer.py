@@ -3,7 +3,7 @@
     inyoka.core.markup.lexer
     ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Tokenizes our wiki markup.  The lexer is implemented as some sort of
+    Tokenizes our markup language.  The lexer is implemented as some sort of
     scanner with an internal stack.  Inspired by pygments.
 
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
@@ -156,8 +156,6 @@ class Lexer(object):
                  'external_link_begin', 'link_target', 'external_link_end')),
             rule(r'\[((?:%s|\?|#).*?)\s+' % _url_pattern, bygroups('link_target'),
                  enter='external_link'),
-            rule(r'\[\s*([^:\]]+?)?\s*:\s*((?:::|[^:])*)\s*:\s*',
-                 astuple('link_target'), enter='wiki_link'),
             rule(_url_pattern + r'[^\s/]+(/[^\s.,:;?]*([.,:;?][^\s.,:;?]+)*)?[^\)\\\s]',
                  'free_link')
         ),
@@ -256,11 +254,6 @@ class Lexer(object):
         'edit': ruleset(
             rule(r'\[/edit\]', leave=1),
             include('everything')
-        ),
-        # links
-        'wiki_link': ruleset(
-            rule(r'\s*\]', leave=1),
-            include('inline')
         ),
         'external_link': ruleset(
             rule(r'\s*\]', leave=1),

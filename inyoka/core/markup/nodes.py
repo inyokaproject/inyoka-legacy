@@ -348,56 +348,6 @@ class Link(Element):
         yield u'</ulink>'
 
 
-class InternalLink(Element):
-    """
-    Internal link.
-    """
-
-    allowed_in_signatures = True
-
-    def __init__(self, page, children=None, anchor=None, id=None, style=None,
-                 class_=None):
-        from inyoka.wiki.utils import deurlify_page_name
-        if not children:
-            children = [Text(deurlify_page_name(page))]
-        Element.__init__(self, children, id, style, class_)
-        self.page = page
-        self.anchor = anchor
-
-    def generate_markup(self, w):
-        target = self.page
-        if self.anchor:
-            target += u'#' + self.anchor
-        w.markup(u'[:%s:' % target.replace(u':', '::'))
-        w.start_escaping(u']')
-        Element.generate_markup(self, w)
-        w.stop_escaping()
-        w.markup(u']')
-
-    def prepare_html(self):
-        from inyoka.wiki.models import Page
-        missing = not Page.query.exists(self.page)
-        url = href('wiki/show', page=self.page)
-        if self.anchor:
-            url += u'#' + url_quote_plus(self.anchor)
-
-        yield build_html_tag(u'a',
-            href=url,
-            id=self.id,
-            style=self.style,
-            classes=(u'internal', missing and u'missing' or u'', self.class_),
-        )
-        for item in Element.prepare_html(self):
-            yield item
-        yield u'</a>'
-
-    def prepare_docbook(self):
-        yield u'<ulink url="/%s">' % self.page
-        for item in Element.prepare_docbook(self):
-            yield item
-        yield u'</ulink>'
-
-
 class Section(Element):
 
     def __init__(self, level, children=None, id=None, style=None, class_=None):

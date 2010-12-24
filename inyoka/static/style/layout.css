@@ -110,10 +110,6 @@
   background: url(../img/icons/portal.png) no-repeat top center;
 }
 
-#navi a.icon-wiki {
-  background: url(../img/icons/wiki.png) no-repeat top center;
-}
-
 #navi a:active {
   padding-top: 56px;
 }
@@ -212,7 +208,6 @@
 }
 
 .forum_questions a,
-.wiki_revisions a,
 .news_articles a,
 .news_comments a,
 .paste_entries a {
@@ -223,8 +218,8 @@
  * TODO: make this a bit more abstract and application aware
  *
  */
-.forum_questions, .wiki_revisions,
-.news_articles, .news_comments, .paste_entries {
+.forum_questions, .news_articles,
+.news_comments, .paste_entries {
   background-position: center left;
   background-repeat: no-repeat;
 }
@@ -239,10 +234,6 @@
 
 .paste_entries {
   background-image: url('../img/icons/small/pastebin.png') !important;
-}
-
-.wiki_revisions {
-  background-image: url('../img/icons/small/wiki.png') !important;
 }
 
 .zealot-left {

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    test_wiki_lexer
-    ~~~~~~~~~~~~~~~
+    test_markup_lexer
+    ~~~~~~~~~~~~~~~~~
 
     This unittest tests various features of the wiki lexer. Just the lexer,
     not the parser.
@@ -92,26 +92,9 @@ def test_escape():
 
 def test_links():
     expect = lexer.tokenize(
-        u'[:foo:]'
-        u'[:foo:bar]'
-        u'[foo:bar:baz]'
         u'[?action=edit]'
         u'[http://example.com example]'
     ).expect
-
-    expect('wiki_link_begin')
-    expect('link_target', (None, 'foo'))
-    expect('wiki_link_end')
-
-    expect('wiki_link_begin')
-    expect('link_target', (None, 'foo'))
-    expect('text', 'bar')
-    expect('wiki_link_end')
-
-    expect('wiki_link_begin')
-    expect('link_target', ('foo', 'bar'))
-    expect('text', 'baz')
-    expect('wiki_link_end')
 
     expect('external_link_begin')
     expect('link_target', '?action=edit')

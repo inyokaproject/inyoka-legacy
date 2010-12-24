@@ -175,7 +175,7 @@ class StackExhaused(ValueError):
 
 class Parser(object):
     """
-    The wiki syntax parser.  Never use this class directly, always do this
+    The Inyoka syntax parser.  Never use this class directly, always do this
     via the public `parse()` function of this module.  The behavior of this
     class in multithreaded environments is undefined (might change from
     revision to revision) and the `parse()` function knows how to handle that.
@@ -232,7 +232,6 @@ class Parser(object):
             'definition_begin':     self.parse_definition,
             'external_link_begin':  self.parse_external_link,
             'free_link':            self.parse_free_link,
-            'wiki_link_begin':      self.parse_wiki_link,
             'ruler':                self.parse_ruler,
             'pre_begin':            self.parse_pre_block,
             'table_row_begin':      self.parse_table,
@@ -612,33 +611,6 @@ class Parser(object):
                 else:
                     break
         return result
-
-    def parse_wiki_link(self, stream):
-        """
-        Parses an wiki or interwiki link.  Depending on the syntax the
-        returned link is either an `InternalLink` node, an `Link` node or
-        an `InternalWikiLink` node.
-        """
-        stream.expect('wiki_link_begin')
-        wiki, page = stream.expect('link_target').value
-        if '#' in page:
-            page, anchor = page.split('#', 1)
-        else:
-            anchor = None
-        children = []
-        while stream.current.type != 'wiki_link_end':
-            children.append(self.parse_node(stream))
-        stream.expect('wiki_link_end')
-        return nodes.InternalLink(page, children, anchor=anchor)
-        #TODO: Find a way to create that interwiki map automatically
-        #      by using some kind of providers.
-
-#        elif wiki in STANDARD_WIKI_MAP:
-#            if not children:
-#                children = [nodes.Text(page)]
-#            return nodes.Link(STANDARD_WIKI_MAP[wiki](page), children,
-#                              class_=wiki)
-#        return nodes.InterWikiLink(wiki, page, children, anchor=anchor)
 
     def parse_external_link(self, stream):
         """

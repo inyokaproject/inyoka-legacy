@@ -226,14 +226,13 @@ def create_test_users():
     supporter = Group(name=u'Supporter', parents=set([team]), users=user_instances[4:-2])
     multimedia = Group(name=u'Supporter Multimedia', parents=set([supporter]),
         users=user_instances[-2:])
-    wikiteam = Group(name=u'Wikiteam', parents=set([team]))
     ikhayateam = Group(name=u'Ikhayateam', parents=set([team]))
     db.session.commit()
 
     # create some stub and dummy users...
     num = {'small': 15, 'medium': 30, 'large': 50}[SIZE]
     used = set()
-    groups = [team, webteam, supporter, multimedia, wikiteam, ikhayateam]
+    groups = [team, webteam, supporter, multimedia, ikhayateam]
     for x in xrange(num):
         while 1:
             username = choice(USERNAMES)
@@ -428,23 +427,6 @@ def create_pastebin_test_data():
     db.session.commit()
 
 
-def create_wiki_test_data():
-    from inyoka.core.api import ctx
-    from inyoka.core.auth.models import User
-    from inyoka.wiki.models import Page, Revision
-
-    u = User.query.first()
-    a = Page.create(ctx.cfg['wiki.index.name'],
-                    change_user=u, change_comment=u'hello world.',
-                    text=u'This is the wiki index page!')
-
-    b = Page.create(u'Installation',
-                    text=u"Type:\n ./configure\n make\n '''make install'''\n"
-                         u"That\'s it.", change_user=u,
-                    change_comment=u'started installation page')
-    db.session.commit()
-
-
 def rebase_dates():
     """Rebase all dates so that they are most recent."""
     from inyoka.forum.models import ForumEntry
@@ -460,7 +442,7 @@ def main():
     global _link_file
     _link_file = open('links.txt', 'w')
     funcs = (create_test_users, create_stub_tags, create_news_test_data,
-             create_pastebin_test_data, create_wiki_test_data, create_forum_test_data,
+             create_pastebin_test_data, create_forum_test_data,
              rebase_dates)
     for func in funcs:
         print "execute %s" % func.func_name

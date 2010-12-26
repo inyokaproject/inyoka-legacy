@@ -29,6 +29,11 @@ Core Tools
 
     core/search
     core/subscriptions
+    core/auth
+    core/config
+    core/forms
+    core/markup
+    core/middlewares
 
 References
 ----------
@@ -71,6 +76,35 @@ This section covers all utilities inyoka implements.
     utils/sortable
     utils/text
     utils/urls
+
+
+:mod:`context` Module
+---------------------
+
+.. automodule:: inyoka.context
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`dispatcher` Module
+------------------------
+
+.. automodule:: inyoka.dispatcher
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    inyoka.admin
+    inyoka.event
+    inyoka.forum
+    inyoka.news
+    inyoka.paste
+    inyoka.portal
 
 
 Indices and tables

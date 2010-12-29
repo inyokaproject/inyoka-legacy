@@ -197,13 +197,19 @@ def build_test_venv(pyver=None):
     create_virtualenv(pyver=pyver)
 
 
-def create_virtualenv(directory='../inyoka-testsuite', pyver=None, interpreter='python'):
+def create_virtualenv(directory=None, pyver=None, interpreter='python'):
     """
     Create a virtual environment for inyoka.
 
     :param directory: Where to create this virtual environment (folder must not exist).
     :param pyver: Which Python Version to use.
     """
+    if directory is None:
+        workon_home = os.environ.get('WORKON_HOME')
+        if workon_home:
+            directory = _path.join(workon_home, 'inyoka')
+        else:
+            directory = '../inyoka-testsuite'
     if not _isdir(directory):
         _mkdir(_path.expanduser(_path.expandvars(directory)))
     local('%s %s > %s' % (interpreter,

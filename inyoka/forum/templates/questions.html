@@ -23,26 +23,18 @@
       </p>
     {% endif %}
 
-    <p class="tags">
-      {%- for tag in forum.all_tags %}
-        <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
-      {%- endfor %}
-    </p>
-
     {%- set url_values = {'forum': forum.slug} %}
-
   {% elif tags %}
-    <p class="tags">
-      {%- for tag in tags %}
-        <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
-      {%- endfor %}
-    </p>
-
-    {%- set url_values = {'tags': tags|join(' ')} %}
-
+    {%- set url_values = {'tags': tags|join(',')} %}
   {% else %}
     {%- set url_values = {} %}
   {% endif %}
+
+  <p class="tags">
+    {%- for tag in tags %}
+      <a class="tag" href="{{ href('forum/questions', tags=tag.name) }}">{{ tag.name }}</a>
+    {%- endfor %}
+  </p>
 
   <ul class="pagetabs">
       {% if tab is undefined %}

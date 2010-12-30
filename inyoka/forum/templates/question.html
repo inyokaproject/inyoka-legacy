@@ -11,36 +11,38 @@
   <div class="question-detail">
     <div class="vote">
       {%- set vote = question.get_vote(request.user) %}
-      {% if vote and vote.score > 0 %}
-        <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
-          <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
-        </a>
-      {% else %}
-        <a href="{{ href('forum/vote', entry_id=question.id, action='up') }}">
-          <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
-        </a>
-      {% endif %}
+      {%- if request.user != question.author %}
+        {%- if vote and vote.score > 0 %}
+          <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
+            <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
+          </a>
+        {%- else %}
+          <a href="{{ href('forum/vote', entry_id=question.id, action='up') }}">
+            <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
+          </a>
+        {%- endif %}
+      {%- endif %}
       <strong>{{ question.score }}</strong>
-      {% if vote and vote.score < 0 %}
-        <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
-          <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
-        </a>
-      {% else %}
-        <a href="{{ href('forum/vote', entry_id=question.id, action='down') }}">
-          <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
-        </a>
-      {% endif %}
-      <p>
-      {% if vote and vote.favorite %}
-      <a href="{{ href('forum/vote', entry_id=question.id, action='nofavorite') }}">
-          <img src="{{ href('static', file='img/favorite.png') }}" alt="{{ _('favorite') }}">
-        </a>
-      {% else %}
-        <a href="{{ href('forum/vote', entry_id=question.id, action='favorite') }}">
-          <img src="{{ href('static', file='img/nofavorite.png') }}" alt="{{ _('no favorite') }}">
-        </a>
-      {% endif %}
-      </p>
+      {%- if request.user != question.author %}
+        {%- if vote and vote.score < 0 %}
+          <a href="{{ href('forum/vote', entry_id=question.id, action='revoke') }}">
+            <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
+          </a>
+        {%- else %}
+          <a href="{{ href('forum/vote', entry_id=question.id, action='down') }}">
+            <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
+          </a>
+        {%- endif %}
+        {%- if vote and vote.favorite %}
+          <a href="{{ href('forum/vote', entry_id=question.id, action='nofavorite') }}">
+            <img src="{{ href('static', file='img/favorite.png') }}" alt="{{ _('favorite') }}">
+          </a>
+        {%- else %}
+          <a href="{{ href('forum/vote', entry_id=question.id, action='favorite') }}">
+            <img src="{{ href('static', file='img/nofavorite.png') }}" alt="{{ _('no favorite') }}">
+          </a>
+        {%- endif %}
+      {%- endif %}
     </div>
 
     <div class="summary">

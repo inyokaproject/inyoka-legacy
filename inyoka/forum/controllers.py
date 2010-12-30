@@ -13,6 +13,7 @@ from inyoka.forum.models import Forum, Question, Answer, Tag, Vote, \
 from inyoka.forum.forms import AskQuestionForm, AnswerQuestionForm, EditForumForm
 from inyoka.core.api import IController, Rule, view, templated, db, \
          redirect, redirect_to, href, login_required
+from inyoka.core.exceptions import Forbidden
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.utils.pagination import URLPagination
 from itertools import ifilter
@@ -177,6 +178,8 @@ class ForumController(IController):
     @view
     def vote(self, request, entry_id, action):
         entry = ForumEntry.query.get(entry_id)
+        if entry.author == request.user:
+            raise Forbidden
         v = Vote.query.filter_by(entry=entry, user=request.user).first()
         args = {
             'up':           {'score': +1},

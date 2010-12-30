@@ -113,8 +113,13 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     #: TODO These relationships do not work yet. Don't know how to create a
     # one-to-one relation
 
-    #discussion_question = db.relationship(Question, primaryjoin=Question.id==discussion_question_id)
-    #info_question = db.relationship(Question, primaryjoin=Question.id==info_question_id)
+    discussion_question = db.relationship(Question,
+            primaryjoin=Question.id==discussion_question_id,
+            backref=db.backref('eventd'))
+
+    info_question = db.relationship(Question,
+            primaryjoin=Question.id==info_question_id,
+            backref=db.backref('eventi'))
 
     def get_url_values(self, action='view'):
         values = {

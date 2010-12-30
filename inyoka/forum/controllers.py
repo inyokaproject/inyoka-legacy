@@ -112,6 +112,10 @@ class ForumController(IController):
     def question(self, request, slug, sort='votes', page=1):
         question = Question.query.filter_by(slug=slug).one()
         answer_query = Answer.query.filter_by(question=question)
+
+        # Order by "votes", "latest" or "oldest"
+        answer_query = getattr(answer_query, sort)
+
         pagination = URLPagination(answer_query, page)
 
         form = AnswerQuestionForm(request.form)

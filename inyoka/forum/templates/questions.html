@@ -63,9 +63,11 @@
       <li{% if tab == 'ask' %} class="selected"{% endif %}>
         <a href="{{ href('forum/ask', **url_values) }}">{{ _('Ask Question') }}</a>
       </li>
-      <li{% if tab == 'edit' %} class="selected"{% endif %}>
-        <a href="{{ href('forum/edit_forum', **url_values) }}">{{ _('Edit Forum') }}</a>
-      </li>
+      {%- if 'forum' in url_values %}
+        <li{% if tab == 'edit' %} class="selected"{% endif %}>
+          <a href="{#{ href('forum/edit_forum', **url_values) }#}">{{ _('Edit Forum') }}</a>
+        </li>
+      {%- endif %}
   </ul>
 
   {% block questions_body %}

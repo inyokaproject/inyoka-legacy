@@ -90,10 +90,8 @@ class ForumController(IController):
             query = query.forum(forum)
             tags = forum.all_tags
         elif tags:
-            #tags = ifilter(bool, (Tag.query.public().filter_by(slug=t).one() \
-            #              for t in tags.split()))
-            tags = [Tag.query.public().filter_by(slug=t).one() \
-                   for t in tags.split(',')]
+            tags = tags.split(',')
+            tags = Tag.query.public().filter(Tag.slug.in_(tags)).all()
             query = query.tagged(tags)
 
         # Order by "latest", "active", "unanswered" or "votes"

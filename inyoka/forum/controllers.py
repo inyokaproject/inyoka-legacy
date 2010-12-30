@@ -60,8 +60,8 @@ class ForumController(IController):
 
         Rule('/question/<string:slug>/', endpoint='question'),
         Rule('/question/<string:slug>/<int:page>/', endpoint='question'),
-        Rule('/question/<string:slug>/<string:sort>/', endpoint='question'),
-        Rule('/question/<string:slug>/<string:sort>/<int:page>/',
+        Rule('/question/<string:slug>/<any(votes, latest, oldest):sort>/', endpoint='question'),
+        Rule('/question/<string:slug>/<any(votes, latest, oldest):sort>/<int:page>/',
              endpoint='question'),
         Rule('/post/<int:posting_id>/', endpoint='posting'),
 

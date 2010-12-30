@@ -83,25 +83,29 @@
     <div class="answer" id="answer-{{ answer.id }}">
       <div class="vote">
         {%- set vote = user_votes[answer.id] %}
-        {% if vote and vote > 0 %}
-          <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
-            <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
-          </a>
-        {% else %}
-          <a href="{{ href('forum/vote', entry_id=answer.id, action='up') }}">
-            <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
-          </a>
-        {% endif %}
+        {%- if request.user != answer.author %}
+          {%- if vote and vote > 0 %}
+            <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
+              <img src="{{ href('static', file='img/voted-up.png') }}" alt="{{ _('vote revoke') }}">
+            </a>
+          {%- else %}
+            <a href="{{ href('forum/vote', entry_id=answer.id, action='up') }}">
+              <img src="{{ href('static', file='img/vote-up.png') }}" alt="{{ _('vote up') }}">
+            </a>
+          {%- endif %}
+        {%- endif %}
         <strong>{{ answer.score }}</strong>
-        {% if vote and vote < 0 %}
-          <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
-            <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
-          </a>
-        {% else %}
-          <a href="{{ href('forum/vote', entry_id=answer.id, action='down') }}">
-            <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
-          </a>
-        {% endif %}
+        {%- if request.user != answer.author %}
+          {%- if vote and vote < 0 %}
+            <a href="{{ href('forum/vote', entry_id=answer.id, action='revoke') }}">
+              <img src="{{ href('static', file='img/voted-down.png') }}" alt="{{ _('vote revoke') }}">
+            </a>
+          {%- else %}
+            <a href="{{ href('forum/vote', entry_id=answer.id, action='down') }}">
+              <img src="{{ href('static', file='img/vote-down.png') }}" alt="{{ _('vote down') }}">
+            </a>
+          {%- endif %}
+       {%- endif %}
       </div>
 
       <div class="summary">

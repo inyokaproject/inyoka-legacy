@@ -108,13 +108,14 @@
        {%- endif %}
       </div>
 
+      <div class="author">
+        {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
+        {{ user_link(answer.author) }}
+      </div>
       <div class="summary">
-        <div class="author">
-          {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
-	        {{ user_link(answer.author) }}
-        </div>
         {{ answer.get_rendered_text(answer.text)|safe }}
         {% if answer.author.profile.signature_html %}
+          <hr>
           <div class="signature">{{ answer.author.profile.signature_html|safe }}</div>
         {% endif %}
       </div>

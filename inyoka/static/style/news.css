@@ -47,7 +47,6 @@ div.article .comments li:target {
 
 div.article.hidden, div.article.hidden * {
   color: #ccc;
-  background-color: #f8f8f8;
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
   border-radius: 0.4em;

@@ -26,11 +26,12 @@ div.author {
   float: right;
   font-size: .8em;
   padding: 0.25em 0.4em;
+  width: 14em;
+  margin-left: 0.4em;
 }
 
 div.question {
   margin-bottom: 1em;
-  background-color: #eee;
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
   border-radius: 0.4em;
@@ -71,6 +72,7 @@ div.stats div.votes {
   float: left;
   padding: .2em 0;
   width: 5em;
+  height: 100%;
 }
 
 div.stats strong {
@@ -80,6 +82,12 @@ div.stats strong {
 
 div.summary {
   margin-left: 8.5em;
+}
+
+div.signature {
+  color: #999;
+  max-height: 4em;
+  overflow: hidden;
 }
 
 div.vote {

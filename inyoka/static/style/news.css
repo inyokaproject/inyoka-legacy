@@ -52,6 +52,10 @@ div.article.hidden, div.article.hidden * {
   border-radius: 0.4em;
 }
 
+div.article.hidden a:hover {
+  color: #525252;
+}
+
 p.meta {
   color: #888;
   font-size: 0.9em;

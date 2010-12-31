@@ -24,7 +24,7 @@ div.article .comments .meta {
 }
 
 div.article .comments img.avatar {
-  background: #ccc;
+  background-color: #ccc;
   border: 1px solid #444;
   height: 60px;
   left: 0;
@@ -40,8 +40,17 @@ div.article .comments li {
   padding: 14px 0 12px 98px;
   position: relative;
 }
+
 div.article .comments li:target {
   background-color: #FFB;
+}
+
+div.article.hidden, div.article.hidden * {
+  color: #ccc;
+  background-color: #f8f8f8;
+  -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
 }
 
 p.meta {

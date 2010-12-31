@@ -61,6 +61,7 @@ li.token-input-selected-token {
 li.token-input-token {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
   background-color: #eff2f7;
   border: 1px solid #ccd5e4;
   border-radius: 5px;

@@ -90,7 +90,7 @@ class ForumController(IController):
             query = query.forum(forum)
             tags = forum.all_tags
         elif tags:
-            tags = tags.split(',')
+            tags = (t.lower() for t in tags.split(','))
             tags = Tag.query.public().filter(Tag.slug.in_(tags)).all()
             query = query.tagged(tags)
 

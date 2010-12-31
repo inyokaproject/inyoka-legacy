@@ -45,6 +45,7 @@
 #head {
   -moz-border-radius: 0 0 0.4em 0.4em;
   -webkit-border-radius: 0 0 0.4em 0.4em;
+  border-radius: 0 0 0.4em 0.4em;
   background-color: #90a818;
   background-image: url(../img/head.png);
   background-repeat: repeat-x;
@@ -66,6 +67,7 @@
 #head h1 a {
   color: #FFF;
   text-decoration: none;
+  text-shadow: 1px 1px 5px #000;
 }
 
 #navi {
@@ -80,6 +82,8 @@
   margin-right: 2em;
   padding-top: 54px;
   text-decoration: none;
+  background-color: #f00;
+  text-shadow: 1px 1px 2px #000;
 }
 
 #navi a.active {
@@ -110,12 +114,17 @@
   background: url(../img/icons/portal.png) no-repeat top center;
 }
 
+#navi a {
+  background: url(../img/icons/admin.png) no-repeat top center;
+}
+
 #navi a:active {
   padding-top: 56px;
 }
 
 #navi a:hover, #navi a:focus {
   color: #46520b;
+  text-shadow: 1px 1px 2px #aaa;
 }
 
 #page {
@@ -131,6 +140,7 @@
 #page-inner > div {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   margin-bottom: 0.5em;
 }
 
@@ -163,6 +173,7 @@
 #page-sidebar div {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background-color: #EEE;
   margin-bottom: 0.4em;
   padding: 0.5em 0.5em 0.5em 28px;
@@ -291,6 +302,7 @@ div.pagination {
 div.pagination a {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background: #90a818;
   color: #fff;
   margin: 0.2em;
@@ -310,6 +322,7 @@ div.pagination span.comma {
 div.pagination strong {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background-color: #23520b;
   color: #fff;
   margin: 0.2em;
@@ -343,6 +356,7 @@ ul.pagetabs li {
 ul.pagetabs li a {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background-color: #dedede;
   border-bottom: none;
   color: #666;

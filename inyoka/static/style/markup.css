@@ -40,6 +40,8 @@ div.bash pre {
 /* Boxes of page templates */
 div.box {
   -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   border: 1px solid #bbb;
   clear: none;
   margin: 0.5em 0;
@@ -52,6 +54,8 @@ div.box div.contents {
 
 div.box h3 {
   -moz-border-radius: 3px 3px 0 0;
+  -webkit-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
   background-color: #bbb;
   color: #FFF;
   font-size: 0.9em;

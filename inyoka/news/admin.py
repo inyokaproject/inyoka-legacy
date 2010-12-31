@@ -65,6 +65,7 @@ class NewsAdminProvider(IAdminProvider):
                 'author'))
             db.session.commit()
             request.flash(_(u'Updated article “%s”' % article.title), True)
+            return redirect_to(article)
         return {
             'form': form,
             'article': article,

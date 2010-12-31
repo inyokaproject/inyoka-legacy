@@ -1,6 +1,7 @@
 a.tag {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background: #dee6b8;
   color: #46520b;
   font-size: .8em;
@@ -20,7 +21,8 @@ div.answer {
 div.author {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
-  background: #eee;
+  border-radius: 0.4em;
+  background: #dedede;
   float: right;
   font-size: .8em;
   padding: 0.25em 0.4em;
@@ -28,6 +30,10 @@ div.author {
 
 div.question {
   margin-bottom: 1em;
+  background-color: #eee;
+  -moz-border-radius: 0.4em;
+  -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
 }
 
 div.question-detail div.summary,
@@ -39,6 +45,7 @@ div.answer div.summary {
 div.stats {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background: #dedede;
   float: left;
   font-size: .75em;
@@ -48,6 +55,7 @@ div.stats {
 div.stats div.status {
   -moz-border-radius: 0 0.4em 0.4em 0;
   -webkit-border-radius: 0 0.4em 0.4em 0;
+  border-radius: 0.4em;
   background: #999;
   color: #FFF;
   float: left;

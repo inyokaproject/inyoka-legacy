@@ -42,14 +42,6 @@
     <div id="page">
       <div id="page-inner">
         <div id="page-navbar">
-          <span class="pathbar">
-            {%- for name, url in trace %}
-              {% if url %}<a href="{{ url }}">{% endif %}
-              {{ name }}
-              {% if url %}</a>{% endif %}
-              {% if not loop.last %}›{% endif %}
-            {%- endfor %}
-          </span>
           <span class="user-status">
             {%- if request.user.is_anonymous -%}
               <a href="{{ href('portal/login') }}">{{ _('Login') }}</a> |
@@ -59,6 +51,14 @@
               <a href="{{ href('usercp/index') }}">{{ _('User Control Panel') }}</a> |
               <a href="{{ href('portal/logout') }}">{{ _('Logout') }}</a>
             {%- endif -%}
+          </span>
+          <span class="pathbar">
+            {%- for name, url in trace %}
+              {% if url %}<a href="{{ url }}">{% endif %}
+              {{ name }}
+              {% if url %}</a>{% endif %}
+              {% if not loop.last %}›{% endif %}
+            {%- endfor %}
           </span>
         </div>
         {%- for message in request.flash_messages %}

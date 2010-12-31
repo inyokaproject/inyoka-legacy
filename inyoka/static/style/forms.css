@@ -297,6 +297,7 @@ input[type] {
 input[type="submit"], a.button, button {
   -moz-border-radius: 0.4em;
   -webkit-border-radius: 0.4em;
+  border-radius: 0.4em;
   background-color: #f5f5f5;
   background-image: url(../img/tick.png);
   background-position: 5px center;

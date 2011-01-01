@@ -145,12 +145,12 @@ class InyokaTestClient(Client):
         if self.context_preserved:
             _request_ctx_stack.pop()
 
+
 # Fixture Framework
 #
 # The code is based on `bootalchemy <http://pypi.python.org/pypi/bootalchemy>`
 # but was heavily modified to better fit Inyokas database system management.
 #
-
 
 class FixtureLoader(object):
     """This class is responsible of loading fixtures."""
@@ -357,10 +357,8 @@ class FixtureLoader(object):
         return new_data
 
     def log_error(self, e, data, cls, item):
-        msg = 'error occured while loading fixture data with output:\n%s' % pformat(data)
-        msg += '\nclass: %s' % cls
-        msg += '\nitem: %s' % item
-        msg += '\n%s' % traceback.format_exc(e)
+        msg = (u'error occured while loading fixture data with output:\n%s\n'
+               u'class: %s\nitem: %s\n%s') % (pformat(data), cls, item, traceback.format_exc(e))
         logger.error(msg)
 
 

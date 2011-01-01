@@ -182,11 +182,21 @@ class ForumController(IController):
         }
 
     @view('answer')
+    @templated('forum/answer.html', modifier=context_modifier)
     def answer(self, request, entry_id, action=None):
-        entry = Answer.query.get(entry_id)
-        if not action:
-            kwargs = {'_anchor': 'answer-%s' % entry.id}
-            return redirect_to(entry.question, **kwargs)
+        answer = Answer.query.get(entry_id)
+        if action == 'edit':
+            form = AnswerQuestionForm(request.form, text=answer.text)
+            if form.validate_on_submit():
+                answer.text = form.text.data
+                db.session.commit()
+                return redirect_to(answer)
+            return {
+                'form': form
+            }
+        else:
+            kwargs = {'_anchor': 'answer-%s' % answer.id}
+            return redirect_to(answer.question, **kwargs)
 
     @login_required
     @view

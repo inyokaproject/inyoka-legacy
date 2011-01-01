@@ -1,0 +1,10 @@
+{%- extends 'forum/base.html' %}
+{% from 'utils/macros.html' import form_fields %}
+{%- block content %}
+  <form action="" method="post" id="forum_news_answer">
+    {{ form_fields(form) }}
+    <fieldset class="actions">
+      <input type="submit" value="{{ _('Submit') }}">
+    </fieldset>
+  </form>
+{%- endblock %}

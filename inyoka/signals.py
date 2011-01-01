@@ -10,6 +10,6 @@
 """
 from blinker import Namespace
 
-# the namespace for code signals.  If you are not Inyoka code, do
-# not put signals in here.  Create your own namespace instead.
+#: the namespace for code signals.  If you are not Inyoka code, do
+#: not put signals in here.  Create your own namespace instead.
 signals = Namespace()

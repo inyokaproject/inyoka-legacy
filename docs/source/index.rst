@@ -46,6 +46,7 @@ References
     dispatcher
     services
     internationalisation
+    signals
 
 
 Applications

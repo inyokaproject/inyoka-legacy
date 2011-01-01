@@ -20,12 +20,18 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
 from jinja2.loaders import split_template_path
 from inyoka import INYOKA_REVISION, l10n, i18n
 from inyoka.context import ctx
+from inyoka.signals import signals
 from inyoka.core.http import Response
 from inyoka.core.routing import href, IServiceProvider
 from inyoka.core.cache import cache as inyoka_cache
 from inyoka.core.config import TextConfigField, BooleanConfigField
 
 
+#! This signal is raised if a template is rendered.  Use it to catch context variables
+#! and such stuff.
+template_rendered = signals.signal('template-rendered')
+
+#: The default templates path
 _default_templates_path = os.path.join(os.environ['INYOKA_MODULE'], 'templates')
 
 #: Custom template path which is searched before the default path
@@ -53,8 +59,6 @@ templates_packages_planet = TextConfigField('templates.packages.planet', default
 templates_packages_event = TextConfigField('templates.packages.event', default=u'inyoka.event')
 
 
-
-
 def populate_context_defaults(context):
     """Fill in context defaults."""
     try:
@@ -75,9 +79,9 @@ def _return_rendered_template(tmpl, context, modifier, request=None, stream=Fals
     # apply the context modifier
     if modifier is not None:
         modifier(request, context)
-    if stream:
-        return tmpl.stream(context)
-    return tmpl.render(context)
+    retval = tmpl.stream(context) if stream else tmpl.render(context)
+    template_rendered.send(template=template, context=context)
+    return retval
 
 
 def render_template(template_name, context, modifier=None, request=None, stream=False):

@@ -69,6 +69,9 @@ class ForumController(IController):
 
         Rule('/ask/', endpoint='ask'),
         Rule('/forum/<string:forum>/ask/', endpoint='ask'),
+
+        Rule('/answer/<int:entry_id>/', endpoint='answer'),
+        Rule('/answer/<int:entry_id>/<any(edit):action>/', endpoint='answer'),
     ]
 
     @view('index')
@@ -177,6 +180,13 @@ class ForumController(IController):
             'tags': tags,
             'form': form
         }
+
+    @view('answer')
+    def answer(self, request, entry_id, action=None):
+        entry = Answer.query.get(entry_id)
+        if not action:
+            kwargs = {'_anchor': 'answer-%s' % entry.id}
+            return redirect_to(entry.question, **kwargs)
 
     @login_required
     @view

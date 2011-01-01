@@ -283,9 +283,9 @@ class Answer(ForumEntry):
     def get_url_values(self, **kwargs):
         """Generates an URL for this answer."""
         kwargs.update({
-            '_anchor': 'answer-%s' % self.id
+            'entry_id': self.id
         })
-        return self.question.get_url_values(**kwargs)
+        return 'forum/answer', kwargs
 
 
 class VoteQuery(db.Query):

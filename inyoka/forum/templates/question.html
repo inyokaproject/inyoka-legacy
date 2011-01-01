@@ -110,7 +110,11 @@
 
       <div class="author">
         {{ _('answered <strong>%(date)s</strong>', date=answer.date_created|timedelta) }}<br>
-        {{ user_link(answer.author) }}
+        by {{ user_link(answer.author) }}<br>
+        <a href="{{ href(answer) }}">Permalink</a>
+        {%- if answer.author == request.user %}
+          <br><a href="{{ href('forum/answer', entry_id=answer.id) }}">Edit</a><br>
+        {%- endif %}
       </div>
       <div class="summary">
         {{ answer.get_rendered_text(answer.text)|safe }}

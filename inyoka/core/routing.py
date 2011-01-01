@@ -270,7 +270,7 @@ def href(endpoint, **values):
 
     if hasattr(endpoint, 'get_url_values'):
         endpoint, values = endpoint.get_url_values(**values)
-        _anchor = values.pop('_anchor', None)
+        _anchor = values.pop('_anchor', _anchor)
 
 
     url = ctx.dispatcher.get_url_adapter() \

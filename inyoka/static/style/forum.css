@@ -30,6 +30,10 @@ div.author {
   margin-left: 0.4em;
 }
 
+div.answer:target div.author {
+  background-color: #f8ef7b;
+}
+
 div.question {
   margin-bottom: 1em;
   -moz-border-radius: 0.4em;

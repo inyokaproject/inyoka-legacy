@@ -14,7 +14,7 @@ from os import path
 from threading import Lock
 from wtforms.validators import ValidationError
 from markupsafe import soft_unicode
-from blinker import signal
+from inyoka.signals import signals
 from io import open
 
 
@@ -184,7 +184,7 @@ class Configuration(object):
     file.
     """
 
-    reload_signal = signal('config-changed',
+    reload_signal = signals.signal('config-changed',
         u'This signal will be emitted everytime the configuration will go'
         u' through the reloading process')
 

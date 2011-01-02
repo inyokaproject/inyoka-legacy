@@ -50,6 +50,7 @@ class PortalController(IController):
         Rule('/user/<username>/', endpoint='profile'),
         Rule('/groups/', endpoint='groups'),
         Rule('/group/<name>/', endpoint='group'),
+        Rule('/tags/', endpoint='tags'),
         Rule('/tag/<slug>/', endpoint='tag'),
         Rule('/search/', endpoint='search'),
     ]
@@ -134,6 +135,23 @@ class PortalController(IController):
             return Response(u'%s: %s' % (['success', 'fail'][not ret[1]],
                                         ret[0]), mimetype='text/plain')
         return ret
+
+    @view
+    @templated('portal/tags.html')
+    def tags(self, request):
+        cloud, more = Tag.query.public().get_cloud()
+        if request.method in ('POST', 'PUT'):
+            # the user choosed a tag by manually entered name
+            name = request.form.get('tag')
+            tag = Tag.query.filter_by(name=name).first()
+            if tag is not None:
+                return redirect_to('portal/tag_edit', slug=tag.slug)
+            request.flash(_(u'The tag “%s” does not exist' % tag.name), False)
+
+        return {
+            'tag_cloud': cloud,
+            'tag_names': [t['name'] for t in cloud]
+        }
 
     @view
     @templated('portal/tag.html', modifier=context_modifier)

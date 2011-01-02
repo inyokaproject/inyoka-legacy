@@ -3,9 +3,9 @@
 {%- if tag.name %}
   {%- set trace = [[_('Edit “%(tag)s”', tag=tag.name), href(tag, action='edit')]] %}
 {%- else %}
-  {%- set trace = [[_('New Tag'), href('admin/portal/tag_edit')]] %}
+  {%- set trace = [[_('New Tag'), href('portal/tag_edit')]] %}
 {%- endif %}
-{%- set trace = [[_('Portal'), href('admin/portal/index')]] + trace %}
+{%- set trace = [[_('Portal'), href('portal/index')], [_('Tags'), href('portal/tags')]] + trace %}
 
 {%- block admin_content %}
   <form action="" method="post" id="admin_tag_edit">

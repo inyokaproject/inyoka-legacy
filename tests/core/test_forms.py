@@ -122,7 +122,7 @@ class TestFormCsrf(ViewTestCase):
 
         # test that disabling on a form instance works
         ctx.cfg['enable_csrf_checks'] = True
-        with self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalud'}) as c:
+        with self.get_new_request(path='/login', method='POST', data={'csrf_token': 'invalid'}) as c:
             form = DummyForm2(c.request.form)
             assert_raises(BadRequest, form.validate)
             form.csrf_disabled = True

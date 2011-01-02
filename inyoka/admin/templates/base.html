@@ -1,7 +1,0 @@
-{% extends "base.html" %}
-{% set styles = ['portal.css'] + styles|default([]) %}
-{% set trace = [[_('Admin'), href('admin/index')]] + trace|default([]) %}
-
-{% block content %}
-  {% block admin_content %}{% endblock %}
-{% endblock %}

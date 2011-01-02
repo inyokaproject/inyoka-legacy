@@ -54,7 +54,6 @@ templates_packages_portal = TextConfigField('templates.packages.portal', default
 templates_packages_news = TextConfigField('templates.packages.news', default=u'inyoka.news')
 templates_packages_forum = TextConfigField('templates.packages.forum', default=u'inyoka.forum')
 templates_packages_paste = TextConfigField('templates.packages.paste', default=u'inyoka.paste')
-templates_packages_event = TextConfigField('templates.packages.admin', default=u'inyoka.admin')
 templates_packages_planet = TextConfigField('templates.packages.planet', default=u'inyoka.planet')
 templates_packages_event = TextConfigField('templates.packages.event', default=u'inyoka.event')
 

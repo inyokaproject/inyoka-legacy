@@ -1,4 +1,4 @@
-{%- extends 'admin/base.html' %}
+{%- extends 'news/base.html' %}
 {% from 'utils/macros.html' import form_fields %}
 {%- set scripts = scripts|default([]) + ['jquery.tokeninput.js'] %}
 {%- set styles = styles|default([]) + ['widgets.css'] %}
@@ -9,7 +9,7 @@
 {%- endif %}
 {%- set trace = [[_('News'), href('news/index')]] + trace %}
 
-{%- block admin_content %}
+{%- block content %}
 <form method="post" action="" id="admin_edit_article">
   {{ form_fields(form) }}
   <fieldset class="actions">

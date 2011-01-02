@@ -1,4 +1,4 @@
-{%- extends 'admin/base.html' %}
+{%- extends 'portal/base.html' %}
 {% from 'utils/macros.html' import form_fields %}
 {%- if tag.name %}
   {%- set trace = [[_('Edit “%(tag)s”', tag=tag.name), href(tag, action='edit')]] %}
@@ -7,7 +7,7 @@
 {%- endif %}
 {%- set trace = [[_('Portal'), href('portal/index')], [_('Tags'), href('portal/tags')]] + trace %}
 
-{%- block admin_content %}
+{%- block content %}
   <form action="" method="post" id="admin_tag_edit">
     {{ form_fields(form, class="horiz-left") }}
     <fieldset class="actions">

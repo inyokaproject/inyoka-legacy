@@ -1,7 +1,7 @@
-{% extends 'admin/base.html' %}
+{% extends 'portal/base.html' %}
 {%- set trace = [[_('Portal'), href('portal/index')]] %}
 
-{% block admin_content %}
+{% block content %}
   <ul>
     <li><a href="{{ href('portal/tags') }}">{{ _('Tags') }}</a></li>
   </ul>

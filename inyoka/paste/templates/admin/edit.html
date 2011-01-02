@@ -1,9 +1,9 @@
-{%- extends 'admin/base.html' %}
+{%- extends 'paste/base.html' %}
 {% from 'utils/macros.html' import form_fields %}
 {% set sidebar = false %}
 {% set trace = [[_('Edit Paste'), href(paste, action='edit')]] %}
 
-{%- block admin_content %}
+{%- block content %}
   <ul class="pagetabs">
     {% if tab is undefined %}
         {% set tab = 'new' %}

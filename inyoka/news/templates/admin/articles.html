@@ -1,7 +1,7 @@
-{% extends 'admin/base.html' %}
+{% extends 'news/base.html' %}
 {%- set trace = [[_('News'), href('news/index')], [_('All articles'), href('news/archive')]] %}
 
-{% block admin_content %}
+{% block content %}
   <ul>
   {% for article in articles %}
     <li><a href="{{ href(article, action='edit') }}">{{ article.title }}</a></li>

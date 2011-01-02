@@ -106,8 +106,8 @@ class TestNewsModels(DatabaseTestCase):
             ('news/subscribe_comments',
             {'slug': article.slug, 'action': 'unsubscribe'}))
 
-        actions = {'edit': 'admin/news/article_edit',
-                   'delete': 'admin/news/article_delete',
+        actions = {'edit': 'news/article_edit',
+                   'delete': 'news/article_delete',
                    'view': 'news/detail'}
         for action, expected in actions.iteritems():
             self.assertEqual(article.get_url_values(action=action),

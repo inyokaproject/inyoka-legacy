@@ -4,7 +4,7 @@
 
 {% block content %}
   <form method="post" action="" id="portal_register">
-    {{ form_field(form.csrf) }}
+    {{ form_field(form.csrf_token) }}
     <ol>
       <li class="horiz">{{ form_field(form.username) }}</li>
       <li class="horiz">{{ form_field(form.email) }}</li>

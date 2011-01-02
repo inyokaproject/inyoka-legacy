@@ -13,7 +13,7 @@
     {{ _('If you still want to continue, please enter your password again.') }}
   </p>
   <form action="" method="post" id="usercp_deactivate_profile">
-    {{ form_field(form.csrf) }}
+    {{ form_field(form.csrf_token) }}
     <ol>
       <li class="horiz-left">{{ form_field(form.password) }}</li>
     </ol>

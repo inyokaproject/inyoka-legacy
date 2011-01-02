@@ -76,7 +76,6 @@ Subpackages
 
 .. toctree::
 
-    inyoka.admin
     inyoka.event
     inyoka.forum
     inyoka.news

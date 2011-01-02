@@ -9,14 +9,6 @@ paste Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`admin` Module
--------------------
-
-.. automodule:: inyoka.paste.admin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`api` Module
 -----------------
 

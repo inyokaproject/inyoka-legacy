@@ -179,8 +179,8 @@ class Article(db.Model, TextRendererMixin):
 
         values = {
             'view': 'news/detail',
-            'edit': 'admin/news/article_edit',
-            'delete': 'admin/news/article_delete',
+            'edit': 'news/article_edit',
+            'delete': 'news/article_delete',
         }
         kwargs.update({'slug': self.slug})
         return values[action], kwargs

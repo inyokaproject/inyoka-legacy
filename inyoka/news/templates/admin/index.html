@@ -1,9 +1,9 @@
 {% extends 'admin/base.html' %}
-{%- set trace = [[_('News'), href('admin/news/index')]] + trace|default([]) %}
+{%- set trace = [[_('News'), href('news/index')]] + trace|default([]) %}
 
 {% block admin_content %}
 <ul>
-  <li><a href="{{ href('admin/news/articles') }}">{{ _('Articles') }}</a></li>
+  <li><a href="{{ href('news/archive') }}">{{ _('Articles') }}</a></li>
 </ul>
 
 {% endblock %}

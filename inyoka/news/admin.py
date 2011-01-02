@@ -9,42 +9,22 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
-from inyoka.core.api import view, templated, redirect_to, db, Rule, render_template
+from inyoka.core.api import view, templated, redirect_to, db, Rule, render_template, IController
 from inyoka.core.forms.utils import model_to_dict, update_model
-from inyoka.admin.api import IAdminProvider
 from inyoka.news.forms import EditArticleForm
 from inyoka.news.models import Article
 
 
-class NewsAdminProvider(IAdminProvider):
+class NewsAdminProvider(IController):
     """The integration hook for the admin interface"""
 
     name = u'news'
-    title = _(u'News')
-
-    index_endpoint = 'index'
 
     url_rules = [
-        Rule('/', endpoint='index'),
-        Rule('/articles/', endpoint='articles'),
-        Rule('/articles/new/', defaults={'slug': None},
-             endpoint='article_edit'),
-        Rule('/articles/<slug>/', endpoint='article_edit'),
-        Rule('/articles/<slug>/delete', endpoint='article_delete'),
+        Rule('/new_article/', endpoint='article_edit', defaults={'slug': None}),
+        Rule('/<slug>/edit/', endpoint='article_edit'),
+        Rule('/<slug>/delete', endpoint='article_delete')
     ]
-
-    @view('index')
-    @templated('news/admin/index.html')
-    def index(self, request):
-        return {}
-
-    @view('articles')
-    @templated('news/admin/articles.html')
-    def articles(self, request):
-        articles = Article.query.order_by(Article.updated.desc()).all()
-        return {
-            'articles': articles
-        }
 
     @view('article_edit')
     @templated('news/admin/article_edit.html')
@@ -58,7 +38,7 @@ class NewsAdminProvider(IAdminProvider):
 
         form = EditArticleForm(request.form, **data)
         if 'delete' in request.form:
-            return redirect_to('admin/news/article_delete', slug=article.slug)
+            return redirect_to('news/article_delete', slug=article.slug)
         elif form.validate_on_submit():
             article = update_model(article, form, ('pub_date', 'updated',
                 'title', 'intro', 'text', 'public', 'tags',
@@ -81,7 +61,7 @@ class NewsAdminProvider(IAdminProvider):
             db.session.commit()
             request.flash(_(u'The article “%s” was deleted successfully.'
                           % article.title))
-            return redirect_to('admin/news/articles')
+            return redirect_to('news/articles')
         else:
             request.flash(render_template('news/admin/article_delete.html', {
                 'article': article

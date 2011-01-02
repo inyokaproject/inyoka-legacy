@@ -1,5 +1,5 @@
 {% extends 'admin/base.html' %}
-{%- set trace = [[_('News'), href('admin/news/index')], [_('All articles'), href('admin/news/articles')]] %}
+{%- set trace = [[_('News'), href('news/index')], [_('All articles'), href('news/archive')]] %}
 
 {% block admin_content %}
   <ul>
@@ -7,7 +7,7 @@
     <li><a href="{{ href(article, action='edit') }}">{{ article.title }}</a></li>
   {% endfor %}
   </ul>
-  {%- trans link=href('admin/news/article_edit') -%}
+  {%- trans link=href('news/article_edit') -%}
   …or <a href="{{ link }}">create a new article</a>
   {%- endtrans -%}
 {% endblock %}

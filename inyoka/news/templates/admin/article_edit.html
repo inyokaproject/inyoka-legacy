@@ -5,9 +5,9 @@
 {%- if article.slug %}
   {%- set trace = [[_('Edit “%(article)s”', article=article.title), href(article, action='edit')]] %}
 {%- else %}
-  {%- set trace = [[_('New Article'), href('admin/news/article_edit')]] %}
+  {%- set trace = [[_('New Article'), href('news/article_edit')]] %}
 {%- endif %}
-{%- set trace = [[_('News'), href('admin/news/index')]] + trace %}
+{%- set trace = [[_('News'), href('news/index')]] + trace %}
 
 {%- block admin_content %}
 <form method="post" action="" id="admin_edit_article">

@@ -37,6 +37,7 @@ from inyoka.core.database import db
 from inyoka.core.http import Response, Request
 from inyoka.core.resource import IResourceManager
 from inyoka.core.exceptions import ImproperlyConfigured
+from inyoka.core.templating import template_rendered
 from inyoka.utils import flatten_iterator
 from inyoka.utils.logger import logger
 from inyoka.utils.urls import get_base_url_for_controller
@@ -457,6 +458,9 @@ class ViewTestCase(DatabaseTestCase):
 
     controller = None
 
+    def _add_template(self, sender, template=None, context=None):
+        self.templates.append((template, context))
+
     def _pre_setup(self):
         """Setup the test client and url and base domain values"""
         super(ViewTestCase, self)._pre_setup()
@@ -464,6 +468,12 @@ class ViewTestCase(DatabaseTestCase):
         self.client = InyokaTestClient(ctx.dispatcher, TestResponse, use_cookies=True)
         self.base_domain = ctx.cfg['base_domain_name']
         self.base_url = get_base_url_for_controller(self.controller or 'test')
+        self.templates = []
+        template_rendered.connect(self._add_template)
+
+    def _post_teardown(self):
+        super(ViewTestCase, self)._post_teardown()
+        template_rendered.disconnect(self._add_template)
 
     def get_context(self, path, method='GET', **kwargs):
         """
@@ -574,12 +584,45 @@ class ViewTestCase(DatabaseTestCase):
             raise AssertionError(u'%r in headers' % key)
         return True
 
-    def assertContext(self, response, value):
-        tctx = getattr(response, '_template_context', {})
-        if value != tctx:
+    def get_context_variable(self, name):
+        """Returns a variable from the context passed to the template.
+
+        Raises a ContextVariableDoesNotExist exception if does
+        not exist in context.
+
+        :versionadded: 0.2
+        :param name: name of variable
+        """
+        for template, context in self.templates:
+            if name in context:
+                return context[name]
+        raise AssertionError(u'Context variable %s does not exist')
+
+    def assertContext(self, name, value):
+        """
+        Checks if given name exists in the template context
+        and equals the given value.
+
+        :versionadded: 0.2
+        :param name: name of context variable
+        :param value: value to check against
+        """
+
+        try:
+            assert self.get_context_variable(name) == value
+        except AssertionError:
             raise AssertionError(u'Expected context:\n%r\n\nActual Context:\n%r'
-                                 % (value, tctx))
-        return True
+                                 % (value, self.templates))
+
+    def assertTemplateUsed(self, name):
+        """Checks if a given template is used in the request.
+
+        :param name: template name
+        """
+        for template, context in self.templates:
+            if template.name == name:
+                return True
+        raise AssertionError(u'Template %s not used' % name)
 
 
 class InyokaPlugin(cover.Coverage):

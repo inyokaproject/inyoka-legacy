@@ -136,8 +136,6 @@ def templated(template_name, modifier=None, stream=False):
             data = render_template(template_name, context, modifier=modifier,
                                    request=request, stream=stream)
             response = Response(data)
-            if ctx.cfg['debug']:
-                response._template_context = context
             return response
         return templated_wrapper
     return decorator

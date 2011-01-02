@@ -17,6 +17,7 @@ import traceback
 from contextlib import contextmanager
 from functools import partial, wraps
 from pprint import pformat
+from urllib2 import urlparse
 
 import nose
 from nose.plugins import cover, base, errorclass
@@ -542,7 +543,7 @@ class ViewTestCase(DatabaseTestCase):
     def assertRedirects(self, response, location):
         assert response.status_code in (301, 302), \
                "Status Code not in (301, 302) got %s" % response.status_code
-        assert response.location == os.path.join(self.base_url, location), \
+        assert response.location == urlparse.urljoin(self.base_url, location), \
                "Location did not match, got %s instead" % response.location
 
     def assertStatus(self, response, status_code):

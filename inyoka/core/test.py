@@ -596,7 +596,7 @@ class ViewTestCase(DatabaseTestCase):
         for template, context in self.templates:
             if name in context:
                 return context[name]
-        raise AssertionError(u'Context variable %s does not exist')
+        raise KeyError(u'Context variable %s does not exist' % name)
 
     def assertContext(self, name, value):
         """
@@ -609,10 +609,10 @@ class ViewTestCase(DatabaseTestCase):
         """
 
         try:
-            assert self.get_context_variable(name) == value
-        except AssertionError:
-            raise AssertionError(u'Expected context:\n%r\n\nActual Context:\n%r'
-                                 % (value, self.templates))
+            self.assertEqual(self.get_context_variable(name), value)
+        except KeyError:
+            raise AssertionError(u'Expected context:\n%r\n\nActual Variables:\n%r'
+                                 % (value, u', '.join(x[1] for x in self.templates)))
 
     def assertTemplateUsed(self, name):
         """Checks if a given template is used in the request.
@@ -622,7 +622,8 @@ class ViewTestCase(DatabaseTestCase):
         for template, context in self.templates:
             if template.name == name:
                 return True
-        raise AssertionError(u'Template %s not used' % name)
+        raise AssertionError(u'Template %s not used.  Used templates: %s'
+                             % (name, u', '.join(x[0].name for x in self.templates)))
 
 
 class InyokaPlugin(cover.Coverage):

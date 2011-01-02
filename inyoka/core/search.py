@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
     inyoka.core.search
-    ~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~
 
     The inyoka search system based on xapian. It uses xappy because we're lazy
     programmers who love easy APIs.

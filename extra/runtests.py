@@ -19,7 +19,7 @@ coverage.coverage(auto_data=True, branch=True)
 coverage.start()
 
 # set the configuration file
-if not 'INYOKA_CONFIG' in os.environ:
+if 'INYOKA_CONFIG' not in os.environ:
     os.environ['INYOKA_CONFIG'] = 'inyoka_tests.ini'
 from inyoka.core.test import InyokaPlugin, FuturePlugin
 from inyoka.core.database import refresh_engine

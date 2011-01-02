@@ -6,7 +6,7 @@
     This module provides various e-mail related functionality.
 
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
-    :license: GNU GPL, see AUTHORS for more details.
+    :license: GNU GPL, see LICENSE for more details.
 """
 from email.mime.text import MIMEText
 from email.header import Header

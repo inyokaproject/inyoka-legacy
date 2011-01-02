@@ -70,7 +70,7 @@ def filter_style(css):
         elif prop.split('-', 1)[0].lower() in \
              ('background', 'border', 'margin', 'padding'):
             for keyword in value.split():
-                if not keyword in acceptable_css_keywords and \
+                if keyword not in acceptable_css_keywords and \
                    not _css_unit_re.match(keyword):
                     break
             else:

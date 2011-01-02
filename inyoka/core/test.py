@@ -349,7 +349,7 @@ class FixtureLoader(object):
                 if isinstance(cls, basestring) and cls not in skip_keys:
                     cls = self.get_cls(cls)
                 new_data.append({cls.__name__: self.add_classes(cls, items)})
-            if not 'nocommit' in group:
+            if 'nocommit' not in group:
                 try:
                     db.session.commit()
                 except exceptions:

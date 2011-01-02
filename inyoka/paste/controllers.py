@@ -11,6 +11,7 @@
 from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, db, redirect_to
+from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.utils.pagination import URLPagination
 from inyoka.paste.forms import AddPasteForm, EditPasteForm
 from inyoka.paste.models import PasteEntry

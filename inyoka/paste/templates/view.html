@@ -8,6 +8,7 @@
   {% if paste.has_tree %}
     <li><a href="{{ href(paste, action='show_tree') }}">{{ _('Paste Tree') }}</a></li>
   {% endif %}
+  <li><a href="{{ href(paste, action='edit') }}">{{ _('Edit') }}</a></li>
 {% endblock %}
 
 {%- block paste_content %}

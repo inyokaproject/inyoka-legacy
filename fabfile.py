@@ -215,7 +215,7 @@ def create_virtualenv(directory=None, pyver=None, interpreter='python'):
     local('%s %s > %s' % (interpreter,
         _j('extra/make-bootstrap.py'), _j('bootstrap.py')), capture=False)
     local('%s ./bootstrap.py --no-site-packages -r %s %s' % (interpreter,
-        _j('requirements.txt'), directory), capture=False)
+        _j('extra/requirements.txt'), directory), capture=False)
 
 
 def clean_files():

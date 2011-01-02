@@ -9,15 +9,16 @@ bind = '0.0.0.0:5000'
 backlog = 2048
 
 # default workers, special configuration is below
-workers = 1
+workers = 4
 
 worker_connections = 600
-worker_class = 'egg:gunicorn#gevent_pywsgi'
+#worker_class = 'egg:gunicorn#gevent_pywsgi'
+worker_class = 'egg:gunicorn#sync'
 timeout = 30
 keepalive = 2
 preload = True
 
-debug = False
+debug = True
 spew = False
 
 daemon = False
@@ -71,7 +72,7 @@ def when_ready(server):
                 logging.info("%s modified; restarting server", path)
                 os.kill(os.getpid(), signal.SIGHUP)
                 modify_times = {}
-            gevent.sleep(1)
+            gevent.sleep(0.1)
 
     import gevent
     gevent.spawn(monitor)

@@ -219,16 +219,9 @@ def create_virtualenv(directory=None, pyver=None, interpreter='python'):
 
 
 def clean_files():
-    """
-    Cleanup some Backup files and many more.
-    """
-    local("find . -name '*.pyc' -delete")
-    local("find . -name '*.pyo' -delete")
-    local("find . -name '*~' -delete")
-    local("find . -name '*.orig' -delete")
-    local("find . -name '*.orig.*' -delete")
-    local("find . -name '*.py.fej' -delete")
-    local("find . -name '*.egg' -delete")
+    """Clean most temporary files"""
+    for f in '*.py[co]', '*~', '*.orig', '*.rej':
+        local("rm -rf `find -name '%s'|grep -v .hg`" % f)
     if _access('bootstrap.py', _F_OK):
         local("rm bootstrap.py")
 

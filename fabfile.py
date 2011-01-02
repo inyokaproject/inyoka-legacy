@@ -28,7 +28,7 @@ os.environ['PYTHONPATH'] = os.pathsep.join((_base_dir, _python_path))
 _j = lambda *a: _path.join(_base_dir, *a)
 
 
-def _make_app(cfg='inyoka.ini', debug=False, profile=False, leaky=False):
+def _make_app(cfg='inyoka.ini', debug=False):
     cfg = os.environ.setdefault('INYOKA_CONFIG', cfg)
     from inyoka.core.api import ctx
     from werkzeug.debug import DebuggedApplication
@@ -118,10 +118,6 @@ runserver = _action(lambda: _make_app(debug=True))
 runserver.__doc__ = u'''Run a development server.
 You can choose between Werkzeug (simple), eventlet, cherrypy or tornado
 to run Inyoka.  Use the `server` attribute to set the server app'''
-profiled = _action(lambda: _make_app(debug=True, profile=True))
-profiled.__doc__ = u'Run a development server with activated profiler.'
-leakfinder = _action(lambda: _make_app(debug=True, leaky=True))
-leakfinder.__doc__ = u'Run a development server with activated leakfinder.'
 
 
 def shell(app='ipython', banner=u'Interactive Inyoka Shell'):

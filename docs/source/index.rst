@@ -42,20 +42,12 @@ References
     :maxdepth: 2
 
     components
+    context
     resources
     dispatcher
     services
     internationalisation
     signals
-
-
-Applications
-------------
-
-.. toctree::
-    :maxdepth: 2
-
-    forum
 
 
 Utilities
@@ -78,22 +70,6 @@ This section covers all utilities inyoka implements.
     utils/text
     utils/urls
 
-
-:mod:`context` Module
----------------------
-
-.. automodule:: inyoka.context
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`dispatcher` Module
-------------------------
-
-.. automodule:: inyoka.dispatcher
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------

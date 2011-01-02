@@ -43,7 +43,7 @@ def get_csrf_token(request=None, force_reset=False):
 class Form(BaseForm):
     """This form implements basic CSRF protection."""
 
-    csrf = fields.HiddenField(u' ')
+    csrf_token = fields.HiddenField(u' ')
 
     #: Set this to `True` to disable all csrf checks on this form.
     #: Note: This overrides global csrf settings!
@@ -51,7 +51,7 @@ class Form(BaseForm):
 
     def __init__(self, formdata=None, *args, **kwargs):
         csrf_token = get_csrf_token()
-        super(Form, self).__init__(formdata, csrf=csrf_token, *args, **kwargs)
+        super(Form, self).__init__(formdata, csrf_token=csrf_token, *args, **kwargs)
 
     def _get_translations(self):
         """Hook our translations into wtforms"""

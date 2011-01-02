@@ -80,7 +80,7 @@ def _return_rendered_template(tmpl, context, modifier, request=None, stream=Fals
     if modifier is not None:
         modifier(request, context)
     retval = tmpl.stream(context) if stream else tmpl.render(context)
-    template_rendered.send(template=template, context=context)
+    template_rendered.send(template=tmpl, context=context)
     return retval
 
 

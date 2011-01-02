@@ -19,6 +19,8 @@ class TestPasteController(ViewTestCase):
 
     def test_index(self):
         self.assertResponseOK(self.open('/'))
+        self.assertTemplateUsed('paste/index.html')
+        self.get_context_variable('form')
 
     def test_new_paste(self):
         self.assertResponseOK(self.open('/'))

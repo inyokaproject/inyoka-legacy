@@ -17,6 +17,3 @@ Hash Maps
     :members:
 
 .. autoclass:: TokenStreamIterator
-
-.. autoclass:: OrderedDict
-   :members:

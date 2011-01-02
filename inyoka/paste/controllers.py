@@ -12,7 +12,7 @@ from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, db, redirect_to
 from inyoka.utils.pagination import URLPagination
-from inyoka.paste.forms import AddPasteForm
+from inyoka.paste.forms import AddPasteForm, EditPasteForm
 from inyoka.paste.models import PasteEntry
 
 
@@ -28,6 +28,7 @@ class PasteController(IController):
     url_rules = [
         Rule('/', endpoint='index'),
         Rule('/paste/<int:id>/', endpoint='view'),
+        Rule('/paste/<int:id>/', endpoint='edit'),
         Rule('/raw/<int:id>/', endpoint='raw'),
         Rule('/browse/', defaults={'page': 1}, endpoint='browse'),
         Rule('/browse/<int:page>/', endpoint='browse'),
@@ -71,6 +72,24 @@ class PasteController(IController):
         e = PasteEntry.query.get(id)
         return {
             'paste': e,
+        }
+
+    @view('edit')
+    @templated('paste/admin/edit.html')
+    def edit_paste(self, request, id):
+        entry = PasteEntry.query.get(id)
+        form = EditPasteForm(request.form, **model_to_dict(
+            entry, exclude=('id', 'author_id')
+        ))
+        if form.validate_on_submit():
+            entry = update_model(entry, form,
+                ('text', 'language', 'title', 'author', 'hidden'))
+            db.session.commit()
+            return redirect_to(entry)
+
+        return {
+            'paste': entry,
+            'form': form,
         }
 
     @view('raw')

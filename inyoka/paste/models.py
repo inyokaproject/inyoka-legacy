@@ -52,7 +52,7 @@ class PasteEntry(db.Model, SerializableObject):
             'view': 'paste/view',
             'raw':  'paste/raw',
             'show_tree': 'paste/show_tree',
-            'edit': 'admin/paste/edit',
+            'edit': 'paste/edit',
         }
         return values[action], {'id': self.id}
 

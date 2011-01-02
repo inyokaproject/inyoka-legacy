@@ -57,7 +57,7 @@ class Form(BaseForm):
         """Hook our translations into wtforms"""
         return get_translations()
 
-    def validate_csrf(self, field):
+    def validate_csrf_token(self, field):
         enabled = (ctx.cfg['enable_csrf_checks'] and
                    not self.csrf_disabled and
                    ctx.current_request)

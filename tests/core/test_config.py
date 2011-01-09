@@ -37,7 +37,7 @@ def _teardown_config_test():
     _config = None
 
 
-@with_setup(teardown=_teardown_config_test)
+@with_setup(setup=_teardown_config_test)
 def test_non_existing_config():
     conf = Configuration(_config_file_name)
     assert_false(conf.exists, False)

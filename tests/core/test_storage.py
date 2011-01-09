@@ -11,7 +11,7 @@
 from inyoka.core.api import db, ctx
 from inyoka.core.test import *
 from inyoka.core.cache import cache, set_cache
-from inyoka.core.storage import storage
+from inyoka.core.storage import CachedStorage
 from inyoka.core.models import Storage
 
 
@@ -26,47 +26,51 @@ class TestStorage(DatabaseTestCase):
     def setUp(self):
         self._configured_cache = ctx.cfg['caching.system']
         ctx.cfg['caching.system'] = 'simple'
-        set_cache()
+        self.cache = set_cache()
+        self.storage = CachedStorage(self.cache)
 
     def tearDown(self):
         ctx.cfg['caching.system'] = self._configured_cache
         Storage.query.delete()
+        self.cache = set_cache()
+        self.storage = CachedStorage(self.cache)
 
     def test_storage_get(self):
         # setup the storage
         for key, value in DICT_1.iteritems():
-            self.assertEqual(cache.get(u'storage/%s' % key), None)
-            storage.set(key, value)
+            self.assertEqual(self.cache.get(u'storage/%s' % key), None)
+            self.storage.set(key, value)
 
         for key, value in DICT_1.iteritems():
             cache_key = u'storage/%s' % key
             # check whether it was also written to the cache
-            self.assertEqual(cache.get(cache_key), value)
+            print self.cache, cache_key, value, self.cache._cache
+            self.assertEqual(self.cache.get(cache_key), value)
             # check whether retrieving storage data of the cache works
-            self.assertEqual(storage.get(key), value)
+            self.assertEqual(self.storage.get(key), value)
             # check whether retrieving storage data without cache works
-            cache.delete(cache_key)
-            self.assertEqual(storage.get(key), value)
+            self.cache.delete(cache_key)
+            self.assertEqual(self.storage.get(key), value)
             # check whether storage.get wrote the data to the cache
-            self.assertEqual(cache.get(cache_key), value)
+            self.assertEqual(self.cache.get(cache_key), value)
 
         # and cleanup the storage
-        cache.delete_many(*DICT_1.keys())
+        self.cache.delete_many(*DICT_1.keys())
 
     def test_storage_get_many(self):
         # check whether storage.set works well for already existing keys
         for key, value in DICT_2.iteritems():
-            storage.set(key, value)
+            self.storage.set(key, value)
 
-        for key, value in storage.get_many(DICT_2.keys()).iteritems():
+        for key, value in self.storage.get_many(DICT_2.keys()).iteritems():
             self.assertEqual(value, DICT_2[key])
             # check whether storage.get_many wrote the data to the cache
-            self.assertEqual(cache.get(u'storage/%s' % key), value)
+            self.assertEqual(self.cache.get(u'storage/%s' % key), value)
 
         # check whether get_many works well if the data isn't in the cache anymore
-        cache.delete_many(*DICT_2.keys())
+        self.cache.delete_many(*DICT_2.keys())
 
-        for key, value in storage.get_many(DICT_2.keys()).iteritems():
+        for key, value in self.storage.get_many(DICT_2.keys()).iteritems():
             self.assertEqual(value, DICT_2[key])
             # check whether storage.get_many wrote the data to the cache
-            self.assertEqual(cache.get(u'storage/%s' % key), value)
+            self.assertEqual(self.cache.get(u'storage/%s' % key), value)

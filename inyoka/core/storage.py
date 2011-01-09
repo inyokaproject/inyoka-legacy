@@ -19,7 +19,7 @@
 """
 from sqlalchemy.exceptions import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
-from inyoka.core.cache import cache
+from inyoka.core.cache import cache as global_cache
 from inyoka.core.database import db
 from inyoka.core.models import Storage
 
@@ -30,6 +30,9 @@ class CachedStorage(object):
     It's used to store cached values also in the database.
     """
 
+    def __init__(self, cache):
+        self.cache = cache
+
     def get(self, key, default=None, timeout=None):
         """
         Get a value from the storage.
@@ -39,7 +42,7 @@ class CachedStorage(object):
                         exist. Defaults to None.
         :param timeout: Give up cache writing after a specific time
         """
-        value = cache.get('storage/' + key)
+        value = self.cache.get('storage/' + key)
         if value is not None:
             return value
 
@@ -85,7 +88,7 @@ class CachedStorage(object):
         :param keys: A list of the requested keys
         :param timeout: Give up cache writing after a specific time
         """
-        objects = cache.get_dict(*('storage/%s' % key for key in keys))
+        objects = self.cache.get_dict(*('storage/%s' % key for key in keys))
         values = {}
         for key, value in objects.iteritems():
             values[key[8:]] = value
@@ -109,7 +112,7 @@ class CachedStorage(object):
         self.set(key, value)
 
     def _update_cache(self, key, value, timeout=None):
-        cache.set('storage/%s' % key, value, timeout)
+        self.cache.set('storage/%s' % key, value, timeout)
 
 
-storage = CachedStorage()
+storage = CachedStorage(global_cache)

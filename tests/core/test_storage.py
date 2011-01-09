@@ -44,7 +44,6 @@ class TestStorage(DatabaseTestCase):
         for key, value in DICT_1.iteritems():
             cache_key = u'storage/%s' % key
             # check whether it was also written to the cache
-            print self.cache, cache_key, value, self.cache._cache
             self.assertEqual(self.cache.get(cache_key), value)
             # check whether retrieving storage data of the cache works
             self.assertEqual(self.storage.get(key), value)

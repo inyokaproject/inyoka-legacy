@@ -45,7 +45,6 @@ import xapian
 from xappy import UnprocessedDocument, Field, IndexerConnection,\
     SearchConnection
 from inyoka import Interface
-from inyoka.core import tasks
 from inyoka.core.api import db, ctx
 from inyoka.core.config import TextConfigField, IntegerConfigField
 from inyoka.core.resource import IResourceManager
@@ -304,3 +303,6 @@ def create_search_document(id, obj):
         for v in (value if isinstance(value, list) else [value]):
             doc.fields.append(Field(key, unicode(v)))
     return doc
+
+# circular import with inyoka.core.tasks
+from inyoka.core import tasks

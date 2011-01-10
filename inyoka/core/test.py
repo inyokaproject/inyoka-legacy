@@ -653,12 +653,12 @@ class InyokaPlugin(cover.Coverage):
         ctx.cfg['testing'] = True
         ctx.load_packages(['tests.*'])
 
-        # special celery handling.  We change the result and carrot backends
+        # special celery handling.  We change the result and transport backends
         # to `memory` to be able to run the unittests without a amqp server.
         # As celery has unittests itself we do know that the result-backend
         # stuff works as expected.
         # We also disable the email sending feature of celery.
-        ctx.cfg['celery.result_backend'] = get_transport_cls('memory')
+        ctx.cfg['celery.result_backend'] = 'database'
         ctx.cfg['broker.backend'] = 'memory'
         ctx.cfg['celery.send_task_error_emails'] = False
 

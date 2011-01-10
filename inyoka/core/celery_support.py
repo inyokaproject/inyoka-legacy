@@ -8,7 +8,6 @@
     :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from carrot.backends import get_backend_cls
 from kombu.transport import get_transport_cls
 from celery.loaders.base import BaseLoader
 from celery.loaders.default import AttributeDict
@@ -25,7 +24,7 @@ celery_imports = ListConfigField('celery.imports', default=['inyoka.core.tasks']
 celery_task_serializer = TextConfigField('celery.task_serializer', default='json')
 celery_send_task_error_emails = BooleanConfigField('celery.send_task_error_emails', default=False)
 
-# carrot broker settings
+# broker settings
 broker_backend = TextConfigField('broker.backend', get_transport_cls(u'memory'))
 broker_host = TextConfigField('broker.host', u'localhost')
 broker_port = IntegerConfigField('broker.port', 5672)

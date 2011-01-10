@@ -1,6 +1,10 @@
 forms Package
 =============
 
+.. testsetup:: *
+
+    from inyoka.core.forms.validators import *
+
 :mod:`forms` Package
 --------------------
 

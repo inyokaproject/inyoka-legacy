@@ -4,6 +4,10 @@ Inyoka Command Line Color Utilities
 
 .. automodule:: inyoka.utils.colors
 
+.. testsetup:: *
+
+    from inyoka.utils.colors import colorize, reset_color
+
 Helpers
 =======
 

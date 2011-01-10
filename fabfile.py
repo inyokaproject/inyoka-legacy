@@ -251,6 +251,9 @@ def test(file='', clean='yes'):
     local('python %s %s' % (_j('extra/runtests.py'), file),
           capture=False)
 
+def doctest():
+    build_docs(builder='doctest')
+
 
 def reindent():
     """

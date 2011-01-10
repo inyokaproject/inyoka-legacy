@@ -92,9 +92,8 @@ class Subscription(db.Model):
                     s.count = len(s.unread_object_ids)
                 db.session.commit()
 
-        from celery.execute import send_task
-        send_task('inyoka.core.tasks.send_notifications',
-                  [object, action.name, subscriptions])
+        from inyoka.core import tasks
+        tasks.send_notifications(object, action.name, subscriptions)
 
     @staticmethod
     def accessed(user, **kwargs):

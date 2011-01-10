@@ -45,6 +45,7 @@ import xapian
 from xappy import UnprocessedDocument, Field, IndexerConnection,\
     SearchConnection
 from inyoka import Interface
+from inyoka.core import tasks
 from inyoka.core.api import db, ctx
 from inyoka.core.config import TextConfigField, IntegerConfigField
 from inyoka.core.resource import IResourceManager
@@ -219,9 +220,7 @@ class SearchIndexMapperExtension(db.MapperExtension):
         self.provider = provider
 
     def _update_index(self, mapper, connection, instance):
-        from celery.execute import send_task
-        send_task('inyoka.core.tasks.UpdateSearchTask',
-                  [self.index, self.provider, instance.id])
+        tasks.UpdateSearchTask.delay(self.index, self.provider, instance.id)
 
     after_insert = after_update = after_delete = _update_index
 
@@ -269,14 +268,12 @@ def query(index, q, **kwargs):
         - If possible, a string containing a spelling-corrected version of `q`
           otherwise `None`
     """
-    from celery.execute import send_task
-    t1 = send_task('inyoka.core.tasks.search_query',
-                   [index, q], {'filters': kwargs})
-    t2 = send_task('inyoka.core.tasks.spell_correct', [index, q])
+    query_task = tasks.search_query.delay(index, q, filters=kwargs)
+    correct_task = tasks.spell_correct.delay(index, q)
 
-    result_ids, total = t1.get()
+    result_ids, total = query_task.get()
     results = _process_result_ids(index, result_ids)
-    corrected = t2.get()
+    corrected = correct_task.get()
 
     return results, total, corrected != q and corrected or None
 
@@ -286,8 +283,7 @@ def find_similar(index, doc):
     Find documents in the search index `index` similar the document `doc`, which
     has to be an id following the scheme "provider-id".
     """
-    from celery.execute import send_task
-    ids = send_task('inyoka.core.tasks.find_similar_docs', [index, doc]).get()
+    ids = tasks.find_similar_docs.delay(index, doc).get()
     return _process_result_ids(index, ids)
 
 

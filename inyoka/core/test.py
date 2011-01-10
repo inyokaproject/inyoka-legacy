@@ -22,6 +22,8 @@ from urllib2 import urlparse
 import nose
 from nose.plugins import cover, base, errorclass
 
+from kombu.transport import get_transport_cls
+
 from logbook import TestHandler as LogbookTestHandler
 
 from werkzeug import Client, create_environ
@@ -49,9 +51,8 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
            'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database',
-           'TestResourceManager', 'execute_tasks_inline', 'log_tasks',
-           'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless',
-           'skip_if_database')
+           'TestResourceManager', 'skip_if_environ', 'todo', 'skip', 'skip_if',
+           'skip_unless', 'skip_if_database')
 
 
 __all__ = __all__ + tuple(nose.tools.__all__)
@@ -653,12 +654,11 @@ class InyokaPlugin(cover.Coverage):
         ctx.load_packages(['tests.*'])
 
         # special celery handling.  We change the result and carrot backends
-        # to `database` to be able to run the unittests without a amqp server.
+        # to `memory` to be able to run the unittests without a amqp server.
         # As celery has unittests itself we do know that the result-backend
         # stuff works as expected.
         # We also disable the email sending feature of celery.
-        ctx.cfg['celery.result_backend'] = 'database'
-        ctx.cfg['celery.result_dburi'] = ctx.cfg['database.url']
+        ctx.cfg['celery.result_backend'] = get_transport_cls('memory')
         ctx.cfg['broker.backend'] = 'memory'
         ctx.cfg['celery.send_task_error_emails'] = False
 
@@ -855,48 +855,3 @@ def skip_unless(predicate, reason):
 def skip_if_database(name, reason):
     databases = to_list(name)
     return skip_if(database.get_engine().url.drivername in databases, reason)
-
-
-@contextmanager
-def execute_tasks_inline():
-    def exec_task(task_name, args=[], kwargs={}, **options):
-        from celery.registry import tasks
-        from celery.execute import apply
-        return apply(tasks[task_name], args, kwargs, **options)
-
-    import celery.execute
-    orig = celery.execute.send_task
-    celery.execute.send_task = exec_task
-
-    try:
-        yield
-    finally:
-        celery.execute.send_task = orig
-
-
-@contextmanager
-def log_tasks():
-    """
-    Don't execute tasks but log them.
-
-    Example::
-        with log_tasks() as log:
-            do_stuff()
-        eq_(log, [
-            ('example.some_task', (1, 2), {'arg3': 4}, {}),
-            ('example.other_task', ('foo'), {}, {'countdown': 10}),
-        ])
-    """
-    log = []
-
-    def log_task(task_name, args=[], kwargs={}, **options):
-        log.append((task_name, args, kwargs, options))
-
-    import celery.execute
-    orig = celery.execute.send_task
-    celery.execute.send_task = log_task
-
-    try:
-        yield log
-    finally:
-        celery.execute.send_task = orig

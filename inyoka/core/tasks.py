@@ -8,7 +8,8 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from celery.decorators import Task, task, periodic_task
+from celery.task import Task
+from celery.decorators import task, periodic_task
 from collections import defaultdict
 from datetime import timedelta
 from sqlalchemy.orm.exc import NoResultFound

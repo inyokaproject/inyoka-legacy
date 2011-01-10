@@ -228,39 +228,38 @@ class TestSubscriptions(DatabaseTestCase):
         entries = self.data['TestSubscriptionEntry']
         NotifyTrackerMixin.tracker = []
 
-        with execute_tasks_inline():
-            #: ensure this does not fail but passes silently
-            Subscription.accessed(one, object=entries[0])
+        #: ensure this does not fail but passes silently
+        Subscription.accessed(one, object=entries[0])
 
-            Subscription.subscribe(one, u'__test_category', cat1)
-            Subscription.subscribe(two, u'__test_blog')
+        Subscription.subscribe(one, u'__test_category', cat1)
+        Subscription.subscribe(two, u'__test_blog')
 
-            NotifyTrackerMixin.epoch = 1
-            Subscription.new(entries[0], u'__test_new_entry')
-            Subscription.new(entries[1], u'__test_new_entry')
-            self._check_multiple_state(one, u'__test_category', cat1.id,
-                                  set((entries[0].id,)), 1)
-            self._check_multiple_state(two, u'__test_blog', None,
-                                  set((entries[0].id, entries[1].id)), 2)
+        NotifyTrackerMixin.epoch = 1
+        Subscription.new(entries[0], u'__test_new_entry')
+        Subscription.new(entries[1], u'__test_new_entry')
+        self._check_multiple_state(one, u'__test_category', cat1.id,
+                              set((entries[0].id,)), 1)
+        self._check_multiple_state(two, u'__test_blog', None,
+                              set((entries[0].id, entries[1].id)), 2)
 
-            NotifyTrackerMixin.epoch = 2
-            Subscription.new(entries[2], u'__test_new_entry')
-            Subscription.new(entries[3], u'__test_new_entry')
-            self._check_multiple_state(one, u'__test_category', cat1.id,
-                                  set((entries[0].id, entries[2].id, entries[3].id)), 3)
-            self._check_multiple_state(two, u'__test_blog', None,
-                                  set((entries[0].id, entries[1].id,
-                                       entries[2].id, entries[3].id)), 4)
+        NotifyTrackerMixin.epoch = 2
+        Subscription.new(entries[2], u'__test_new_entry')
+        Subscription.new(entries[3], u'__test_new_entry')
+        self._check_multiple_state(one, u'__test_category', cat1.id,
+                              set((entries[0].id, entries[2].id, entries[3].id)), 3)
+        self._check_multiple_state(two, u'__test_blog', None,
+                              set((entries[0].id, entries[1].id,
+                                   entries[2].id, entries[3].id)), 4)
 
-            Subscription.accessed(two, object=entries[2])
-            Subscription.accessed(two, object=entries[1])
-            self._check_multiple_state(two, u'__test_blog', None,
-                                  set((entries[0].id, entries[3].id)), 2)
+        Subscription.accessed(two, object=entries[2])
+        Subscription.accessed(two, object=entries[1])
+        self._check_multiple_state(two, u'__test_blog', None,
+                              set((entries[0].id, entries[3].id)), 2)
 
-            Subscription.accessed(one, subject=cat1)
-            Subscription.accessed(one, subject=cat1) # must work also if not unread
-            self._check_multiple_state(one, u'__test_category', cat1.id,
-                                  set(), 0)
+        Subscription.accessed(one, subject=cat1)
+        Subscription.accessed(one, subject=cat1) # must work also if not unread
+        self._check_multiple_state(one, u'__test_category', cat1.id,
+                              set(), 0)
 
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
             (1, u'__test_new_entry', one, entries[0], {'__test_category': [cat1]}),
@@ -286,48 +285,47 @@ class TestSubscriptions(DatabaseTestCase):
 
         NotifyTrackerMixin.tracker = []
 
-        with execute_tasks_inline():
-            Subscription.subscribe(three, u'__test_tag', t1)
-            Subscription.subscribe(three, u'__test_tag', t2)
-            Subscription.subscribe(three, u'__test_category', cat2)
-            Subscription.subscribe(four, u'__test_tag', t3)
+        Subscription.subscribe(three, u'__test_tag', t1)
+        Subscription.subscribe(three, u'__test_tag', t2)
+        Subscription.subscribe(three, u'__test_category', cat2)
+        Subscription.subscribe(four, u'__test_tag', t3)
 
-            self._check_multiple_state(three, u'__test_tag', t1.id,
-                                       set(), 0)
-            self._check_multiple_state(three, u'__test_tag', t2.id,
-                                       set(), 0)
-            self._check_multiple_state(four, u'__test_tag', t3.id,
-                                       set(), 0)
+        self._check_multiple_state(three, u'__test_tag', t1.id,
+                                   set(), 0)
+        self._check_multiple_state(three, u'__test_tag', t2.id,
+                                   set(), 0)
+        self._check_multiple_state(four, u'__test_tag', t3.id,
+                                   set(), 0)
 
-            NotifyTrackerMixin.epoch = 1
-            Subscription.new(entries[0], u'__test_new_entry')
-            NotifyTrackerMixin.epoch = 2
-            Subscription.new(entries[2], u'__test_new_entry')
-            self._check_multiple_state(three, u'__test_tag', t1.id,
-                                       set((entries[0].id,)), 1)
-            self._check_multiple_state(three, u'__test_tag', t2.id,
-                                       set((entries[0].id,)), 1)
+        NotifyTrackerMixin.epoch = 1
+        Subscription.new(entries[0], u'__test_new_entry')
+        NotifyTrackerMixin.epoch = 2
+        Subscription.new(entries[2], u'__test_new_entry')
+        self._check_multiple_state(three, u'__test_tag', t1.id,
+                                   set((entries[0].id,)), 1)
+        self._check_multiple_state(three, u'__test_tag', t2.id,
+                                   set((entries[0].id,)), 1)
 
-            NotifyTrackerMixin.epoch = 3
-            Subscription.new(entries[1], u'__test_new_entry')
-            self._check_multiple_state(three, u'__test_tag', t2.id,
-                                       set((entries[0].id, entries[1].id)), 2)
+        NotifyTrackerMixin.epoch = 3
+        Subscription.new(entries[1], u'__test_new_entry')
+        self._check_multiple_state(three, u'__test_tag', t2.id,
+                                   set((entries[0].id, entries[1].id)), 2)
 
-            self._check_multiple_state(three, u'__test_category', cat2.id,
-                                       set((entries[1].id,)), 1)
-            Subscription.accessed(three, object=entries[1])
-            Subscription.accessed(three, object=entries[1])
-            self._check_multiple_state(three, u'__test_category', cat2.id,
-                                       set(), 0)
+        self._check_multiple_state(three, u'__test_category', cat2.id,
+                                   set((entries[1].id,)), 1)
+        Subscription.accessed(three, object=entries[1])
+        Subscription.accessed(three, object=entries[1])
+        self._check_multiple_state(three, u'__test_category', cat2.id,
+                                   set(), 0)
 
-            NotifyTrackerMixin.epoch = 4
-            Subscription.new(entries[3], u'__test_new_entry')
-            self._check_multiple_state(three, u'__test_tag', t1.id,
-                                       set((entries[0].id,)), 1)
-            self._check_multiple_state(three, u'__test_tag', t2.id,
-                                       set((entries[0].id, entries[3].id)), 2)
-            self._check_multiple_state(four, u'__test_tag', t3.id,
-                                       set((entries[3].id,)), 1)
+        NotifyTrackerMixin.epoch = 4
+        Subscription.new(entries[3], u'__test_new_entry')
+        self._check_multiple_state(three, u'__test_tag', t1.id,
+                                   set((entries[0].id,)), 1)
+        self._check_multiple_state(three, u'__test_tag', t2.id,
+                                   set((entries[0].id, entries[3].id)), 2)
+        self._check_multiple_state(four, u'__test_tag', t3.id,
+                                   set((entries[3].id,)), 1)
 
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
             (1, u'__test_new_entry', three, entries[0], {'__test_tag': [t1, t2]}),
@@ -349,58 +347,57 @@ class TestSubscriptions(DatabaseTestCase):
 
         NotifyTrackerMixin.tracker = []
 
-        with execute_tasks_inline():
-            Subscription.subscribe(three, u'__test_comments', e1)
-            Subscription.subscribe(three, u'__test_comments', e2)
-            Subscription.subscribe(four, u'__test_comments', e1)
+        Subscription.subscribe(three, u'__test_comments', e1)
+        Subscription.subscribe(three, u'__test_comments', e2)
+        Subscription.subscribe(four, u'__test_comments', e1)
 
-            self._check_sequent_state(three, u'__test_comments', e1.id,
-                                      None, 0)
-            self._check_sequent_state(three, u'__test_comments', e2.id,
-                                      None, 0)
-            self._check_sequent_state(four, u'__test_comments', e1.id,
-                                      None, 0)
+        self._check_sequent_state(three, u'__test_comments', e1.id,
+                                  None, 0)
+        self._check_sequent_state(three, u'__test_comments', e2.id,
+                                  None, 0)
+        self._check_sequent_state(four, u'__test_comments', e1.id,
+                                  None, 0)
 
-            NotifyTrackerMixin.epoch = 1
-            Subscription.new(comments[0], u'__test_new_comment') # e1
-            Subscription.new(comments[1], u'__test_new_comment') # e2
+        NotifyTrackerMixin.epoch = 1
+        Subscription.new(comments[0], u'__test_new_comment') # e1
+        Subscription.new(comments[1], u'__test_new_comment') # e2
 
-            self._check_sequent_state(three, u'__test_comments', e1.id,
-                                      comments[0].id, 1)
-            self._check_sequent_state(three, u'__test_comments', e2.id,
-                                      comments[1].id, 1)
-            self._check_sequent_state(four, u'__test_comments', e1.id,
-                                      comments[0].id, 1)
+        self._check_sequent_state(three, u'__test_comments', e1.id,
+                                  comments[0].id, 1)
+        self._check_sequent_state(three, u'__test_comments', e2.id,
+                                  comments[1].id, 1)
+        self._check_sequent_state(four, u'__test_comments', e1.id,
+                                  comments[0].id, 1)
 
-            Subscription.accessed(three, subject=e1)
-            self._check_sequent_state(three, u'__test_comments', e1.id,
-                                      None, 0)
+        Subscription.accessed(three, subject=e1)
+        self._check_sequent_state(three, u'__test_comments', e1.id,
+                                  None, 0)
 
-            NotifyTrackerMixin.epoch = 2
-            Subscription.new(comments[2], u'__test_new_comment') # e1
-            self._check_sequent_state(three, u'__test_comments', e1.id,
-                                 comments[2].id, 1)
+        NotifyTrackerMixin.epoch = 2
+        Subscription.new(comments[2], u'__test_new_comment') # e1
+        self._check_sequent_state(three, u'__test_comments', e1.id,
+                             comments[2].id, 1)
 
-            NotifyTrackerMixin.epoch = 3
-            Subscription.new(comments[3], u'__test_new_comment') # e1
-            self._check_sequent_state(three, u'__test_comments', e1.id,
-                                 comments[2].id, 2)
-            self._check_sequent_state(four, u'__test_comments', e1.id,
-                                 comments[0].id, 3)
+        NotifyTrackerMixin.epoch = 3
+        Subscription.new(comments[3], u'__test_new_comment') # e1
+        self._check_sequent_state(three, u'__test_comments', e1.id,
+                             comments[2].id, 2)
+        self._check_sequent_state(four, u'__test_comments', e1.id,
+                             comments[0].id, 3)
 
-            Subscription.accessed(four, object=comments[3])
-            self._check_sequent_state(four, u'__test_comments', e1.id,
-                                 None, 0)
+        Subscription.accessed(four, object=comments[3])
+        self._check_sequent_state(four, u'__test_comments', e1.id,
+                             None, 0)
 
-            NotifyTrackerMixin.epoch = 4
-            Subscription.new(comments[4], u'__test_new_comment') # e1
-            Subscription.new(comments[5], u'__test_new_comment') # e2
-            self._check_sequent_state(three, u'__test_comments', e1.id,
-                                 comments[2].id, 3)
-            self._check_sequent_state(three, u'__test_comments', e2.id,
-                                 comments[1].id, 2)
-            self._check_sequent_state(four, u'__test_comments', e1.id,
-                                 comments[4].id, 1)
+        NotifyTrackerMixin.epoch = 4
+        Subscription.new(comments[4], u'__test_new_comment') # e1
+        Subscription.new(comments[5], u'__test_new_comment') # e2
+        self._check_sequent_state(three, u'__test_comments', e1.id,
+                             comments[2].id, 3)
+        self._check_sequent_state(three, u'__test_comments', e2.id,
+                             comments[1].id, 2)
+        self._check_sequent_state(four, u'__test_comments', e1.id,
+                             comments[4].id, 1)
 
         eq_(sorted(NotifyTrackerMixin.tracker), sorted([
             (1, u'__test_new_comment', three, comments[0], {'__test_comments': [e1]}),

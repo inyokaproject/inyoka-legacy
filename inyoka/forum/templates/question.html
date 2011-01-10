@@ -48,8 +48,8 @@
     <div class="summary">
 
       {{ question.get_rendered_text(question.text)|safe }}
-      {% if question.author.profile.signature_html %}
-        <div class="signature">{{ question.author.profile.signature_html|safe }}</div>
+      {% if question.author.profile.signature %}
+        <div class="signature">{{ question.author.profile.get_rendered_text(question.author.profile.signature)|safe }}</div>
       {% endif %}
       <p>{{ _('Tags: ') }}
         {%- for tag in question.tags %}
@@ -118,9 +118,9 @@
       </div>
       <div class="summary">
         {{ answer.get_rendered_text(answer.text)|safe }}
-        {% if answer.author.profile.signature_html %}
+        {% if answer.author.profile.signature %}
           <hr>
-          <div class="signature">{{ answer.author.profile.signature_html|safe }}</div>
+          <div class="signature">{{ answer.author.profile.get_rendered_text(answer.author.profile.signature)|safe }}</div>
         {% endif %}
       </div>
     </div>

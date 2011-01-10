@@ -25,12 +25,7 @@ from itertools import izip
 
 
 def context_modifier(request, context):
-    """This function adds two things to the context of all pages:
-    `archive`
-        A list of the latest months with articles.
-    `tags`
-        A list of all tags.
-    """
+    """Injects `archive`, `tags`, `months`, `tags` to context globals"""
     key = 'news/archive'
     data = cache.get(key)
     if data is None:

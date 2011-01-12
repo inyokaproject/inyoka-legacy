@@ -36,7 +36,7 @@ INYOKA_REVISION = 'unknown'
 #: List of activated components.  This defaults to load all components
 #  from the inyoka.* namespace.
 activated_components = ListConfigField('activated_components',
-    ['inyoka.core.api', 'inyoka.core.*', 'inyoka.*'])
+    ['inyoka.core.api', 'inyoka.*'])
 
 #: List of deactivated components
 deactivated_components = ListConfigField('deactivated_components', [])

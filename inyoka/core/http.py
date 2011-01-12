@@ -135,9 +135,12 @@ def redirect_to(endpoint, **kwargs):
     return redirect(href(endpoint, **kwargs))
 
 
-def allow_next_redirects(default='portal/index'):
+def allow_next_redirects(default):
     """Use this decorator to ease the usage of the "next" url parameter
-    for redirecting after doing some important things."""
+    for redirecting after doing some important things.
+
+    :param default: The default redirect target.
+    """
 
     def decorated(func):
         def _inner(*args, **kwargs):

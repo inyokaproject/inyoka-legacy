@@ -680,10 +680,11 @@ def drop_all_tables(bind=None):
 
 def _make_module():
     db = ModuleType('db')
-    for mod in sqlalchemy, orm:
-        for key, value in mod.__dict__.iteritems():
-            if key in mod.__all__:
-                setattr(db, key, value)
+    _get_items = lambda mod: ((key, getattr(mod, key)) for key in mod.__all__)
+    modules = (_get_items(sqlalchemy), _get_items(orm))
+    for module in modules:
+        for key, value in module:
+            setattr(db, key, value)
 
     # support for postgresql array type
     from sqlalchemy.dialects.postgresql.base import PGArray

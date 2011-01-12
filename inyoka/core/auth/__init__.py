@@ -96,13 +96,6 @@ class IAuthSystem(Interface):
     #: for this auth system, you can disable it here.
     show_register_link = True
 
-    def get_login_form(self, request, default=None):
-        """Returns the login form.
-
-        :param request: The current request.
-        :param default: The initial form values.
-        """
-
     @property
     def can_reset_password(self):
         """You can either override this property or leave the default
@@ -124,32 +117,36 @@ class IAuthSystem(Interface):
         """Called like a view function with only the request.  Has to do the
         register heavy-lifting.
 
-        This method should, but must not call :meth:`before_register` and
+        This method should, but don't have to call :meth:`before_register` and
         :meth:`after_register` to either check if the register process is
-        not required or th finish the user registration.
+        not required or to finish the user registration.
 
         :param request: The current request object.
         """
 
     def after_register(self, request, user):
-        """
-        Tasks to be performed after the registration.
-        Per default this sends an activation email.
-        """
+        """Tasks to be performed after the registration."""
 
     def before_login(self, request):
         """If this login system uses an external login URL, this function
         has to return a redirect response, otherwise None.  This is called
         before the standard form handling to allow redirecting to an
-        external login URL.  This function is called by the default
-        `login` implementation.
+        external login URL.
 
         If the actual login happens here because of a back-redirect the
         system might raise a `LoginUnsucessful` exception.
         """
 
     def login(self, request):
-        """Like `register` just for login."""
+        """Called like a view function with only the request.  Has to do the
+        login heavy-lifting.
+
+        This method should, but don't have to call :meth:`before_login` and
+        :meth:`after_register` to either check if the login process is
+        not required or finish the user login.
+
+        :param request: The current request object.
+        """
 
     def perform_login(self, request, **form_data):
         """If `login` is not overridden, this is called with the submitted
@@ -164,8 +161,7 @@ class IAuthSystem(Interface):
         redirect back to the logout page, but instead directly to the
         **current** `request.next_url`.
 
-        Most auth systems do not have to implement this method.  The
-        default one calls `set_user(request, None)`.
+        Most auth systems do not have to implement this method.
         """
 
     def get_user(self, request):

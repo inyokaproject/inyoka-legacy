@@ -9,7 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
-from inyoka.core.api import view, templated, redirect_to, db, Rule, render_template, IController
+from inyoka.core.api import view, templated, redirect_to, db, Rule, render_template, \
+    IController, login_required
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.news.forms import EditArticleForm
 from inyoka.news.models import Article
@@ -26,6 +27,7 @@ class NewsAdminProvider(IController):
         Rule('/<slug>/delete', endpoint='article_delete')
     ]
 
+    @login_required
     @view('article_edit')
     @templated('news/admin/article_edit.html')
     def articles_edit(self, request, slug=None):
@@ -51,6 +53,7 @@ class NewsAdminProvider(IController):
             'article': article,
         }
 
+    @login_required
     @view('article_delete')
     def articles_delete(self, request, slug):
         article = Article.query.filter_by(slug=slug).one()

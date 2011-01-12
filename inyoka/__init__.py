@@ -348,12 +348,10 @@ def _bootstrap():
     ctx = ApplicationContext()
     ctx.bind()
 
-    ctx.load_packages(['inyoka.core.api'])
-    if ctx.cfg['testing']:
-        logger.level_name = 'ERROR'
-
     # setup components
     ctx.load_packages(ctx.cfg['activated_components'])
+    if ctx.cfg['testing']:
+        logger.level_name = 'ERROR'
 
     # makes INYOKA_REVISION visible in the extra dict of every log record
     Processor(lambda x:

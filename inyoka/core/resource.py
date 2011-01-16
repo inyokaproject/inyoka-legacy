@@ -9,9 +9,20 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import os
+import sys
 from sqlalchemy import Table
+from werkzeug import cached_property
 from inyoka import Interface
 from inyoka.context import ctx
+
+
+def _get_package_path(name):
+    """Returns the path to a package or cwd if that cannot be found."""
+    try:
+        return os.path.abspath(os.path.dirname(sys.modules[name].__file__))
+    except (KeyError, AttributeError):
+        return os.getcwd()
 
 
 class IResourceManager(Interface):
@@ -20,6 +31,10 @@ class IResourceManager(Interface):
     more deeply without getting in our (or inyokas...) way.
 
     """
+
+    #: The name of the package or module this IResourceManager is located.
+    #: If it's None it defaults to the current module of the IResourceManager.
+    package_name = None
 
     #: List all models here to get them registered with the database
     #: subsystem.  Models not listed won't be recognized by structure
@@ -72,3 +87,39 @@ class IResourceManager(Interface):
                 dct.setdefault(provider.index, {})
                 dct[provider.index][provider.name] = provider
         return dct
+
+    @property
+    def root_path(self):
+        """Where is the app root located?"""
+        return _get_package_path(self.package_name or self.__module__)
+
+    @property
+    def has_static_folder(self):
+        """This is `True` if the package bound object's container has a
+        folder named ``'static'``.
+        """
+        return os.path.isdir(os.path.join(self.root_path, 'static'))
+
+    def open_resource(self, resource):
+        """Opens a resource from the application's resource folder.  To see
+        how this works, consider the following folder structure::
+
+            /myapplication.py
+            /schemal.sql
+            /static
+                /style.css
+            /templates
+                /layout.html
+                /index.html
+
+        If you want to open the `schema.sql` file you would do the
+        following::
+
+            with app.open_resource('schema.sql') as f:
+                contents = f.read()
+                do_something_with(contents)
+
+        :param resource: the name of the resource.  To access resources within
+                         subfolders use forward slashes as separator.
+        """
+        return open(os.path.join(self.root_path, resource), 'rb')

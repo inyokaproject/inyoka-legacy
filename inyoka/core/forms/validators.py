@@ -10,8 +10,9 @@
 """
 import re
 from urlparse import urlparse
-from wtforms.validators import *
-from wtforms.validators import ValidationError
+from wtforms.validators import email, equal_to, ip_address, length, \
+    number_range, optional, required, regexp, url, any_of, none_of, \
+    ValidationError
 from inyoka.i18n import lazy_gettext
 from inyoka.context import ctx
 from inyoka.core.auth.models import User

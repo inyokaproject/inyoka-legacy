@@ -16,13 +16,13 @@ from inyoka.news.models import Tag
 
 
 class EditArticleForm(Form):
-    title = TextField(_(u'Title'), [validators.Required(), validators.Length(max=200)])
-    intro = TextField(_(u'Intro'), [validators.Required()], widget=widgets.TextArea())
-    text = TextField(_(u'Text'), [validators.Required()], widget=widgets.TextArea())
+    title = TextField(_(u'Title'), [validators.required(), validators.length(max=200)])
+    intro = TextField(_(u'Intro'), [validators.required()], widget=widgets.TextArea())
+    text = TextField(_(u'Text'), [validators.required()], widget=widgets.TextArea())
     public = BooleanField(_(u'Published'))
     tags = AutocompleteField(_(u'Tags'), get_label='name',
                              query_factory=lambda: Tag.query.autoflush(False))
-    author = QuerySelectField(_(u'Author'), [validators.Required()],
+    author = QuerySelectField(_(u'Author'), [validators.required()],
                              query_factory=lambda: User.query.autoflush(False),
                              widget=widgets.Select())
 

@@ -22,18 +22,18 @@ from inyoka.utils.text import get_random_password
 class ProfileForm(Form):
 
     # personal data
-    real_name = TextField(lazy_gettext(u'Realname'), [validators.Length(max=200)])
+    real_name = TextField(lazy_gettext(u'Realname'), [validators.length(max=200)])
     website = TextField(lazy_gettext(u'Website'),
-        validators=[validators.Optional(), validators.is_valid_url()])
-    location = TextField(lazy_gettext(u'Location'), [validators.Length(max=200)])
-    interests = TextField(lazy_gettext(u'Interests'), [validators.Length(max=200)])
-    occupation = TextField(lazy_gettext(u'Occupation'), [validators.Length(max=200)])
+        validators=[validators.optional(), validators.is_valid_url()])
+    location = TextField(lazy_gettext(u'Location'), [validators.length(max=200)])
+    interests = TextField(lazy_gettext(u'Interests'), [validators.length(max=200)])
+    occupation = TextField(lazy_gettext(u'Occupation'), [validators.length(max=200)])
     signature = TextField(lazy_gettext(u'Signature'), widget=widgets.TextArea())
 
     # communication channels
     jabber = TextField(lazy_gettext(u'Jabber ID'),
-        validators=[validators.Optional(), validators.is_valid_jabber()])
-    skype = TextField(lazy_gettext(u'Skype'), [validators.Length(max=200)])
+        validators=[validators.optional(), validators.is_valid_jabber()])
+    skype = TextField(lazy_gettext(u'Skype'), [validators.length(max=200)])
 
     def __init__(self, *args, **kwargs):
         self.profile = profile = kwargs.pop('profile')
@@ -51,8 +51,8 @@ class ProfileForm(Form):
 
 class LoginForm(Form):
     """Used to log in users."""
-    username = TextField(lazy_gettext(u'Username'), [validators.Required()])
-    password = TextField(lazy_gettext(u'Password'), [validators.Required()],
+    username = TextField(lazy_gettext(u'Username'), [validators.required()])
+    password = TextField(lazy_gettext(u'Password'), [validators.required()],
                          widget=widgets.PasswordInput())
     permanent = BooleanField(lazy_gettext(u'Remember me'))
 
@@ -67,15 +67,15 @@ def get_registration_form(request):
     random_pw = get_random_password() if 'random' in request.args else None
 
     class RegistrationForm(Form):
-        username = TextField(lazy_gettext(u'Username'), [validators.Required(),
+        username = TextField(lazy_gettext(u'Username'), [validators.required(),
             validators.is_user(negative=True)])
-        email = TextField(lazy_gettext(u'Email'), [validators.Required(),
+        email = TextField(lazy_gettext(u'Email'), [validators.required(),
             validators.is_user(negative=True, key='email')])
-        password = PasswordField(lazy_gettext(u'Password'), [validators.Required(),
-            validators.EqualTo('confirm', message=lazy_gettext(u'Passwords must match'))],
+        password = PasswordField(lazy_gettext(u'Password'), [validators.required(),
+            validators.equal_to('confirm', message=lazy_gettext(u'Passwords must match'))],
             widget=widgets.PasswordInput(False), default=random_pw)
         confirm = PasswordField(lazy_gettext(u'Repeat Passord'),
-            [validators.Required()], widget=widgets.PasswordInput(False),
+            [validators.required()], widget=widgets.PasswordInput(False),
             default=random_pw)
         captcha = RecaptchaField(lazy_gettext(u'ReCaptcha'))
 
@@ -83,19 +83,19 @@ def get_registration_form(request):
 
 
 class EditTagForm(Form):
-    name = TextField(lazy_gettext(u'Name'), [validators.Required(),
-                validators.Length(max=20),validators.is_valid_tag_name()])
+    name = TextField(lazy_gettext(u'Name'), [validators.required(),
+                validators.length(max=20),validators.is_valid_tag_name()])
 
 
 class SearchForm(MagicFilterForm):
     csrf_disabled = True
     dynamic_fields = ['author', 'tags', 'date']
 
-    q = TextField(lazy_gettext(u'Search'), [validators.Required()])
+    q = TextField(lazy_gettext(u'Search'), [validators.required()])
     page = IntegerField(lazy_gettext(u'Page'), default=1)
 
     # dynamc fields
-    author = TextField(lazy_gettext(u'Author'), [validators.Optional(),
+    author = TextField(lazy_gettext(u'Author'), [validators.optional(),
         validators.is_user()],
         widget=widgets.AutocompleteWidget('api/core/get_user'))
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
@@ -109,13 +109,13 @@ def get_change_password_form(request):
     class ChangePasswordForm(Form):
 
         old_password = PasswordField(lazy_gettext(u'Old Password'),
-                                     [validators.Required()])
+                                     [validators.required()])
         new_password = PasswordField(lazy_gettext(u'New Password'),
-                                     [validators.Required()],
+                                     [validators.required()],
                                      default=random_pw,
                                      widget=widgets.PasswordInput(False))
         new_password_confirm = PasswordField(lazy_gettext(u'New Password (confirmation)'),
-            [validators.EqualTo('new_password', message=lazy_gettext(u'Passwords must match'))],
+            [validators.equal_to('new_password', message=lazy_gettext(u'Passwords must match'))],
             default=random_pw, widget=widgets.PasswordInput(False))
 
     return ChangePasswordForm
@@ -123,5 +123,5 @@ def get_change_password_form(request):
 
 class DeactivateProfileForm(Form):
     password = PasswordField(lazy_gettext(u'Password'),
-            [validators.Required()],
+            [validators.required()],
             widget=widgets.PasswordInput(False))

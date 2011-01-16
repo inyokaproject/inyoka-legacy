@@ -8,8 +8,9 @@
     :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
-from wtforms.widgets import *
-from wtforms.widgets import HTMLString, TextInput, HiddenInput, Input
+from wtforms.widgets import CheckboxInput, FileInput, HiddenInput, ListWidget, \
+    PasswordInput, RadioInput, Select, SubmitInput, TableWidget, TextArea, \
+    TextInput, HTMLString, Input
 from inyoka.context import ctx
 from inyoka.core.serializer import get_serializer, primitive
 from inyoka.core.models import Tag

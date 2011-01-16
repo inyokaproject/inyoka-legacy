@@ -18,8 +18,8 @@ from inyoka.forum.models import Forum, Tag
 class AskQuestionForm(Form):
 
     title = TextField(lazy_gettext(u'Title'),
-        [validators.Length(max=160), validators.Required()])
-    text = TextField(lazy_gettext(u'Text'), [validators.Required()],
+        [validators.length(max=160), validators.required()])
+    text = TextField(lazy_gettext(u'Text'), [validators.required()],
                      widget=widgets.TextArea())
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
                         query_factory=lambda: Tag.query)
@@ -27,23 +27,23 @@ class AskQuestionForm(Form):
 
 class AnswerQuestionForm(Form):
 
-    text = TextField(lazy_gettext(u'Text'), [validators.Required()],
+    text = TextField(lazy_gettext(u'Text'), [validators.required()],
                      widget=widgets.TextArea())
 
 
 class EditForumForm(Form):
 
     name = TextField(lazy_gettext(u'Name'),
-                     [validators.Required(), validators.Length(max=160)])
+                     [validators.required(), validators.length(max=160)])
     slug = TextField(lazy_gettext(u'Slug'),
-                     [validators.Required(), validators.Length(max=160)])
+                     [validators.required(), validators.length(max=160)])
     parent = QuerySelectField(lazy_gettext(u'Parent'), query_factory=lambda: Forum.query,
                               get_label='name', allow_blank=True)
-    description = TextField(lazy_gettext(u'Description'), [validators.Required()],
+    description = TextField(lazy_gettext(u'Description'), [validators.required()],
                             widget=widgets.TextArea())
     tags = AutocompleteField(lazy_gettext(u'Tags'), get_label='name',
                              query_factory=lambda: Tag.query,
-                             validators=[validators.Length(min=1)])
+                             validators=[validators.length(min=1)])
 
     def validate_parent(self, field):
         message = lazy_gettext(u"You can't choose the forum itself or one of its subforums as parent")

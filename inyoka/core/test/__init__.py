@@ -14,7 +14,6 @@ import sys
 import unittest
 import warnings
 import traceback
-from contextlib import contextmanager
 from functools import partial, wraps
 from pprint import pformat
 from urllib2 import urlparse
@@ -22,13 +21,11 @@ from urllib2 import urlparse
 import nose
 from nose.plugins import cover, base, errorclass
 
-from kombu.transport import get_transport_cls
-
 from logbook import TestHandler as LogbookTestHandler
 
-from werkzeug import Client, create_environ
+from werkzeug import Client
 from werkzeug.contrib.testtools import ContentAccessors
-from minimock import mock, Mock, TraceTracker, restore as revert_mocks
+from minimock import mock, TraceTracker, restore as revert_mocks
 
 from sqlalchemy.util import to_list
 
@@ -49,7 +46,7 @@ warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
-           'future', 'tracker', 'mock', 'Mock', 'revert_mocks', 'db', 'Response',
+           'future', 'tracker', 'mock', 'revert_mocks', 'db', 'Response',
            'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database',
            'TestResourceManager', 'skip_if_environ', 'todo', 'skip', 'skip_if',
            'skip_unless', 'skip_if_database')

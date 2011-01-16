@@ -11,6 +11,7 @@
 from time import sleep
 from functools import partial
 from inyoka.core.test import *
+from inyoka.core.test.mock import mock, TraceTracker
 from inyoka.core.cache import cache
 
 
@@ -106,6 +107,7 @@ def test_cached_query():
     c = DatabaseTestCategory(slug=u'category')
     db.session.commit()
     # setup mock objects
+    tracker = TraceTracker()
     mock('cache.set', tracker=tracker)
     tracker.clear()
     if db.driver(('sqlite', 'postgresql')):

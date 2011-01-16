@@ -25,13 +25,13 @@ from logbook import TestHandler as LogbookTestHandler
 
 from werkzeug import Client
 from werkzeug.contrib.testtools import ContentAccessors
-from minimock import mock, TraceTracker, restore as revert_mocks
 
 from sqlalchemy.util import to_list
 
 from inyoka.l10n import parse_timestamp, parse_timeonly
 from inyoka.context import ctx, _request_ctx_stack
 from inyoka.core import database
+from inyoka.core.test import mock
 from inyoka.core.database import db
 from inyoka.core.http import Response, Request
 from inyoka.core.resource import IResourceManager
@@ -46,10 +46,9 @@ warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
-           'future', 'tracker', 'mock', 'revert_mocks', 'db', 'Response',
-           'ctx', 'FixtureLoader', 'DatabaseTestCase', 'refresh_database',
-           'TestResourceManager', 'skip_if_environ', 'todo', 'skip', 'skip_if',
-           'skip_unless', 'skip_if_database')
+           'future', 'db', 'Response', 'ctx', 'FixtureLoader',
+           'DatabaseTestCase', 'refresh_database', 'TestResourceManager',
+           'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless', 'skip_if_database')
 
 
 __all__ = __all__ + tuple(nose.tools.__all__)
@@ -58,9 +57,6 @@ dct = globals()
 for obj in nose.tools.__all__:
     dct[obj] = getattr(nose.tools, obj)
 del dct
-
-# an overall trace tracker from minimock
-tracker = TraceTracker()
 
 
 _iterables = (list, tuple, set, frozenset)
@@ -440,7 +436,7 @@ class DatabaseTestCase(TestCase):
                     db.session.commit()
 
         # revert all mock objects to get clear passage on the next test
-        revert_mocks()
+        mock.restore()
         try:
             db.session.close()
         except db.SQLAlchemyError:

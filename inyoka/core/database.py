@@ -99,6 +99,7 @@ from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.types import MutableType, TypeDecorator
 from sqlalchemy.engine import reflection
 from sqlalchemy.schema import DropTable, DropConstraint
+from inyoka import InterfaceMeta
 from inyoka.context import ctx
 from inyoka.core.resource import IResourceManager
 from inyoka.utils import flatten_iterator
@@ -436,7 +437,7 @@ class Query(orm.Query):
         return self.options(*args)
 
 
-class DeclarativeMeta(SADeclarativeMeta):
+class DeclarativeMeta(SADeclarativeMeta, InterfaceMeta):
     """Our own metaclass to register all model classes
     """
 

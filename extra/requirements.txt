@@ -3,7 +3,6 @@ Jinja2==2.5.5
 kombu==1.0.0b4
 Logbook==0.3
 MarkupSafe==0.11
-MiniMock==1.2.5
 Pygments==1.4
 SQLAlchemy==0.6.6
 Sphinx==1.0.6

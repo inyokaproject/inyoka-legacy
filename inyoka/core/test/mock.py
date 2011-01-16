@@ -46,10 +46,7 @@ import inspect
 import doctest
 import re
 import textwrap
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
+from StringIO import StringIO
 
 # A list of mocked objects. Each item is a tuple of (original object,
 # namespace dict, object name, and a list of object attributes).

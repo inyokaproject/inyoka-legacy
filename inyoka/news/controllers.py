@@ -223,8 +223,8 @@ class NewsController(IController):
             'subscribe': [_(u'You had already been subscribed before.'),
                           _(u'You have successfully been subscribed to '
                             u'new comments on this article.')],
-            'unsubscribe':[_(u'You had not been subscribed before.'),
-                           _(u'You have successfully been unsubscribed from '
+            'unsubscribe': [_(u'You had not been subscribed before.'),
+                            _(u'You have successfully been unsubscribed from '
                              u'new comments on this article.')],
         }
         request.flash(msg[action][existed], True if not existed else None)

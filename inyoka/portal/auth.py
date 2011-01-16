@@ -20,7 +20,6 @@ from inyoka.portal.forms import LoginForm, get_registration_form
 from inyoka.utils.confirm import register_confirm
 
 
-
 @register_confirm('activate_user')
 def activate_user(data):
     try:

@@ -82,7 +82,7 @@ class Pagination(object):
 
         offset = (self.page - 1) * self.per_page
         #TODO: implement position_col
-        self.query = query[offset:offset+self.per_page]
+        self.query = query[offset:offset + self.per_page]
 
     @abstract
     def make_link(self, page):
@@ -134,7 +134,8 @@ class Pagination(object):
             if num > (self.pages - right_threshold):
                 return True
 
-            if avoidsingle: # avoid 4 ... 6
+            # avoid 4 ... 6
+            if avoidsingle:
                 if include(num + 1, False) and include(num - 1, False):
                     return True
 
@@ -193,7 +194,8 @@ class Pagination(object):
         add = ret.append
         add(u'<div class="%s">' % class_)
 
-        was_ellipsis = True #no comma at beginning
+        # no comma at beginning
+        was_ellipsis = True
         for type, link in self._get_buttons(left_threshold=left_threshold,
                                             inner_threshold=inner_threshold,
                                             right_threshold=right_threshold,
@@ -317,7 +319,8 @@ class GETPagination(Pagination):
         args['page'] = page
         if page == 1:
             args.pop('page', None)
-            if self.link: # avoid query string of only `?`
+            # avoid query string of only `?`
+            if self.link:
                 return self.link
         return '%s?%s' % (self.link or u'', url_encode(args))
 
@@ -336,4 +339,4 @@ class SearchPagination(GETPagination):
             raise NotFound()
 
         offset = (self.page - 1) * self.per_page
-        self.query = query[offset:offset+self.per_page]
+        self.query = query[offset:offset + self.per_page]

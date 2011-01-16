@@ -84,7 +84,7 @@ def get_registration_form(request):
 
 class EditTagForm(Form):
     name = TextField(lazy_gettext(u'Name'), [validators.required(),
-                validators.length(max=20),validators.is_valid_tag_name()])
+                validators.length(max=20), validators.is_valid_tag_name()])
 
 
 class SearchForm(MagicFilterForm):

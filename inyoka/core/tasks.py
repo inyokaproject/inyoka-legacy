@@ -28,6 +28,7 @@ from inyoka.core.api import _
 # set up the connections to the search index
 INDEXES = IResourceManager.get_search_indexes()
 
+
 def get_index_implementation(name):
     if isinstance(name, SearchIndex):
         return name

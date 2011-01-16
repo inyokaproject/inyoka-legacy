@@ -80,7 +80,7 @@ class Forum(db.Model, SerializableObject):
             index=True)
 
     subforums = db.relationship('Forum',
-            backref=db.backref('parent',remote_side=id),
+            backref=db.backref('parent', remote_side=id),
             lazy='joined')
     tags = db.relationship(Tag, secondary=forum_tag, lazy='dynamic',
                            backref=db.backref('forums', lazy='dynamic'),
@@ -128,7 +128,6 @@ class ForumEntryQuery(db.Query):
     """Entries can be sorted by their creation date, their last activity or the
     number of votes they have received."""
 
-
     @property
     def latest(self):
         """Sort the entries by their creation date."""
@@ -149,7 +148,6 @@ class ForumEntryQuery(db.Query):
     def votes(self):
         """Sort the entries by the score that they have received from votes."""
         return self.order_by(ForumEntry.score.desc(), ForumEntry.date_active.desc())
-
 
 
 class ForumEntry(db.Model, SerializableObject, TextRendererMixin):
@@ -294,9 +292,8 @@ class VoteQuery(db.Query):
         if entry_ids:
             user_votes = defaultdict(int, dict(
                 db.session.query(Vote.entry_id, Vote.score) \
-                          .filter(db.and_(Vote.user_id==user_id,
-                                          Vote.entry_id.in_(entry_ids)))
-            ))
+                          .filter(db.and_(Vote.user_id == user_id,
+                                          Vote.entry_id.in_(entry_ids)))))
             return user_votes
         else:
             return {}

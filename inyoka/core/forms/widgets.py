@@ -24,8 +24,8 @@ $(document).ready(function() {
 </script>
 '''
 TOKEN_INPUT = SCRIPT % '$("#%s").tokenInput("%s", {prePopulate: %s});'
-AUTOCOMPLETE = SCRIPT % '$("#%s").autocomplete({source: "%s"})';
-DATE = SCRIPT % '$("#%s").datepicker({dateFormat: "yy-mm-dd"})'
+AUTOCOMPLETE = SCRIPT % '$("#%s").autocomplete({source: "%s"});'
+DATE = SCRIPT % '$("#%s").datepicker({dateFormat: "yy-mm-dd"});'
 
 
 class RecaptchaWidget(object):

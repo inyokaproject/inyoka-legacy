@@ -15,7 +15,7 @@
 """
 from datetime import timedelta, datetime
 
-from werkzeug import redirect, cached_property
+from werkzeug import redirect, cached_property, create_environ
 
 from inyoka.context import ctx, local_manager, _request_ctx_stack, \
     _lookup_object
@@ -306,7 +306,6 @@ class RequestDispatcher(object):
         :func:`werkzeug.create_environ` for more information, this
         function accepts the same arguments).
         """
-        from werkzeug import create_environ
         return self.request_context(create_environ(*args, **kwargs))
 
     def __call__(self, environ, start_response):

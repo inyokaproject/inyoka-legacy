@@ -354,9 +354,8 @@ def _bootstrap():
         logger.level_name = 'ERROR'
 
     # makes INYOKA_REVISION visible in the extra dict of every log record
-    Processor(lambda x:
-        x.extra.update(INYOKA_REVISION=INYOKA_REVISION)
-    ).push_application()
+    proc = Processor(lambda x: x.extra.update(INYOKA_REVISION=INYOKA_REVISION))
+    proc.push_application()
 
 
 _bootstrap()

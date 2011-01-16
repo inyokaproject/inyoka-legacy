@@ -12,7 +12,6 @@
 import os
 import sys
 from sqlalchemy import Table
-from werkzeug import cached_property
 from inyoka import Interface
 from inyoka.context import ctx
 

@@ -12,6 +12,7 @@ import os
 import sys
 import json
 import functools
+from threading import Lock
 from pkg_resources import DefaultProvider, ResourceManager, \
     get_provider
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, \
@@ -23,6 +24,7 @@ from inyoka.context import ctx
 from inyoka.signals import signals
 from inyoka.core.http import Response
 from inyoka.core.routing import href, IServiceProvider
+from inyoka.core.resource import IResourceManager
 from inyoka.core.cache import cache as inyoka_cache
 from inyoka.core.config import TextConfigField, BooleanConfigField
 
@@ -48,14 +50,6 @@ templates_use_memcached_cache = BooleanConfigField('templates.use_memcached_cach
 
 #: Use filesystem for bytecode caching
 templates_use_filesystem_cache = BooleanConfigField('templates.use_filesystem_cache', default=False)
-
-#TODO: yet a hack untill we have proper information about what an app is
-templates_packages_portal = TextConfigField('templates.packages.portal', default=u'inyoka.portal')
-templates_packages_news = TextConfigField('templates.packages.news', default=u'inyoka.news')
-templates_packages_forum = TextConfigField('templates.packages.forum', default=u'inyoka.forum')
-templates_packages_paste = TextConfigField('templates.packages.paste', default=u'inyoka.paste')
-templates_packages_planet = TextConfigField('templates.packages.planet', default=u'inyoka.planet')
-templates_packages_event = TextConfigField('templates.packages.event', default=u'inyoka.event')
 
 
 def populate_context_defaults(context):
@@ -91,7 +85,7 @@ def render_template(template_name, context, modifier=None, request=None, stream=
     Use streaming only in those situations because it's usually slower than
     bunch processing.
     """
-    tmpl = jinja_env.get_template(template_name)
+    tmpl = get_environment().get_template(template_name)
     return _return_rendered_template(tmpl, context, modifier, request, stream)
 
 
@@ -99,7 +93,7 @@ def render_string(source, context, modifier=None, request=None, stream=False):
     """Same arguments as `render_template` but accepts the template source
     as input rather than a filename.
     """
-    tmpl = jinja_env.from_string(source)
+    tmpl = get_environment().from_string(source)
     return _return_rendered_template(tmpl, context, modifier, request, stream)
 
 
@@ -141,70 +135,11 @@ def templated(template_name, modifier=None, stream=False):
     return decorator
 
 
-class LazyPackageLoader(PackageLoader):
-    """Works like the jinja2 package loader but loads packages
-    lazily to not break our import system on startup.
-    """
-
-    def __init__(self, package_name, package_path='templates',
-                 encoding='utf-8'):
-        self.package_name = package_name
-        self.encoding = encoding
-        self.manager = ResourceManager()
-        self.package_path = package_path
-
-    def get_source(self, environment, template):
-        provider = get_provider(self.package_name)
-        pieces = split_template_path(template)
-        p = '/'.join((self.package_path,) + tuple(pieces))
-        if not provider.has_resource(p):
-            raise TemplateNotFound(template)
-
-        filename = uptodate = None
-        if isinstance(provider, DefaultProvider):
-            filename = provider.get_resource_filename(self.manager, p)
-            mtime = os.path.getmtime(filename)
-            def uptodate():
-                try:
-                    return os.path.getmtime(filename) == mtime
-                except OSError:
-                    return False
-
-        source = provider.get_resource_string(self.manager, p)
-        return source.decode(self.encoding), filename, uptodate
-
-    def list_templates(self):
-        provider = get_provider(self.package_name)
-        path = self.package_path
-        if path[:2] == './':
-            path = path[2:]
-        elif path == '.':
-            path = ''
-        offset = len(path)
-        results = []
-        def _walk(path):
-            for filename in provider.resource_listdir(path):
-                fullname = path + '/' + filename
-                if provider.resource_isdir(fullname):
-                    for item in _walk(fullname):
-                        results.append(item)
-                else:
-                    results.append(fullname[offset:].lstrip('/'))
-        _walk(path)
-        results.sort()
-        return results
-
-
 class InyokaEnvironment(Environment):
-    """
-    Beefed up version of the jinja environment but without security features
-    to improve the performance of the lookups.
-    """
-
     def __init__(self):
         loaders = {}
-        for key, package in ctx.cfg.itersection('templates.packages'):
-            loaders[key.split('.')[-1]] = LazyPackageLoader(package)
+        for resource in ctx.get_implementations(IResourceManager, instances=True):
+            loaders[resource.resource_name] = FileSystemLoader(resource.templates_path)
 
         loader = ChoiceLoader([FileSystemLoader(ctx.cfg['templates.path']),
                                PrefixLoader(loaders)])
@@ -254,11 +189,21 @@ class InyokaEnvironment(Environment):
         )
 
 
-jinja_env = InyokaEnvironment()
+
+_jinja_env = None
+_jinja_env_lock = Lock()
+
+
+def get_environment():
+    global _jinja_env
+    with _jinja_env_lock:
+        if _jinja_env is None:
+            _jinja_env = InyokaEnvironment()
+        return _jinja_env
 
 
 @i18n.translations_reloaded.connect
 def reload_environment(sender):
-    jinja_env.install_gettext_translations(
+    get_environment().install_gettext_translations(
         i18n.get_translations(), newstyle=True
     )

@@ -36,6 +36,9 @@ class IResourceManager(Interface):
     #: If it's None it defaults to the current module of the IResourceManager.
     package_name = None
 
+    #: The short name to identify resource specific paths and features.
+    short_name = None
+
     #: List all models here to get them registered with the database
     #: subsystem.  Models not listed won't be recognized by structure
     #: changing operations such as initial table creation.
@@ -89,6 +92,11 @@ class IResourceManager(Interface):
         return dct
 
     @property
+    def resource_name(self):
+        module = sys.modules[self.__module__]
+        return self.short_name or u'.'.join(module.__package__.split('.')[1:])
+
+    @property
     def root_path(self):
         """Where is the app root located?"""
         return _get_package_path(self.package_name or self.__module__)
@@ -99,6 +107,11 @@ class IResourceManager(Interface):
         folder named ``'static'``.
         """
         return os.path.isdir(os.path.join(self.root_path, 'static'))
+
+    @property
+    def templates_path(self):
+        """The path to the templates folder."""
+        return os.path.join(self.root_path, 'templates')
 
     def open_resource(self, resource):
         """Opens a resource from the application's resource folder.  To see

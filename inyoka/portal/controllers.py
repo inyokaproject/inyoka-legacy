@@ -10,7 +10,7 @@
 """
 from xappy.highlight import Highlighter
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, href, redirect, _, login_required
+    templated, href, redirect, _, login_required, redirect_to
 from inyoka.core import search
 from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User, UserProfile, Group

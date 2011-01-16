@@ -558,7 +558,7 @@ class ViewTestCase(DatabaseTestCase):
                "Location did not match, got %s instead" % response.location
 
     def assertStatus(self, response, status_code):
-        eq_(response.status_code, status_code)
+        nose.tools.eq_(response.status_code, status_code)
 
     def assertResponseOK(self, response):
         self.assertStatus(response, 200)

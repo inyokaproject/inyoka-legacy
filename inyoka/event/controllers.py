@@ -12,7 +12,7 @@ import calendar
 from datetime import datetime, date, timedelta
 from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, db, redirect_to
+    templated, db, redirect_to, Tag
 from inyoka.utils.pagination import URLPagination
 from inyoka.event.forms import AddEventForm
 from inyoka.event.models import Event

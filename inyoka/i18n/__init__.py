@@ -20,7 +20,6 @@ from gettext import NullTranslations
 from weakref import WeakKeyDictionary
 from babel import Locale, UnknownLocaleError
 from babel.support import Translations as TranslationsBase, LazyProxy
-from blinker import signal
 from inyoka.context import ctx
 from inyoka.signals import signals
 from inyoka.core.config import TextConfigField

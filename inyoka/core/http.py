@@ -20,9 +20,7 @@ from inyoka.context import ctx
 from inyoka.core.routing import href
 
 
-class FlashMessage(namedtuple('FlashMessage', 'text success id html')):
-    __slots__ = ()
-
+class FlashMessage(namedtuple('FlashMessage', ('text', 'success', 'id', 'html'))):
     def __unicode__(self):
         if not self.html:
             return escape(self.text)

@@ -25,14 +25,6 @@ auth Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`forms` Module
--------------------
-
-.. automodule:: inyoka.core.auth.forms
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`models` Module
 --------------------
 

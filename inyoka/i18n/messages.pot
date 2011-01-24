@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-01-02 17:51+0100\n"
+"POT-Creation-Date: 2011-01-24 03:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -139,7 +139,7 @@ msgstr ""
 msgid "Unknown format \"%s\""
 msgstr ""
 
-#: inyoka/core/tasks.py:40
+#: inyoka/core/tasks.py:42
 #, python-format
 msgid "Registration at %s"
 msgstr ""
@@ -148,19 +148,19 @@ msgstr ""
 msgid "You must login to view this!"
 msgstr ""
 
-#: inyoka/core/auth/models.py:27
+#: inyoka/core/auth/models.py:26
 msgid "inactive"
 msgstr ""
 
-#: inyoka/core/auth/models.py:28
+#: inyoka/core/auth/models.py:27
 msgid "normal"
 msgstr ""
 
-#: inyoka/core/auth/models.py:29
+#: inyoka/core/auth/models.py:28
 msgid "banned"
 msgstr ""
 
-#: inyoka/core/auth/models.py:30
+#: inyoka/core/auth/models.py:29
 msgid "deleted"
 msgstr ""
 
@@ -168,43 +168,43 @@ msgstr ""
 msgid "Add filter"
 msgstr ""
 
-#: inyoka/core/forms/validators.py:76
+#: inyoka/core/forms/validators.py:77
 msgid "You have to enter a valid email address."
 msgstr ""
 
-#: inyoka/core/forms/validators.py:98
+#: inyoka/core/forms/validators.py:99
 msgid "You have to enter a valid URL."
 msgstr ""
 
-#: inyoka/core/forms/validators.py:126
+#: inyoka/core/forms/validators.py:127
 msgid "You have to enter a valid Jabber ID"
 msgstr ""
 
-#: inyoka/core/forms/validators.py:136
+#: inyoka/core/forms/validators.py:137
 msgid "You entered an invalid captcha."
 msgstr ""
 
-#: inyoka/core/forms/validators.py:159
+#: inyoka/core/forms/validators.py:160
 msgid "This user does already exist"
 msgstr ""
 
-#: inyoka/core/forms/validators.py:160
+#: inyoka/core/forms/validators.py:161
 msgid "This user doesn't exist"
 msgstr ""
 
-#: inyoka/core/forms/validators.py:162
+#: inyoka/core/forms/validators.py:163
 msgid "This email address is already used"
 msgstr ""
 
-#: inyoka/core/forms/validators.py:163
+#: inyoka/core/forms/validators.py:164
 msgid "There's no user with this email"
 msgstr ""
 
-#: inyoka/core/forms/validators.py:176
+#: inyoka/core/forms/validators.py:177
 msgid "The name must not contain slashes."
 msgstr ""
 
-#: inyoka/core/forms/validators.py:184
+#: inyoka/core/forms/validators.py:185
 msgid "Tag Names should only contain ascii characters and numbers."
 msgstr ""
 
@@ -567,74 +567,74 @@ msgstr ""
 msgid "%(timedelta)s ago"
 msgstr ""
 
-#: inyoka/news/admin.py:47
+#: inyoka/news/admin.py:49
 #, python-format
 msgid "Updated article “%s”"
 msgstr ""
 
-#: inyoka/news/admin.py:58 inyoka/portal/admin.py:59
+#: inyoka/news/admin.py:61 inyoka/portal/admin.py:59
 msgid "Action canceled"
 msgstr ""
 
-#: inyoka/news/admin.py:62
+#: inyoka/news/admin.py:65
 #, python-format
 msgid "The article “%s” was deleted successfully."
 msgstr ""
 
-#: inyoka/news/controllers.py:117
+#: inyoka/news/controllers.py:112
 msgid "This article is hidden"
 msgstr ""
 
-#: inyoka/news/controllers.py:125
+#: inyoka/news/controllers.py:120
 msgid "The comment was successfully edited"
 msgstr ""
 
-#: inyoka/news/controllers.py:130
+#: inyoka/news/controllers.py:125
 msgid "Your comment was successfully created"
 msgstr ""
 
-#: inyoka/news/controllers.py:156
+#: inyoka/news/controllers.py:151
 msgid "The comment was hidden"
 msgstr ""
 
-#: inyoka/news/controllers.py:157
+#: inyoka/news/controllers.py:152
 msgid "The comment was restored"
 msgstr ""
 
-#: inyoka/news/controllers.py:166
+#: inyoka/news/controllers.py:161
 msgid "The comment was saved"
 msgstr ""
 
-#: inyoka/news/controllers.py:206 inyoka/news/controllers.py:228
+#: inyoka/news/controllers.py:201 inyoka/news/controllers.py:223
 msgid "You had already been subscribed before."
 msgstr ""
 
-#: inyoka/news/controllers.py:207
+#: inyoka/news/controllers.py:202
 msgid "You have successfully been subscribed to new News articles."
 msgstr ""
 
-#: inyoka/news/controllers.py:209 inyoka/news/controllers.py:231
+#: inyoka/news/controllers.py:204 inyoka/news/controllers.py:226
 msgid "You had not been subscribed before."
 msgstr ""
 
-#: inyoka/news/controllers.py:210
+#: inyoka/news/controllers.py:205
 msgid "You have successfully been unsubscribed from new News articles."
 msgstr ""
 
-#: inyoka/news/controllers.py:229
+#: inyoka/news/controllers.py:224
 msgid "You have successfully been subscribed to new comments on this article."
 msgstr ""
 
-#: inyoka/news/controllers.py:232
+#: inyoka/news/controllers.py:227
 msgid "You have successfully been unsubscribed from new comments on this article."
 msgstr ""
 
-#: inyoka/news/controllers.py:250
+#: inyoka/news/controllers.py:245
 #, python-format
 msgid "News for %s"
 msgstr ""
 
-#: inyoka/news/controllers.py:255
+#: inyoka/news/controllers.py:250
 #, python-format
 msgid "%s – %s"
 msgstr ""
@@ -913,23 +913,23 @@ msgstr ""
 msgid "User is unknown or the password is not correct."
 msgstr ""
 
-#: inyoka/portal/auth.py:112 inyoka/portal/auth.py:144 inyoka/portal/auth.py:188
+#: inyoka/portal/auth.py:111 inyoka/portal/auth.py:143 inyoka/portal/auth.py:187
 msgid "You are now logged in."
 msgstr ""
 
-#: inyoka/portal/auth.py:133
+#: inyoka/portal/auth.py:132
 msgid "You have been logged out successfully."
 msgstr ""
 
-#: inyoka/portal/auth.py:176
+#: inyoka/portal/auth.py:175
 msgid "Please log in."
 msgstr ""
 
-#: inyoka/portal/auth.py:191
+#: inyoka/portal/auth.py:190
 msgid "Invalid login."
 msgstr ""
 
-#: inyoka/portal/auth.py:193
+#: inyoka/portal/auth.py:192
 msgid "Invalid login"
 msgstr ""
 

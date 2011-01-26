@@ -6,16 +6,14 @@
     This module abstracts nosetest and provides an interface for our unittests
     and doctests.  It also implements various helper classes and functions.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import os
 import sys
 import unittest
 import warnings
-import traceback
-from functools import partial, wraps
-from pprint import pformat
+from functools import wraps
 from urllib2 import urlparse
 
 import nose
@@ -28,17 +26,16 @@ from werkzeug.contrib.testtools import ContentAccessors
 
 from sqlalchemy.util import to_list
 
-from inyoka.l10n import parse_timestamp, parse_timeonly
 from inyoka.context import ctx, _request_ctx_stack
 from inyoka.core import database
 from inyoka.core.test import mock
+from inyoka.core.test.fixtures import FixtureLoader
 from inyoka.core.database import db
-from inyoka.core.http import Response, Request
+from inyoka.core.http import Response
 from inyoka.core.resource import IResourceManager
 from inyoka.core.exceptions import ImproperlyConfigured
 from inyoka.core.templating import template_rendered
 from inyoka.utils import flatten_iterator
-from inyoka.utils.logger import logger
 from inyoka.utils.urls import get_base_url_for_controller
 
 
@@ -46,7 +43,7 @@ warnings.filterwarnings('ignore', message='lxml does not preserve')
 warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no parameters')
 
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
-           'future', 'db', 'Response', 'ctx', 'FixtureLoader',
+           'future', 'db', 'Response', 'ctx',
            'DatabaseTestCase', 'refresh_database', 'TestResourceManager',
            'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless', 'skip_if_database')
 
@@ -142,222 +139,6 @@ class InyokaTestClient(Client):
             _request_ctx_stack.pop()
 
 
-# Fixture Framework
-#
-# The code is based on `bootalchemy <http://pypi.python.org/pypi/bootalchemy>`
-# but was heavily modified to better fit Inyokas database system management.
-#
-
-class FixtureLoader(object):
-    """This class is responsible of loading fixtures."""
-
-    def cast(type_, cast_func, value):
-        if type(value) == type_:
-            return value
-        else:
-            return cast_func(value)
-
-    default_casts = {
-        db.Integer:int,
-        db.Unicode: partial(cast, unicode, lambda x: unicode(x, 'utf-8')),
-        db.Date: parse_timestamp,
-        db.DateTime: parse_timestamp,
-        db.Time: parse_timeonly,
-        db.Float:float,
-        db.Boolean: partial(cast, bool, lambda x: x.lower() not in ('f', 'false', 'no', 'n')),
-        db.Binary: partial(cast, str, lambda x: x.encode('base64')),
-        db.PGArray: list
-    }
-
-    def __init__(self, references=None, check_types=True):
-        if references is None:
-            self._references = {}
-        else:
-            self._references = references
-
-        self.check_types = check_types
-
-    def clear(self):
-        """Clear the existing references."""
-        self._references = {}
-
-    def create_obj(self, cls, item):
-        """Create an object with the given data"""
-        return cls(**item)
-
-    def resolve_value(self, value):
-        """Resolve `value`.
-
-        This method resolves references on columns or even whole
-        objects as well as nested references.
-        """
-        if isinstance(value, basestring):
-            if value.startswith('&'):
-                return None
-            elif value.startswith('*'):
-                if value[1:] in self._references:
-                    return self._references[value[1:]]
-                else:
-                    raise Exception('The pointer {val} could not be found. '
-                                    'Make sure that {val} declared before '
-                                    'it is used.'.format(val=value))
-        elif isinstance(value, dict):
-            keys = value.keys()
-            if len(keys) == 1 and keys[0].startswith('!'):
-                cls_name = keys[0][1:]
-                items = value[keys[0]]
-                cls = self.get_cls(cls_name)
-
-                if isinstance(items, dict):
-                    return self.add_cls_with_values(cls, items)
-                elif isinstance(items, (list, set)):
-                    return self.add_classes(cls, items)
-                else:
-                    raise TypeError('You can only give a nested value a list or a dict. '
-                                    'You tried to feed a %s into a %s.'
-                                    % (items.__class__.__name__, cls_name))
-        elif isinstance(value, (list, set)):
-            return type(value)([self.resolve_value(list_item) for list_item in value])
-
-        return value
-
-    def has_references(self, item):
-        """Check if `item` has references of any kind"""
-        for key, value in item.iteritems():
-            if isinstance(value, basestring) and value.startswith('&'):
-                return True
-
-    def add_reference(self, key, obj):
-        """Add a reference to the internal reference dictionary"""
-        self._references[key[1:]] = obj
-
-    def set_references(self, obj, item):
-        """Extracts and stores the value of an object in the reference counter."""
-        for key, value in item.iteritems():
-            if isinstance(value, basestring) and value.startswith('&'):
-                self._references[value[1:]] = getattr(obj, key)
-            if isinstance(value, (list, set)):
-                for i in value:
-                    if isinstance(value, basestring) and i.startswith('&'):
-                        self._references[value[1:]] = getattr(obj, value[1:])
-
-    def _check_types(self, cls, obj):
-        """Validate all types and cast them to better matching types if possible."""
-        if not self.check_types:
-            return obj
-        mapper = db.class_mapper(cls)
-        for table in mapper.tables:
-            for key in obj.keys():
-                col = table.columns.get(key, None)
-                value = obj[key]
-                if value is not None and col is not None and col.type is not None:
-                    for type_, func in self.default_casts.iteritems():
-                        if isinstance(col.type, type_):
-                            obj[key] = func(value)
-                            break
-                if value is None and col is not None and isinstance(col.type, (db.String, db.Unicode)):
-                    obj[key] = ''
-        return obj
-
-    def get_cls(self, name):
-        """Try to find the right class for `name`"""
-        cls = None
-        models = list(IResourceManager.get_models())
-        names = [m.__name__ for m in models]
-        if name in names:
-            cls = models[names.index(name)]
-
-        # check that the class was found.
-        if cls is None:
-            raise AttributeError('Model %s not found' % name)
-
-        return cls
-
-    def add_cls_with_values(self, cls, values):
-        """Return a new objects with resolved `values`.
-
-        :param cls: A type to initiate.
-        :param values: A dictionary with values for initialisation.
-        """
-        ref_name = None
-        keys = values.keys()
-        if len(keys) == 1 and keys[0].startswith('&') and isinstance(values[keys[0]], dict):
-            ref_name = keys[0]
-            values = values[ref_name] # ie. item.values[0]
-
-        # Values is a dict of attributes and their values for any ObjectName.
-        # Copy the given dict, iterate all key-values and process those with
-        # special directions (nested creations or links).
-        resolved_values = values.copy()
-        for key, value in resolved_values.iteritems():
-            resolved_values[key] = self.resolve_value(value)
-
-        # _check_types currently does nothing (unless you call the loaded with a check_types parameter)
-        resolved_values = self._check_types(cls, resolved_values)
-
-        obj = self.create_obj(cls, resolved_values)
-        db.session.add(obj)
-
-        if ref_name:
-            self.add_reference(ref_name, obj)
-        if self.has_references(values):
-            db.session.flush()
-            self.set_references(obj, values)
-
-        return obj
-
-    def add_classes(self, cls, items):
-        """Returns a list of the new objects.
-        These objects are already in session, so you don't
-        *need* to do anything with them.
-
-        """
-        objects = []
-        for item in items:
-            obj = self.add_cls_with_values(cls, item)
-            objects.append(obj)
-        return objects
-
-    def from_list(self, data):
-        """Initialize `data` in `session`.  See unittest docs for more details."""
-        cls = None
-        item = None
-        group = None
-        skip_keys = ['nocommit']
-        new_data = []
-
-        # psycopg2 raises an InternalError instance that is not inherited from
-        # `Exception` and as such requires to be catched too.
-        exceptions = [Exception]
-        if 'postgresql' in db.get_engine().url.drivername:
-            try:
-                from psycopg2 import InternalError
-                exceptions.append(InternalError)
-            except ImportError:
-                pass
-
-        for group in data:
-            for cls, items in group.iteritems():
-                if cls in skip_keys:
-                    continue
-                if isinstance(cls, basestring) and cls not in skip_keys:
-                    cls = self.get_cls(cls)
-                new_data.append({cls.__name__: self.add_classes(cls, items)})
-            if 'nocommit' not in group:
-                try:
-                    db.session.commit()
-                except exceptions:
-                    self.log_error(sys.exc_info()[2], data, cls, item)
-                    db.session.rollback()
-
-        return new_data
-
-    def log_error(self, e, data, cls, item):
-        msg = (u'error occured while loading fixture data with output:\n%s\n'
-               u'class: %s\nitem: %s\n%s') % (pformat(data), cls, item, traceback.format_exc(e))
-        logger.error(msg)
-
-
 class TestCase(unittest.TestCase):
     """TestCase for the Inyoka test framework.
 
@@ -391,7 +172,6 @@ class TestCase(unittest.TestCase):
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception:
-            import sys
             result.addError(self, sys.exc_info())
             return
         super(TestCase, self).__call__(result)
@@ -400,7 +180,6 @@ class TestCase(unittest.TestCase):
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception:
-            import sys
             result.addError(self, sys.exc_info())
             return
 
@@ -665,7 +444,7 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        with LogbookTestHandler() as handler:
+        with LogbookTestHandler():
             # drop all tables
             database.drop_all_tables(bind=db.get_engine())
 

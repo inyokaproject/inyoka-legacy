@@ -10,6 +10,7 @@
 """
 from inyoka.core.test import *
 from inyoka.core.test import flatten_data
+from inyoka.core.test.fixtures import FixtureLoader
 from inyoka.core.auth.models import User, UserProfile, Group
 
 

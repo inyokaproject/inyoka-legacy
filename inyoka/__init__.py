@@ -7,7 +7,7 @@
     to which we refer as applications.  The name Inyoka means “snake” in
     Zulu and was chosen because it's an application written in Python *cough*.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import os

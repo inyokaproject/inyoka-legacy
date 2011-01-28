@@ -5,7 +5,7 @@
 
     Form library based on WTForms.
 
-    :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from wtforms.widgets import CheckboxInput, FileInput, HiddenInput, ListWidget, \

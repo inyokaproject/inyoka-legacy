@@ -14,7 +14,7 @@
     enforced because dict-less objects cannot be replaced in place which is
     a required by the `DeferredNode`.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from urlparse import urlparse, urlunparse

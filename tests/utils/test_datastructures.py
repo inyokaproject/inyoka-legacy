@@ -5,7 +5,7 @@
 
     Unittests for various datastructures implemented by inyoka.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import cPickle as pickle

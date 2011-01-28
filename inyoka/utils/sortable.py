@@ -6,7 +6,7 @@
     This module implements a class that makes it easy to handle various
     sortable data.  It automates this process as much as possible.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from markupsafe import Markup, escape

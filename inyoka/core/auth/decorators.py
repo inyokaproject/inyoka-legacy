@@ -5,7 +5,7 @@
 
     Various decorators to ease the usage with the auth modules.
 
-    :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from functools import wraps

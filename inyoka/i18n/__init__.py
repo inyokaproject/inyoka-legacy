@@ -9,7 +9,7 @@
     Use the :func:`_` and :func:`lazy_gettext` functions for easy
     marking strings as translatable.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import os

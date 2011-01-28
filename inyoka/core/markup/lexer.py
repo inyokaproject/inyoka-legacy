@@ -6,7 +6,7 @@
     Tokenizes our markup language.  The lexer is implemented as some sort of
     scanner with an internal stack.  Inspired by pygments.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import re

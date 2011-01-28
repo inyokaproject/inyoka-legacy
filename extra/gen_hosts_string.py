@@ -6,7 +6,7 @@
     This script generates the string that must be added to a /etc/hosts file
     to finally setup inyoka development.
 
-    :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from urllib2 import splitport

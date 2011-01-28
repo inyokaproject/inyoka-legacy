@@ -5,7 +5,7 @@
 
     Tests for our component system
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Interface, InterfaceMeta, _is_interface, _import_module

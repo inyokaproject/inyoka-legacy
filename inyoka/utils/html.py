@@ -6,7 +6,7 @@
     Various html utilities.  These are kinda html5 specific, if you need to
     handle xhtml use `inyoka.utils.xml` instead.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.utils.xml import quoteattr

@@ -5,7 +5,7 @@
 
     This unittests tests the parser.
 
-    :copyright: 2010 by the Project Name Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Project Name Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 from inyoka.core.markup.parser import Parser

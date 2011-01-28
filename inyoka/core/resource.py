@@ -6,7 +6,7 @@
     The resource system of Inyoka.  This abstract interface implements
     various ways to interact with the Inyoka core.
 
-    :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 import os

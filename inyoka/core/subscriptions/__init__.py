@@ -12,7 +12,7 @@
        comment on a news entry respectively. Each object has one subject (for
        the given examples: The topic / news entry it was posted in)
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka import Interface

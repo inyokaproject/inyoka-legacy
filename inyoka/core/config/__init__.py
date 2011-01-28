@@ -6,7 +6,7 @@
     This module implements the configuration.  The configuration is a more or
     less flat thing saved as ini in the instance folder.
 
-    :copyright: 2009-2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: MIT, see LICENSE for more details.
 """
 import os

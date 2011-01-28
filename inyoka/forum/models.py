@@ -5,7 +5,7 @@
 
     Database models for the Inyoka Forum application.
 
-    :copyright: 2010 by the Inyoka Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
 from datetime import datetime

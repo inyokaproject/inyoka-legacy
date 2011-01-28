@@ -6,7 +6,7 @@
     This unittest tests various features of the wiki lexer. Just the lexer,
     not the parser.
 
-    :copyright: 2010 by the Project Name Team, see AUTHORS for more details.
+    :copyright: 2010-2011 by the Project Name Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
 from inyoka.core.markup.lexer import Lexer

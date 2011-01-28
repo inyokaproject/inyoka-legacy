@@ -6,8 +6,8 @@
     <div class="navigation">
         {%- set url_values = {'year': pre.year, 'month': pre.month} %}
         <a href="{{ href('event/calendar', **url_values) }}">{{ pre|monthformat }}</a>
-        {%- set url_values = {'year': today.year, 'month': today.month} %}
-        <a href="{{ href('event/calendar', **url_values) }}">{{ today|monthformat }}</a>
+        {%- set url_values = {'year': current.year, 'month': current.month} %}
+        <a href="{{ href('event/calendar', **url_values) }}">{{ current|monthformat }}</a>
         {%- set url_values = {'year': post.year, 'month': post.month} %}
         <a href="{{ href('event/calendar', **url_values) }}">{{ post|monthformat }}</a>
     </div>

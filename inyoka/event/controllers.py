@@ -166,9 +166,9 @@ class EventController(IController):
             'monthstart': first_weekday_this_month,
             'days_in_premonth': days_in_premonth,
             'days_in_month': days_in_month,
-            'thisday': date.today(),
-            'month_range': daterange(month_begin, month_end),
             'today': date.today(),
+            'month_range': daterange(month_begin, month_end),
+            'current': date(year, month, 1),
             'pre': pre,
             'post': post,
         }

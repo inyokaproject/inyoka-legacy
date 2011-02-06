@@ -21,22 +21,9 @@ def flatten_iterator(iter):
 
 
 class classproperty(object):
-    """
-    A mix out of the built-in `classmethod` and
-    `property` so that we can achieve a property
-    that is not bound to an instance.
+    """A mix of the built-in `classmethod` and `property`.
 
-    Example::
-
-        >>> class Foo(object):
-        ...     bar = 'baz'
-        ...
-        ...     @classproperty
-        ...     def bars(cls):
-        ...         return [cls.bar]
-        ...
-        >>> Foo.bars
-        ['baz']
+    This is used to achieve a property that is not bound to an instance.
     """
 
     def __init__(self, func, name=None):

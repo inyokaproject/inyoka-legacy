@@ -110,25 +110,31 @@ class User(db.Model, SerializableObject):
     object_type = 'inyoka.user'
     public_fields = ('id', 'username', 'pw_hash', 'status', 'real_name')
 
-    # the internal ID of the user.  Even if an external Auth system is
-    # used, we're storing the users a second time internal so that we
-    # can easilier work with relations.
+    #: The internal ID of the user.  Even if an external Auth system is
+    #: used, we're storing the users a second time internal so that we
+    #: can easilier work with relations.
     id = db.Column(db.Integer, primary_key=True)
-    # the username of the user.  For external auth systems it makes a
-    # lot of sense to allow the user to chose a name on first login.
+
+    #: The username of the user.  For external auth systems it makes a
+    #: lot of sense to allow the user to chose a name on first login.
     username = db.Column(db.Unicode(40), unique=True)
-    # the email of the user.  If an external auth system is used, the
-    # login code should update that information automatically on login
+
+    #: The email of the user.  If an external auth system is used, the
+    #: login code should update that information automatically on login
     email = db.Column(db.Unicode(250), index=True, unique=True)
-    # the password hash.  This might not be used by every auth system.
-    # the OpenID auth for example does not use it at all.  But also
-    # external auth systems might not store the password here.
+
+    #: The password hash.  This might not be used by every auth system.
+    #: the OpenID auth for example does not use it at all.  But also
+    #: external auth systems might not store the password here.
     pw_hash = db.Column(db.Unicode(60))
-    # When the user registered himself
+
+    #: When the user registered himself
     date_joined = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    # When the user recently joined the webpage
+
+    #: When the user recently joined the webpage
     last_login = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    # the status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
+
+    #: The status of the user. 0: inactive, 1: normal, 2: banned, 3: deleted
     _status = db.Column('status', db.Integer, nullable=False, default=0)
 
     groups = db.relationship(Group, secondary=user_group,

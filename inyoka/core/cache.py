@@ -26,6 +26,7 @@ from inyoka.core.config import TextConfigField, IntegerConfigField
 
 __all__ = ('cache',)
 
+#: The current configured cache object.  This is set on runtime by :func:`set_cache`.
 cache = (type('UnconfiguredCache', (NullCache,), {}))()
 
 #: Set the caching system.  Choose one of ’null’, ’simple’, ’memcached’ or ’filesystem’.
@@ -117,7 +118,7 @@ class DatabaseCache(BaseCache):
             db.session.commit()
 
     def add(self, key, value, timeout=None):
-        """Same as :method:`set` but does not overwrite values per default."""
+        """Same as :meth:`set` but does not overwrite values per default."""
         self.set(key, value, timeout, overwrite=False)
 
     def set_many(self, mapping, timeout=None):
@@ -257,7 +258,7 @@ def clear_memoized(*keys):
         def random_func():
         return random.randrange(1, 50)
 
-    :param *keys: A list of function names to clear from cache.
+    :param \*keys: A list of function names to clear from cache.
     """
     global _memoized
     def deletes(item):

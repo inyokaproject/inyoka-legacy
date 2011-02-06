@@ -59,6 +59,34 @@ class CacheTestCase(ViewTestCase):
 
             self.assertNotEqual(my_list, his_list)
 
+    def test_cached_function_unless(self):
+        with self.get_new_request():
+            @cached(5, unless=lambda: True)
+            def non_cached_view():
+                return str(time.time())
+
+            @cached(5, unless=lambda: False)
+            def cached_view():
+                return str(time.time())
+
+            the_time = non_cached_view()
+            time.sleep(1)
+            the_new_time = non_cached_view()
+            self.assertNotEqual(the_time, the_new_time)
+
+            the_time = cached_view()
+            time.sleep(1)
+            the_new_time = cached_view()
+            self.assertEqual(the_time, the_new_time)
+
+    def test_cached_out_of_request_context(self):
+        @cached(5)
+        def cached_view():
+            return u'Foo'
+
+        with self.assertRaises(RuntimeError):
+            cached_view()
+
     def test_memoize(self):
         with self.get_new_request():
             @memoize(5)

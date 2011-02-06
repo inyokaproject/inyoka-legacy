@@ -187,7 +187,7 @@ def cached(timeout=None, key_prefix='view/%s', unless=None):
 
     :param timeout: Default None. If set to an integer, will cache for that
                     amount of time. Unit of time is in seconds.
-    :param key_prefix: Default 'view/%(request.path)s'. Beginning key to .
+    :param key_prefix: Default 'view/%(request.path)s'. Beginning key to
                        use for the cache key.
     :param unless: Default None. Cache will *always* execute the caching
                    facilities unless this callable is true.
@@ -201,6 +201,8 @@ def cached(timeout=None, key_prefix='view/%s', unless=None):
                 return f(*args, **kwargs)
 
             if '%s' in key_prefix:
+                if not ctx.current_request:
+                    raise RuntimeError(u'You assumed to be in a request context, but you are not!')
                 cache_key = key_prefix % ctx.current_request.path
             else:
                 cache_key = key_prefix

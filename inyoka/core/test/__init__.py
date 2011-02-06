@@ -28,6 +28,7 @@ from sqlalchemy.util import to_list
 
 from inyoka.context import ctx, _request_ctx_stack
 from inyoka.core import database
+from inyoka.core.cache import set_cache
 from inyoka.core.test import mock
 from inyoka.core.test.fixtures import FixtureLoader
 from inyoka.core.database import db
@@ -45,7 +46,8 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'db', 'Response', 'ctx',
            'DatabaseTestCase', 'refresh_database', 'TestResourceManager',
-           'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless', 'skip_if_database')
+           'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless', 'skip_if_database',
+           'set_simple_cache')
 
 
 __all__ = __all__ + tuple(nose.tools.__all__)
@@ -565,6 +567,27 @@ class FuturePlugin(errorclass.ErrorClassPlugin):
     future = errorclass.ErrorClass(ExpectedFailure, label='FUTURE', isfailure=False)
     unexpected = errorclass.ErrorClass(UnexpectedSuccess, label='UNEXPECTED',
                                        isfailure=True)
+
+def set_simple_cache(func):
+    """Set the cache system to 'simple'.
+
+    This also adds the proper configured cache object as the first argument.
+    Example::
+
+        @set_simple_cache
+        def test_something_furious(cache):
+            assert cache.get('some_key_never_exists') is None
+
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        _configured_cache = ctx.cfg['caching.system']
+        ctx.cfg['caching.system'] = 'simple'
+        cache = set_cache()
+        func(cache, *args, **kwargs)
+        ctx.cfg['caching.system'] = _configured_cache
+        cache = set_cache()
+    return wrapper
 
 
 #TODO: write unittests

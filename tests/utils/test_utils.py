@@ -10,7 +10,7 @@
 """
 from functools import partial
 from inyoka.core.test import *
-from inyoka.utils import classproperty
+from inyoka.utils import classproperty, flatten_iterator
 
 
 class Foo(object):
@@ -26,3 +26,9 @@ def test_classproperty():
     eq_(Foo.bars, ['baz'])
     Foo.bar = 'foo'
     eq_(Foo.bars, ['foo'])
+
+
+def test_flatten_iterator():
+    eq_(list(flatten_iterator([1, [2, 3, [5, 6]], [1, 2]])),
+                              [1, 2, 3, 5, 6, 1, 2])
+    eq_(tuple(flatten_iterator((1, 2, 3, 4))), (1, 2, 3, 4))

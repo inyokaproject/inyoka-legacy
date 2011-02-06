@@ -30,6 +30,7 @@ Core Tools
     core/search
     core/subscriptions
     core/auth
+    core/cache
     core/config
     core/forms
     core/markup

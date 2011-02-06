@@ -12,7 +12,6 @@ from time import sleep
 from functools import partial
 from inyoka.core.test import *
 from inyoka.core.test.mock import mock, TraceTracker
-from inyoka.core.cache import cache
 
 
 class DatabaseTestCategory(db.Model):
@@ -102,8 +101,9 @@ def test_slug_generator():
     eq_(c5.slug, u'this-is-just-a-test-category-with-awesome-feat2')
 
 
+@set_simple_cache
 @refresh_database
-def test_cached_query():
+def test_cached_query(cache):
     c = DatabaseTestCategory(slug=u'category')
     db.session.commit()
     # setup mock objects
@@ -138,7 +138,6 @@ def test_cached_query():
 
     # A bug fixed in revision 842:19fb808dfa7f raised a DetachedInstanceError
     # if we accessed the cached entries twice with a lazy relationship
-    # TODO: Test this only if caching is enabled!
     c1 = SlugGeneratorTestModel(name=u'cat')
     db.session.commit()
     obj = DatabaseTestCategory.query.cached('_test/categories')[0]

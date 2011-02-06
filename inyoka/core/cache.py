@@ -14,8 +14,9 @@
 """
 import time
 import random
-from datetime import datetime
 from os.path import join
+from datetime import datetime
+from functools import wraps
 from werkzeug.contrib.cache import NullCache, SimpleCache, FileSystemCache, \
      MemcachedCache, BaseCache, GAEMemcachedCache
 from inyoka.context import ctx
@@ -155,6 +156,117 @@ class DatabaseCache(BaseCache):
 
     def __len__(self):
         return db.session.query(Cache).count()
+
+
+
+def cached(timeout=None, key_prefix='view/%s', unless=None):
+    """Decorator.  Use this to cache a function.
+
+    By default the cache key is `view/request.path`.  You are able to
+    use this decorator with any function by changing the `key_prefix`.
+    If the token `%s` is located within the `key_prefix` then it will
+    be replaced with `request.path`.
+
+    Example::
+
+        # An example view function
+        @cached(timeout=50)
+        def big_foo():
+            return big_bar_calc()
+
+        # An example misc function to cache.
+        @cached(key_prefix='MyCachedList')
+        def get_list():
+            return [random.randrange(0, 1) for i in range(50000)]
+
+    .. note::
+
+        You MUST have a request context to actually called any functions
+        that are cached if you are using the request.path formatter.
+
+    :param timeout: Default None. If set to an integer, will cache for that
+                    amount of time. Unit of time is in seconds.
+    :param key_prefix: Default 'view/%(request.path)s'. Beginning key to .
+                       use for the cache key.
+    :param unless: Default None. Cache will *always* execute the caching
+                   facilities unless this callable is true.
+                   This will bypass the caching entirely.
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            #: Bypass the cache entirely.
+            if callable(unless) and unless() is True:
+                return f(*args, **kwargs)
+
+            if '%s' in key_prefix:
+                cache_key = key_prefix % ctx.current_request.path
+            else:
+                cache_key = key_prefix
+
+            rv = cache.get(cache_key)
+            if rv is None:
+                rv = f(*args, **kwargs)
+                cache.set(cache_key, rv, timeout=timeout)
+            return rv
+        return decorated_function
+    return decorator
+
+
+#: A list holding all used cache-keys used by the memoized decorator.
+_memoized = []
+
+
+def memoize(timeout=None):
+    """Decorator.  Use this to cache the result of a function,
+    taking it's arguments into account in the cache key.
+
+    For more information, see `Memoization <http://en.wikipedia.org/wiki/Memoization>`_.
+
+    Example::
+
+        @memoize(timeout=50)
+        def big_foo(a, b):
+            return a + b + random.randrange(0, 1000)
+
+    :param timeout: Default None. If set to an integer, will cache for that
+                    amount of time. Unit of time is in seconds.
+    """
+    def memoize(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            cache_key = ('memoize', f.__name__, id(f), args, str(kwargs))
+
+            rv = cache.get(cache_key)
+            if rv is None:
+                rv = f(*args, **kwargs)
+                cache.set(cache_key, rv, timeout=timeout)
+                if cache_key not in _memoized:
+                    _memoized.append(cache_key)
+            return rv
+        return decorated_function
+    return memoize
+
+
+def clear_memoized(*keys):
+    """Deletes all of the cached functions that used Memoize for caching.
+
+    Example::
+
+        @cache.memoize(50)
+        def random_func():
+        return random.randrange(1, 50)
+
+    :param *keys: A list of function names to clear from cache.
+    """
+    global _memoized
+    def deletes(item):
+        if item[0] == 'memoize' and item[1] in keys:
+            cache.delete(item)
+            return True
+        return False
+
+    _memoized[:] = [x for x in _memoized if not deletes(x)]
 
 
 #: the cache system factories.

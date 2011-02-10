@@ -20,6 +20,11 @@ def flatten_iterator(iter):
             yield item
 
 
+def flatten_list(iter):
+    """Same as `flatten_iterator` but returns a list"""
+    return list(flatten_iterator(iter))
+
+
 class classproperty(object):
     """A mix of the built-in `classmethod` and `property`.
 

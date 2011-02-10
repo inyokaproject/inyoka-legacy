@@ -121,3 +121,68 @@ class CacheTestCase(ViewTestCase):
             self.assertEqual(big_foo(5, 2), result)
             clear_memoized('big_foo')
             self.assertNotEqual(big_foo(5, 2), result)
+
+
+class TestDatabaseCache(ViewTestCase):
+
+    def setUp(self):
+        self._configured_cache = ctx.cfg['caching.system']
+        ctx.cfg['caching.system'] = 'database'
+        self.cache = set_cache()
+
+    def tearDown(self):
+        ctx.cfg['caching.system'] = self._configured_cache
+        self.cache = set_cache()
+
+    # test basic API but do not test details as those are tested in
+    # upstream unittest suites.
+
+    def test_set(self):
+        self.cache.set(u'hi', u'hello')
+        self.assertEqual(self.cache.get(u'hi'), u'hello')
+
+    def test_add(self):
+        self.cache.add(u'hi', u'hello')
+        self.assertEqual(self.cache.get(u'hi'), u'hello')
+        self.cache.add(u'hi', u'foobar')
+        self.assertEqual(self.cache.get(u'hi'), u'hello')
+
+    def test_delete(self):
+        self.cache.set(u'hi', u'hello')
+        self.cache.delete(u'hi')
+        self.assertTrue(self.cache.get(u'hi') is None)
+
+    def test_get(self):
+        self.cache.set(u'hi', u'hello', timeout=2)
+        self.assertEqual(self.cache.get(u'hi'), u'hello')
+        time.sleep(3)
+        self.assertNotEqual(self.cache.get(u'hi'), u'hello')
+
+    def test_get_many(self):
+        self.cache.set(u'hi1', u'hello1')
+        self.cache.set(u'h12', u'hello2')
+        self.cache.set(u'hi3', u'hello3')
+        self.assertEqual(self.cache.get_many((u'hi1', u'hi3')),
+                         [u'hello1', u'hello3'])
+
+    def test_get_dict(self):
+        self.cache.set(u'hi1', u'hello1')
+        self.cache.set(u'h12', u'hello2')
+        self.cache.set(u'hi3', u'hello3')
+        self.assertEqual(self.cache.get_dict(u'hi1', u'hi3'),
+                         {u'hi1': u'hello1', u'hi3': u'hello3'})
+
+    def test_set_many(self):
+        self.cache.set_many({u'hi1': u'hello1', u'hi5': u'hello5'}, timeout=2)
+        self.assertEqual(self.cache.get(u'hi1'), u'hello1')
+        self.assertEqual(self.cache.get(u'hi5'), u'hello5')
+        time.sleep(3)
+        self.assertNotEqual(self.cache.get(u'hi1'), u'hello1')
+        self.assertNotEqual(self.cache.get(u'hi5'), u'hello5')
+
+    def test_delete_many(self):
+        self.cache.set_many({u'hi1': u'hello1', u'hi5': u'hello5'}, timeout=2)
+        self.assertEqual(self.cache.get(u'hi1'), u'hello1')
+        self.cache.delete_many(u'hi1', u'hi5')
+        self.assertNotEqual(self.cache.get(u'hi1'), u'hello1')
+        self.assertNotEqual(self.cache.get(u'hi5'), u'hello5')

@@ -23,6 +23,8 @@ from inyoka.context import ctx
 from inyoka.core.database import db
 from inyoka.core.models import Cache
 from inyoka.core.config import TextConfigField, IntegerConfigField
+from inyoka.utils import flatten_list
+
 
 __all__ = ('cache',)
 
@@ -80,7 +82,7 @@ class DatabaseCache(BaseCache):
 
         :param keys: A list of keys to retrieve.
         """
-        return db.session.query(Cache.value).fitler(Cache.key.in_(keys)).all()
+        return flatten_list(db.session.query(Cache.value).filter(Cache.key.in_(keys)).all())
 
     def get_dict(self, *keys):
         """Return a key/value dictionary for all `keys`"""
@@ -131,7 +133,7 @@ class DatabaseCache(BaseCache):
 
     def delete_many(self, *keys):
         """Delete many cached values"""
-        db.session.query(Cache).filter(Cache.key.in_(keys)).delete()
+        db.session.query(Cache).filter(Cache.key.in_(keys)).delete(False)
 
     def _cull(self):
         """Remove not used or expired items in cache."""
@@ -148,6 +150,15 @@ class DatabaseCache(BaseCache):
             delkeys = list(random.choice(keys) for i in xrange(self.maxcull))
             # delete keys
             db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete()
+
+    def __contains__(self, key):
+        value = self.get(key)
+        if value is not None:
+            return True
+        return False
+
+    def __len__(self):
+        return db.session.query(Cache).count()
 
 
 def cached(timeout=None, key_prefix='view/%s', unless=None):

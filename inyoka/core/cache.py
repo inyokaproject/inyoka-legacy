@@ -149,16 +149,6 @@ class DatabaseCache(BaseCache):
             # delete keys
             db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete()
 
-    def __contains__(self, key):
-        value = self.get(key)
-        if value is not None:
-            return True
-        return False
-
-    def __len__(self):
-        return db.session.query(Cache).count()
-
-
 
 def cached(timeout=None, key_prefix='view/%s', unless=None):
     """Decorator.  Use this to cache a function.

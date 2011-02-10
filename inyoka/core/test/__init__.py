@@ -319,6 +319,8 @@ class ViewTestCase(DatabaseTestCase):
         """Creates a WSGI environment from the given values (see
         :func:`werkzeug.create_environ` for more information, this
         function accepts the same arguments).
+
+        Can be used as a context manager.
         """
         kwargs['base_url'] = self.base_url
         return ctx.dispatcher.test_request_context(*args, **kwargs)

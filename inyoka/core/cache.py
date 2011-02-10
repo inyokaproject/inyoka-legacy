@@ -139,17 +139,22 @@ class DatabaseCache(BaseCache):
         """Remove not used or expired items in cache."""
         # remove items that have timed out
         now = datetime.now().replace(microsecond=0)
-        db.session.query(Cache).filter(Cache.expires < now).delete()
+        db.session.query(Cache).filter(Cache.expires < now).delete(False)
         # remove any items over the maximum allowed number in the cache
         if len(self) >= self.max_entries:
             # upper limit for key query
             ul = self.maxcull * 2
             # get list of keys
-            keys = db.session.query(Cache.key).filter_by(limit=ul).all()
+            keys = flatten_list(db.session.query(Cache.key) \
+                                          .order_by(Cache.key).limit(ul).all())
             # get some keys at random
             delkeys = list(random.choice(keys) for i in xrange(self.maxcull))
             # delete keys
-            db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete()
+            db.session.query(Cache).filter(Cache.key.in_(delkeys)).delete(False)
+
+    def clear(self):
+        """Clears the cache."""
+        db.session.query(Cache).delete(False)
 
     def __contains__(self, key):
         value = self.get(key)

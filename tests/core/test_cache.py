@@ -116,11 +116,18 @@ class CacheTestCase(ViewTestCase):
             def big_foo(a, b):
                 return a+b+random.randrange(0, 100000)
 
+            @memoize(5)
+            def another_foo(a, b):
+                return a+b+random.randrange(0, 20)
+
             result = big_foo(5, 2)
+            another_result = another_foo(5, 2)
             time.sleep(1)
             self.assertEqual(big_foo(5, 2), result)
+            self.assertEqual(another_foo(5, 2), another_result)
             clear_memoized('big_foo')
             self.assertNotEqual(big_foo(5, 2), result)
+            self.assertEqual(another_foo(5, 2), another_result)
 
 
 class TestDatabaseCache(ViewTestCase):
@@ -129,17 +136,30 @@ class TestDatabaseCache(ViewTestCase):
         self._configured_cache = ctx.cfg['caching.system']
         ctx.cfg['caching.system'] = 'database'
         self.cache = set_cache()
+        self.cache.clear()
 
     def tearDown(self):
+        self.cache.clear()
         ctx.cfg['caching.system'] = self._configured_cache
         self.cache = set_cache()
-
-    # test basic API but do not test details as those are tested in
-    # upstream unittest suites.
 
     def test_set(self):
         self.cache.set(u'hi', u'hello')
         self.assertEqual(self.cache.get(u'hi'), u'hello')
+        # test proper _cull usage
+        for idx in xrange(self.cache.max_entries + 5):
+            self.cache.set(u'hello_test%s' % idx, u'buh!')
+        self.assertTrue(len(self.cache) <= self.cache.max_entries)
+        # overwrite (default True)
+        self.cache.set(u'hi', u'hello')
+        self.assertEqual(self.cache.get(u'hi'), u'hello')
+        self.cache.set(u'hi', u'hello2')
+        self.assertEqual(self.cache.get(u'hi'), u'hello2')
+        # overwrite False
+        self.cache.set(u'hi', u'hello')
+        self.assertEqual(self.cache.get(u'hi'), u'hello')
+        self.cache.set(u'hi', u'hello2', overwrite=False)
+        self.assertNotEqual(self.cache.get(u'hi'), u'hello2')
 
     def test_add(self):
         self.cache.add(u'hi', u'hello')

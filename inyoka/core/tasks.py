@@ -105,7 +105,7 @@ class UpdateSearchTask(Task):
                         indexer.add(doc)
                     except errors.IndexerError:
                         # there's already an exising one, replace it
-                        index.indexer.replace(doc)
+                        indexer.replace(doc)
         except errors.XapianDatabaseLockError as exc:
             # Retry to index that object in 30 seconds
             self.retry([index, provider, doc_id], kwargs,

@@ -123,8 +123,9 @@ def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
                 Possible values are: python, ipython and bpython.
     """
     from code import interact
-    namespace = {}
     assert app in ('python', 'ipython', 'bpython'), u'Your shell is not supported!'
+    from inyoka.core.api import ctx
+    namespace = {'ctx': ctx}
     try:
         if app == 'python':
             interact(banner, local=namespace)

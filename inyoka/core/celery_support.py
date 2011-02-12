@@ -54,12 +54,3 @@ class CeleryLoader(BaseLoader):
         self.configured = True
 
         return AttributeDict(dict(settings))
-
-    def on_worker_init(self):
-        """Imports modules at worker init so tasks can be registered
-        and used by the worked.
-
-        The list of modules to import is taken from the ``celery.imports``
-        configuration value.
-        """
-        self.import_default_modules()

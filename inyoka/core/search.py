@@ -36,6 +36,7 @@
     :copyright: 2010-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import os
 import time
 from os import path
 from weakref import WeakKeyDictionary
@@ -112,6 +113,8 @@ class SearchIndex(Interface):
     @property
     def path(self):
         search_folder = ctx.cfg['search.folder']
+        if not path.exists(search_folder):
+            os.makedirs(search_folder)
         return path.join(search_folder, self.name)
 
     @contextmanager

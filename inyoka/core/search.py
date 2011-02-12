@@ -40,6 +40,7 @@ import time
 from os import path
 from weakref import WeakKeyDictionary
 from threading import currentThread as get_current_thread
+from contextlib import contextmanager
 from werkzeug.utils import cached_property
 import xapian
 from xappy import UnprocessedDocument, Field, IndexerConnection,\
@@ -70,6 +71,7 @@ def get_connection(path, indexer=False):
     global _index_connection, _search_connections
 
     _connection_attemts = 0
+    connection = None
     while _connection_attemts <= 3:
         try:
             if indexer:
@@ -82,9 +84,8 @@ def get_connection(path, indexer=False):
                     _search_connections[thread] = connection = SearchConnection(path)
                 else:
                     connection = _search_connections[thread]
-        except xapian.DatabaseOpeningError:
+        except (xapian.DatabaseOpeningError, xapian.DatabaseLockError):
             time.sleep(0.5)
-            connection.reopen()
             _connection_attemts += 1
         else:
             break
@@ -113,16 +114,25 @@ class SearchIndex(Interface):
         search_folder = ctx.cfg['search.folder']
         return path.join(search_folder, self.name)
 
-    @cached_property
-    def indexer(self):
-        """
-        Return an `IndexerConnection` object for this search index.
-        Remember to cache the result because multiple indexers for the same
-        search index can lead to problems.
+    @contextmanager
+    def get_indexer_connection(self):
+        """Get an `IndexerConnection` object for this search index.
+
+        Remember to cache the result because multiple indexers
+        for the same search index can lead to problems.
+
+        Example usage::
+
+            with index.get_indexer_connection():
+                # ... index your documents
+
         """
         indexer = get_connection(self.path, True)
         self._register_fields(indexer)
-        return indexer
+        try:
+            yield indexer
+        finally:
+            indexer.close()
 
     @cached_property
     def searcher(self):

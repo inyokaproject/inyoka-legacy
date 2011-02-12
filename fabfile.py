@@ -297,19 +297,19 @@ def reindex(index):
     index = IResourceManager.get_search_indexes()[index]
 
     # iterate over all search providers...
-    for provider in index.providers.itervalues():
-        # ... to get all their data
-        for id, obj in provider.prepare_all():
-            # create a new document for the search index
-            doc = create_search_document('%s-%s' % (provider.name, id), obj)
-            try:
-                # try to create a new search entry
-                index.indexer.add(doc)
-            except errors.IndexerError:
-                # there's already an exising one, replace it
-                index.indexer.replace(doc)
-        index.indexer.flush()
-    index.indexer.close()
+    with index.get_indexer_connection() as indexer:
+        for provider in index.providers.itervalues():
+            # ... to get all their data
+            for id, obj in provider.prepare_all():
+                # create a new document for the search index
+                doc = create_search_document('%s-%s' % (provider.name, id), obj)
+                try:
+                    # try to create a new search entry
+                    indexer.add(doc)
+                except errors.IndexerError:
+                    # there's already an exising one, replace it
+                    indexer.replace(doc)
+            indexer.flush()
 
 
 def search(index, query, count=50):

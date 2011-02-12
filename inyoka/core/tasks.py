@@ -93,18 +93,19 @@ class UpdateSearchTask(Task):
             return
 
         try:
-            if obj is None:
-                # the document was deleted in the database, delete the search index
-                # entry too
-                index.indexer.delete(id)
-            else:
-                doc = create_search_document(id, obj)
-                try:
-                    # try to create a new search entry
-                    index.indexer.add(doc)
-                except errors.IndexerError:
-                    # there's already an exising one, replace it
-                    index.indexer.replace(doc)
+            with index.get_indexer_connection() as indexer:
+                if obj is None:
+                    # the document was deleted in the database, delete the search index
+                    # entry too
+                    indexer.delete(id)
+                else:
+                    doc = create_search_document(id, obj)
+                    try:
+                        # try to create a new search entry
+                        indexer.add(doc)
+                    except errors.IndexerError:
+                        # there's already an exising one, replace it
+                        indexer.replace(doc)
         except errors.XapianDatabaseLockError as exc:
             # Retry to index that object in 30 seconds
             self.retry([index, provider, doc_id], kwargs,
@@ -176,7 +177,7 @@ def find_similar_docs(index, doc):
     return [result.id.split('-', 1) for result in results if result.id != doc]
 
 
-@periodic_task(run_every=timedelta(seconds=30))
+@periodic_task(run_every=timedelta(minutes=5))
 def flush_indexer():
     """
     Flush all indexer connections.
@@ -184,5 +185,6 @@ def flush_indexer():
     logger = flush_indexer.get_logger()
     indexes = IResourceManager.get_search_indexes()
     for index in indexes.itervalues():
-        logger.debug('Flush search index: %s' % index.name)
-        index.indexer.flush()
+        with index.get_indexer_connection() as indexer:
+            logger.debug('Flush search index: %s' % index.name)
+            indexer.flush()

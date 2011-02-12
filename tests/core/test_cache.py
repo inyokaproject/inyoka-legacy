@@ -14,7 +14,7 @@ from inyoka.core.test import *
 from inyoka.core.cache import cache, memoize, cached, set_cache, clear_memoized
 
 
-class CacheTestCase(ViewTestCase):
+class TestCacheFramework(ViewTestCase):
 
     def setUp(self):
         self._configured_cache = ctx.cfg['caching.system']

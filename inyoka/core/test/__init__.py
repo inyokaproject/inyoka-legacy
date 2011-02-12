@@ -27,7 +27,7 @@ from werkzeug.contrib.testtools import ContentAccessors
 from sqlalchemy.util import to_list
 
 from inyoka.context import ctx, _request_ctx_stack
-from inyoka.core import database
+from inyoka.core import database, mail
 from inyoka.core.cache import set_cache
 from inyoka.core.test import mock
 from inyoka.core.test.fixtures import FixtureLoader
@@ -205,6 +205,10 @@ class DatabaseTestCase(TestCase):
     def _post_teardown(self):
         super(DatabaseTestCase, self)._post_teardown()
 
+        # This is a bit slow because we commit after every DELETE
+        # statement.  But to preserve the order of fixtures there's
+        # no other way to not break cascade statements and other
+        # relationships.
         for factory in self.custom_cleanup_factories:
             for item in factory():
                 db.session.delete(item)
@@ -448,22 +452,29 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        with LogbookTestHandler():
-            # drop all tables
-            database.drop_all_tables(bind=db.get_engine())
+        # drop all tables
+        database.drop_all_tables(bind=db.get_engine())
 
-            # then we create everything
-            database.init_db(bind=db.get_engine(), is_test=True)
+        # then we create everything
+        database.init_db(bind=db.get_engine(), is_test=True)
 
-            _internal_modules_to_skip = ('inyoka.core.tasks',)
-            self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
-                                or i in _internal_modules_to_skip]
+        # clear email outbox
+        mail.outbox = []
+
+        _internal_modules_to_skip = ('inyoka.core.tasks',)
+        self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
+                            or i in _internal_modules_to_skip]
 
     def beforeTest(self, test):
         database.init_db(bind=db.get_engine(), is_test=True)
 
     def finalize(self, result):
-        """Finally drop all database tables."""
+        """Cleanup some stuff."""
+        # clear database tables
+        database.drop_all_tables(bind=db.get_engine())
+
+        # clear email backend outbox.
+        mail.outbox = []
 
     def configure(self, options, conf):
         """Configure the plugin"""
@@ -592,7 +603,6 @@ def set_simple_cache(func):
     return wrapper
 
 
-#TODO: write unittests
 def future(func):
     """Mark a test as expected to unconditionally fail."""
     @wraps(func)

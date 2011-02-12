@@ -13,6 +13,7 @@ from collections import defaultdict
 from datetime import timedelta
 from sqlalchemy.orm.exc import NoResultFound
 from xappy import errors
+from inyoka.i18n import _
 from inyoka.context import ctx
 from inyoka.core.auth.models import User
 from inyoka.core.resource import IResourceManager
@@ -20,8 +21,7 @@ from inyoka.core.search import create_search_document, SearchIndex
 from inyoka.core.subscriptions import SubscriptionAction
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.core.templating import render_template
-from inyoka.utils.mail import send_mail
-from inyoka.core.api import _
+from inyoka.core.mail import send_email
 
 
 # set up the connections to the search index
@@ -34,18 +34,18 @@ def get_index_implementation(name):
     return INDEXES[name]
 
 
-@task
+@task(ignore_result=True)
 def send_activation_mail(user_id, activation_url):
     user = User.query.get(user_id)
     website_title = ctx.cfg['website_title']
-    send_mail(_(u'Registration at %s') % website_title, render_template('mails/registration', {
+    send_email(_(u'Registration at %s') % website_title, render_template('mails/registration', {
         'user':             user,
         'activation_url':   activation_url,
         'website_title':    website_title,
     }), ctx.cfg['mail_address'], user.email)
 
 
-@task
+@task(ignore_result=True)
 def send_notifications(object, action_name, subscriptions):
     action = SubscriptionAction.by_name(action_name)
     if action is None:
@@ -115,9 +115,7 @@ class UpdateSearchTask(Task):
                        countdown=30, exc=exc)
 
 @task
-def search_query(index, q, page=1, filters={}):
-    # using **kwargs for `filters` is not possible because celery sends some
-    # confusing keyword arguments
+def search_query(index, q, page=1, **filters):
     """
     Searches for the query `q` in the search index `index`.
 
@@ -189,8 +187,3 @@ def flush_indexer():
     """
     for index in INDEXES.itervalues():
         index.indexer.flush()
-
-
-# don't store the result of tasks without return value
-for f in [send_activation_mail, send_notifications]:
-    f.ignore_result = True

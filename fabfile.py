@@ -48,7 +48,9 @@ def initdb():
 def reset(no_testdata=False):
     """Reset the database and create new test data"""
     from inyoka.core.api import db
+    print "Drop all tables..."
     db.drop_all_tables()
+    print "Initalize database..."
     initdb()
     if not no_testdata:
         local("python %s" % _j('extra/create_testdata.py'), capture=False)

@@ -34,7 +34,7 @@ def _calculate_thresholds(min_weight, max_weight, steps):
 
 def _calculate_tag_weight(weight, max_weight):
     """Lograithmic tag weight calculation"""
-    return math.log(weight or 1) * max_weight / math.log(max_weight or 1)
+    return math.log(weight or 1) * max_weight / (math.log(max_weight or 1) or 1)
 
 
 class TagCounterExtension(db.AttributeExtension):

@@ -154,7 +154,7 @@ def celeryd():
     """
     # we start celery with -B option to make periodic tasks possible
     cmd = ('CELERY_LOADER="inyoka.core.celery_support.CeleryLoader" '
-           'celeryd --loglevel=INFO -B')
+           'celeryd --loglevel=DEBUG -B')
     local(cmd, capture=False)
 
 

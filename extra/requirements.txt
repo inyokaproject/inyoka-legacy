@@ -1,6 +1,6 @@
 Fabric==0.9.3
 Jinja2==2.5.5
-kombu==1.0
+kombu==1.0.2
 Logbook==0.3
 MarkupSafe==0.11
 Pygments==1.4
@@ -17,7 +17,7 @@ feedparser==5.0
 html5lib==0.90
 lxml==2.3
 mailer==0.5
-mercurial==1.7
+mercurial==1.7.5
 nose==0.11.4
 paramiko==1.7.6
 pycrypto==2.0.1

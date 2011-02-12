@@ -24,14 +24,10 @@ from inyoka.core.templating import render_template
 from inyoka.core.mail import send_email
 
 
-# set up the connections to the search index
-INDEXES = IResourceManager.get_search_indexes()
-
-
 def get_index_implementation(name):
     if isinstance(name, SearchIndex):
         return name
-    return INDEXES[name]
+    return IResourceManager.get_search_indexes()[name]
 
 
 @task(ignore_result=True)
@@ -185,5 +181,8 @@ def flush_indexer():
     """
     Flush all indexer connections.
     """
-    for index in INDEXES.itervalues():
+    logger = flush_indexer.get_logger()
+    logger.debug('Every 5 seconds...')
+    indexes = IResourceManager.get_search_indexes()
+    for index in indexes.itervalues():
         index.indexer.flush()

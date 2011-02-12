@@ -122,8 +122,8 @@ def shell(app='ipython', banner=u'Interactive Inyoka Shell'):
     :param app: choose between common python shell, ipython or bpython.
                 Possible values are: python, ipython and bpython.
     """
-    from code import interact
     assert app in ('python', 'ipython', 'bpython'), u'Your shell is not supported!'
+    from code import interact
     from inyoka.core.api import ctx
     namespace = {'ctx': ctx}
     try:

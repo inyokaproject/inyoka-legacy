@@ -73,6 +73,9 @@ class ICoreResourceManager(IResourceManager):
     #: package path.
     static_path = TextConfigField('static_path', default=u'static')
 
+    #: Exclude inyoka.core.tasks per default to fix the celery loader
+    deactivated_components.default.append('inyoka.core.tasks')
+
     #: register core models
     models = [Cache, Confirm, Tag, Storage]
 

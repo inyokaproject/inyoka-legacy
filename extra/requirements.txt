@@ -24,7 +24,7 @@ pycrypto==2.0.1
 pylibmc==1.1.1
 pyparsing==1.5.5
 python-dateutil==1.5
-pytz==2011b
+pytz==2010h
 translitcodec==0.1
 virtualenv==1.5.1
 wsgiref==0.1.2

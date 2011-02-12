@@ -176,13 +176,13 @@ def find_similar_docs(index, doc):
     return [result.id.split('-', 1) for result in results if result.id != doc]
 
 
-@periodic_task(run_every=timedelta(minutes=5))
+@periodic_task(run_every=timedelta(seconds=30))
 def flush_indexer():
     """
     Flush all indexer connections.
     """
     logger = flush_indexer.get_logger()
-    logger.debug('Every 5 seconds...')
     indexes = IResourceManager.get_search_indexes()
     for index in indexes.itervalues():
+        logger.debug('Flush search index: %s' % index.name)
         index.indexer.flush()

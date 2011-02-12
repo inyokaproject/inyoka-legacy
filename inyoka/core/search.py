@@ -45,7 +45,7 @@ from contextlib import contextmanager
 from werkzeug.utils import cached_property
 import xapian
 from xappy import UnprocessedDocument, Field, IndexerConnection,\
-    SearchConnection
+    SearchConnection, errors
 from inyoka import Interface
 from inyoka.core.api import db, ctx
 from inyoka.core.config import TextConfigField, IntegerConfigField
@@ -64,34 +64,47 @@ _index_connection = None
 _search_connections = WeakKeyDictionary()
 
 
-def get_connection(path, indexer=False):
+@contextmanager
+def get_connection(path, indexer=False, callback=None):
     """Get a connection to the database.
 
     This function reuses already existing connections.
     """
     global _index_connection, _search_connections
 
-    _connection_attemts = 0
-    connection = None
-    while _connection_attemts <= 3:
-        try:
-            if indexer:
-                if _index_connection is None:
-                    _index_connection = IndexerConnection(path)
-                connection = _index_connection
-            else:
-                thread = get_current_thread()
-                if thread not in _search_connections:
-                    _search_connections[thread] = connection = SearchConnection(path)
+    try:
+        _connection_attemts = _new = 0
+        connection = None
+        while _connection_attemts <= 3:
+            try:
+                if indexer:
+                    if _index_connection is None:
+                        _new = True
+                        _index_connection = IndexerConnection(path)
+                    connection = _index_connection
                 else:
-                    connection = _search_connections[thread]
-        except (xapian.DatabaseOpeningError, xapian.DatabaseLockError):
-            time.sleep(0.5)
-            _connection_attemts += 1
-        else:
-            break
+                    thread = get_current_thread()
+                    if thread not in _search_connections:
+                        _new = True
+                        _search_connections[thread] = connection = SearchConnection(path)
+                    else:
+                        connection = _search_connections[thread]
+            except (xapian.DatabaseOpeningError, xapian.DatabaseLockError):
+                time.sleep(0.5)
+                _connection_attemts += 1
+            else:
+                break
 
-    return connection
+        if callback:
+            callback(connection)
+
+        if not _new:
+            connection.reopen()
+        yield connection
+    finally:
+        if connection is not None:
+            connection.close()
+            _index_connection = None
 
 
 class SearchIndex(Interface):
@@ -117,8 +130,7 @@ class SearchIndex(Interface):
             os.makedirs(search_folder)
         return path.join(search_folder, self.name)
 
-    @contextmanager
-    def get_indexer_connection(self):
+    def indexer_connection(self):
         """Get an `IndexerConnection` object for this search index.
 
         Remember to cache the result because multiple indexers
@@ -126,19 +138,13 @@ class SearchIndex(Interface):
 
         Example usage::
 
-            with index.get_indexer_connection():
+            with index.indexer:
                 # ... index your documents
 
         """
-        indexer = get_connection(self.path, True)
-        self._register_fields(indexer)
-        try:
-            yield indexer
-        finally:
-            indexer.close()
+        return get_connection(self.path, True, lambda c: self._register_fields(c))
 
-    @cached_property
-    def searcher(self):
+    def searcher_connection(self):
         """
         Return a `SearchConnection` object for this search index.
         """
@@ -281,11 +287,11 @@ def query(index, q, **kwargs):
           otherwise `None`
     """
     query_task = tasks.search_query.delay(index, q, filters=kwargs)
-    correct_task = tasks.spell_correct.delay(index, q)
-
-    result_ids, total = query_task.get()
+    result_ids, total = query_task.get(timeout=2)
     results = _process_result_ids(index, result_ids)
-    corrected = correct_task.get()
+
+    correct_task = tasks.spell_correct.delay(index, q)
+    corrected = correct_task.get(timeout=2)
 
     return results, total, corrected != q and corrected or None
 

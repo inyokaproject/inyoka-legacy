@@ -470,9 +470,6 @@ class InyokaPlugin(cover.Coverage):
 
     def finalize(self, result):
         """Cleanup some stuff."""
-        # clear database tables
-        database.drop_all_tables(bind=db.get_engine())
-
         # clear email backend outbox.
         mail.outbox = []
 

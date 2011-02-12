@@ -1,6 +1,7 @@
 Fabric==0.9.3
 Jinja2==2.5.5
 kombu==1.0.2
+kombu-sqlalchemy
 Logbook==0.3
 MarkupSafe==0.11
 Pygments==1.4

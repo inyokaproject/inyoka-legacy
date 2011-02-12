@@ -20,7 +20,7 @@ from inyoka.core.config import TextConfigField, ListConfigField, IntegerConfigFi
 
 # celery broker settings
 celery_result_backend = TextConfigField('celery.result_backend', default=u'database')
-celery_result_dburi = TextConfigField('celery.result_dburi', default=u'sqlite://')
+celery_result_dburi = TextConfigField('celery.result_dburi', default='sqlite:///celery.db')
 celery_imports = ListConfigField('celery.imports', default=['inyoka.core.tasks'])
 celery_task_serializer = TextConfigField('celery.task_serializer', default='pickle')
 celery_send_task_error_emails = BooleanConfigField('celery.send_task_error_emails', default=False)
@@ -28,8 +28,8 @@ celery_eager_propagates_exceptions = BooleanConfigField('celery.eager_propagates
 celery_track_started = BooleanConfigField('celery.track_started', default=True)
 
 # broker settings
-broker_backend = TextConfigField('broker.backend', u'memory')
-broker_host = TextConfigField('broker.host', u'localhost')
+broker_backend = TextConfigField('broker.backend', u'sqlakombu.transport.Transport')
+broker_host = TextConfigField('broker.host', 'sqlite:///kombu.db')
 broker_port = IntegerConfigField('broker.port', 5672)
 broker_user = TextConfigField('broker.user', u'inyoka')
 broker_password = TextConfigField('broker.password', u'default')

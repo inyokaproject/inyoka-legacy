@@ -297,7 +297,7 @@ def reindex(index):
     index = IResourceManager.get_search_indexes()[index]
 
     # iterate over all search providers...
-    with index.get_indexer_connection() as indexer:
+    with index.indexer_connection() as indexer:
         for provider in index.providers.itervalues():
             # ... to get all their data
             for id, obj in provider.prepare_all():
@@ -319,10 +319,10 @@ def search(index, query, count=50):
     from inyoka.core.resource import IResourceManager
 
     index = IResourceManager.get_search_indexes()[index]
-    searcher = index.searcher
+    with index.searcher_connection() as searcher:
 
-    query = searcher.query_parse(query, allow=index.direct_search_allowed)
-    results = searcher.search(query, 0, int(count))
+        query = searcher.query_parse(query, allow=index.direct_search_allowed)
+        results = searcher.search(query, 0, int(count))
 
-    for result in results:
-        print u'%d. %s' % (result.rank, result.id)
+        for result in results:
+            print u'%d. %s' % (result.rank, result.id)

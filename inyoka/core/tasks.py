@@ -93,7 +93,7 @@ class UpdateSearchTask(Task):
             return
 
         try:
-            with index.get_indexer_connection() as indexer:
+            with index.indexer_connection() as indexer:
                 if obj is None:
                     # the document was deleted in the database, delete the search index
                     # entry too
@@ -105,7 +105,7 @@ class UpdateSearchTask(Task):
                         indexer.add(doc)
                     except errors.IndexerError:
                         # there's already an exising one, replace it
-                        indexer.replace(doc)
+                        index.indexer.replace(doc)
         except errors.XapianDatabaseLockError as exc:
             # Retry to index that object in 30 seconds
             self.retry([index, provider, doc_id], kwargs,
@@ -134,28 +134,30 @@ def search_query(index, q, page=1, **filters):
     """
     count = ctx.cfg['search.count']
     offset = (page - 1) * count
-    searcher = get_index_implementation(index).searcher
-    qry = searcher.query_parse(q, allow=get_index_implementation(index).direct_search_allowed)
+    with get_index_implementation(index).searcher_connection() as searcher:
 
-    for key, val in filters.iteritems():
-        # ignore senseless filters
-        if val in (None, [], (), ''):
-            continue
+        qry = searcher.query_parse(q, allow=get_index_implementation(index).direct_search_allowed)
 
-        # determine the type of query to execute
-        key, type = key.split('_') if '_' in key else (key, None)
+        for key, val in filters.iteritems():
+            # ignore senseless filters
+            if val in (None, [], (), ''):
+                continue
 
-        if type == 'list':
-            for v in val:
-                qry = searcher.query_filter(qry, searcher.query_field(key, v))
-        elif type == 'range':
-            qry = searcher.query_filter(qry, searcher.query_range(key, *val))
-        else:
-            qry = searcher.query_filter(qry, searcher.query_field(key, val))
+            # determine the type of query to execute
+            key, type = key.split('_') if '_' in key else (key, None)
 
-    results = searcher.search(qry, offset, offset + count)
-    total = results.matches_estimated
-    return [result.id.split('-', 1) for result in results], total
+            if type == 'list':
+                for v in val:
+                    qry = searcher.query_filter(qry, searcher.query_field(key, v))
+            elif type == 'range':
+                qry = searcher.query_filter(qry, searcher.query_range(key, *val))
+            else:
+                qry = searcher.query_filter(qry, searcher.query_field(key, val))
+
+        results = searcher.search(qry, offset, offset + count)
+        total = results.matches_estimated
+        ret = [result.id.split('-', 1) for result in results], total
+        return ret
 
 
 @task
@@ -163,7 +165,8 @@ def spell_correct(index, q):
     """
     Uses the search index `index` to return a spelling-corrected version of `q`.
     """
-    return get_index_implementation(index).searcher.spell_correct(q)
+    with get_index_implementation(index).searcher_connection() as searcher:
+        return searcher.spell_correct(q)
 
 
 @task
@@ -171,10 +174,11 @@ def find_similar_docs(index, doc):
     """
     Find documents imilar to `doc` in the search index `index`.
     """
-    searcher = get_index_implementation(index).searcher
-    results = searcher.search(searcher.query_similar(doc), 0, 10)
-    # sometimes xapian returns the document itself; ignore this
-    return [result.id.split('-', 1) for result in results if result.id != doc]
+    with get_index_implementation(index).searcher_connection() as searcher:
+        searcher = get_index_implementation(index).searcher
+        results = searcher.search(searcher.query_similar(doc), 0, 10)
+        # sometimes xapian returns the document itself; ignore this
+        return [result.id.split('-', 1) for result in results if result.id != doc]
 
 
 @periodic_task(run_every=timedelta(minutes=5))
@@ -185,6 +189,6 @@ def flush_indexer():
     logger = flush_indexer.get_logger()
     indexes = IResourceManager.get_search_indexes()
     for index in indexes.itervalues():
-        with index.get_indexer_connection() as indexer:
+        with index.indexer_connection() as indexer:
             logger.debug('Flush search index: %s' % index.name)
             indexer.flush()

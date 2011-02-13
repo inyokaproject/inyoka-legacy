@@ -71,6 +71,15 @@ Or create it under a user definied path::
     # it is not required to create the target directory before
     fab create_virtualenv:directory=../where-ever-you-want
 
+Since a couple of Linux distributions use Python3 as default Python interpreter,
+you can use the `interpreter` parameter to use Python2.7::
+
+    fab create_virtualenv:interpreter=python2.7
+
+To combine the directory and the interpreter, seperate them with a comma::
+
+    fab create_virtualenv:directory=../where-ever-you-want,interpreter=python2.7
+
 We are ready to run now.  If you start inyoka the first time (see below) a
 default `inyoka.ini` will be created.  You can, of course, create and modify
 for you own purposes.

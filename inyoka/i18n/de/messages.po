@@ -1,15 +1,15 @@
-# German translations for PROJECT.
-# Copyright (C) 2009 The Inyoka Team
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# German translations for .
+# Copyright (C) 2011 The Inyoka Team
+# This file is distributed under the same license as the  project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version:  Inyoka-NG\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-02-13 15:57+0100\n"
-"PO-Revision-Date: 2010-05-14 16:16+0100\n"
-"Last-Translator: Christopher Grebs <cg@webshox.org>\n"
+"POT-Creation-Date: 2011-02-13 17:12+0100\n"
+"PO-Revision-Date: 2011-02-13 16:12+0000\n"
+"Last-Translator: EnTeQuAk <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
@@ -19,124 +19,122 @@ msgstr ""
 
 #: wtforms/fields.py:403
 msgid "Invalid Choice: could not coerce"
-msgstr ""
+msgstr "Ungültige Auswahl: konnte nicht erzwingen"
 
 #: wtforms/fields.py:410 wtforms/ext/appengine/fields.py:63
 #: wtforms/ext/django/fields.py:77 wtforms/ext/sqlalchemy/fields.py:122
 #: wtforms/ext/sqlalchemy/fields.py:172 wtforms/ext/sqlalchemy/fields.py:177
 msgid "Not a valid choice"
-msgstr ""
+msgstr "Keine gültige Wahl"
 
 #: wtforms/fields.py:436
 msgid "Invalid choice(s): one or more data inputs could not be coerced"
 msgstr ""
+"Ungültige Wahl(en): eine oder mehrere Dateneingänge konnte nicht erzwungen "
+"werden"
 
 #: wtforms/fields.py:443
 #, python-format
 msgid "'%(value)s' is not a valid choice for this field"
-msgstr ""
+msgstr "' %(value)s ' ist keine gültige Wahl für dieses Feld"
 
 #: wtforms/fields.py:527
 msgid "Not a valid integer value"
-msgstr ""
+msgstr "Kein gültiger Integerwert"
 
 #: wtforms/fields.py:572
 msgid "Not a valid decimal value"
-msgstr ""
+msgstr "Kein gültiger Dezimalwert"
 
 #: wtforms/fields.py:596
 msgid "Not a valid float value"
-msgstr ""
+msgstr "Kein gültiger Float-Wert"
 
 #: wtforms/validators.py:51
 #, python-format
 msgid "Invalid field name '%s'."
-msgstr ""
+msgstr "Ungültiger Feldname „%s”."
 
 #: wtforms/validators.py:58
 #, python-format
 msgid "Field must be equal to %(other_name)s."
-msgstr ""
+msgstr "Feld muss gleich %(other_name)s ."
 
 #: wtforms/validators.py:90
 #, python-format
 msgid "Field must be at least %(min)d character long."
 msgid_plural "Field must be at least %(min)d characters long."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Feld muss mindestens %(min)d Zeichen lang sein."
+msgstr[1] "Feld muss mindestens %(min)d Zeichen lang sein."
 
 #: wtforms/validators.py:93
 #, python-format
 msgid "Field cannot be longer than %(max)d character."
 msgid_plural "Field cannot be longer than %(max)d characters."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Feld kann nicht länger sein als %(max)d Zeichen."
+msgstr[1] "Feld kann nicht länger sein als %(max)d Zeichen."
 
 #: wtforms/validators.py:96
 #, python-format
 msgid "Field must be between %(min)d and %(max)d characters long."
-msgstr ""
+msgstr "Feld muss zwischen %(min)d und %(max)d Zeichen lang sein."
 
 #: wtforms/validators.py:131
 #, python-format
 msgid "Number must be greater than %(min)s."
-msgstr ""
+msgstr "Anzahl muss größer als %(min)s."
 
 #: wtforms/validators.py:133
 #, python-format
 msgid "Number must be less than %(max)s."
-msgstr ""
+msgstr "Zahl muss kleiner als %(max)s."
 
 #: wtforms/validators.py:135
 #, python-format
 msgid "Number must be between %(min)s and %(max)s."
-msgstr ""
+msgstr "Anzahl muss zwischen %(min)s und %(max)s sein"
 
 #: wtforms/validators.py:171
 msgid "This field is required."
-msgstr ""
+msgstr "Dieses Feld ist obligatorisch."
 
 #: wtforms/validators.py:199
-#, fuzzy
 msgid "Invalid input."
-msgstr "Fehlerhafter Login."
+msgstr "Ungültige Eingabe."
 
 #: wtforms/validators.py:218
-#, fuzzy
 msgid "Invalid email address."
-msgstr "Du musst eine valide E-Mail Adresse eingeben."
+msgstr "Ungültige E-Mail-Adresse."
 
 #: wtforms/validators.py:235
 msgid "Invalid IP address."
-msgstr ""
+msgstr "Ungültige IP-Adresse."
 
 #: wtforms/validators.py:260
-#, fuzzy
 msgid "Invalid URL."
-msgstr "Fehlerhafter Login."
+msgstr "Ungültige URL."
 
 #: wtforms/validators.py:287
 #, python-format
 msgid "Invalid value, must be one of: %(values)s."
-msgstr ""
+msgstr "Ungültiger Wert, gültige Werte: %(values)s."
 
 #: wtforms/validators.py:314
 #, python-format
 msgid "Invalid value, can't be any of: %(values)s."
-msgstr ""
+msgstr "Ungültiger Wert, darf nicht einer der folgenden sein: %(values)s."
 
 #: wtforms/ext/appengine/fields.py:82
-#, fuzzy
 msgid "Not a valid list"
-msgstr "Fehlerhafter Login"
+msgstr "Keine gültige Liste"
 
 #: wtforms/ext/dateutil/fields.py:48
 msgid "Please input a date/time value"
-msgstr ""
+msgstr "Bitte geben Sie ein Datum / Zeit-Wert ein"
 
 #: wtforms/ext/dateutil/fields.py:60
 msgid "Invalid date/time input"
-msgstr ""
+msgstr "Ungültige Datum-/Uhrzeit-Eingabe"
 
 #: inyoka/core/serializer.py:140
 msgid ""
@@ -218,20 +216,19 @@ msgstr "Der Name darf keinn Slash enthalten."
 
 #: inyoka/core/forms/validators.py:185
 msgid "Tag Names should only contain ascii characters and numbers."
-msgstr ""
+msgstr "Tag-Namen dürfen nur ASCII-Zeichen und Zahlen enthalten."
 
 #: inyoka/core/mail/__init__.py:94
-#, fuzzy
 msgid "invalid value for email address"
-msgstr "Du musst eine valide E-Mail Adresse eingeben."
+msgstr "ungültiger Wert für die E-Mail Adresse"
 
 #: inyoka/core/mail/__init__.py:100
 msgid "Not all mailing parameters filled in"
-msgstr ""
+msgstr "Nicht alle E-Mail Parameter wurden ausgefüllt"
 
 #: inyoka/core/mail/__init__.py:137
 msgid "TLS enabled but server does not support TLS"
-msgstr ""
+msgstr "TLS aktiviert, aber Server unterstützt kein TLS"
 
 #: inyoka/core/markup/parser.py:47
 msgid "Internal parser error: "
@@ -257,12 +254,11 @@ msgstr "Text"
 
 #: inyoka/event/forms.py:22
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: inyoka/event/forms.py:23
-#, fuzzy
 msgid "End"
-msgstr "zehn"
+msgstr "Ende"
 
 #: inyoka/event/forms.py:24 inyoka/forum/forms.py:24 inyoka/forum/forms.py:44
 #: inyoka/news/forms.py:23 inyoka/news/templates/base.html:20
@@ -275,16 +271,15 @@ msgstr "Schlagwörter"
 
 #: inyoka/event/forms.py:26
 msgid "Create topic for discussion"
-msgstr ""
+msgstr "Diskussionsthema erstellen"
 
 #: inyoka/event/forms.py:27
 msgid "Create topic for further information"
-msgstr ""
+msgstr "Thema erstellen für weitere Informationen"
 
 #: inyoka/event/templates/base.html:2 inyoka/templates/base.html:37
-#, fuzzy
 msgid "Event"
-msgstr "sieben"
+msgstr "Event"
 
 #: inyoka/event/templates/base.html:12 inyoka/paste/templates/base.html:12
 msgid "New"
@@ -300,36 +295,36 @@ msgstr "Kalender"
 
 #: inyoka/event/templates/calendar.html:16
 msgid "Monday"
-msgstr ""
+msgstr "Montag"
 
 #: inyoka/event/templates/calendar.html:17
 msgid "Tuesday"
-msgstr ""
+msgstr "Dienstag"
 
 #: inyoka/event/templates/calendar.html:18
 msgid "Wednesday"
-msgstr ""
+msgstr "Mittwoch"
 
 #: inyoka/event/templates/calendar.html:19
 msgid "Thursday"
-msgstr ""
+msgstr "Donnerstag"
 
 #: inyoka/event/templates/calendar.html:20
 msgid "Friday"
-msgstr ""
+msgstr "Freitag"
 
 #: inyoka/event/templates/calendar.html:21
 msgid "Saturday"
-msgstr ""
+msgstr "Samstag"
 
 #: inyoka/event/templates/calendar.html:22
 msgid "Sunday"
-msgstr ""
+msgstr "Sonntag"
 
 #: inyoka/event/templates/calendar.html:33
 #, python-format
 msgid "Start: %(date)s - End: %(date2)s"
-msgstr ""
+msgstr "Start: %(date)s  - Ende: %(date2)s "
 
 #: inyoka/event/templates/index.html:9 inyoka/forum/templates/answer.html:7
 #: inyoka/forum/templates/ask.html:12 inyoka/forum/templates/question.html:138
@@ -343,22 +338,22 @@ msgid "Submit"
 msgstr "Abschicken"
 
 #: inyoka/event/templates/oncoming.html:9 inyoka/event/templates/view.html:5
-#, fuzzy, python-format
+#, python-format
 msgid "Starting on %(date)s."
-msgstr "Erstellt am %(date)s."
+msgstr "Ab %(date)s ."
 
 #: inyoka/event/templates/oncoming.html:9 inyoka/event/templates/view.html:6
-#, fuzzy, python-format
+#, python-format
 msgid "Ending on %(date)s."
-msgstr "Erstellt am %(date)s."
+msgstr "Bis zum %(date)s ."
 
 #: inyoka/event/templates/view.html:13
 msgid "Event Discussion"
-msgstr ""
+msgstr "Event Diskussion"
 
 #: inyoka/event/templates/view.html:15
 msgid "Event Information"
-msgstr ""
+msgstr "Informationen zur Veranstaltung"
 
 #: inyoka/forum/forms.py:36 inyoka/portal/forms.py:86
 msgid "Name"
@@ -379,6 +374,8 @@ msgstr "Beschreibung"
 #: inyoka/forum/forms.py:49
 msgid "You can't choose the forum itself or one of its subforums as parent"
 msgstr ""
+"Du kannst nicht das Forum selbst oder eines der Unterforen als Elternteil "
+"auswählen"
 
 #: inyoka/forum/models.py:36
 msgid "Questions"
@@ -755,11 +752,9 @@ msgid "Latest Articles"
 msgstr "Aktuelle Artikel"
 
 #: inyoka/news/templates/detail.html:9
-#, fuzzy, python-format
+#, python-format
 msgid "written by %(author_link)s on %(article_pubdate)s %(article_pubtime)s"
-msgstr ""
-"geschrieben von <a href=\"%(author_url)s\">%(author_name)s</a> "
-"%(article_pubdate)s %(article_pubtime)s"
+msgstr "geschrieben von %(author_link)s am %(article_pubdate)s  %(article_pubtime)s "
 
 #: inyoka/news/templates/detail.html:33 inyoka/news/templates/detail.html:58
 #: inyoka/paste/templates/browse.html:24
@@ -1086,11 +1081,11 @@ msgstr "ReCaptcha"
 #: inyoka/portal/forms.py:94 inyoka/portal/templates/search.html:5
 #: inyoka/portal/templates/search.html:14
 msgid "Search"
-msgstr ""
+msgstr "Suche"
 
 #: inyoka/portal/forms.py:95
 msgid "Page"
-msgstr ""
+msgstr "Seite"
 
 #: inyoka/portal/forms.py:111
 msgid "Old Password"
@@ -1228,7 +1223,7 @@ msgstr "Profil bearbeiten"
 
 #: inyoka/portal/templates/profile.html:25
 msgid "This user is deactivated."
-msgstr ""
+msgstr "Dieser Benutzer ist deaktiviert."
 
 #: inyoka/portal/templates/register.html:3
 #: inyoka/portal/templates/register.html:28 inyoka/templates/base.html:46
@@ -1253,12 +1248,11 @@ msgstr "Zufallskennwort generieren"
 
 #: inyoka/portal/templates/search.html:19
 msgid "Did you mean:"
-msgstr ""
+msgstr "Meintest du:"
 
 #: inyoka/portal/templates/search.html:34
-#, fuzzy
 msgid "No matches found."
-msgstr "Keine Fragen gefunden."
+msgstr "Keine Übereinstimmungen gefunden."
 
 #: inyoka/portal/templates/tags.html:2
 msgid "Choose Tag"
@@ -1312,11 +1306,10 @@ msgstr ""
 "\"im Forum und im Wiki beleiben bestehen"
 
 #: inyoka/portal/templates/usercp/deactivate.html:10
-#, fuzzy
 msgid "This action is irreversible and you can not login anymore!!"
 msgstr ""
-"Diese Aktion ist nicht umkehrbar und \"\n"
-"\"du kannst dich nicht mehr einloggen!!"
+"Diese Aktion ist irreversibel, du kannst dich anschließend nicht mehr "
+"einloggen!"
 
 #: inyoka/portal/templates/usercp/deactivate.html:13
 msgid "If you still want to continue, please enter your password again."
@@ -1325,9 +1318,8 @@ msgstr ""
 "\"gib bitte noch mal dein Passwort ein."
 
 #: inyoka/portal/templates/usercp/deactivate.html:21
-#, fuzzy
 msgid "Deactivate Profile "
-msgstr "Benutzer deaktivieren"
+msgstr "Profil deaktivieren"
 
 #: inyoka/portal/templates/usercp/password.html:3
 #: inyoka/portal/templates/usercp/password.html:30

@@ -123,8 +123,8 @@ class InyokaTestClient(Client):
         if self.context_preserved:
             _request_ctx_stack.pop()
             self.context_preserved = False
-        kwargs.setdefault('environ_overrides', {}) \
-            ['inyoka._preserve_context'] = self.preserve_context
+        kwargs.setdefault('environ_overrides', {})
+        kwargs['inyoka._preserve_context'] = self.preserve_context
         old = _request_ctx_stack.top
         try:
             return Client.open(self, *args, **kwargs)
@@ -433,14 +433,9 @@ class InyokaPlugin(cover.Coverage):
         ctx.cfg['testing'] = True
         ctx.load_packages(['tests.*'])
 
-        # special celery handling.  We change the result and transport backends
-        # to `memory` to be able to run the unittests without a amqp server.
-        # As celery has unittests itself we do know that the result-backend
-        # stuff works as expected.
-        # We also disable the email sending feature of celery.
-#        ctx.cfg['celery.result_backend'] = 'database'
-#        ctx.cfg['celery.result_dburi'] = 'sqlite://'
-#        ctx.cfg['broker.backend'] = 'memory'
+        # Special celery handling.
+        #
+        # We disable the email sending feature of celery for safety.
         ctx.cfg['celery.send_task_error_emails'] = False
 
     def options(self, parser, env):
@@ -481,6 +476,11 @@ class InyokaPlugin(cover.Coverage):
         """Cleanup some stuff."""
         # clear email backend outbox.
         mail.outbox = []
+
+        # drop all database tables to leave an empty environment
+        db.metadata.drop_all(self._connection)
+
+        # finally close the database connection.
         self._connection.close()
 
     def configure(self, options, conf):

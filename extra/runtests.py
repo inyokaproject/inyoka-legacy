@@ -28,7 +28,7 @@ from inyoka.core.database import refresh_engine
 def run_suite(module='inyoka'):
     # We need debug set to True for our tests
     from inyoka.context import ctx
-    ctx.cfg['debug'] = 1
+    ctx.cfg['debug'] = 0
 
     # force the engine to be bound to the new database
     refresh_engine()

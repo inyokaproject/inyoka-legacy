@@ -142,14 +142,18 @@ database_pool_recycle = IntegerConfigField('database.pool_recycle', default=-1, 
 database_pool_timeout = IntegerConfigField('database.pool_timeout', default=30, min_value=5)
 
 
-def get_engine():
+def get_engine(info=None, force_new=False):
     """Creates the engine if it does not exist and returns
     the current engine.
+
+    :param info: An optional database uri.
+    :param force_new: If `True` we do not overwrite the global engine
+                      but return a new engine object.
     """
     global _engine
     with _engine_lock:
-        if _engine is None:
-            info = make_url(ctx.cfg['database.url'])
+        if _engine is None or force_new:
+            info = make_url(info or ctx.cfg['database.url'])
             # convert_unicode: Let SQLAlchemy convert all values to unicode
             #                  before we get them
             # echo:            Set the database debug level
@@ -171,8 +175,12 @@ def get_engine():
                 options['proxy'] = ConnectionDebugProxy()
 
             url = SafeURL(info)
-            _engine = create_engine(url, **options)
-        return _engine
+            engine = create_engine(url, **options)
+            if not force_new:
+                _engine = engine
+        else:
+            engine = _engine
+        return engine
 
 
 @ctx.cfg.reload_signal.connect

@@ -10,14 +10,98 @@
     :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+import os
 import sys
+import time
 import traceback
 from pprint import pformat
 from functools import partial
+from sqlalchemy import text
 from inyoka.l10n import parse_timestamp, parse_timeonly
 from inyoka.core.resource import IResourceManager
-from inyoka.core.database import db
+from inyoka.core.database import db, URL
 from inyoka.utils.logger import logger
+
+
+def _get_admin_connection(connection):
+    url = connection.engine.url
+    admin_engine = db.get_engine(unicode(URL(url.drivername, url.username,
+        url.password, url.host, url.port, query=url.query)), force_new=True)
+
+    return admin_engine
+
+
+def create_sqlite_db(connection):
+    test_database_name = connection.engine.url.database
+    if not test_database_name:
+        test_database_name = ':memory:'
+
+    if test_database_name != ':memory:':
+        # Erase the old test database
+        logger.info('Destroying old test database "%s"...' % unicode(connection.engine.url))
+        if os.access(test_database_name, os.F_OK):
+            try:
+                os.remove(test_database_name)
+            except Exception as exc:
+                logger.warning('Got an error deleting the old test database: %s\n' % exc)
+    return test_database_name
+
+
+def destroy_sqlite_db(connection):
+    test_database_name = connection.engine.url.database
+    if test_database_name and test_database_name != ":memory:":
+        # Remove the SQLite database file
+        os.remove(test_database_name)
+    return test_database_name
+
+
+def create_db(connection):
+    """Creates the test database tables."""
+    driver = connection.engine.name
+    if driver == 'sqlite':
+        return create_sqlite_db(connection)
+
+    # Create the test database and connect to it. We need to autocommit
+    # if the database supports it because PostgreSQL doesn't allow
+    # CREATE/DROP DATABASE statements within transactions.
+    def _execute(sql, *args, **kwargs):
+        engine = _get_admin_connection(connection)
+        engine.execute(text(sql).execution_options(autocommit=True), *args, **kwargs)
+
+    test_database_name = connection.engine.url.database
+
+    try:
+        _execute('CREATE DATABASE %s' % test_database_name)
+    except Exception as exc:
+        logger.warning('Got an error creating the test database: %s\n' % exc)
+        logger.info('Destroying old test database "%s"...' % unicode(connection.engine.url))
+        try:
+            _execute('DROP DATABASE %s' % test_database_name)
+            _execute('CREATE DATABASE %s' % test_database_name)
+        except Exception as exc:
+            logger.warning('Got an error recreating the test database: %s\n' % exc)
+
+    return test_database_name
+
+
+def destroy_db(connection):
+    """Remove the test database tables."""
+    # To avoid "database is being accessed by other users" errors.
+    time.sleep(1)
+
+    driver = connection.engine.name
+    if driver == 'sqlite':
+        return destroy_sqlite_db(connection)
+
+    def _execute(sql, *args, **kwargs):
+        engine = _get_admin_connection(connection)
+        engine.execute(text(sql).execution_options(autocommit=True), *args, **kwargs)
+
+    try:
+        _execute('DROP DATABASE %s' % connection.engine.url.database)
+    except Exception:
+        # The database seems to exist, fail silently.
+        pass
 
 
 class FixtureLoader(object):

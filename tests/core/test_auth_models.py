@@ -14,8 +14,8 @@ from inyoka.core.auth.models import User, USER_STATUS_MAP, Group
 
 class TestUserModel(DatabaseTestCase):
 
-    fixtures = [{User: [{'username': u'me', 'email': u'me@example.com',
-                         'password': u's3cr3t'}]}]
+    fixtures = [{User: [{u'username': u'me', u'email': u'me@example.com',
+                         u'password': u's3cr3t'}]}]
 
     def test_user_status(self):
         me = self.data['User'][0]
@@ -43,7 +43,7 @@ class TestUserModel(DatabaseTestCase):
     def test_user_password(self):
         me = self.data['User'][0]
         self.assertTrue(me.check_password(u's3cr3t'))
-        self.assertFalse(me.check_password('secr3t'))
+        self.assertFalse(me.check_password(u'secr3t'))
         self.assertFalse(me.check_password(u'„s€©®€™”'))
 
     def test_user_display_name(self):
@@ -70,10 +70,10 @@ class TestUserModel(DatabaseTestCase):
 
 class TestGroupModel(DatabaseTestCase):
     fixtures = [{Group: [
-        {'&g1': {'name': 'g1'}},
-        {'&g4': {'name': 'g4'}},
-        {'&g2': {'name': 'g2', 'parents': set(['*g1', '*g4'])}},
-        {'&g3': {'name': 'g3', 'parents': set(['*g1', '*g2'])}},
+        {'&g1': {'name': u'g1'}},
+        {'&g4': {'name': u'g4'}},
+        {'&g2': {'name': u'g2', 'parents': set(['*g1', '*g4'])}},
+        {'&g3': {'name': u'g3', 'parents': set(['*g1', '*g2'])}},
     ]}]
 
     def test_groups(self):

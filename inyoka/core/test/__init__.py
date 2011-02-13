@@ -13,7 +13,7 @@ import os
 import sys
 import unittest
 import warnings
-from functools import wraps
+from functools import wraps, partial
 from urllib2 import urlparse
 
 import nose
@@ -30,7 +30,7 @@ from inyoka.context import ctx, _request_ctx_stack
 from inyoka.core import database, mail
 from inyoka.core.cache import set_cache
 from inyoka.core.test import mock
-from inyoka.core.test.fixtures import FixtureLoader
+from inyoka.core.test.fixtures import FixtureLoader, create_db, destroy_db
 from inyoka.core.database import db
 from inyoka.core.http import Response
 from inyoka.core.resource import IResourceManager
@@ -123,8 +123,9 @@ class InyokaTestClient(Client):
         if self.context_preserved:
             _request_ctx_stack.pop()
             self.context_preserved = False
-        kwargs.setdefault('environ_overrides', {})
-        kwargs['inyoka._preserve_context'] = self.preserve_context
+
+        kwargs.setdefault('environ_overrides', {})['inyoka._preserve_context'] = \
+            self.preserve_context
         old = _request_ctx_stack.top
         try:
             return Client.open(self, *args, **kwargs)
@@ -253,16 +254,6 @@ class ViewTestCase(DatabaseTestCase):
     def _post_teardown(self):
         super(ViewTestCase, self)._post_teardown()
         template_rendered.disconnect(self._add_template)
-
-    def get_context(self, path, method='GET', **kwargs):
-        """
-        Return the template context from a view wrapped by :func:`templated`.
-        """
-        response = self.open(path, method=method, **kwargs)
-        try:
-            return response._template_context
-        except AttributeError:
-            raise ImproperlyConfigured(u'You must set inyoka.debug to \'True\'')
 
     def open(self, path, *args, **kw):
         """
@@ -448,13 +439,18 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        self._connection = conn = db.get_engine().connect()
+        engine = db.get_engine()
 
-        # drop all tables
-        db.metadata.drop_all(conn)
+        # cleanup the existing databases and recreate them.
+        # Also ensure that a database exists properly.
+        destroy_db(engine)
+        create_db(engine)
 
-        # then we create everything
-        database.init_db(bind=conn, is_test=True)
+        # create a connection to the existing database
+        self._connection = connection = engine.connect()
+
+        # setup all database tables.
+        database.init_db(bind=connection, is_test=True)
 
         # clear email outbox
         mail.outbox = []
@@ -477,11 +473,11 @@ class InyokaPlugin(cover.Coverage):
         # clear email backend outbox.
         mail.outbox = []
 
-        # drop all database tables to leave an empty environment
-        db.metadata.drop_all(self._connection)
-
         # finally close the database connection.
         self._connection.close()
+
+        # drop all database tables to leave an empty environment
+        # destroy_db(self._connection)
 
     def configure(self, options, conf):
         """Configure the plugin"""

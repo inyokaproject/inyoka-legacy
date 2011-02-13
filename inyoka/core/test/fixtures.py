@@ -51,7 +51,11 @@ def destroy_sqlite_db(connection):
     test_database_name = connection.engine.url.database
     if test_database_name and test_database_name != ":memory:":
         # Remove the SQLite database file
-        os.remove(test_database_name)
+        if os.access(test_database_name, os.F_OK):
+            try:
+                os.remove(test_database_name)
+            except Exception as exc:
+                logger.warning('Got an error deleting the test database: %s\n' % exc)
     return test_database_name
 
 

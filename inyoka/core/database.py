@@ -626,9 +626,12 @@ class File(MutableType, TypeDecorator):
 def init_db(**kwargs):
     kwargs['tables'] = list(IResourceManager.get_models(tables=True))
     is_test = kwargs.pop('is_test', False)
+    bind = kwargs.pop('bind', None)
 
     if kwargs['tables']:
-        metadata.create_all(**kwargs)
+        conn = bind or db.get_engine()
+        metadata.create_all(conn, **kwargs)
+
         # some essential database things
         from inyoka.core.auth.models import User, UserProfile
         anon_name = ctx.cfg['anonymous_name']
@@ -644,41 +647,6 @@ def init_db(**kwargs):
         db.session.commit()
 
 
-def drop_all_tables(bind=None):
-    engine = bind or get_engine()
-    if engine.url.drivername == 'sqlite':
-        # SQLite is a nice database with no fancy restrictions.
-        # So we just drop everything and return.
-        db.metadata.drop_all(bind=engine)
-        return
-
-    # close an already existing session properly.  This closes all transactions
-    # and such stuff.  As DDL statements can produce deadlocks in some databases.
-    db.session.close()
-
-    inspector = reflection.Inspector.from_engine(engine)
-    metadata = MetaData()
-
-    tables = []
-    foreign_keys = []
-
-    for table_name in inspector.get_table_names():
-        fks = []
-        for fk in inspector.get_foreign_keys(table_name):
-            if not fk['name']:
-                continue
-            fks.append(db.ForeignKeyConstraint((), (), name=fk['name']))
-        t = db.Table(table_name, metadata, *fks)
-        tables.append(t)
-        foreign_keys.extend(fks)
-
-    for fkc in foreign_keys:
-        engine.execute(DropConstraint(fkc))
-
-    for table in tables:
-        engine.execute(AdvancedDropTable(table, cascade=True))
-
-
 def _make_module():
     db = ModuleType('db')
     _get_items = lambda mod: ((key, getattr(mod, key)) for key in mod.__all__)
@@ -692,7 +660,6 @@ def _make_module():
     db.PGArray = PGArray
 
     db.get_engine = get_engine
-    db.drop_all_tables = drop_all_tables
     db.session = session
     db.metadata = metadata
     db.mapper = mapper

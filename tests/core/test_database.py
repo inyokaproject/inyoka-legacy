@@ -63,7 +63,6 @@ class DatabaseTestQuestion(DatabaseTestEntry):
     answer_count = db.Column(db.Integer, default=0)
 
 
-@refresh_database
 def test_find_next_increment():
     eq_(db.find_next_increment(DatabaseTestCategory.slug, u'cat'), u'cat')
 
@@ -78,7 +77,6 @@ def test_find_next_increment():
     eq_(db.find_next_increment(DatabaseTestCategory.slug, u'cat'), u'cat3')
 
 
-@refresh_database
 def test_slug_generator():
     c1 = SlugGeneratorTestModel(name=u'cat')
     db.session.commit()
@@ -102,7 +100,7 @@ def test_slug_generator():
 
 
 @set_simple_cache
-@refresh_database
+@needs_real_database
 def test_cached_query(cache):
     c = DatabaseTestCategory(slug=u'category')
     db.session.commit()
@@ -146,7 +144,7 @@ def test_cached_query(cache):
     obj.sluggies
 
 
-@refresh_database
+@needs_real_database
 def test_atomic_add():
     # We cannot test if the function is really atomic, this also depends
     # on the used database.  But we check if the results are as expected
@@ -164,7 +162,7 @@ def test_atomic_add():
     eq_(obj.count, 1)
 
 
-@refresh_database
+@needs_real_database
 def test_atomic_add_on_joined_tables():
     obj = DatabaseTestQuestion(title=u'some question')
     db.session.commit()

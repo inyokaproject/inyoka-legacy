@@ -14,7 +14,6 @@ from inyoka.core.test.fixtures import FixtureLoader
 from inyoka.core.auth.models import User, UserProfile, Group
 
 
-@refresh_database
 def test_fixture_loader_string_model_references():
     data = [{'User': [{
         'username': u'ente',
@@ -34,7 +33,6 @@ def test_fixture_loader_string_model_references():
     eq_(len(new_data['User']), 1)
 
 
-@refresh_database
 def test_fixture_loader_class_model_references():
     data = [{User: [{
         'username': u'ente',
@@ -51,7 +49,6 @@ def test_fixture_loader_class_model_references():
     eq_(len(new_data['User']), 1)
 
 
-@refresh_database
 def test_fixture_references():
     data = [{
         'User': [{

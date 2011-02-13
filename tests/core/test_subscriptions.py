@@ -409,7 +409,6 @@ class TestSubscriptions(DatabaseTestCase):
             (4, u'__test_new_comment', four, comments[4], {'__test_comments': [e1]}),
         ]))
 
-    @refresh_database
     def check_bad_implemented_type(self):
         """check for not well implemented subscription types"""
         w1 = Wrapper()

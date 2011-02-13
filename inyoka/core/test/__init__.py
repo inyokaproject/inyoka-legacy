@@ -45,9 +45,9 @@ warnings.filterwarnings('ignore', message=r'object\.__init__.*?takes no paramete
 
 __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'db', 'Response', 'ctx',
-           'DatabaseTestCase', 'refresh_database', 'TestResourceManager',
+           'DatabaseTestCase', 'TestResourceManager',
            'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless', 'skip_if_database',
-           'set_simple_cache')
+           'set_simple_cache', 'needs_real_database')
 
 
 __all__ = __all__ + tuple(nose.tools.__all__)
@@ -438,8 +438,9 @@ class InyokaPlugin(cover.Coverage):
         # As celery has unittests itself we do know that the result-backend
         # stuff works as expected.
         # We also disable the email sending feature of celery.
-        ctx.cfg['celery.result_backend'] = 'database'
-        ctx.cfg['broker.backend'] = 'memory'
+#        ctx.cfg['celery.result_backend'] = 'database'
+#        ctx.cfg['celery.result_dburi'] = 'sqlite://'
+#        ctx.cfg['broker.backend'] = 'memory'
         ctx.cfg['celery.send_task_error_emails'] = False
 
     def options(self, parser, env):
@@ -452,11 +453,13 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
+        self._connection = db.get_engine().connect()
+
         # drop all tables
-        database.drop_all_tables(bind=db.get_engine())
+        db.metadata.drop_all(self._connection)
 
         # then we create everything
-        database.init_db(bind=db.get_engine(), is_test=True)
+        database.init_db(bind=self._connection, is_test=True)
 
         # clear email outbox
         mail.outbox = []
@@ -465,13 +468,40 @@ class InyokaPlugin(cover.Coverage):
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
                             or i in _internal_modules_to_skip]
 
+    def _end_transaction(self):
+        db.session.rollback()
+        self._transaction.rollback()
+        db.session.bind = db.get_engine()
+
+    def _start_transaction(self):
+        self._transaction = self._connection.begin()
+        db.session.bind = self._connection
+
     def beforeTest(self, test):
-        database.init_db(bind=db.get_engine(), is_test=True)
+        if isinstance(test.test, (nose.case.FunctionTestCase, nose.case.MethodTestCase)):
+            if getattr(test.test.test, '_needs_real_database', False):
+                db.metadata.drop_all(self._connection)
+                database.init_db(bind=self._connection, is_test=True)
+            else:
+                self._start_transaction()
+        else:
+            self._start_transaction()
+
+    def afterTest(self, test):
+        if isinstance(test.test, (nose.case.FunctionTestCase, nose.case.MethodTestCase)):
+            if getattr(test.test.test, '_needs_real_database', False):
+                db.metadata.drop_all(self._connection)
+                database.init_db(bind=self._connection, is_test=True)
+            else:
+                self._end_transaction()
+        else:
+            self._end_transaction()
 
     def finalize(self, result):
         """Cleanup some stuff."""
         # clear email backend outbox.
         mail.outbox = []
+        self._connection.close()
 
     def configure(self, options, conf):
         """Configure the plugin"""
@@ -517,17 +547,9 @@ class InyokaPlugin(cover.Coverage):
             html_reporter.report(modules, config)
 
 
-def refresh_database(func):
-    """Refresh the database right after the decorated function was called"""
-    @wraps(func)
-    def decorator(*args, **kwargs):
-        ret = func(*args, **kwargs)
-        # drop all data afterwards and initialize the database again.
-        _engine = database.get_engine()
-        database.drop_all_tables(bind=_engine)
-        database.init_db(bind=_engine, is_test=True)
-        return ret
-    return decorator
+def needs_real_database(func):
+    func._needs_real_database = True
+    return func
 
 
 def with_fixtures(fixtures):
@@ -548,7 +570,6 @@ def with_fixtures(fixtures):
     This may lead into performance issues.
     """
     def decorator(func):
-        @refresh_database
         @wraps(func)
         def _proxy(*args, **kwargs):
             if callable(fixtures):

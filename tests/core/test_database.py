@@ -100,7 +100,6 @@ def test_slug_generator():
 
 
 @set_simple_cache
-@needs_real_database
 def test_cached_query(cache):
     c = DatabaseTestCategory(slug=u'category')
     db.session.commit()
@@ -112,14 +111,14 @@ def test_cached_query(cache):
         tester = partial(lambda: tracker.check(
             "Called cache.set("
             "    '_test/categories',"
-            "    [DatabaseTestCategory(id=1, slug=u'category')],"
+            "    [DatabaseTestCategory(slug=u'category')],"
             "    timeout=0.5)"
         ))
     else:
         tester = partial(lambda: tracker.check(
             "Called cache.set("
             "    '_test/categories',"
-            "    [DatabaseTestCategory(id=1L, slug=u'category')],"
+            "    [DatabaseTestCategory(slug=u'category')],"
             "    timeout=0.5)"
         ))
 
@@ -144,7 +143,6 @@ def test_cached_query(cache):
     obj.sluggies
 
 
-@needs_real_database
 def test_atomic_add():
     # We cannot test if the function is really atomic, this also depends
     # on the used database.  But we check if the results are as expected
@@ -162,7 +160,6 @@ def test_atomic_add():
     eq_(obj.count, 1)
 
 
-@needs_real_database
 def test_atomic_add_on_joined_tables():
     obj = DatabaseTestQuestion(title=u'some question')
     db.session.commit()

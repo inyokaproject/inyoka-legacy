@@ -47,7 +47,7 @@ __all__ = ('TestResponse', 'ViewTestCase', 'TestCase', 'with_fixtures',
            'future', 'db', 'Response', 'ctx',
            'DatabaseTestCase', 'TestResourceManager',
            'skip_if_environ', 'todo', 'skip', 'skip_if', 'skip_unless', 'skip_if_database',
-           'set_simple_cache', 'needs_real_database')
+           'set_simple_cache')
 
 
 __all__ = __all__ + tuple(nose.tools.__all__)
@@ -453,13 +453,13 @@ class InyokaPlugin(cover.Coverage):
         setup and to not setup coverage again, since we start it
         quite a lot earlier.
         """
-        self._connection = db.get_engine().connect()
+        self._connection = conn = db.get_engine().connect()
 
         # drop all tables
-        db.metadata.drop_all(self._connection)
+        db.metadata.drop_all(conn)
 
         # then we create everything
-        database.init_db(bind=self._connection, is_test=True)
+        database.init_db(bind=conn, is_test=True)
 
         # clear email outbox
         mail.outbox = []
@@ -468,34 +468,14 @@ class InyokaPlugin(cover.Coverage):
         self.skipModules = [i for i in sys.modules.keys() if not i.startswith('inyoka')
                             or i in _internal_modules_to_skip]
 
-    def _end_transaction(self):
-        db.session.rollback()
-        self._transaction.rollback()
-        db.session.bind = db.get_engine()
-
-    def _start_transaction(self):
+    def beforeTest(self, test):
         self._transaction = self._connection.begin()
         db.session.bind = self._connection
 
-    def beforeTest(self, test):
-        if isinstance(test.test, (nose.case.FunctionTestCase, nose.case.MethodTestCase)):
-            if getattr(test.test.test, '_needs_real_database', False):
-                db.metadata.drop_all(self._connection)
-                database.init_db(bind=self._connection, is_test=True)
-            else:
-                self._start_transaction()
-        else:
-            self._start_transaction()
-
     def afterTest(self, test):
-        if isinstance(test.test, (nose.case.FunctionTestCase, nose.case.MethodTestCase)):
-            if getattr(test.test.test, '_needs_real_database', False):
-                db.metadata.drop_all(self._connection)
-                database.init_db(bind=self._connection, is_test=True)
-            else:
-                self._end_transaction()
-        else:
-            self._end_transaction()
+        self._transaction.rollback()
+        db.session.rollback()
+        db.session.remove()
 
     def finalize(self, result):
         """Cleanup some stuff."""
@@ -545,11 +525,6 @@ class InyokaPlugin(cover.Coverage):
             if not os.path.exists(self.coverHtmlDir):
                 os.makedirs(self.coverHtmlDir)
             html_reporter.report(modules, config)
-
-
-def needs_real_database(func):
-    func._needs_real_database = True
-    return func
 
 
 def with_fixtures(fixtures):

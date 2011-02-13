@@ -220,6 +220,9 @@ def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
     of added of the local value.  This is a good idea if the value should
     be used for reflection. The `primary_key_field` should only get passed in,
     if the mapped table is a join between two tables.
+
+    If `connection` is applied, it will be used to execute the atomic
+    operation.
     """
     obj_mapper = orm.object_mapper(obj)
     primary_key = obj_mapper.primary_key_from_instance(obj)
@@ -236,7 +239,8 @@ def atomic_add(obj, column, delta, expire=False, primary_key_field=None):
     stmt = sql.update(table, primary_key_field == primary_key[0], {
         column:     table.c[column] + delta
     })
-    get_engine().execute(stmt)
+
+    db.session.execute(stmt)
 
     val = orm.attributes.get_attribute(obj, column)
     if expire:
@@ -469,7 +473,7 @@ class ModelBase(object):
         attrs = []
         dict_ = type(self)._sa_class_manager.mapper.columns.keys()
         for key in dict_:
-            if not key.startswith('_'):
+            if not key.startswith('_') and not key == 'id':
                 attrs.append((key, getattr(self, key)))
         return self.__class__.__name__ + '(' + ', '.join(x[0] + '=' +
                                             repr(x[1]) for x in attrs) + ')'

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-01-27 00:03+0100\n"
+"POT-Creation-Date: 2011-02-13 15:57+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,9 @@ msgstr ""
 msgid "Invalid Choice: could not coerce"
 msgstr ""
 
-#: wtforms/fields.py:410 wtforms/ext/appengine/fields.py:62
+#: wtforms/fields.py:410 wtforms/ext/appengine/fields.py:63
+#: wtforms/ext/django/fields.py:77 wtforms/ext/sqlalchemy/fields.py:122
+#: wtforms/ext/sqlalchemy/fields.py:172 wtforms/ext/sqlalchemy/fields.py:177
 msgid "Not a valid choice"
 msgstr ""
 
@@ -34,15 +36,15 @@ msgstr ""
 msgid "'%(value)s' is not a valid choice for this field"
 msgstr ""
 
-#: wtforms/fields.py:525
+#: wtforms/fields.py:527
 msgid "Not a valid integer value"
 msgstr ""
 
-#: wtforms/fields.py:570
+#: wtforms/fields.py:572
 msgid "Not a valid decimal value"
 msgstr ""
 
-#: wtforms/fields.py:592
+#: wtforms/fields.py:596
 msgid "Not a valid float value"
 msgstr ""
 
@@ -120,6 +122,10 @@ msgstr ""
 msgid "Invalid value, can't be any of: %(values)s."
 msgstr ""
 
+#: wtforms/ext/appengine/fields.py:82
+msgid "Not a valid list"
+msgstr ""
+
 #: wtforms/ext/dateutil/fields.py:48
 msgid "Please input a date/time value"
 msgstr ""
@@ -139,7 +145,7 @@ msgstr ""
 msgid "Unknown format \"%s\""
 msgstr ""
 
-#: inyoka/core/tasks.py:42
+#: inyoka/core/tasks.py:37
 #, python-format
 msgid "Registration at %s"
 msgstr ""
@@ -206,6 +212,18 @@ msgstr ""
 
 #: inyoka/core/forms/validators.py:185
 msgid "Tag Names should only contain ascii characters and numbers."
+msgstr ""
+
+#: inyoka/core/mail/__init__.py:94
+msgid "invalid value for email address"
+msgstr ""
+
+#: inyoka/core/mail/__init__.py:100
+msgid "Not all mailing parameters filled in"
+msgstr ""
+
+#: inyoka/core/mail/__init__.py:137
+msgid "TLS enabled but server does not support TLS"
 msgstr ""
 
 #: inyoka/core/markup/parser.py:47

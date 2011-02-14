@@ -88,7 +88,7 @@ class ArticleQuery(db.Query):
     def hidden(self):
         """Return a query for not yet published articles.
 
-        To hide an article set :attr:`Article.public` to `False or
+        To hide an article set :attr:`Article.public` to `False` or
         set :attr:`Article.pub_date` to some value in the future.
         """
         q = self.filter(db.or_(

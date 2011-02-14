@@ -27,6 +27,7 @@ class EventQuery(db.Query):
 
     def start_in(self, year, month):
         """Return a query for all events that start in the given year and month
+
         :param year: The year that the event starts have to match
         :param month: The month that the event starts have to match
         """
@@ -40,7 +41,8 @@ class EventQuery(db.Query):
         return q
 
     def end_in(self, year, month):
-        """Return a query for all events that start in the given year and month
+        """Return a query for all events that end in the given year and month
+
         :param year: The year that the event ends have to match
         :param month: The month that the event ends have to match
         """
@@ -55,6 +57,7 @@ class EventQuery(db.Query):
 
     def oncoming(self, year, month, duration=10):
         """Return a query for all events that start in the given year and month
+
         :param year: The year that the event starts have to match
         :param month: The month that the event starts have to match
         :param duration: The number of days from event start
@@ -68,6 +71,12 @@ class EventQuery(db.Query):
         return q
 
     def during(self, begin, end):
+        """Return a query for all events that overlap either the beginning, the end
+        or both
+
+        :param begin: the beginning of the timeframe
+        :param end: the end of the timeframe
+        """
         q = self.filter(db.or_(
             db.and_(
                 Event.start_date >= begin,
@@ -110,8 +119,6 @@ class Event(db.Model, SerializableObject, TextRendererMixin):
     info_question_id = db.Column(db.ForeignKey(Question.id), nullable=True)
 
     author = db.relationship(User, lazy='joined')
-    #: TODO These relationships do not work yet. Don't know how to create a
-    # one-to-one relation
 
     discussion_question = db.relationship(Question,
             primaryjoin=Question.id==discussion_question_id,

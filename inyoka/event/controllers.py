@@ -12,7 +12,7 @@ import calendar
 from datetime import datetime, date, timedelta
 from inyoka.core import exceptions as exc
 from inyoka.core.api import IController, Rule, view, Response, \
-    templated, db, redirect_to, Tag
+    templated, db, redirect_to, Tag, href
 from inyoka.utils.pagination import URLPagination
 from inyoka.event.forms import AddEventForm
 from inyoka.event.models import Event
@@ -63,21 +63,33 @@ class EventController(IController):
 
         form = AddEventForm(request.form)
         if form.validate_on_submit():
-            # TODO request the form data
-            #: Check for creating a question-object a discussion
+            #: Create the event object
+            e = Event(title=form.title.data,
+                      text=form.text.data,
+                      author=request.user,
+                      start_date=form.start.data,
+                      end_date=form.end.data,
+                      tags=form.tags.data,
+                      discussion_question_id = None,
+                      info_question_id = None)
+            db.session.commit()
+
+            #: Check for creating a question-object for an event discussion
             if form.discussion_question.data:
                 q_discussion = Question(title=u'[Event discussion] %s' % form.title.data,
                                         author=request.user,
-                                        text=u'This is the discussion for the event "%s"' % form.title.data,
+                                        text=u'This is the discussion for the event [%s "%s"]' %
+                                            (href(e, _external=True), form.title.data),
                                         tags=form.tags.data)
             else:
                 q_discussion = None
 
-            #: Check for creating a question-object a discussion
+            #: Check for creating a question-object an event information
             if form.info_question.data:
                 q_info = Question(title=u'[Event information] %s' % form.title.data,
                                   author=request.user,
-                                  text=u'This is the discussion for the event "%s"' % form.title.data,
+                                  text=u'This is the information topic for the event [%s "%s"]' %
+                                        (href(e, _external=True), form.title.data),
                                   tags=form.tags.data)
             else:
                 q_info = None
@@ -85,26 +97,13 @@ class EventController(IController):
             db.session.commit()
 
             if q_discussion:
-                q_discussion_id = q_discussion.id
-            else:
-                q_discussion_id = None
+                e.discussion_question_id = q_discussion.id
 
             if q_info:
-                q_info_id = q_info.id
-            else:
-                q_info_id = None
+                e.info_question_id = q_info.id
 
-            e = Event(title=form.title.data,
-                      text=form.text.data,
-                      author=request.user,
-                      start_date=form.start.data,
-                      end_date=form.end.data,
-                      tags=form.tags.data,
-                      discussion_question_id = q_discussion_id,
-                      info_question_id = q_info_id)
-            #if form.parent.data:
-                #e.parent_id = form.parent.data
             db.session.commit()
+
             return redirect_to(e)
 
         return {

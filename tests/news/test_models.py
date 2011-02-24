@@ -84,15 +84,15 @@ class TestNewsModels(DatabaseTestCase):
         visible, invisible = self.data['Article']
         self.assertFalse(visible.hidden)
         self.assertTrue(invisible.hidden)
-        self.assertEqual(Article.query.published().all(), [visible])
+        self.assertEqual(Article.query.public().all(), [visible])
         self.assertEqual(Article.query.hidden().all(), [invisible])
         invisible.public = True
         db.session.commit()
-        self.assertEqual(Article.query.published().all(), [visible, invisible])
+        self.assertEqual(Article.query.public().all(), [visible, invisible])
         invisible.pub_date = datetime.datetime.utcnow() + datetime.timedelta(days=2)
         db.session.commit()
         self.assertTrue(invisible.hidden)
-        self.assertEqual(Article.query.published().all(), [visible])
+        self.assertEqual(Article.query.public().all(), [visible])
 
     def test_article_get_url_values(self):
         article = self.data['Article'][0]

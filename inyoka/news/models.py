@@ -73,7 +73,7 @@ class Comment(db.Model, TextRendererMixin):
 
 class ArticleQuery(db.Query):
 
-    def published(self):
+    def public(self):
         """Return a query for all published articles.
 
         An article is either published if :attr:`Article.public` is `True`

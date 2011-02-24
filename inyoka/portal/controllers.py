@@ -61,7 +61,7 @@ class PortalController(IController):
     @templated('portal/index.html', modifier=context_modifier)
     def index(self, request):
         cloud, more = Tag.query.public().get_cloud()
-        articles = Article.query.order_by(Article.updated.desc()).limit(5).all()
+        articles = Article.query.public().order_by(Article.updated.desc()).limit(5).all()
         return {
             'tag_cloud': cloud,
             'more_tags': more,

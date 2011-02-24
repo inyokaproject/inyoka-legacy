@@ -177,7 +177,7 @@ class NewsController(IController):
             }
             return ret
 
-        query = Article.query.published().by_date(year, month, day)
+        query = Article.query.public().by_date(year, month, day)
 
         pagination = PageURLPagination(query, page=page, per_page=5)
 

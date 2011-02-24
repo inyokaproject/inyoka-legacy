@@ -14,8 +14,8 @@
 {%- block content %}
   {% if user.is_active %}
     <ul>
-      {%- for key, name in fields %}
-        <li>{{ name }}: {{ user.profile[key] or '–' }}</li>
+      {%- for key, name in fields if user.profile[key] %}
+        <li>{{ name }}: {{ user.profile[key] }}</li>
       {%- endfor %}
     </ul>
     {% if user == request.user %}

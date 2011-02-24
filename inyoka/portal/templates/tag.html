@@ -2,7 +2,7 @@
 {%- set trace = [[tag.name, href(tag)]] %}
 
 {% block content %}
-  <em><a href="{{ href('portal/tag_edit', slug=tag.name) }}">edit this tag</a></em>
+  <em><a href="{{ href('portal/tag_edit', slug=tag.slug) }}">edit this tag</a></em>
   {% for taggable in content %}
     <div class="column">
       <h2>{{ taggable.name }}</h2>

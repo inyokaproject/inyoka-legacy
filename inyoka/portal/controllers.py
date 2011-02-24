@@ -145,8 +145,8 @@ class PortalController(IController):
             name = request.form.get('tag')
             tag = Tag.query.filter_by(name=name).first()
             if tag is not None:
-                return redirect_to('portal/tag_edit', slug=tag.slug)
-            request.flash(_(u'The tag “%s” does not exist' % tag.name), False)
+                return redirect_to('portal/tag', slug=tag.slug)
+            request.flash(_(u'The tag “%s” does not exist' % name), False)
 
         return {
             'tag_cloud': cloud,

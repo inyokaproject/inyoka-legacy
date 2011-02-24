@@ -1,6 +1,6 @@
 {%- extends 'forum/base.html' %}
 {% from 'utils/macros.html' import form_fields, user_link %}
-{%- set trace = [[question.title, href(question)]] %}
+{%- set trace = [[_('„%(title)s“', title=question.title), href(question)]] %}
 {%- block content %}
 
   <div class="author">{{ _('asked') }} <strong>{{ question.date_created|timedelta }}</strong><br>

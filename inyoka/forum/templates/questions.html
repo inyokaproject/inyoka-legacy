@@ -2,7 +2,7 @@
 {% from 'utils/macros.html' import user_link %}
 
 {%- if forum %}
-  {%- set trace = [[_('„%(forum)s”', forum=forum.name), href(forum)]] + trace|default([]) %}
+  {%- set trace = [[_('“%(forum)s”', forum=forum.name), href(forum)]] + trace|default([]) %}
 {%- elif tags %}
   {%- set trace = [[_('Tagged Questions'), '']] + trace|default([]) %}
 {%- else %}

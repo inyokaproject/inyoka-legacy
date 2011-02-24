@@ -3,7 +3,7 @@
 
 {%- set trace = [[_('Tags'), href('portal/tags')]] %}
 {%- if tag.name %}
-  {%- do trace.extend([[_('„%(tag)s“', tag=tag.name), href(tag)],
+  {%- do trace.extend([[_('“%(tag)s“', tag=tag.name), href(tag)],
                        [_('Edit'), href(tag, action='edit')]]) %}
 {%- else %}
   {%- do trace.append([_('New'), href('portal/tag_edit')]) %}

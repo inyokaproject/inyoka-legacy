@@ -1,5 +1,5 @@
 {% extends "portal/base.html" %}
-{%- set trace = [[_('Tags'), href('portal/tags')], [_('„%(tag)s“', tag=tag.name), href(tag)]] %}
+{%- set trace = [[_('Tags'), href('portal/tags')], [_('“%(tag)s“', tag=tag.name), href(tag)]] %}
 
 {% block content %}
   <em><a href="{{ href('portal/tag_edit', slug=tag.slug) }}">edit this tag</a></em>

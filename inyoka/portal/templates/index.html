@@ -7,6 +7,16 @@
 
 {% block content %}
   <div id="portal" class="clear">
+    {% if articles %}
+      <div class="column">
+        <h2>{{ _('News') }}</h2>
+        <ul>
+          {%- for article in articles %}
+            <li><a href="{{ href('news/detail', slug=article.slug) }}">{{ article.title }}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+    {%- endif %}
     {% if tag_cloud %}
       <div class="column tagcloud">
         <h2>{{ _('Tags') }}</h2>

@@ -1,0 +1,9 @@
+{% from 'utils/macros.html' import form_field %}
+<form action="{{ destination }}" method="post">
+  {{ form_field(form.csrf_token) }}
+  <p>{{ message }}</p>
+  <fieldset class="actions">
+    <input type="submit" name="confirm" value="{{ _('Yes') }}">
+    <input type="submit" name="cancel" value="{{ _('No') }}">
+  </fieldset>
+</form>

@@ -156,8 +156,8 @@ class NewsController(IController):
                               id=id, action=action):
                 comment.deleted = action == 'hide'
                 db.session.commit()
-                request.flash(_(u'The comment was hidden') if action == 'hide' \
-                    else _(u'The comment was restored'))
+                request.flash(_(u'The comment has been hidden') if \
+				    action == 'hide' else _(u'The comment has been restored'))
                 return redirect_to(comment)
             return redirect_to(comment.article)
 

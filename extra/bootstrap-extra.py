@@ -157,7 +157,7 @@ def adjust_options(options, args):
     if not path.exists(build_dir):
         os.mkdir(build_dir)
 
-    if not os.path.exists('_python_was_build') or options.force_rebuild:
+    if not os.path.exists('.python_was_built') or options.force_rebuild:
         # checkout python distribution
         call_subprocess(FETCH_CMD + ['http://python.org/ftp/python/%s/Python-%s.tar.bz2' % (python_version, python_version)],
                         cwd=build_dir)
@@ -170,9 +170,9 @@ def adjust_options(options, args):
         call_subprocess(['make'], cwd=python_folder)
         call_subprocess(['make', 'install'], cwd=python_folder)
 
-    # touch a special file to indicate we have already build a python interpreter
-    with open('_python_was_build', 'a'):
-        os.utime('_python_was_build', None)
+    # touch a special file to indicate we have already built a python interpreter
+    with open('.python_was_built', 'a'):
+        os.utime('.python_was_built', None)
 
     options.python = path.join(python_folder, 'python')
     options.no_site_packages = True

@@ -18,4 +18,4 @@ glob:extra/design/structure.dot.png
 links\.txt
 ^.*tar\.gz$
 ^bootstrap.py$
-^_python_was_build$
+^.python_was_built$

@@ -31,7 +31,7 @@ def confirm_action(request, message, endpoint, **kwargs):
     from inyoka.core.forms import Form
     form = Form(request.form)
     if form.validate_on_submit():
-        return True if 'confirm' in request.form else False
+        return 'confirm' in request.form
     request.flash(render_template('utils/confirm.html', {
         'message': message,
         'form': form,

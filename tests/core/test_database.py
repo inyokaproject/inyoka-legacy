@@ -40,7 +40,7 @@ class SlugGeneratorTestModel(db.Model):
 
 class GuidGeneratorTestModel1(db.Model):
     __tablename__ = '_test_database_guid_generator1'
-    __mapper_args__ = {'extension': db.GuidGenerator('test1')}
+    __mapper_args__ = {'extension': db.GuidGenerator('_test1')}
 
     manager = TestResourceManager
 
@@ -50,13 +50,13 @@ class GuidGeneratorTestModel1(db.Model):
 
 class GuidGeneratorTestModel2(db.Model):
     __tablename__ = '_test_database_guid_generator2'
-    __mapper_args__ = {'extension': db.GuidGenerator('test2', key='key', field='unique_id')}
+    __mapper_args__ = {'extension': db.GuidGenerator('_test2', key='slug', field='unique_id')}
 
     manager = TestResourceManager
 
     id = db.Column(db.Integer, primary_key=True)
     slug = db.Column(db.String(50), unique=True)
-    guid = db.Column(db.String(80), unique=True)
+    unique_id = db.Column(db.String(80), unique=True)
 
 
 class DatabaseTestEntry(db.Model):
@@ -123,7 +123,7 @@ def test_guid_generator():
     c1 = GuidGeneratorTestModel1()
     db.session.commit()
     eq_(c1.guid, u'tag:inyoka.local,1970:inyoka/_test1/%d' % c1.id)
-    c2 = GuidGeneratorTestModel2(key=u'example')
+    c2 = GuidGeneratorTestModel2(slug=u'example')
     db.session.commit()
     eq_(c2.unique_id, u'tag:inyoka.local,1970:inyoka/_test2/example')
 

@@ -46,7 +46,9 @@ class NewsAdminProvider(IController):
                 'title', 'intro', 'text', 'public', 'tags',
                 'author'))
             db.session.commit()
-            request.flash(_(u'Updated article “%s”' % article.title), True)
+            msg = slug and _(u'Updated article “%s”') \
+                       or _(u'Created article “%s”')
+            request.flash(msg % article.title, True)
             return redirect_to(article)
         return {
             'form': form,

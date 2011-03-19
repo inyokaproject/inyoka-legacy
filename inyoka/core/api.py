@@ -48,6 +48,9 @@ class ICoreResourceManager(IResourceManager):
     #: Cookie domain name
     cookie_domain_name = TextConfigField('cookie_domain_name', default=u'.inyoka.local')
 
+    #: Tag uri base, see RFC 4151. May be changed safely.
+    tag_uri_base = TextConfigField('tag_uri_base', default=u'tag:inyoka.local,1970:inyoka/')
+
     #: Cookie name
     cookie_name = TextConfigField('cookie_name', default=u'inyoka-session')
 

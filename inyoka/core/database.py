@@ -535,6 +535,30 @@ class SlugGenerator(orm.MapperExtension):
                                 slug, max_length))
         return orm.EXT_CONTINUE
 
+class GuidGenerator(orm.MapperExtension):
+    """
+    Automatically generate a GUID (for usage in feeds for the entry).
+    This allows changing domain name etc. without breaking existing entries.
+
+    :param namespace: The namespace for the object.
+    :param key: The attribute used for generating the guid (default: `id`)
+    :param field: The field the guid is saved to (default: `guid`)
+    """
+    def __init__(self, namespace, key='id', field='guid'):
+        self.namespace = namespace
+        self.key = key
+        self.field = field
+
+    def after_insert(self, mapper, connection, instance):
+        guid = '%s%s/%s' % (
+            ctx.cfg['tag_uri_base'],
+            self.namespace, getattr(instance, self.key)
+        )
+        setattr(instance, self.field, guid)
+        connection.execute(instance.__table__.update()
+                           .values(**{self.field: guid})
+                           .where(instance.__table__.c.id == instance.id)
+        )
 
 class FileObject(FileStorage):
 
@@ -684,6 +708,7 @@ def _make_module():
     db.Query = Query
     db.File = File
     db.SlugGenerator = SlugGenerator
+    db.GuidGenerator = GuidGenerator
     db.AttributeExtension = AttributeExtension
     db.ColumnProperty = orm.ColumnProperty
     db.NoResultFound = orm.exc.NoResultFound

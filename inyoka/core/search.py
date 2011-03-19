@@ -239,6 +239,7 @@ class SearchIndexMapperExtension(db.MapperExtension):
 
     def _update_index(self, mapper, connection, instance):
         tasks.UpdateSearchTask.delay(self.index, self.provider, instance.id)
+        return db.EXT_CONTINUE
 
     after_insert = after_update = after_delete = _update_index
 

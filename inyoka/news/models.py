@@ -118,11 +118,13 @@ class ArticleQuery(db.Query):
         ))
 
 
+
 class Article(db.Model, TextRendererMixin):
     __tablename__ = 'news_article'
     __mapper_args__ = {
         'extension': (db.SlugGenerator('slug', 'title'),
-                      SearchIndexMapperExtension('portal', 'news'))
+                      SearchIndexMapperExtension('portal', 'news'),
+                      db.GuidGenerator('news/article'))
     }
     query = db.session.query_property(ArticleQuery)
 
@@ -137,6 +139,7 @@ class Article(db.Model, TextRendererMixin):
     view_count = db.Column(db.Integer, default=0, nullable=False)
     comment_count = db.Column(db.Integer, default=0, nullable=False)
     comments_enabled = db.Column(db.Boolean, default=True, nullable=False)
+    guid = db.Column(db.Unicode(80), unique=True)
 
     tags = db.relationship(Tag, secondary=article_tag, backref=db.backref(
         'articles', lazy='dynamic'), lazy='joined',

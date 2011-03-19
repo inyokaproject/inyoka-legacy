@@ -157,7 +157,7 @@ class NewsController(IController):
                 comment.deleted = action == 'hide'
                 db.session.commit()
                 request.flash(_(u'The comment has been hidden') if \
-				    action == 'hide' else _(u'The comment has been restored'))
+                    action == 'hide' else _(u'The comment has been restored'))
                 return redirect_to(comment)
             return redirect_to(comment.article)
 
@@ -270,6 +270,6 @@ class NewsController(IController):
                     'name': article.author.display_name,
                     'uri': href(article.author.profile)
                 },
-                id=article.id, updated=article.updated, published=article.pub_date)
+                id=article.guid, updated=article.updated, published=article.pub_date)
 
         return feed

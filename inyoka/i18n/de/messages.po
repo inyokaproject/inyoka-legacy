@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  Inyoka-NG\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-03-19 12:03+0100\n"
+"POT-Creation-Date: 2011-03-20 12:29+0100\n"
 "PO-Revision-Date: 2011-02-13 16:12+0000\n"
 "Last-Translator: EnTeQuAk <cg@webshox.org>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -242,13 +242,13 @@ msgstr ""
 "Der Parser konnte den Text nicht verarbeiten, da die maximale Tiefe für "
 "verschachtelte Elemente überschritten wurde"
 
-#: inyoka/event/forms.py:18 inyoka/forum/forms.py:20 inyoka/news/forms.py:19
+#: inyoka/event/forms.py:18 inyoka/forum/forms.py:20 inyoka/news/forms.py:20
 #: inyoka/paste/templates/browse.html:14
 msgid "Title"
 msgstr "Titel"
 
 #: inyoka/event/forms.py:20 inyoka/forum/forms.py:22 inyoka/forum/forms.py:30
-#: inyoka/news/forms.py:21 inyoka/news/forms.py:31 inyoka/paste/forms.py:31
+#: inyoka/news/forms.py:22 inyoka/news/forms.py:32 inyoka/paste/forms.py:31
 msgid "Text"
 msgstr "Text"
 
@@ -261,7 +261,7 @@ msgid "End"
 msgstr "Ende"
 
 #: inyoka/event/forms.py:24 inyoka/forum/forms.py:24 inyoka/forum/forms.py:44
-#: inyoka/news/forms.py:23 inyoka/news/templates/base.html:20
+#: inyoka/news/forms.py:24 inyoka/news/templates/base.html:20
 #: inyoka/portal/forms.py:101 inyoka/portal/templates/base.html:14
 #: inyoka/portal/templates/index.html:22 inyoka/portal/templates/tag.html:2
 #: inyoka/portal/templates/tags.html:2 inyoka/portal/templates/admin/index.html:6
@@ -276,9 +276,9 @@ msgstr "Diskussionsthema erstellen"
 msgid "Create topic for further information"
 msgstr "Thema erstellen für weitere Informationen"
 
-#: inyoka/event/templates/base.html:2 inyoka/templates/base.html:38
-msgid "Event"
-msgstr "Event"
+#: inyoka/event/templates/base.html:2
+msgid "Events"
+msgstr "Veranstaltungen"
 
 #: inyoka/event/templates/base.html:12 inyoka/paste/templates/base.html:12
 msgid "New"
@@ -286,7 +286,7 @@ msgstr "Neu"
 
 #: inyoka/event/templates/base.html:15
 msgid "Oncoming Events"
-msgstr "Kommende Termine"
+msgstr "Kommende Veranstaltungen"
 
 #: inyoka/event/templates/base.html:18
 msgid "Calendar"
@@ -675,26 +675,26 @@ msgstr "Artikel für %s"
 msgid "%s – %s"
 msgstr "%s – %s"
 
-#: inyoka/news/forms.py:20
+#: inyoka/news/forms.py:21
 msgid "Intro"
 msgstr "Einführung"
 
-#: inyoka/news/forms.py:22
+#: inyoka/news/forms.py:23
 msgid "Published"
 msgstr "Veröffentlicht"
 
-#: inyoka/news/forms.py:25 inyoka/paste/templates/browse.html:15
+#: inyoka/news/forms.py:26 inyoka/paste/templates/browse.html:15
 #: inyoka/portal/forms.py:98
 msgid "Author"
 msgstr "Author"
 
-#: inyoka/news/forms.py:32
+#: inyoka/news/forms.py:33
 msgid ""
 "To quote another comment use <em>@comment_number</em>. This is automatically"
 " used if you click “answer”."
 msgstr ""
-"Um einen anderen Kommentar zu zitieren benutze <em>@kommentar_nummer</em>. "
-"Dies geschieht automatisch wenn du „Antworten” klickst."
+"Um einen anderen Kommentar zu zitieren, benutze <em>@kommentarnummer</em>. "
+"Dies geschieht automatisch, wenn du „Antworten” klickst."
 
 #: inyoka/news/models.py:28 inyoka/news/templates/admin/index.html:6
 msgid "Articles"
@@ -764,7 +764,7 @@ msgid "written by %(author_link)s on %(article_pubdate)s %(article_pubtime)s"
 msgstr "geschrieben von %(author_link)s am %(article_pubdate)s  %(article_pubtime)s "
 
 #: inyoka/news/templates/detail.html:33 inyoka/news/templates/detail.html:58
-#: inyoka/paste/templates/browse.html:24
+#: inyoka/paste/templates/browse.html:22
 msgid "edit"
 msgstr "bearbeiten"
 
@@ -776,11 +776,15 @@ msgstr "wiederherstellen"
 msgid "hide"
 msgstr "verstecken"
 
-#: inyoka/news/templates/detail.html:80 inyoka/news/templates/index.html:31
+#: inyoka/news/templates/detail.html:74
+msgid "Write new Comment"
+msgstr "Neuen Kommentar schreiben"
+
+#: inyoka/news/templates/detail.html:81 inyoka/news/templates/index.html:31
 msgid "subscribe"
 msgstr "abonnieren"
 
-#: inyoka/news/templates/detail.html:82 inyoka/news/templates/index.html:33
+#: inyoka/news/templates/detail.html:83 inyoka/news/templates/index.html:33
 msgid "unsubscribe"
 msgstr "abbestellen"
 
@@ -865,17 +869,17 @@ msgstr "Pastebin"
 msgid "Browse"
 msgstr "Einträge durchstöbern"
 
-#: inyoka/paste/templates/browse.html:7
-msgid "Create one yourself!"
-msgstr "Erstelle selber einen!"
-
 #: inyoka/paste/templates/browse.html:16 inyoka/portal/forms.py:103
 msgid "Date"
 msgstr "Datum"
 
 #: inyoka/paste/templates/browse.html:30
-msgid "There are no pastes yet!"
-msgstr "Es gibt noch keine Einträge!"
+msgid "There are no pastes yet."
+msgstr "Es gibt noch keine Einträge."
+
+#: inyoka/paste/templates/browse.html:35
+msgid "Create one yourself!"
+msgstr "Erstelle selber einen!"
 
 #: inyoka/paste/templates/compare_paste.html:6
 #, python-format
@@ -1359,6 +1363,10 @@ msgstr "Interner API-Handler"
 #: inyoka/templates/_debug_dump.html:13
 msgid "Dump"
 msgstr "Dump"
+
+#: inyoka/templates/base.html:38
+msgid "Event"
+msgstr "Event"
 
 #: inyoka/templates/base.html:49
 #, python-format

@@ -71,7 +71,8 @@
       </ol>
       <div class="new_comment">
         <form action="" method="post" id="news_new_comment">
-        {{ form_fields(form, true) }}
+          <h3>{% trans %}Write new Comment{% endtrans %}</h3>
+          {{ form_fields(form, true) }}
         </form>
       </div>
     {% endif %}

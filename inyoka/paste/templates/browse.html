@@ -4,10 +4,10 @@
 {%- set trace = [[_('Browse'), href('paste/browse')]] %}
 
 {%- block paste_content %}
-  <p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
-
   {{ pagination() }}
 
+  {% for p in pastes %}
+  {# TODO: ACL for hidden pastes and edit link! #}
   <table>
     <thead>
       <tr>
@@ -18,19 +18,19 @@
       </tr>
     </thead>
     <tbody>
-    {% for p in pastes %}
-      {# TODO: ACL for hidden pastes and edit link! #}
       <tr{% if p.hidden %} class="hidden"{% endif %}>
         <td><a href="{{ href(p) }}">{{ p }}</a> <small><a href="{{ href(p, action='edit') }}">{{ _('edit') }}</a></small></td>
         <td>{{ user_link(p.author) }}</td>
         <td>{{ p.pub_date|datetimeformat('short') }}</td>
         <td>{{ p.language|default('plain text') }}</td>
       </tr>
-    {% else %}
-      <strong>{{ _('There are no pastes yet!') }}</strong>
-    {% endfor %}
     </tbody>
   </table>
+  {% else %}
+    <p><strong>{{ _('There are no pastes yet.') }}</strong></p>
+  {% endfor %}
 
   {{ pagination() }}
+
+  <p><a href="{{ href('paste/index') }}">{{ _('Create one yourself!') }}</a></p>
 {%- endblock %}

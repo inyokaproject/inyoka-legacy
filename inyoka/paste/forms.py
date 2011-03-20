@@ -31,7 +31,7 @@ class AddPasteForm(Form):
     text = TextField(_(u'Text'), [validators.required()],
                      widget=widgets.TextArea())
     language = SelectField(_(u'Language'), choices=_get_pygments_lexers())
-    parent = HiddenIntegerField()
+    parent = HiddenIntegerField(validators=[validators.optional()])
 
 
 class EditPasteForm(AddPasteForm):

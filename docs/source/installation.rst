@@ -24,7 +24,8 @@ To get Inyoka work properly we need those dependencies (with headers):
  * libxml2
  * libbz2
  * uuid-dev
- * RabbitMQ
+ * RabbitMQ (optional. Celery can use the database as a queue backend, but for
+   scaling tasks across multiple servers, you can use RabbitMQ)
  * libreadline-dev (optional, but needed if you want readline support in the
    python interpreter)
  * libsqlite3-dev (required for SQLite)
@@ -95,26 +96,26 @@ default ``inyoka.ini`` will be created.  You can, of course, change settings as
 you like.
 
 
-AMQP Messaging and Celery
-=========================
+AMQP Messaging and Celery (optional)
+====================================
 
 We're using celery to support cron-like tasks and delayed execution.  This
-allows us to implement more features like never before and this
-much easier.  See delayed "hotness" calculation for example that calculates
-the hotness factor of various contents.
+allows us to implement more features like never before and this much easier.
+See delayed "hotness" calculation for example that calculates the hotness
+factor of various contents.
 
-In order to use celery you need to setup a AMQP Server, we're using RabbitMQ
-here for demonstration reasons.
+In order to use celery you can either use the database or setup a AMQP Server,
+we're using RabbitMQ here for demonstration reasons.
 
-If the server is not running already, you must start it; depending on your
-configuration, it should be one of the following commands::
+If the RabbitMQ server is not running already, you must start it; depending on
+your configuration, it should be one of the following commands::
 
     invoke-rc.d rabbitmq-server start
     /etc/init.d/rabbitmq-server start
     service rabbitmq-server start
 
-The server needs to be configured to create a new
-namespace for inyoka to not disturb other services.
+The server needs to be configured to create a new namespace for inyoka to not
+disturb other services.
 
 First we add a new user named ``inyoka`` with password ``default``::
 

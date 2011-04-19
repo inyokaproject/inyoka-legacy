@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2011-02-13 17:12+0100\n"
+"POT-Creation-Date: 2011-03-20 12:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.0dev-r546\n"
+"Generated-By: Babel 1.0dev-r571\n"
 
 #: wtforms/fields.py:403
 msgid "Invalid Choice: could not coerce"
@@ -236,13 +236,13 @@ msgid ""
 "allowed depth for nested elements"
 msgstr ""
 
-#: inyoka/event/forms.py:18 inyoka/forum/forms.py:20 inyoka/news/forms.py:19
+#: inyoka/event/forms.py:18 inyoka/forum/forms.py:20 inyoka/news/forms.py:20
 #: inyoka/paste/templates/browse.html:14
 msgid "Title"
 msgstr ""
 
 #: inyoka/event/forms.py:20 inyoka/forum/forms.py:22 inyoka/forum/forms.py:30
-#: inyoka/news/forms.py:21 inyoka/news/forms.py:31 inyoka/paste/forms.py:31
+#: inyoka/news/forms.py:22 inyoka/news/forms.py:32 inyoka/paste/forms.py:31
 msgid "Text"
 msgstr ""
 
@@ -255,11 +255,10 @@ msgid "End"
 msgstr ""
 
 #: inyoka/event/forms.py:24 inyoka/forum/forms.py:24 inyoka/forum/forms.py:44
-#: inyoka/news/forms.py:23 inyoka/news/templates/base.html:20
+#: inyoka/news/forms.py:24 inyoka/news/templates/base.html:20
 #: inyoka/portal/forms.py:101 inyoka/portal/templates/base.html:14
-#: inyoka/portal/templates/index.html:12
-#: inyoka/portal/templates/admin/index.html:6
-#: inyoka/portal/templates/admin/tag_edit.html:8
+#: inyoka/portal/templates/index.html:22 inyoka/portal/templates/tag.html:2
+#: inyoka/portal/templates/tags.html:2 inyoka/portal/templates/admin/index.html:6
 msgid "Tags"
 msgstr ""
 
@@ -271,8 +270,8 @@ msgstr ""
 msgid "Create topic for further information"
 msgstr ""
 
-#: inyoka/event/templates/base.html:2 inyoka/templates/base.html:37
-msgid "Event"
+#: inyoka/event/templates/base.html:2
+msgid "Events"
 msgstr ""
 
 #: inyoka/event/templates/base.html:12 inyoka/paste/templates/base.html:12
@@ -326,7 +325,6 @@ msgstr ""
 #: inyoka/news/templates/edit_comment.html:10
 #: inyoka/news/templates/admin/article_edit.html:16
 #: inyoka/paste/templates/index.html:9 inyoka/paste/templates/admin/edit.html:20
-#: inyoka/portal/templates/admin/tag_edit.html:14
 #: inyoka/portal/templates/usercp/profile.html:9
 msgid "Submit"
 msgstr ""
@@ -378,7 +376,7 @@ msgid "Ask a Question"
 msgstr ""
 
 #: inyoka/forum/templates/base.html:2 inyoka/forum/templates/admin/forum.html:10
-#: inyoka/forum/templates/admin/index.html:2 inyoka/templates/base.html:36
+#: inyoka/forum/templates/admin/index.html:2 inyoka/templates/base.html:37
 msgid "Forum"
 msgstr ""
 
@@ -470,11 +468,6 @@ msgstr ""
 msgid "Your Answer"
 msgstr ""
 
-#: inyoka/forum/templates/questions.html:5
-#, python-format
-msgid "Forum “%(forum)s”"
-msgstr ""
-
 #: inyoka/forum/templates/questions.html:7
 msgid "Tagged Questions"
 msgstr ""
@@ -515,7 +508,7 @@ msgstr[1] ""
 msgid "asked <strong>%(date)s</strong>"
 msgstr ""
 
-#: inyoka/forum/templates/questions.html:107
+#: inyoka/forum/templates/questions.html:104
 msgid "No questions found."
 msgstr ""
 
@@ -590,87 +583,100 @@ msgstr ""
 msgid "Updated article “%s”"
 msgstr ""
 
-#: inyoka/news/admin.py:61 inyoka/portal/admin.py:59
+#: inyoka/news/admin.py:50
+#, python-format
+msgid "Created article “%s”"
+msgstr ""
+
+#: inyoka/news/admin.py:63
 msgid "Action canceled"
 msgstr ""
 
-#: inyoka/news/admin.py:65
+#: inyoka/news/admin.py:67
 #, python-format
 msgid "The article “%s” was deleted successfully."
 msgstr ""
 
-#: inyoka/news/controllers.py:112
+#: inyoka/news/controllers.py:114
 msgid "This article is hidden"
 msgstr ""
 
-#: inyoka/news/controllers.py:120
+#: inyoka/news/controllers.py:122
 msgid "The comment was successfully edited"
 msgstr ""
 
-#: inyoka/news/controllers.py:125
+#: inyoka/news/controllers.py:127
 msgid "Your comment was successfully created"
 msgstr ""
 
-#: inyoka/news/controllers.py:151
-msgid "The comment was hidden"
-msgstr ""
-
 #: inyoka/news/controllers.py:152
-msgid "The comment was restored"
+msgid "Do you really want to hide the comment?"
 msgstr ""
 
-#: inyoka/news/controllers.py:161
+#: inyoka/news/controllers.py:153
+msgid "Do you really want to restore the comment?"
+msgstr ""
+
+#: inyoka/news/controllers.py:159
+msgid "The comment has been hidden"
+msgstr ""
+
+#: inyoka/news/controllers.py:160
+msgid "The comment has been restored"
+msgstr ""
+
+#: inyoka/news/controllers.py:170
 msgid "The comment was saved"
 msgstr ""
 
-#: inyoka/news/controllers.py:201 inyoka/news/controllers.py:223
+#: inyoka/news/controllers.py:210 inyoka/news/controllers.py:232
 msgid "You had already been subscribed before."
 msgstr ""
 
-#: inyoka/news/controllers.py:202
+#: inyoka/news/controllers.py:211
 msgid "You have successfully been subscribed to new News articles."
 msgstr ""
 
-#: inyoka/news/controllers.py:204 inyoka/news/controllers.py:226
+#: inyoka/news/controllers.py:213 inyoka/news/controllers.py:235
 msgid "You had not been subscribed before."
 msgstr ""
 
-#: inyoka/news/controllers.py:205
+#: inyoka/news/controllers.py:214
 msgid "You have successfully been unsubscribed from new News articles."
 msgstr ""
 
-#: inyoka/news/controllers.py:224
+#: inyoka/news/controllers.py:233
 msgid "You have successfully been subscribed to new comments on this article."
 msgstr ""
 
-#: inyoka/news/controllers.py:227
+#: inyoka/news/controllers.py:236
 msgid "You have successfully been unsubscribed from new comments on this article."
 msgstr ""
 
-#: inyoka/news/controllers.py:245
+#: inyoka/news/controllers.py:254
 #, python-format
 msgid "News for %s"
 msgstr ""
 
-#: inyoka/news/controllers.py:250
+#: inyoka/news/controllers.py:259
 #, python-format
 msgid "%s – %s"
 msgstr ""
 
-#: inyoka/news/forms.py:20
+#: inyoka/news/forms.py:21
 msgid "Intro"
 msgstr ""
 
-#: inyoka/news/forms.py:22
+#: inyoka/news/forms.py:23
 msgid "Published"
 msgstr ""
 
-#: inyoka/news/forms.py:25 inyoka/paste/templates/browse.html:15
+#: inyoka/news/forms.py:26 inyoka/paste/templates/browse.html:15
 #: inyoka/portal/forms.py:98
 msgid "Author"
 msgstr ""
 
-#: inyoka/news/forms.py:32
+#: inyoka/news/forms.py:33
 msgid ""
 "To quote another comment use <em>@comment_number</em>. This is automatically"
 " used if you click “answer”."
@@ -729,7 +735,8 @@ msgstr ""
 #: inyoka/news/templates/base.html:3
 #: inyoka/news/templates/admin/article_edit.html:10
 #: inyoka/news/templates/admin/articles.html:2
-#: inyoka/news/templates/admin/index.html:2 inyoka/templates/base.html:35
+#: inyoka/news/templates/admin/index.html:2 inyoka/portal/templates/index.html:12
+#: inyoka/templates/base.html:36
 msgid "News"
 msgstr ""
 
@@ -743,7 +750,7 @@ msgid "written by %(author_link)s on %(article_pubdate)s %(article_pubtime)s"
 msgstr ""
 
 #: inyoka/news/templates/detail.html:33 inyoka/news/templates/detail.html:58
-#: inyoka/paste/templates/browse.html:24
+#: inyoka/paste/templates/browse.html:22
 msgid "edit"
 msgstr ""
 
@@ -755,11 +762,15 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: inyoka/news/templates/detail.html:80 inyoka/news/templates/index.html:31
+#: inyoka/news/templates/detail.html:74
+msgid "Write new Comment"
+msgstr ""
+
+#: inyoka/news/templates/detail.html:81 inyoka/news/templates/index.html:31
 msgid "subscribe"
 msgstr ""
 
-#: inyoka/news/templates/detail.html:82 inyoka/news/templates/index.html:33
+#: inyoka/news/templates/detail.html:83 inyoka/news/templates/index.html:33
 msgid "unsubscribe"
 msgstr ""
 
@@ -786,12 +797,12 @@ msgid "Do you really want to delete the article “%(article)s”?"
 msgstr ""
 
 #: inyoka/news/templates/admin/article_delete.html:4
-#: inyoka/portal/templates/admin/tag_delete.html:4
+#: inyoka/templates/utils/confirm.html:7
 msgid "No"
 msgstr ""
 
 #: inyoka/news/templates/admin/article_delete.html:5
-#: inyoka/portal/templates/admin/tag_delete.html:5
+#: inyoka/templates/utils/confirm.html:6
 msgid "Yes"
 msgstr ""
 
@@ -805,7 +816,7 @@ msgid "New Article"
 msgstr ""
 
 #: inyoka/news/templates/admin/article_edit.html:18
-#: inyoka/portal/templates/admin/tag_edit.html:16
+#: inyoka/portal/templates/tag.html:7
 msgid "Delete"
 msgstr ""
 
@@ -835,7 +846,7 @@ msgstr ""
 msgid "Paste #%d"
 msgstr ""
 
-#: inyoka/paste/templates/base.html:2 inyoka/templates/base.html:34
+#: inyoka/paste/templates/base.html:2 inyoka/templates/base.html:35
 msgid "Pastebin"
 msgstr ""
 
@@ -844,16 +855,16 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: inyoka/paste/templates/browse.html:7
-msgid "Create one yourself!"
-msgstr ""
-
 #: inyoka/paste/templates/browse.html:16 inyoka/portal/forms.py:103
 msgid "Date"
 msgstr ""
 
 #: inyoka/paste/templates/browse.html:30
-msgid "There are no pastes yet!"
+msgid "There are no pastes yet."
+msgstr ""
+
+#: inyoka/paste/templates/browse.html:35
+msgid "Create one yourself!"
 msgstr ""
 
 #: inyoka/paste/templates/compare_paste.html:6
@@ -888,6 +899,7 @@ msgid "Reply"
 msgstr ""
 
 #: inyoka/paste/templates/view.html:11 inyoka/paste/templates/admin/edit.html:12
+#: inyoka/portal/templates/tag.html:6
 msgid "Edit"
 msgstr ""
 
@@ -908,14 +920,18 @@ msgstr ""
 msgid "Edit Paste"
 msgstr ""
 
-#: inyoka/portal/admin.py:46
+#: inyoka/portal/admin.py:47
 #, python-format
 msgid "Created tag “%s”"
 msgstr ""
 
-#: inyoka/portal/admin.py:48
+#: inyoka/portal/admin.py:49
 #, python-format
 msgid "Updated tag “%s”"
+msgstr ""
+
+#: inyoka/portal/admin.py:58
+msgid "Do you really want to delete this tag?"
 msgstr ""
 
 #: inyoka/portal/admin.py:63
@@ -951,49 +967,49 @@ msgstr ""
 msgid "Invalid login"
 msgstr ""
 
-#: inyoka/portal/controllers.py:130
+#: inyoka/portal/controllers.py:134
 msgid "Key not found. Maybe it has already been used?"
 msgstr ""
 
-#: inyoka/portal/controllers.py:132
+#: inyoka/portal/controllers.py:136
 msgid "The supplied key is not valid anymore."
 msgstr ""
 
-#: inyoka/portal/controllers.py:149
+#: inyoka/portal/controllers.py:153
 #, python-format
 msgid "The tag “%s” does not exist"
 msgstr ""
 
-#: inyoka/portal/controllers.py:213
+#: inyoka/portal/controllers.py:217
 msgid "Edit profile"
 msgstr ""
 
-#: inyoka/portal/controllers.py:229
+#: inyoka/portal/controllers.py:233
 msgid "Your profile was saved successfully"
 msgstr ""
 
-#: inyoka/portal/controllers.py:237
+#: inyoka/portal/controllers.py:241
 msgid "Change password"
 msgstr ""
 
-#: inyoka/portal/controllers.py:252
+#: inyoka/portal/controllers.py:256
 msgid "The password you entered doesn't match your old one."
 msgstr ""
 
-#: inyoka/portal/controllers.py:257
+#: inyoka/portal/controllers.py:261
 msgid "Your password was changed successfully"
 msgstr ""
 
-#: inyoka/portal/controllers.py:268
+#: inyoka/portal/controllers.py:272
 #: inyoka/portal/templates/usercp/deactivate.html:3
 msgid "Deactivate Profile"
 msgstr ""
 
-#: inyoka/portal/controllers.py:283
+#: inyoka/portal/controllers.py:287
 msgid "The password was not correct."
 msgstr ""
 
-#: inyoka/portal/controllers.py:289
+#: inyoka/portal/controllers.py:293
 msgid "Your profile was deactivated successfully"
 msgstr ""
 
@@ -1095,9 +1111,8 @@ msgstr ""
 msgid "We tried these urls:"
 msgstr ""
 
-#: inyoka/portal/templates/base.html:4 inyoka/portal/templates/tags.html:2
-#: inyoka/portal/templates/admin/index.html:2
-#: inyoka/portal/templates/admin/tag_edit.html:8 inyoka/templates/base.html:33
+#: inyoka/portal/templates/base.html:4 inyoka/portal/templates/admin/index.html:2
+#: inyoka/templates/base.html:34
 msgid "Portal"
 msgstr ""
 
@@ -1168,19 +1183,19 @@ msgid ""
 "technologies."
 msgstr ""
 
-#: inyoka/portal/templates/index.html:15 inyoka/portal/templates/tags.html:12
+#: inyoka/portal/templates/index.html:25 inyoka/portal/templates/tags.html:12
 #, python-format
 msgid "%(num)s item tagged %(tag)s"
 msgid_plural "%(num)s items tagged %(tag)s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inyoka/portal/templates/index.html:21
+#: inyoka/portal/templates/index.html:31
 msgid "more Tags"
 msgstr ""
 
 #: inyoka/portal/templates/login.html:3 inyoka/portal/templates/login.html:9
-#: inyoka/templates/base.html:45
+#: inyoka/templates/base.html:46
 msgid "Login"
 msgstr ""
 
@@ -1202,7 +1217,7 @@ msgid "This user is deactivated."
 msgstr ""
 
 #: inyoka/portal/templates/register.html:3
-#: inyoka/portal/templates/register.html:28 inyoka/templates/base.html:46
+#: inyoka/portal/templates/register.html:28 inyoka/templates/base.html:47
 msgid "Register"
 msgstr ""
 
@@ -1230,17 +1245,13 @@ msgstr ""
 msgid "No matches found."
 msgstr ""
 
-#: inyoka/portal/templates/tags.html:2
-msgid "Choose Tag"
-msgstr ""
-
 #: inyoka/portal/templates/tags.html:8
 msgid "All tags"
 msgstr ""
 
 #: inyoka/portal/templates/tags.html:18
 #, python-format
-msgid "…or <a href=\"%(link)s\">create a new tag</a>"
+msgid "… or <a href=\"%(link)s\">create a new tag</a>"
 msgstr ""
 
 #: inyoka/portal/templates/users.html:3
@@ -1255,20 +1266,7 @@ msgstr ""
 msgid "Date joined"
 msgstr ""
 
-#: inyoka/portal/templates/admin/tag_delete.html:2
-msgid "Do you really want to delete that tag?"
-msgstr ""
-
-#: inyoka/portal/templates/admin/tag_edit.html:4
-#, python-format
-msgid "Edit “%(tag)s”"
-msgstr ""
-
-#: inyoka/portal/templates/admin/tag_edit.html:6
-msgid "New Tag"
-msgstr ""
-
-#: inyoka/portal/templates/usercp/base.html:2 inyoka/templates/base.html:49
+#: inyoka/portal/templates/usercp/base.html:2 inyoka/templates/base.html:50
 msgid "User Control Panel"
 msgstr ""
 
@@ -1335,16 +1333,20 @@ msgstr ""
 msgid "Dump"
 msgstr ""
 
-#: inyoka/templates/base.html:48
+#: inyoka/templates/base.html:38
+msgid "Event"
+msgstr ""
+
+#: inyoka/templates/base.html:49
 #, python-format
 msgid "Hello %(name)s (%(status)s)"
 msgstr ""
 
-#: inyoka/templates/base.html:50
+#: inyoka/templates/base.html:51
 msgid "Logout"
 msgstr ""
 
-#: inyoka/templates/base.html:85
+#: inyoka/templates/base.html:88
 #, python-format
 msgid "Powered by Inyoka %(revision)s on Python %(python)s"
 msgstr ""

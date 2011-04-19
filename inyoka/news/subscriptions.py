@@ -54,7 +54,7 @@ class NewArticleSubscriptionAction(SubscriptionAction):
 
     @classmethod
     def notify(cls, user, object, subjects):
-        logger.debug('Notify %s about new article „%s“' % \
+        logger.debug('Notify %s about new article “%s“' % \
                      (user.username, object.title))
 
 

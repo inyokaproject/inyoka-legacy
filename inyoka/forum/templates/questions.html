@@ -2,7 +2,7 @@
 {% from 'utils/macros.html' import user_link %}
 
 {%- if forum %}
-  {%- set trace = [[_('Forum “%(forum)s”', forum=forum.name), href(forum)]] + trace|default([]) %}
+  {%- set trace = [[forum.name, href(forum)]] + trace|default([]) %}
 {%- elif tags %}
   {%- set trace = [[_('Tagged Questions'), '']] + trace|default([]) %}
 {%- else %}
@@ -100,9 +100,6 @@
 
         </div>
       </div>
-      {%- if not loop.last %}
-        <hr>
-      {%- endif %}
     {% else %}
       <p>{{ _('No questions found.') }}</p>
     {% endfor %}

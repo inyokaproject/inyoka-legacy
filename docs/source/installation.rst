@@ -2,15 +2,11 @@
 Installation
 ============
 
-Inyoka requires at least Python 2.6 to work correctly. Next to this Inyoka has
-a lot of dependencies as well as a nice bootstrap process. This is documentated
-on the following slides.
-
 .. todo:
 
    This documentation is a bit distribution dependent, try to abstract it.
 
-Dependencies and virtual environment
+Dependencies and Virtual Environment
 ====================================
 
 To get Inyoka work properly we need those dependencies (with headers):
@@ -28,26 +24,25 @@ To get Inyoka work properly we need those dependencies (with headers):
  * libxml2
  * libbz2
  * uuid-dev
- * libsqlite3-dev (if we want to use SQLite)
- * libmysqlclient-dev (if we want to use MySQL)
+ * RabbitMQ (optional. Celery can use the database as a queue backend, but for
+   scaling tasks across multiple servers, you can use RabbitMQ)
+ * libreadline-dev (optional, but needed if you want readline support in the
+   python interpreter)
+ * libsqlite3-dev (required for SQLite)
+ * libmysqlclient-dev and MySQLdb (required for MySQL)
+ * libpq-dev and psycopg2 (required for PostgreSQL)
 
-For Ubuntu (or any Debian based distribution) use ``aptitude`` to install:
+Packet list for Debian / Ubuntu::
 
-For SQLite::
+    python-dev python-setuptools python-virtualenv mercurial subversion memcached libmemcached-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev fabric libreadline-dev
 
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion memcached libmemcached-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libsqlite3-dev
+If you want to use SQLite, add ``libsqlite3-dev``; for MySQL, add
+``libmysqlclient-dev`` and ``python-mysqldb``; for PostgreSQL, you need
+``libpq-dev`` and ``python-psycopg2``.
 
-For MySQL::
-
-    aptitude install python-dev python-setuptools python-virtualenv mercurial subversion memcached libmemcached-dev build-essential zlib1g-dev libxml2-dev libxslt1-dev unzip libbz2-dev uuid-dev libmysqlclient-dev
-
-Now we build the dependencies for python-imaging::
+In addition, we need the dependencies for python-imaging::
 
     apt-get build-dep python-imaging
-
-Because fabric is only in Ubuntu since Jaunty we use ``easy_install`` for it::
-
-    easy_install fabric
 
 Now we can install Inyoka. But first we need to check out inyoka from the
 mercurial repository. To do that we create a new folder ``inyoka-dev`` in your
@@ -60,48 +55,67 @@ Or use the current experimental branch::
 
     hg clone http://bitbucket.org/EnTeQuAk/inyoka-sandbox/ inyoka
 
-Now it's possible to install the virtual environment. This is done with a simple
-Python command::
+We're installing all of Inyoka's dependencies in a
+`virtual environment <http://www.virtualenv.org/>`_ rather than globally for 
+the whole system. This makes it possible to have different versions of those
+libraries installed in one system, without affecting other applications.
 
-    # assumed that you are located in the root directory of the inyoka repository
+To create the virtual environment, change to the root directory of the inyoka
+repository and run::
+
     fab create_virtualenv
 
-Or create it under a user definied path::
+This will install the libraries in ``../inyoka-testsuite``, you may supply a
+custom path (it is not required to create the target directory before)::
 
-    # it is not required to create the target directory before
-    fab create_virtualenv:directory=../where-ever-you-want
+    fab create_virtualenv:directory=whereever/you/want
 
-Since a couple of Linux distributions use Python3 as default Python interpreter,
-you can use the `interpreter` parameter to use Python2.7::
+If your Linux distribution uses Python3 as default Python interpreter,
+you need to use the ``interpreter`` parameter to enforce Python2.7::
 
     fab create_virtualenv:interpreter=python2.7
 
-To combine the directory and the interpreter, seperate them with a comma::
+To specify both options, seperate them with a comma::
 
-    fab create_virtualenv:directory=../where-ever-you-want,interpreter=python2.7
+    fab create_virtualenv:directory=whereever/you/want,interpreter=python2.7
 
-We are ready to run now.  If you start inyoka the first time (see below) a
-default `inyoka.ini` will be created.  You can, of course, create and modify
-for you own purposes.
+This will take quite a while, and a fast internet connection is recommended.
+Note that the libraries are downloaded unencrypted and unsigned, so avoid
+doing this in an unsafe network.
 
-AMQP Messaging and Celery
-=========================
+Every time we want to run inyoka, we need to activate the virtual environment,
+so that the libraries we installed above are used, not the global ones
+(you have to change the path if you specified a custom one before)::
 
-We're using celery to support cron like tasks and delayed execution.  This
-gives us the opportunity to implement more features like never before and this
-much easier.  See delayed "hotness" calculation for example that calculates
-the hotness factor of various contents.
+    . ../inyoka-testsuite/bin/activate
 
-In order to use celery you need to setup a AMQP Server, we're using RabbitMQ
-here for demonstration reasons.
+(Do not forget the dot at the beginning!)
 
-Install and start RabbitMQ::
+We are ready to run now.  If you start inyoka the first time (see below), a
+default ``inyoka.ini`` will be created.  You can, of course, change settings as
+you like.
 
-    sudo apt-get install rabbitmq-server
-    sudo /etc/init.d/rabbitmq-server start
 
-The server now runs fine and only needs to be configured to create a new
-namespace for inyoka to not disturb other services.
+AMQP Messaging and Celery (optional)
+====================================
+
+We're using celery to support cron-like tasks and delayed execution.  This
+allows us to implement more features like never before and this much easier.
+See delayed "hotness" calculation for example that calculates the hotness
+factor of various contents.
+
+In order to use celery you can either use the database or setup a AMQP Server,
+we're using RabbitMQ here for demonstration reasons.
+
+If the RabbitMQ server is not running already, you must start it; depending on
+your configuration, it should be one of the following commands::
+
+    invoke-rc.d rabbitmq-server start
+    /etc/init.d/rabbitmq-server start
+    service rabbitmq-server start
+
+The server needs to be configured to create a new namespace for inyoka to not
+disturb other services.
 
 First we add a new user named ``inyoka`` with password ``default``::
 
@@ -117,63 +131,69 @@ on the inyoka virtual host domain::
 
     sudo rabbitmqctl set_permissions -p inyoka inyoka ".*" ".*" ".*"
 
-Now you can use ``fab celeryd`` to start your celery server.
+Now, use ``fab celeryd`` to start your celery server.
 
-Database initialization
+
+Database Initialization
 =======================
 
-We are now ready to activate the virtual environment
-(``../inyoka-testsuite`` is the default installation folder, may be replaced).
-Do not forget the "." at the beginning!::
+SQLite is the default, so to use it you don't have to change anything.
+You may define a custom database file name in ``inyoka.ini`` (create it if it
+does not exist)::
 
-    . ../inyoka-testsuite/bin/activate
+    [database]
+    url = sqlite://mydatabase.db
 
-Before starting we have to initialize the database. Inyoka is using
-`SQLite <http://www.sqlite.org/>`_ by default. To use
-`MySQL <http://www.mysql.com/>`_ see below::
+If you want to use MySQL or PostgreSQL, you need to make sure you have the
+required libraries installed (see above).
 
-    fab initdb
+Specify the database in ``inyoka.ini``::
 
-And create some Test Data::
+    [database]
+    url = (mysql|postgres)://user:password@host/database
+
+Before starting we have to initialize the database::
 
     fab reset
+
+This does also create test data.
+
 
 .. _starting-the-server:
 
-Starting the server
+Starting the Server
 ===================
 
-Last but not least make some DNS Setup in the ``/etc/hosts``::
+We need to configure the hostnames used by inyoka, so that your browser can
+find it. Append the output of this command to the ``127.0.0.1`` line in your
+``/etc/hosts``::
 
-    # put the output at the end of the 127.0.0.1 line
     fab lsdns
 
-Now start the development server::
+Now we can finally start the development server::
 
     fab runserver
 
-Inyoka should be accessible at http://inyoka.local:5000. Otherwise comment out the
+Inyoka should be accessible at http://inyoka.local:5000/. Otherwise comment out the
 IPv6 lines in your ``/etc/hosts`` and try again.
 
-Almost done!
 
-Installing MySQL instead of SQLite
-==================================
+Additional setup
+================
 
-Make sure you have libmysqlclient-dev installed::
+Below, there are some hints to make working with inyoka more comfortable,
+although none of this is required to run it.
 
-    apt-get install libmysqlclient-dev
+IPython
+-------
 
-To add the Python bindings for MySQL run::
+IPython won't work in the virtual environment if you have installed it
+globally, you have to install it separately in the virtualenv::
 
-    pip install MySQL-python
+    pip install ipython
 
-Now we can initialize the database::
+fab tab completion
+------------------
 
-    fab initdb
-
-And create some Test Data::
-
-    fab reset
-
-Now continue with :ref:`starting-the-server`
+There is a `bash tab completion for the fab command
+<http://github.com/ricobl/dotfiles/blob/master/bin/fab_bash_completion>`_.

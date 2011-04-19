@@ -14,11 +14,13 @@ from inyoka.i18n import _
 from inyoka.l10n import get_month_names
 from inyoka.core.api import IController, Rule, cache, view, templated, href, \
     redirect_to, db, login_required, ctx
+from inyoka.core.forms import Form
 from inyoka.core.subscriptions.models import Subscription
 from inyoka.news.models import Article, Tag, Comment
 from inyoka.news.forms import EditCommentForm
 from inyoka.news.subscriptions import ArticleSubscriptionType, \
     CommentSubscriptionType
+from inyoka.utils import confirm_action
 from inyoka.utils.feeds import atom_feed, AtomFeed
 from inyoka.utils.pagination import URLPagination, PageURLPagination
 from itertools import izip
@@ -146,11 +148,18 @@ class NewsController(IController):
     def change_comment(self, request, id, action):
         comment = Comment.query.get(id)
         if action in ('hide', 'restore'):
-            comment.deleted = action == 'hide'
-            db.session.commit()
-            request.flash(_(u'The comment was hidden') if action == 'hide' \
-                else _(u'The comment was restored'))
-            return redirect_to(comment)
+            message = {
+                'hide': _(u'Do you really want to hide the comment?'),
+                'restore': _(u'Do you really want to restore the comment?')
+            }
+            if confirm_action(request, message[action], 'news/edit_comment',
+                              id=id, action=action):
+                comment.deleted = action == 'hide'
+                db.session.commit()
+                request.flash(_(u'The comment has been hidden') if \
+                    action == 'hide' else _(u'The comment has been restored'))
+                return redirect_to(comment)
+            return redirect_to(comment.article)
 
         # action == 'edit'
         form = EditCommentForm(request.form)
@@ -177,7 +186,7 @@ class NewsController(IController):
             }
             return ret
 
-        query = Article.query.published().by_date(year, month, day)
+        query = Article.query.public().by_date(year, month, day)
 
         pagination = PageURLPagination(query, page=page, per_page=5)
 
@@ -261,6 +270,6 @@ class NewsController(IController):
                     'name': article.author.display_name,
                     'uri': href(article.author.profile)
                 },
-                id=article.id, updated=article.updated, published=article.pub_date)
+                id=article.guid, updated=article.updated, published=article.pub_date)
 
         return feed

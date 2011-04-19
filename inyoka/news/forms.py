@@ -8,6 +8,7 @@
     :copyright: 2009-2011 by the Inyoka Team, see AUTHORS for more details.
     :license: GNU GPL, see LICENSE for more details.
 """
+from markupsafe import Markup
 from inyoka.core.forms import Form, widgets, validators, TextField, \
     BooleanField, QuerySelectField, AutocompleteField
 from inyoka.core.auth.models import User
@@ -29,5 +30,6 @@ class EditArticleForm(Form):
 
 class EditCommentForm(Form):
     text = TextField(_(u'Text'), widget=widgets.TextArea(),
-        description=_(u'To quote another comment use <em>@comment_number</em>. '
-                      u'This is automatically used if you click “answer”.'))
+        description=Markup(_(u'To quote another comment use '
+                             u'<em>@comment_number</em>. This is '
+                             u'automatically used if you click “answer”.')))

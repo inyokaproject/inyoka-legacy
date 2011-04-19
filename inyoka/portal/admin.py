@@ -9,10 +9,11 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from inyoka.i18n import _
-from inyoka.core.api import db, view, templated, redirect_to, Rule, render_template, IController
+from inyoka.core.api import db, view, templated, redirect_to, Rule, render_template, IController, href
 from inyoka.core.models import Tag
 from inyoka.core.forms.utils import model_to_dict, update_model
 from inyoka.portal.forms import EditTagForm
+from inyoka.utils import confirm_action
 
 
 class PortalAdminController(IController):
@@ -54,17 +55,12 @@ class PortalAdminController(IController):
 
     @view('tag_delete')
     def tags_delete(self, request, slug):
+        message = _(u'Do you really want to delete this tag?')
         tag = Tag.query.filter_by(slug=slug).one()
-        if 'cancel' in request.form:
-            request.flash(_(u'Action canceled'))
-        elif 'confirm' in request.form:
+        if confirm_action(request, message, 'portal/tag_delete', slug=slug):
             db.session.delete(tag)
             db.session.commit()
-            request.flash(_(u'The tag “%s” was deleted successfully.'
-                          % tag.name))
-            return redirect_to('/portal/tags')
-        else:
-            request.flash(render_template('portal/admin/tag_delete.html', {
-                'tag': tag
-            }), html=True)
-        return redirect_to(tag, action='edit')
+            request.flash(_(u'The tag “%s” was deleted successfully.' %
+                            tag.name))
+            return redirect_to('portal/tags')
+        return redirect_to(tag)

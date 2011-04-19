@@ -6,7 +6,8 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <title>Inyoka{% for title, url in trace %} › {{ title }}{% endfor %}</title>
+    <!--<title>Inyoka{% for title, url in trace %} › {{ title }}{% endfor %}</title>-->
+    <title>{{ trace[-1][0] }} - Inyoka</title>
     {#- Commonly used javascript files that need to included first #}
     {%- for script in ['jquery.js', 'jquery.ui.js', 'classy.js', 'babel.js', 'inyoka.js'] %}
       <script type="text/javascript" src="{{ href('static', file='js/' + script) }}"></script>
@@ -53,7 +54,9 @@
           <span class="pathbar">
             {%- for name, url in trace %}
               {% if url %}<a href="{{ url }}">{% endif %}
+              {% if loop.last %}<strong>{% endif %}
               {{ name }}
+              {% if loop.last %}</strong>{% endif %}
               {% if url %}</a>{% endif %}
               {% if not loop.last %}›{% endif %}
             {%- endfor %}

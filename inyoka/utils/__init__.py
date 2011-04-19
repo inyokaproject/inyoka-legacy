@@ -25,6 +25,21 @@ def flatten_list(iter):
     return list(flatten_iterator(iter))
 
 
+def confirm_action(request, message, endpoint, **kwargs):
+    """Flash a csrf protected "Are you sure?" form."""
+    from inyoka.core.api import render_template, href
+    from inyoka.core.forms import Form
+    form = Form(request.form)
+    if form.validate_on_submit():
+        return 'confirm' in request.form
+    request.flash(render_template('utils/confirm.html', {
+        'message': message,
+        'form': form,
+        'destination': href(endpoint, **kwargs)
+    }), html=True)
+    return False
+
+
 class classproperty(object):
     """A mix of the built-in `classmethod` and `property`.
 

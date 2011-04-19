@@ -9,6 +9,8 @@
     :license: GNU GPL, see LICENSE for more details.
 """
 from xappy.highlight import Highlighter
+
+from inyoka.context import ctx
 from inyoka.core.api import IController, Rule, view, Response, \
     templated, href, redirect, _, login_required, redirect_to
 from inyoka.core import search
@@ -16,15 +18,15 @@ from inyoka.core.auth import get_auth_system
 from inyoka.core.auth.models import User, UserProfile, Group
 from inyoka.core.http import allow_next_redirects
 from inyoka.core.models import Tag
-from inyoka.context import ctx
 from inyoka.core.database import db
+from inyoka.news.models import Article
+from inyoka.portal.api import ITaggableContentProvider
+from inyoka.portal.forms import ProfileForm, SearchForm, DeactivateProfileForm,\
+    get_change_password_form
 from inyoka.utils.confirm import call_confirm, Expired
 from inyoka.utils.pagination import URLPagination, SearchPagination
 from inyoka.utils.sortable import Sortable
 from inyoka.utils.text import get_search_words
-from inyoka.portal.forms import ProfileForm, SearchForm, DeactivateProfileForm,\
-    get_change_password_form
-from inyoka.portal.api import ITaggableContentProvider
 
 
 hl = Highlighter(ctx.cfg['language'])
@@ -59,9 +61,11 @@ class PortalController(IController):
     @templated('portal/index.html', modifier=context_modifier)
     def index(self, request):
         cloud, more = Tag.query.public().get_cloud()
+        articles = Article.query.public().order_by(Article.updated.desc()).limit(5).all()
         return {
             'tag_cloud': cloud,
             'more_tags': more,
+            'articles': articles,
         }
 
     @view
@@ -145,8 +149,8 @@ class PortalController(IController):
             name = request.form.get('tag')
             tag = Tag.query.filter_by(name=name).first()
             if tag is not None:
-                return redirect_to('portal/tag_edit', slug=tag.slug)
-            request.flash(_(u'The tag “%s” does not exist' % tag.name), False)
+                return redirect_to('portal/tag', slug=tag.slug)
+            request.flash(_(u'The tag “%s” does not exist' % name), False)
 
         return {
             'tag_cloud': cloud,

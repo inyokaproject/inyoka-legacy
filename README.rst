@@ -4,7 +4,7 @@ Inyoka Legacy
 
 This is the formerly called “inyoka-ng” project that was set out to be more dynamic and extensible than the original Inyoka Project.
 
-**This represents yet legacy code that is not active maintained!**
+**This represents legacy code that is not actively maintained!**
 
 The application mainly provides:
 

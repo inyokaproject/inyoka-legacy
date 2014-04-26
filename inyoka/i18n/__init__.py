@@ -99,7 +99,7 @@ class Translations(TranslationsBase):
 
 
 def find_catalog(path, domain, locale, gettext_lookup=False):
-    """Finds the catalog for the given locale on the path.  Return sthe
+    """Finds the catalog for the given locale on the path.  Return the
     filename of the .mo file if found, otherwise `None` is returned.
     """
     args = [path, str(get_locale(locale)), domain + '.mo']
